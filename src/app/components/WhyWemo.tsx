@@ -5,7 +5,8 @@ const reasons = [
   {
     icon: Heart,
     title: "Mỗi Món Quà Là Một Câu Chuyện",
-    description: "Biến những món quà đơn giản thành hành trình cảm xúc mà người nhận sẽ trân trọng mãi mãi. Tạo ra ký ức bền lâu, không chỉ là khoảnh khắc.",
+    description:
+      "Biến những món quà đơn giản thành hành trình cảm xúc mà người nhận sẽ trân trọng mãi mãi. Tạo ra ký ức bền lâu, không chỉ là khoảnh khắc.",
     stat: "10x",
     statLabel: "Đáng Nhớ Hơn",
     color: "#FFD4D4",
@@ -13,7 +14,8 @@ const reasons = [
   {
     icon: Sparkles,
     title: "Cảm Xúc Hơn Quà Truyền Thống",
-    description: "Kết hợp ảnh, video, tin nhắn giọng nói và âm nhạc để tạo trải nghiệm đa giác quan chạm đến trái tim.",
+    description:
+      "Kết hợp ảnh, video, tin nhắn giọng nói và âm nhạc để tạo trải nghiệm đa giác quan chạm đến trái tim.",
     stat: "98%",
     statLabel: "Tỷ Lệ Hài Lòng",
     color: "#E8B4A8",
@@ -21,7 +23,8 @@ const reasons = [
   {
     icon: Infinity,
     title: "Trải Nghiệm Cá Nhân Hóa Vô Hạn",
-    description: "Không giới hạn ảnh, video hay tin nhắn. Cập nhật và thêm nội dung bất cứ lúc nào. Món quà lớn lên cùng mối quan hệ của bạn.",
+    description:
+      "Không giới hạn ảnh, video hay tin nhắn. Cập nhật và thêm nội dung bất cứ lúc nào. Món quà lớn lên cùng mối quan hệ của bạn.",
     stat: "∞",
     statLabel: "Khả Năng",
     color: "#D4AF78",
@@ -29,16 +32,17 @@ const reasons = [
   {
     icon: Zap,
     title: "Không Cần Cài Ứng Dụng",
-    description: "Người nhận chỉ cần chạm và trải nghiệm. Hoạt động ngay lập tức trên bất kỳ điện thoại nào có NFC hoặc quét mã QR.",
+    description:
+      "Người nhận chỉ cần chạm và trải nghiệm. Hoạt động ngay lập tức trên bất kỳ điện thoại nào có NFC hoặc quét mã QR.",
     stat: "3 giây",
     statLabel: "Để Trải Nghiệm",
     color: "#FFD4D4",
   },
 ];
 
-export function WhyWebo() {
+export function WhyWemo() {
   return (
-    <section className="relative py-24" style={{ background: '#FAF8F5' }}>
+    <section className="relative py-24" style={{ background: "#FAF8F5" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
@@ -47,25 +51,26 @@ export function WhyWebo() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 
+          <h2
             className="mb-4"
             style={{
-              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+              fontSize: "clamp(2rem, 4vw, 3.5rem)",
               fontWeight: 700,
-              color: '#1A1818',
+              color: "#1A1818",
             }}
           >
-            Tại Sao Chọn WEBO?
+            Tại Sao Chọn WEMO?
           </h2>
           <p
             className="max-w-2xl mx-auto"
             style={{
-              fontSize: '1.125rem',
-              color: '#6B6B6B',
+              fontSize: "1.125rem",
+              color: "#6B6B6B",
               lineHeight: 1.6,
             }}
           >
-            Chúng tôi đang định nghĩa lại ý nghĩa của việc tặng quà có ý nghĩa trong thời đại số
+            Chúng tôi đang định nghĩa lại ý nghĩa của việc tặng quà có ý nghĩa
+            trong thời đại số
           </p>
         </motion.div>
 
@@ -96,38 +101,38 @@ export function WhyWebo() {
 
                 {/* Content */}
                 <div className="flex-1">
-                  <h3 
+                  <h3
                     className="mb-3"
                     style={{
-                      fontSize: '1.5rem',
+                      fontSize: "1.5rem",
                       fontWeight: 600,
-                      color: '#1A1818',
+                      color: "#1A1818",
                     }}
                   >
                     {reason.title}
                   </h3>
-                  <p 
+                  <p
                     className="mb-4"
                     style={{
-                      color: '#6B6B6B',
+                      color: "#6B6B6B",
                       lineHeight: 1.6,
                     }}
                   >
                     {reason.description}
                   </p>
-                  
+
                   {/* Stat */}
                   <div className="flex items-baseline gap-2">
-                    <span 
+                    <span
                       className="font-bold"
                       style={{
-                        fontSize: '2rem',
+                        fontSize: "2rem",
                         color: reason.color,
                       }}
                     >
                       {reason.stat}
                     </span>
-                    <span style={{ color: '#6B6B6B', fontSize: '0.875rem' }}>
+                    <span style={{ color: "#6B6B6B", fontSize: "0.875rem" }}>
                       {reason.statLabel}
                     </span>
                   </div>
@@ -144,16 +149,16 @@ export function WhyWebo() {
           viewport={{ once: true }}
           className="rounded-3xl p-8 md:p-12"
           style={{
-            background: 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)',
-            boxShadow: '0 20px 60px rgba(232, 180, 168, 0.4)',
+            background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+            boxShadow: "0 20px 60px rgba(232, 180, 168, 0.4)",
           }}
         >
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 text-center text-white">
             {[
-              { value: '50,000+', label: 'Quà Đã Tạo' },
-              { value: '200+', label: 'Quốc Gia' },
-              { value: '1M+', label: 'Ký Ức Được Chia Sẻ' },
-              { value: '4.9/5', label: 'Đánh Giá Trung Bình' },
+              { value: "50,000+", label: "Quà Đã Tạo" },
+              { value: "200+", label: "Quốc Gia" },
+              { value: "1M+", label: "Ký Ức Được Chia Sẻ" },
+              { value: "4.9/5", label: "Đánh Giá Trung Bình" },
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -162,13 +167,13 @@ export function WhyWebo() {
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
               >
-                <div 
+                <div
                   className="font-bold mb-2"
-                  style={{ fontSize: 'clamp(2rem, 4vw, 3rem)' }}
+                  style={{ fontSize: "clamp(2rem, 4vw, 3rem)" }}
                 >
                   {stat.value}
                 </div>
-                <div style={{ fontSize: '1rem', opacity: 0.9 }}>
+                <div style={{ fontSize: "1rem", opacity: 0.9 }}>
                   {stat.label}
                 </div>
               </motion.div>
@@ -183,16 +188,16 @@ export function WhyWebo() {
           viewport={{ once: true }}
           className="text-center mt-16"
         >
-          <p 
+          <p
             className="italic max-w-3xl mx-auto"
             style={{
-              fontSize: '1.25rem',
-              color: '#6B6B6B',
+              fontSize: "1.25rem",
+              color: "#6B6B6B",
               lineHeight: 1.8,
             }}
           >
-            "Những món quà tốt nhất không được gói bằng giấy — chúng được gói bằng ký ức,
-            cảm xúc và những khoảnh khắc tồn tại mãi mãi."
+            "Những món quà tốt nhất không được gói bằng giấy — chúng được gói
+            bằng ký ức, cảm xúc và những khoảnh khắc tồn tại mãi mãi."
           </p>
         </motion.div>
       </div>

@@ -1,0 +1,17 @@
+# Các thư mục cài đặt nặng, không cần đẩy lên Git
+node_modules/
+.pnpm-store/
+
+# File chứa thông tin bảo mật (API key, mật khẩu...)
+.env
+.env.local
+
+# Các thư mục chứa bản build khi chạy lệnh đóng gói
+dist/
+build/
+
+# File log hệ thống khi xảy ra lỗi
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

@@ -10,7 +10,7 @@ const faqs = [
   {
     question: "WEMO là gì và hoạt động như thế nào?",
     answer:
-      "WEBO là nền tảng quà tặng kỹ thuật số NFC cá nhân hóa, biến hộp quà vật lý thành trải nghiệm web tương tác. Người nhận chỉ cần chạm điện thoại thông minh vào hộp quà NFC để mở khóa một trang web đẹp mắt, cá nhân hóa với ảnh, video, tin nhắn giọng nói và nhiều hơn nữa. Không cần cài ứng dụng!",
+      "WEMO là nền tảng quà tặng kỹ thuật số NFC cá nhân hóa, biến hộp quà vật lý thành trải nghiệm web tương tác. Người nhận chỉ cần chạm điện thoại thông minh vào hộp quà NFC để mở khóa một trang web đẹp mắt, cá nhân hóa với ảnh, video, tin nhắn giọng nói và nhiều hơn nữa. Không cần cài ứng dụng!",
   },
   {
     question: "Tôi có cần thiết bị đặc biệt hay kiến thức kỹ thuật không?",
@@ -25,7 +25,7 @@ const faqs = [
   {
     question: "Những thiết bị nào tương thích với WEMO?",
     answer:
-      "WEBO hoạt động trên tất cả điện thoại thông minh hiện đại có NFC (iPhone 7 trở lên, hầu hết điện thoại Android). Với thiết bị không có NFC, chúng tôi cung cấp mã QR thay thế hoạt động trên bất kỳ điện thoại nào. Trải nghiệm web được tối ưu cho mọi kích thước màn hình.",
+      "WEMO hoạt động trên tất cả điện thoại thông minh hiện đại có NFC (iPhone 7 trở lên, hầu hết điện thoại Android). Với thiết bị không có NFC, chúng tôi cung cấp mã QR thay thế hoạt động trên bất kỳ điện thoại nào. Trải nghiệm web được tối ưu cho mọi kích thước màn hình.",
   },
   {
     question: "Trải nghiệm kỹ thuật số tồn tại trong bao lâu?",
@@ -51,7 +51,7 @@ const faqs = [
   {
     question: "Tôi có thể tạo quà bằng tiếng Việt không?",
     answer:
-      "Có! WEBO hỗ trợ nhiều ngôn ngữ bao gồm tiếng Việt. Bạn có thể tạo toàn bộ trải nghiệm bằng tiếng Việt và các mẫu thiết kế được thiết kế để hiển thị đẹp mắt với văn bản bất kỳ ngôn ngữ nào.",
+      "Có! WEMO hỗ trợ nhiều ngôn ngữ bao gồm tiếng Việt. Bạn có thể tạo toàn bộ trải nghiệm bằng tiếng Việt và các mẫu thiết kế được thiết kế để hiển thị đẹp mắt với văn bản bất kỳ ngôn ngữ nào.",
   },
   {
     question: "Nếu tôi cần hỗ trợ tạo quà thì sao?",

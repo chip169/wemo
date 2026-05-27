@@ -29,39 +29,38 @@ export function Header() {
       animate={{ y: 0 }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: isScrolled 
-          ? 'var(--webo-glass-white)' 
-          : 'transparent',
-        backdropFilter: isScrolled ? 'blur(20px)' : 'none',
-        borderBottom: isScrolled ? '1px solid rgba(255,255,255,0.3)' : 'none',
+        background: isScrolled ? "var(--webo-glass-white)" : "transparent",
+        backdropFilter: isScrolled ? "blur(20px)" : "none",
+        borderBottom: isScrolled ? "1px solid rgba(255,255,255,0.3)" : "none",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link to="/">
-          <motion.div
-            className="flex items-center gap-2 cursor-pointer"
-            whileHover={{ scale: 1.05 }}
-          >
-            <div 
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{
-                background: 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)',
-              }}
+            <motion.div
+              className="flex items-center gap-2 cursor-pointer"
+              whileHover={{ scale: 1.05 }}
             >
-              <Heart className="w-6 h-6 text-white fill-white" />
-            </div>
-            <span 
-              className="font-bold"
-              style={{
-                fontSize: '1.5rem',
-                color: '#1A1818',
-              }}
-            >
-              WEBO
-            </span>
-          </motion.div>
+              <div
+                className="w-10 h-10 rounded-xl flex items-center justify-center"
+                style={{
+                  background:
+                    "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+                }}
+              >
+                <Heart className="w-6 h-6 text-white fill-white" />
+              </div>
+              <span
+                className="font-bold"
+                style={{
+                  fontSize: "1.5rem",
+                  color: "#1A1818",
+                }}
+              >
+                WEMO
+              </span>
+            </motion.div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -73,14 +72,14 @@ export function Header() {
                   <Link
                     to={item.href}
                     className="font-medium transition-colors relative"
-                    style={{ color: isActive ? '#E8B4A8' : '#1A1818' }}
+                    style={{ color: isActive ? "#E8B4A8" : "#1A1818" }}
                   >
                     {item.name}
                     {isActive && (
                       <motion.div
                         layoutId="nav-underline"
                         className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full"
-                        style={{ background: '#E8B4A8' }}
+                        style={{ background: "#E8B4A8" }}
                       />
                     )}
                   </Link>
@@ -99,9 +98,9 @@ export function Header() {
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6" style={{ color: '#1A1818' }} />
+              <X className="w-6 h-6" style={{ color: "#1A1818" }} />
             ) : (
-              <Menu className="w-6 h-6" style={{ color: '#1A1818' }} />
+              <Menu className="w-6 h-6" style={{ color: "#1A1818" }} />
             )}
           </button>
         </div>
@@ -120,13 +119,15 @@ export function Header() {
                   key={index}
                   to={item.href}
                   className="font-medium py-2"
-                  style={{ color: location.pathname === item.href ? '#E8B4A8' : '#1A1818' }}
+                  style={{
+                    color:
+                      location.pathname === item.href ? "#E8B4A8" : "#1A1818",
+                  }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-
             </nav>
           </motion.div>
         )}

@@ -152,7 +152,7 @@ export function Footer() {
           <p
             style={{ color: "rgba(255, 255, 255, 0.5)", fontSize: "0.875rem" }}
           >
-            © 2026 WEBO. Bảo lưu mọi quyền. Được tạo với{" "}
+            © 2026 WEMO. Bảo lưu mọi quyền. Được tạo với{" "}
             <Heart
               className="w-3 h-3 inline fill-current"
               style={{ color: "#E8B4A8" }}

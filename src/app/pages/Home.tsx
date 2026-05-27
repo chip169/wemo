@@ -3,7 +3,7 @@ import { HowItWorks } from "../components/HowItWorks";
 import { TemplateShowcase } from "../components/TemplateShowcase";
 import { PersonalizationFeatures } from "../components/PersonalizationFeatures";
 import { LiveDemo } from "../components/LiveDemo";
-import { WhyWebo } from "../components/WhyWebo";
+import { WhyWemo } from "../components/WhyWemo";
 import { Testimonials } from "../components/Testimonials";
 import { Pricing } from "../components/Pricing";
 import { FAQ } from "../components/FAQ";
@@ -17,7 +17,7 @@ export function Home() {
       <TemplateShowcase />
       <PersonalizationFeatures />
       <LiveDemo />
-      <WhyWebo />
+      <WhyWemo />
       <Testimonials />
       <Pricing />
       <FAQ />
