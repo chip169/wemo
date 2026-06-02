@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { Heart, Menu, X } from "lucide-react";
+import { Heart, Menu, X, Gift } from "lucide-react";
 import { Link, useLocation } from "react-router";
 
 export function Header() {
@@ -88,8 +88,17 @@ export function Header() {
             })}
           </nav>
 
-          {/* Desktop Navigation Spacer */}
-          <div className="hidden md:block" />
+          {/* CTA */}
+          <Link
+            to="/create"
+            className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm text-white transition-all hover:opacity-90 hover:scale-105"
+            style={{
+              background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+            }}
+          >
+            <Gift className="w-4 h-4" />
+            Tạo Quà
+          </Link>
 
           {/* Mobile Menu Button */}
           <button

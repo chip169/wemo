@@ -6,8 +6,13 @@ import { TemplatesPage } from "./pages/TemplatesPage";
 import { TemplateDetailPage } from "./pages/TemplateDetailPage";
 import { PricingPage } from "./pages/PricingPage";
 import { FAQPage } from "./pages/FAQPage";
+import { GiftWizard } from "./pages/GiftWizard";
 
 export const router = createBrowserRouter([
+  {
+    path: "create",
+    Component: GiftWizard,
+  },
   {
     path: "/",
     Component: Root,

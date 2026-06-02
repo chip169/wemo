@@ -224,6 +224,8 @@ export function FAQPage() {
           </p>
           <a
             href="https://www.facebook.com/hieu.kimxuan.7"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block px-7 py-3 rounded-full font-semibold text-sm"
             style={{ background: "white", color: "#E8B4A8" }}
           >
