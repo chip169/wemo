@@ -645,6 +645,38 @@ app.post("/api/support/messages", async (req, res) => {
   }
 });
 
+app.delete("/api/support/messages/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (getDbMode() === "mongodb") {
+      await Message.findByIdAndDelete(id);
+    } else {
+      const messages = await readJsonFile("messages.json");
+      const filtered = messages.filter((m) => m.timestamp !== id && m.id !== id);
+      await writeJsonFile("messages.json", filtered);
+    }
+    res.json({ success: true, message: "Đã xóa tin nhắn." });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete("/api/support/sessions/:sessionId", authMiddleware, async (req, res) => {
+  const { sessionId } = req.params;
+  try {
+    if (getDbMode() === "mongodb") {
+      await Message.deleteMany({ sessionId });
+    } else {
+      const messages = await readJsonFile("messages.json");
+      const filtered = messages.filter((m) => m.sessionId !== sessionId);
+      await writeJsonFile("messages.json", filtered);
+    }
+    res.json({ success: true, message: "Đã xóa cuộc hội thoại thành công." });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`📡 Express Server running on port ${PORT}`);
