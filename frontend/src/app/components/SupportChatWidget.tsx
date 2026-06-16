@@ -86,9 +86,16 @@ export function SupportChatWidget() {
     e.preventDefault();
     if (!name.trim() || !phone.trim()) return;
 
-    const formattedSessionId = `${name.trim()} - ${phone.trim()}`;
+    // Clean phone number: keep only digits
+    const cleanedPhone = phone.replace(/\D/g, "");
+    if (cleanedPhone.length === 10) {
+      alert("Số điện thoại không hợp lệ. Vui lòng nhập từ 10 chữ số.");
+      return;
+    }
+
+    const formattedSessionId = `${name.trim()} - ${cleanedPhone}`;
     localStorage.setItem("wemo_chat_user_name", name.trim());
-    localStorage.setItem("wemo_chat_user_phone", phone.trim());
+    localStorage.setItem("wemo_chat_user_phone", cleanedPhone);
     localStorage.setItem("wemo_support_session_id", formattedSessionId);
 
     setSessionId(formattedSessionId);
@@ -98,7 +105,7 @@ export function SupportChatWidget() {
     const body = {
       sessionId: formattedSessionId,
       sender: "user",
-      text: `[Hệ thống] Khách hàng yêu cầu hỗ trợ. Họ tên: ${name.trim()} - SĐT: ${phone.trim()}`,
+      text: `[Hệ thống] Khách hàng yêu cầu hỗ trợ. Họ tên: ${name.trim()} - SĐT: ${cleanedPhone}`,
     };
 
     fetch("/api/support/messages", {
@@ -108,7 +115,12 @@ export function SupportChatWidget() {
     })
       .then((res) => res.json())
       .then((newMsg) => {
-        setMessages((prev) => [...prev, newMsg]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.timestamp === newMsg.timestamp && m.text === newMsg.text)) {
+            return prev;
+          }
+          return [...prev, newMsg];
+        });
       })
       .catch(console.error);
   };
@@ -130,7 +142,12 @@ export function SupportChatWidget() {
     })
       .then((res) => res.json())
       .then((newMsg) => {
-        setMessages((prev) => [...prev, newMsg]);
+        setMessages((prev) => {
+          if (prev.some((m) => m.timestamp === newMsg.timestamp && m.text === newMsg.text)) {
+            return prev;
+          }
+          return [...prev, newMsg];
+        });
         setInputText("");
       })
       .catch(console.error);
@@ -149,7 +166,7 @@ export function SupportChatWidget() {
             {/* Header */}
             <div className="px-5 py-4 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white flex items-center justify-between shadow-sm">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-450 animate-pulse border border-white/30" />
+                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse border border-white/30" />
                 <span className="text-xs font-black tracking-wide">WEMO Hỗ Trợ 24/7</span>
               </div>
               <button
@@ -183,7 +200,7 @@ export function SupportChatWidget() {
               <div className="flex-1 flex flex-col justify-center p-6 bg-stone-50/20 space-y-4">
                 <div className="text-center space-y-1">
                   <Sparkles className="w-6 h-6 text-[#E8B4A8] mx-auto animate-bounce" />
-                  <h3 className="text-xs font-black text-stone-850">Liên Hệ Trực Tuyến</h3>
+                  <h3 className="text-xs font-black text-stone-800">Liên Hệ Trực Tuyến</h3>
                   <p className="text-[10px] text-stone-400">
                     Vui lòng cung cấp thông tin để chúng tôi hỗ trợ bạn tốt nhất
                   </p>
@@ -214,7 +231,6 @@ export function SupportChatWidget() {
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="Nhập số điện thoại liên hệ..."
                       required
-                      pattern="[0-9]{9,11}"
                       className="w-full px-3 py-2 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-white text-stone-800"
                     />
                   </div>
@@ -252,8 +268,8 @@ export function SupportChatWidget() {
                         >
                           <div
                             className={`max-w-[75%] rounded-2xl px-3 py-1.5 text-[11px] leading-relaxed shadow-sm ${isMe
-                                ? "bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white rounded-tr-none"
-                                : "bg-white text-stone-800 rounded-tl-none border"
+                              ? "bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white rounded-tr-none"
+                              : "bg-white text-stone-800 rounded-tl-none border"
                               }`}
                           >
                             <p>{msg.text}</p>
