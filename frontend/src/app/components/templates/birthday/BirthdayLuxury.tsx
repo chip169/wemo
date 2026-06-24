@@ -115,7 +115,7 @@ export default function BirthdayLuxury({
   };
 
   return (
-    <div className="w-full flex justify-center bg-[#090909] min-h-screen p-0 sm:p-6 select-none items-center relative overflow-hidden">
+    <div className="w-full select-none relative overflow-hidden">
       {/* Styles injecting premium serif & luxury font styles */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@200;400;500;600&display=swap');
@@ -174,8 +174,7 @@ export default function BirthdayLuxury({
         }
       `}</style>
 
-      {/* Container simulating high-end card inside device bounds */}
-      <div className="w-full max-w-[412px] min-h-screen sm:min-h-[892px] bg-[#0c0c0c] border-[6px] border-[#161616] sm:rounded-[40px] relative overflow-hidden flex flex-col justify-between shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)]">
+      <div className="w-full bg-[#0c0c0c] rounded-3xl relative overflow-hidden flex flex-col justify-between shadow-2xl">
         
         {/* Animated Background Gold Dust */}
         {showGoldDust && (
