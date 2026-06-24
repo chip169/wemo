@@ -226,31 +226,25 @@ export function RenderLiveTemplate({
   }
 }
 
-// ─── Phone Preview Shell ─────────────────────────────────────────────────────
+// ─── Direct Preview (no phone shell) ─────────────────────────────────────────
 
-function PhonePreview({
+function DirectPreview({
   gift,
+  isEditing = false,
   onUpdate,
 }: {
   gift: GiftData;
+  isEditing?: boolean;
   onUpdate?: (fields: Partial<GiftData>) => void;
 }) {
   return (
-    <div className="relative mx-auto" style={{ width: 240, height: 480 }}>
-      {/* Phone Shell */}
-      <div className="absolute inset-0 rounded-[2.5rem] shadow-2xl bg-[#1A1818] border-[3px] border-[#333]">
-        {/* Notch */}
-        <div className="absolute top-3 left-1/2 -translate-x-1/2 w-20 h-4 bg-black rounded-full z-30" />
-        {/* Screen */}
-        <div className="absolute inset-[3px] rounded-[2.2rem] overflow-hidden bg-white">
-          <div className="w-full h-full overflow-y-auto no-scrollbar">
-            <RenderLiveTemplate
-              gift={gift}
-              isEditing={false}
-              onUpdate={onUpdate}
-            />
-          </div>
-        </div>
+    <div className="w-full rounded-2xl overflow-hidden border border-stone-200/60 shadow-lg bg-white">
+      <div className="w-full overflow-y-auto max-h-[600px]" style={{ scrollbarWidth: 'thin' }}>
+        <RenderLiveTemplate
+          gift={gift}
+          isEditing={isEditing}
+          onUpdate={onUpdate}
+        />
       </div>
     </div>
   );
@@ -601,7 +595,7 @@ function Step1({
               </button>
               <h3 className="font-bold text-stone-900 text-sm mb-4">Xem thử giao diện mẫu</h3>
               
-              <PhonePreview gift={demoTemplate} />
+              <DirectPreview gift={demoTemplate} />
 
               <button
                 onClick={() => {
@@ -761,7 +755,7 @@ function Step2({
   );
 }
 
-// Bước 3: Tự chỉnh sửa tùy ý
+// Bước 3: Tự chỉnh sửa tùy ý (2-column: live preview + form)
 function Step3({
   gift,
   setGift,
@@ -776,60 +770,86 @@ function Step3({
     <div>
       <h2 className="mb-2 text-2xl font-bold text-stone-900">Thiết Kế Nội Dung</h2>
       <p className="mb-8 text-sm text-stone-500">
-        Điền thông tin lời chúc để cá nhân hóa món quà theo ý bạn
+        Chỉnh sửa trực tiếp trên thiệp hoặc sử dụng form bên dưới để cá nhân hóa nội dung
       </p>
 
-      <div className="space-y-4 bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm">
-        <div>
-          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-            Tên người nhận *
-          </label>
-          <input
-            type="text"
-            value={gift.recipientName}
-            onChange={(e) => updateField({ recipientName: e.target.value })}
-            placeholder="Ví dụ: Mẹ yêu, Bạn thân,..."
-            className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-sm"
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+        {/* Left: Live editable template preview */}
+        <div className="order-2 lg:order-1">
+          <div className="flex items-center gap-2 mb-3">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            <span className="text-xs font-bold text-stone-500 uppercase tracking-wider">Xem trước trực tiếp</span>
+          </div>
+          <DirectPreview
+            gift={gift}
+            isEditing={true}
+            onUpdate={updateField}
           />
+          <p className="text-[10px] text-stone-400 mt-2 text-center italic">
+            💡 Click trực tiếp vào ảnh, chữ trên thiệp để chỉnh sửa
+          </p>
         </div>
-        <div>
-          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-            Tiêu đề cảm xúc
-          </label>
-          <input
-            type="text"
-            value={gift.title}
-            onChange={(e) => updateField({ title: e.target.value })}
-            placeholder="Ví dụ: Tuổi mới rực rỡ, I Love You,..."
-            className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-sm"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
-            Lời chúc nhắn gửi *
-          </label>
-          <textarea
-            value={gift.message}
-            onChange={(e) => updateField({ message: e.target.value })}
-            rows={4}
-            placeholder="Viết những lời ấm áp từ trái tim..."
-            className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-sm resize-none"
-          />
-        </div>
-        <div>
-          <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2.5">
-            🎵 Nhạc nền đi kèm
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {MUSIC.map((m) => (
-              <button
-                key={m.id}
-                onClick={() => updateField({ music: m.id })}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${gift.music === m.id ? "bg-stone-900 border-stone-900 text-white" : "bg-stone-50 border-stone-200 text-stone-600"}`}
-              >
-                {m.emoji} {m.name}
-              </button>
-            ))}
+
+        {/* Right: Edit form panel */}
+        <div className="order-1 lg:order-2 space-y-4">
+          <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm space-y-4">
+            <div className="flex items-center gap-2 mb-1">
+              <Sparkles className="w-4 h-4 text-[#E8B4A8]" />
+              <span className="text-xs font-bold text-stone-700 uppercase tracking-wider">Thông tin thiệp</span>
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                Tên người nhận *
+              </label>
+              <input
+                type="text"
+                value={gift.recipientName}
+                onChange={(e) => updateField({ recipientName: e.target.value })}
+                placeholder="Ví dụ: Mẹ yêu, Bạn thân,..."
+                className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-sm transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                Tiêu đề cảm xúc
+              </label>
+              <input
+                type="text"
+                value={gift.title}
+                onChange={(e) => updateField({ title: e.target.value })}
+                placeholder="Ví dụ: Tuổi mới rực rỡ, I Love You,..."
+                className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-sm transition-colors"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-1.5">
+                Lời chúc nhắn gửi *
+              </label>
+              <textarea
+                value={gift.message}
+                onChange={(e) => updateField({ message: e.target.value })}
+                rows={4}
+                placeholder="Viết những lời ấm áp từ trái tim..."
+                className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-sm resize-none transition-colors"
+              />
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm">
+            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2.5">
+              🎵 Nhạc nền đi kèm
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {MUSIC.map((m) => (
+                <button
+                  key={m.id}
+                  onClick={() => updateField({ music: m.id })}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${gift.music === m.id ? "bg-stone-900 border-stone-900 text-white" : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"}`}
+                >
+                  {m.emoji} {m.name}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -935,16 +955,13 @@ function Step4({
           </motion.button>
         </div>
 
-        {/* Right Column: Embedded Phone Preview */}
-        <div className="flex flex-col items-center justify-center p-8 bg-white/40 border border-stone-200/50 rounded-[2.5rem] shadow-inner relative overflow-hidden group">
-          <div className="absolute inset-0 bg-gradient-to-tr from-[#E8B4A8]/5 to-[#D4AF78]/5 pointer-events-none" />
+        {/* Right Column: Template Preview */}
+        <div className="flex flex-col items-center justify-center">
           <p className="text-[9px] font-black text-stone-400 uppercase tracking-[0.2em] mb-5 flex items-center gap-1.5">
             <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
-            MÔ PHỎNG MÀN HÌNH NGƯỜI NHẬN
+            XEM TRƯỚC THIỆP NGƯỜI NHẬN
           </p>
-          <div className="relative transition-transform duration-500 group-hover:scale-[1.01] shadow-[0_20px_50px_rgba(232,180,168,0.2)] rounded-[2.5rem]">
-            <PhonePreview gift={gift} />
-          </div>
+          <DirectPreview gift={gift} />
         </div>
       </div>
     </div>
@@ -1406,7 +1423,7 @@ export function GiftWizard() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Workspace Panel */}
         <div ref={contentRef} className="flex-1 overflow-y-auto bg-[#FAF8F5]">
-          <div className="max-w-xl mx-auto px-4 sm:px-6 py-8 flex flex-col h-full justify-between">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex flex-col h-full justify-between">
             <AnimatePresence mode="wait">
               <motion.div
                 key={step}
