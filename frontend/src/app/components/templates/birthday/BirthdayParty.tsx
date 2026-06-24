@@ -71,7 +71,7 @@ export default function BirthdayPinkRibbon({
   ];
 
   return (
-    <div className="w-full flex justify-center bg-[#1e1a1b] min-h-screen p-0 sm:p-6 select-none items-center">
+    <div className="w-full select-none">
       {/* Khối nhúng tài nguyên và hiệu ứng nâng cao */}
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Cinzel:wght@500;700&family=Montserrat:wght@400;500;600&display=swap');
@@ -99,8 +99,8 @@ export default function BirthdayPinkRibbon({
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `}</style>
 
-      {/* THIẾT BỊ MÔ PHỎNG SMARTPHONE CÓ ĐỘ ĐỔ BÓNG CHÂN THỰC */}
-      <div className="w-full max-w-[412px] h-screen sm:h-[892px] premium-matte-bg overflow-y-auto overflow-x-hidden shadow-[0_25px_60px_-15px_rgba(0,0,0,0.7)] sm:rounded-[40px] relative no-scrollbar border-stone-800/80 sm:border-[10px] flex flex-col justify-between">
+      {/* THIẾP MỜ NỔI (MAIN CARD LAYER) */}
+      <div className="w-full premium-matte-bg overflow-hidden rounded-3xl shadow-2xl relative no-scrollbar flex flex-col justify-between">
         {/* THANH ĐĨA NHẠC GLASSMORPHISM GÓC TRÊN TRÁI */}
         <div className="absolute top-6 left-6 z-30">
           <button
