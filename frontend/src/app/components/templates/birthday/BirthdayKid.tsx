@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion"; // Đảm bảo sử dụng đúng package bạn cài (framer-motion hoặc motion/react)
+import { motion } from "motion/react";
 import {
   Camera,
   Music,
@@ -113,8 +113,7 @@ export default function BirthdayKid({
   ];
 
   return (
-    <div className="w-full flex justify-center bg-stone-900 min-h-screen p-0 sm:p-4 select-none">
-      {/* STYLE HOÀN TOÀN KHÔNG CHỨA LỖI SYNTAX JSX */}
+    <div className="w-full select-none">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Quicksand:wght@300..700&display=swap');
         .font-sans-card { font-family: 'Quicksand', sans-serif; }
@@ -126,8 +125,7 @@ export default function BirthdayKid({
         .vertical-text { writing-mode: vertical-rl; text-orientation: mixed; }
       `}</style>
 
-      {/* CONTAINER CHÍNH */}
-      <div className="w-full max-w-[420px] h-screen sm:h-[860px] card-bg-texture overflow-y-auto overflow-x-hidden shadow-2xl sm:rounded-3xl relative [scrollbar-width:none] [&::-webkit-scrollbar]:hidden font-sans-card text-stone-800">
+      <div className="w-full card-bg-texture overflow-hidden rounded-3xl shadow-2xl relative font-sans-card text-stone-800">
         {/* ĐĨA NHẠC XOAY */}
         <div className="absolute top-6 right-6 z-40">
           <button
