@@ -1,46 +1,45 @@
 import { motion } from "framer-motion";
 import { Heart, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 
-// 🌟 BƯỚC 1: Import file ảnh gấu đã tách nền (.png hoặc .webp) từ thư mục assets
 import bearImg from "../assets/gau.png";
 
 export function Footer() {
   const footerLinks = {
     "Sản Phẩm": [
-      { name: "Tính Năng", href: "#" },
-      { name: "Mẫu Thiết Kế", href: "#" },
-      { name: "Bảng Giá", href: "#" },
-      { name: "Cách Hoạt Động", href: "#" },
-      { name: "Ví Dụ", href: "#" },
-    ],
-    "Công Ty": [
-      { name: "Về Chúng Tôi", href: "#" },
-      { name: "Blog", href: "#" },
-      { name: "Tuyển Dụng", href: "#" },
-      { name: "Bộ Truyền Thông", href: "#" },
-      { name: "Liên Hệ", href: "#" },
-    ],
-    "Hỗ Trợ": [
-      { name: "Trung Tâm Hỗ Trợ", href: "#" },
-      { name: "Video Hướng Dẫn", href: "#" },
-      { name: "Câu Hỏi Thường Gặp", href: "#" },
-      { name: "Tài Liệu API", href: "#" },
-      { name: "Trạng Thái", href: "#" },
+      { name: "Tính Năng", href: "/features" },
+      { name: "Mẫu Thiết Kế", href: "/templates" },
+      { name: "Bảng Giá", href: "/pricing" },
+      { name: "Tạo thiệp", href: "/create" },
     ],
     "Pháp Lý": [
       { name: "Chính Sách Bảo Mật", href: "#" },
       { name: "Điều Khoản Dịch Vụ", href: "#" },
-      { name: "Chính Sách Cookie", href: "#" },
-      { name: "GDPR", href: "#" },
       { name: "Chính Sách Hoàn Tiền", href: "#" },
+    ],
+    "Hỗ Trợ": [
+      { name: "Trung Tâm Hỗ Trợ", href: "#" },
+      { name: "Video Hướng Dẫn", href: "#" },
+      { name: "Câu Hỏi Thường Gặp", href: "/faq" },
+    ],
+    "Công Ty": [
+      { name: "Về Chúng Tôi", href: "/" },
+      { name: "Liên Hệ", href: "/" },
     ],
   };
 
   const socialLinks = [
-    { icon: Instagram, href: "#", label: "Instagram", color: "#E1306C" },
-    { icon: Twitter, href: "#", label: "Twitter", color: "#1DA1F2" },
-    { icon: Facebook, href: "#", label: "Facebook", color: "#1877F2" },
-    { icon: Youtube, href: "#", label: "Youtube", color: "#FF0000" },
+    {
+      icon: Instagram,
+      href: "https://www.facebook.com/hieu.kimxuan.7",
+      label: "Instagram",
+      color: "#E1306C",
+    },
+    {
+      icon: Facebook,
+      href: "https://www.facebook.com/hieu.kimxuan.7",
+      label: "Facebook",
+      color: "#1877F2",
+    },
   ];
 
   return (
