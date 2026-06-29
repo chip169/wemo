@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Camera, Calendar, Sparkles, Send, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Camera, Calendar, Sparkles, Send, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
 
@@ -152,7 +152,7 @@ export default function AnniversaryTimeline({
   return (
     <div className="w-full relative overflow-hidden bg-gradient-to-b from-[#FAF7F4] to-[#EFE9DF] text-[#7C5E43] rounded-3xl min-h-[600px] border-2 border-[#D4C4A8] font-sans shadow-2xl">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
         .font-retro-typewriter { font-family: 'Courier Prime', monospace; }
         .font-retro-serif { font-family: 'Playfair Display', serif; }
         
@@ -248,11 +248,10 @@ export default function AnniversaryTimeline({
             {/* Fine texture particles */}
             <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#8B7355_1px,transparent_1px)] [background-size:20px_20px] z-0" />
 
-            {/* CHƯƠNG 1: TRANG BÌA HỒI KÝ */}
+            {/* TRANG BÌA HỒI KÝ */}
             <section className="text-center z-10 space-y-5">
               <div className="relative inline-block">
                 <Calendar className="w-8 h-8 mx-auto text-[#8B7355] drop-shadow-sm animate-pulse" />
-                <span className="text-[9px] font-retro-typewriter tracking-[0.25em] text-[#8B7355] font-bold block mt-1">CHƯƠNG I</span>
               </div>
               
               <h1 className="text-2xl font-retro-serif font-black text-[#664C35] uppercase tracking-wide">
@@ -289,10 +288,9 @@ export default function AnniversaryTimeline({
               </div>
             </section>
 
-            {/* CHƯƠNG 2: LỜI TỪ TÂM KHẢM */}
+            {/* LỜI TỪ TÂM KHẢM */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-retro-typewriter tracking-[0.25em] text-[#8B7355] font-bold block mb-1">CHƯƠNG II</span>
                 <h3 className="text-xs font-retro-typewriter tracking-[0.2em] uppercase text-[#664C35] font-black">Trang Hồi Ký</h3>
                 <div className="w-8 h-[1px] bg-[#8B7355]/40 mx-auto mt-2" />
               </div>
@@ -314,10 +312,9 @@ export default function AnniversaryTimeline({
               </div>
             </section>
 
-            {/* CHƯƠNG 3: DÒNG THỜI GIAN KÝ ỨC (TIMELINE SECTION) */}
+            {/* DÒNG THỜI GIAN KÝ ỨC (TIMELINE SECTION) */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-retro-typewriter tracking-[0.25em] text-[#8B7355] font-bold block mb-1">CHƯƠNG III</span>
                 <h3 className="text-xs font-retro-typewriter tracking-[0.2em] uppercase text-[#664C35] font-black">Nhật Ký Hành Trình</h3>
                 <div className="w-8 h-[1px] bg-[#8B7355]/40 mx-auto mt-2" />
               </div>
@@ -360,10 +357,9 @@ export default function AnniversaryTimeline({
               </div>
             </section>
 
-            {/* CHƯƠNG 4: THỜI KHẮC TIẾP THEO (COUNTDOWN) */}
+            {/* THỜI KHẮC TIẾP THEO (COUNTDOWN) */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-retro-typewriter tracking-[0.25em] text-[#8B7355] font-bold block mb-1">CHƯƠNG IV</span>
                 <h3 className="text-xs font-retro-typewriter tracking-[0.2em] uppercase text-[#664C35] font-black">Cột Mốc Kế Tiếp</h3>
                 <div className="w-8 h-[1px] bg-[#8B7355]/40 mx-auto mt-2" />
               </div>
@@ -403,10 +399,9 @@ export default function AnniversaryTimeline({
               </div>
             </section>
 
-            {/* CHƯƠNG 5: SỔ LƯU BÚT HÀNH TRÌNH (GUESTBOOK) */}
+            {/* SỔ LƯU BÚT HÀNH TRÌNH (GUESTBOOK) */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-retro-typewriter tracking-[0.25em] text-[#8B7355] font-bold block mb-1">CHƯƠNG V</span>
                 <h3 className="text-xs font-retro-typewriter tracking-[0.2em] uppercase text-[#664C35] font-black">Sổ Lưu Bút Kỷ Niệm</h3>
                 <div className="w-8 h-[1px] bg-[#8B7355]/40 mx-auto mt-2" />
               </div>

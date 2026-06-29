@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Camera, Sparkles, Send, Calendar, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Camera, Sparkles, Send, Calendar, MapPin, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
 
@@ -159,8 +159,8 @@ export default function ChristmasCozy({
   return (
     <div className="w-full relative overflow-hidden bg-gradient-to-b from-[#1A3E2F] to-[#11261B] text-[#FAF7F4] rounded-3xl min-h-[600px] border-4 border-[#D4AF78]/25 font-sans shadow-2xl">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Montserrat:wght@400;650&display=swap');
-        .font-xmas-title { font-family: 'Cinzel', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@400;650&display=swap');
+        .font-xmas-title { font-family: 'Playfair Display', serif; font-weight: 850; }
         .font-xmas-sans { font-family: 'Montserrat', sans-serif; }
         
         /* Fireplace burning animation using gradients */
@@ -260,11 +260,10 @@ export default function ChristmasCozy({
             transition={{ duration: 0.6 }}
             className="w-full flex flex-col justify-start relative px-6 py-10 space-y-12 overflow-y-auto max-h-[85vh]"
           >
-            {/* CHƯƠNG 1: TRANG BÌA GIÁNG SINH */}
+            {/* TRANG BÌA GIÁNG SINH */}
             <section className="text-center z-10 space-y-5">
               <div className="relative inline-block">
                 <span className="text-3xl filter drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]">🎄</span>
-                <span className="text-[9px] font-xmas-sans tracking-[0.25em] text-[#D4AF78] font-bold block mt-2">CHƯƠNG I</span>
               </div>
               
               <h1 className="text-2xl font-xmas-title font-extrabold tracking-widest text-white uppercase">
@@ -305,10 +304,9 @@ export default function ChristmasCozy({
               </div>
             </section>
 
-            {/* CHƯƠNG 2: LỜI TỪ TÂM KHẢM */}
+            {/* LỜI TỪ TÂM KHẢM */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-xmas-sans tracking-[0.25em] text-[#D4AF78] font-bold block mb-1">CHƯƠNG II</span>
                 <h3 className="text-xs font-xmas-sans tracking-[0.2em] uppercase text-white font-bold">Thư Chúc Noel</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>
@@ -332,10 +330,9 @@ export default function ChristmasCozy({
               </div>
             </section>
 
-            {/* CHƯƠNG 3: NHỮNG KỶ NIỆM MÙA ĐÔNG */}
+            {/* NHỮNG KỶ NIỆM MÙA ĐÔNG */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-xmas-sans tracking-[0.25em] text-[#D4AF78] font-bold block mb-1">CHƯƠNG III</span>
                 <h3 className="text-xs font-xmas-sans tracking-[0.2em] uppercase text-white font-bold">Thước Phim Giáng Sinh</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>
@@ -374,10 +371,9 @@ export default function ChristmasCozy({
               </div>
             </section>
 
-            {/* CHƯƠNG 4: ĐÊM TIỆC SUM VẦY (COUNTDOWN) */}
+            {/* ĐÊM TIỆC SUM VẦY (COUNTDOWN) */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-xmas-sans tracking-[0.25em] text-[#D4AF78] font-bold block mb-1">CHƯƠNG IV</span>
                 <h3 className="text-xs font-xmas-sans tracking-[0.2em] uppercase text-white font-bold">Thời Khắc Noel</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>
@@ -416,24 +412,12 @@ export default function ChristmasCozy({
                   </div>
                 </div>
 
-                {/* Map URL button */}
-                <a
-                  href="https://maps.google.com/?q=CineLove+Hotel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2 bg-gradient-to-r from-[#D32F2F] to-[#9B1C31] text-white border border-[#D4AF78]/35 font-xmas-sans text-[10px] font-bold tracking-widest flex items-center justify-center gap-1.5 shadow-md rounded-xl transition-all"
-                >
-                  <MapPin className="w-3.5 h-3.5" />
-                  CHỈ ĐƯỜNG GPS ĐẾN TIỆC
-                  <ExternalLink className="w-3 h-3" />
-                </a>
               </div>
             </section>
 
-            {/* CHƯƠNG 5: HỘP THƯ BẮC CỰC (GUESTBOOK) */}
+            {/* HỘP THƯ BẮC CỰC (GUESTBOOK) */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-xmas-sans tracking-[0.25em] text-[#D4AF78] font-bold block mb-1">CHƯƠNG V</span>
                 <h3 className="text-xs font-xmas-sans tracking-[0.2em] uppercase text-white font-bold">Thư Gửi Ông Già Noel</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>

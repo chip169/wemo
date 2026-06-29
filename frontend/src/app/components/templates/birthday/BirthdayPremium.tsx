@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Crown, Camera, Sparkles, MessageSquare, Send, Heart, Calendar, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Crown, Camera, Sparkles, MessageSquare, Send, Heart, Calendar, MapPin, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
 
@@ -132,10 +132,10 @@ export default function BirthdayPremium({
   return (
     <div className="w-full relative overflow-hidden bg-[#0c0c0c] text-[#F5EDE4] rounded-3xl min-h-[600px] border border-amber-950 font-luxury shadow-2xl">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap');
-        .font-luxury-serif { font-family: 'Cinzel', serif; }
-        .font-luxury-display { font-family: 'Cinzel Decorative', serif; }
-        .font-luxury-body { font-family: 'Cormorant Garamond', serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Lora:ital,wght@0,400..700;1,400..700&family=Montserrat:wght@300;450;700;900&display=swap');
+        .font-luxury-serif { font-family: 'Playfair Display', serif; }
+        .font-luxury-display { font-family: 'Playfair Display', serif; font-weight: 800; font-style: italic; }
+        .font-luxury-body { font-family: 'Lora', serif; }
         
         .gold-border {
           border: 1px solid transparent;
@@ -243,11 +243,10 @@ export default function BirthdayPremium({
             {/* Sparkles particle background */}
             <div className="absolute inset-0 pointer-events-none opacity-20 bg-[radial-gradient(#D4AF78_1px,transparent_1px)] [background-size:24px_24px] z-0" />
 
-            {/* CHƯƠNG 1: TRANG BÌA CẢM XÚC */}
+            {/* TRANG BÌA CẢM XÚC */}
             <section className="text-center z-10 space-y-5">
               <div className="relative inline-block">
                 <Crown className="w-10 h-10 mx-auto text-[#D4AF78] mb-1 drop-shadow-[0_0_8px_rgba(212,175,55,0.6)] animate-pulse" />
-                <span className="text-[9px] font-luxury-serif tracking-[0.3em] text-[#D4AF78] block">CHƯƠNG I</span>
               </div>
               
               <h1 className="text-2xl font-luxury-display tracking-widest uppercase leading-snug text-white">
@@ -286,10 +285,9 @@ export default function BirthdayPremium({
               </div>
             </section>
 
-            {/* CHƯƠNG 2: BỨC THƯ TỪ TÂM KHẢM */}
+            {/* BỨC THƯ TỪ TÂM KHẢM */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-luxury-serif tracking-[0.3em] text-[#D4AF78] block mb-1">CHƯƠNG II</span>
                 <h3 className="text-xs font-luxury-serif tracking-[0.2em] uppercase text-white">Lời Chúc Tốt Đẹp</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>
@@ -313,10 +311,9 @@ export default function BirthdayPremium({
               </div>
             </section>
 
-            {/* CHƯƠNG 3: NHỮNG THƯỚC PHIM KỶ NIỆM */}
+            {/* NHỮNG THƯỚC PHIM KỶ NIỆM */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-luxury-serif tracking-[0.3em] text-[#D4AF78] block mb-1">CHƯƠNG III</span>
                 <h3 className="text-xs font-luxury-serif tracking-[0.2em] uppercase text-white">Thước Phim Thời Gian</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>
@@ -355,10 +352,9 @@ export default function BirthdayPremium({
               </div>
             </section>
 
-            {/* CHƯƠNG 4: THỜI GIAN & KHÔNG GIAN HẸN ƯỚC */}
+            {/* THỜI GIAN & KHÔNG GIAN HẸN ƯỚC */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-luxury-serif tracking-[0.3em] text-[#D4AF78] block mb-1">CHƯƠNG IV</span>
                 <h3 className="text-xs font-luxury-serif tracking-[0.2em] uppercase text-white">Đại Tiệc Hoàng Gia</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>
@@ -409,24 +405,12 @@ export default function BirthdayPremium({
                   </div>
                 </div>
 
-                {/* Maps redirection */}
-                <a
-                  href="https://maps.google.com/?q=CineLove+Hotel"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#BF953F] to-[#AA771C] text-black font-luxury-serif text-[10px] font-bold tracking-widest flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition-transform"
-                >
-                  <MapPin className="w-3.5 h-3.5" />
-                  CHỈ ĐƯỜNG BẢN ĐỒ
-                  <ExternalLink className="w-3 h-3" />
-                </a>
               </div>
             </section>
 
-            {/* CHƯƠNG 5: SỔ VÀNG LỜI CHÚC (GUESTBOOK) */}
+            {/* SỔ VÀNG LỜI CHÚC (GUESTBOOK) */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-luxury-serif tracking-[0.3em] text-[#D4AF78] block mb-1">CHƯƠNG V</span>
                 <h3 className="text-xs font-luxury-serif tracking-[0.2em] uppercase text-white">Sổ Vàng Lời Chúc VIP</h3>
                 <div className="w-8 h-[1px] bg-[#D4AF78]/40 mx-auto mt-2" />
               </div>

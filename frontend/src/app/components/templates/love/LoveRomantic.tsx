@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Heart, Camera, Sparkles, Send, Calendar, MapPin, Clock, ExternalLink } from "lucide-react";
+import { Heart, Camera, Sparkles, Send, Calendar, MapPin, Clock } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
 
@@ -147,8 +147,8 @@ export default function LoveRomantic({
   return (
     <div className="w-full relative overflow-hidden bg-gradient-to-b from-[#FFEBEB] to-[#FFCCD5] text-rose-950 rounded-3xl min-h-[600px] border border-rose-200 font-serif shadow-2xl">
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Great+Vibes&display=swap');
-        .font-romantic-title { font-family: 'Great Vibes', cursive; }
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Dancing+Script:wght@400..700&display=swap');
+        .font-romantic-title { font-family: 'Dancing Script', cursive; }
         .font-romantic-serif { font-family: 'Playfair Display', serif; }
         
         .love-wax-seal {
@@ -251,11 +251,10 @@ export default function LoveRomantic({
               ))}
             </div>
 
-            {/* CHƯƠNG 1: TRANG BÌA HẠNH PHÚC */}
+            {/* TRANG BÌA HẠNH PHÚC */}
             <section className="text-center z-10 space-y-5">
               <div className="relative inline-block">
                 <Heart className="w-8 h-8 mx-auto text-rose-600 fill-rose-500 drop-shadow-[0_0_8px_rgba(225,29,72,0.4)] animate-pulse" />
-                <span className="text-[9px] font-sans tracking-[0.25em] text-rose-500 font-bold block mt-1">CHƯƠNG I</span>
               </div>
               
               <h1 className="text-3xl font-romantic-title text-rose-900 leading-none">
@@ -291,10 +290,9 @@ export default function LoveRomantic({
               </div>
             </section>
 
-            {/* CHƯƠNG 2: LỜI TỪ TÂM KHẢM */}
+            {/* LỜI TỪ TÂM KHẢM */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-sans tracking-[0.25em] text-rose-500 font-bold block mb-1">CHƯƠNG II</span>
                 <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-rose-800 font-black">Bức Thư Tình</h3>
                 <div className="w-8 h-[1px] bg-rose-350 mx-auto mt-2" />
               </div>
@@ -318,10 +316,9 @@ export default function LoveRomantic({
               </div>
             </section>
 
-            {/* CHƯƠNG 3: NHỮNG KỶ NIỆM NGỌT NGÀO */}
+            {/* NHỮNG KỶ NIỆM NGỌT NGÀO */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-sans tracking-[0.25em] text-rose-500 font-bold block mb-1">CHƯƠNG III</span>
                 <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-rose-800 font-black">Thước Phim Đôi Ta</h3>
                 <div className="w-8 h-[1px] bg-rose-350 mx-auto mt-2" />
               </div>
@@ -360,10 +357,9 @@ export default function LoveRomantic({
               </div>
             </section>
 
-            {/* CHƯƠNG 4: HÀNH TRÌNH ĐÃ QUA */}
+            {/* HÀNH TRÌNH ĐÃ QUA */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-sans tracking-[0.25em] text-rose-500 font-bold block mb-1">CHƯƠNG IV</span>
                 <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-rose-800 font-black">Ngày Yêu Thương</h3>
                 <div className="w-8 h-[1px] bg-rose-350 mx-auto mt-2" />
               </div>
@@ -398,10 +394,9 @@ export default function LoveRomantic({
               </div>
             </section>
 
-            {/* CHƯƠNG 5: HẸN ƯỚC NƠI HẠN GẶP */}
+            {/* HẸN ƯỚC NƠI HẠN GẶP */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-sans tracking-[0.25em] text-rose-500 font-bold block mb-1">CHƯƠNG V</span>
                 <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-rose-800 font-black">Buổi Hẹn Hò Đặc Biệt</h3>
                 <div className="w-8 h-[1px] bg-rose-350 mx-auto mt-2" />
               </div>
@@ -429,24 +424,12 @@ export default function LoveRomantic({
                   </div>
                 </div>
 
-                {/* Map URL button */}
-                <a
-                  href="https://maps.google.com/?q=Central+Landmark+CineLove"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2 bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-sans text-[10px] font-bold tracking-widest flex items-center justify-center gap-1.5 shadow-md rounded-xl transition-all"
-                >
-                  <MapPin className="w-3.5 h-3.5" />
-                  CHỈ ĐƯỜNG ĐẾN ĐIỂM HẸN
-                  <ExternalLink className="w-3 h-3" />
-                </a>
               </div>
             </section>
 
             {/* CHƯƠNG 6: SỔ KÝ ỨC LỜI YÊU THƯƠNG */}
             <section className="z-10 space-y-4">
               <div className="text-center">
-                <span className="text-[9px] font-sans tracking-[0.25em] text-rose-500 font-bold block mb-1">CHƯƠNG VI</span>
                 <h3 className="text-xs font-sans tracking-[0.2em] uppercase text-rose-800 font-black">Lời Chúc Tình Yêu</h3>
                 <div className="w-8 h-[1px] bg-rose-350 mx-auto mt-2" />
               </div>
