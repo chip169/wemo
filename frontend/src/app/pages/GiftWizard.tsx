@@ -25,14 +25,11 @@ import { Link } from "react-router";
 import confetti from "canvas-confetti";
 
 // ─── Import Template Components ──────────────────────────────────────────────
-import BirthdayParty from "../components/templates/birthday/BirthdayParty";
-import BirthdayMinimal from "../components/templates/birthday/BirthdayMinimal";
-import BirthdayKid from "../components/templates/birthday/BirthdayKid";
-import BirthdayRetro from "../components/templates/birthday/BirthdayRetro";
-import BirthdayLuxury from "../components/templates/birthday/BirthdayLuxury";
+import BirthdayPremium from "../components/templates/birthday/BirthdayPremium";
 import LoveRomantic from "../components/templates/love/LoveRomantic";
 import ChristmasCozy from "../components/templates/christmas/ChristmasCozy";
 import AnniversaryTimeline from "../components/templates/anniversary/AnniversaryTimeline";
+
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -93,44 +90,8 @@ const THEMES = [
 
 const TEMPLATES = [
   {
-    id: "sinh-nhat-party",
-    name: "Tiệc Đêm Sôi Động",
-    emoji: "🥳",
-    color: "#FF6B8A",
-    light: "#FFE8ED",
-    img: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400&q=80",
-    theme: "sinh-nhat",
-  },
-  {
-    id: "sinh-nhat-toi-gian",
-    name: "Tối Giản Sâu Lắng",
-    emoji: "🌿",
-    color: "#C4776A",
-    light: "#F5EDE4",
-    img: "https://images.unsplash.com/photo-1504196606672-aef5c9cefc92?w=400&q=80",
-    theme: "sinh-nhat",
-  },
-  {
-    id: "sinh-nhat-con-nit",
-    name: "Kẹo Ngọt Đáng Yêu",
-    emoji: "🧸",
-    color: "#2D6A0E",
-    light: "#E8F5E3",
-    img: "https://images.unsplash.com/photo-1516627145497-ae6968895b74?w=400&q=80",
-    theme: "sinh-nhat",
-  },
-  {
-    id: "sinh-nhat-retro",
-    name: "Máy Nhắn Tin Cổ Điển",
-    emoji: "📟",
-    color: "#FF6A88",
-    light: "#fffdf9",
-    img: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80",
-    theme: "sinh-nhat",
-  },
-  {
-    id: "sinh-nhat-sang-trong",
-    name: "Thượng Lưu Ánh Kim",
+    id: "sinh-nhat-premium",
+    name: "Sinh Nhật Hoàng Gia Premium",
     emoji: "👑",
     color: "#D4AF78",
     light: "#2c2519",
@@ -200,16 +161,8 @@ export function RenderLiveTemplate({
   };
 
   switch (gift.templateId) {
-    case "sinh-nhat-party":
-      return <BirthdayParty {...props} />;
-    case "sinh-nhat-toi-gian":
-      return <BirthdayMinimal {...props} />;
-    case "sinh-nhat-con-nit":
-      return <BirthdayKid {...props} />;
-    case "sinh-nhat-retro":
-      return <BirthdayRetro {...props} />;
-    case "sinh-nhat-sang-trong":
-      return <BirthdayLuxury {...props} />;
+    case "sinh-nhat-premium":
+      return <BirthdayPremium {...props} />;
     case "love-romantic":
       return <LoveRomantic {...props} />;
     case "anniversary-timeline":

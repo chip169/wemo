@@ -1,0 +1,17 @@
+# Chặn các thư mục thư viện tải về (Cực kỳ nặng)
+node_modules/
+vendor/
+.venv/
+env/
+
+# Chặn các thư mục build / output đầu ra
+dist/
+build/
+out/
+.next/
+
+# Chặn dữ liệu hệ thống và mã nguồn cũ
+.git/
+.idea/
+.vscode/
+*.log
