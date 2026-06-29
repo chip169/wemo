@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Camera, Calendar, Sparkles, Send, Clock } from "lucide-react";
+import { Camera, Calendar, Sparkles, Send, Clock, Play, Pause } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import confetti from "canvas-confetti";
+import { useRef } from "react";
 
 type TemplateProps = {
   recipientName: string;
@@ -25,6 +25,82 @@ type TimelineComment = {
   time: string;
 };
 
+function AudioPlayerWidget({ src }: { src: string }) {
+  const [playing, setPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+  }, []);
+
+  const toggle = () => {
+    if (!audioRef.current) {
+      audioRef.current = new Audio(src);
+      audioRef.current.onended = () => setPlaying(false);
+    }
+    if (playing) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(console.error);
+    }
+    setPlaying(!playing);
+  };
+
+  return (
+    <div className="p-4 rounded-2xl bg-white/40 border border-amber-900/10 backdrop-blur-md flex items-center gap-4 text-left mt-3">
+      <button
+        type="button"
+        onClick={toggle}
+        className="w-10 h-10 rounded-full bg-stone-900 text-white flex items-center justify-center shrink-0 shadow-md active:scale-95 transition-transform"
+      >
+        {playing ? <Pause className="w-4 h-4 text-white fill-white" /> : <Play className="w-4 h-4 text-white fill-white ml-0.5" />}
+      </button>
+      <div className="flex-1">
+        <p className="text-[9px] font-sans font-bold tracking-widest text-stone-500 uppercase">Lời nhắn âm thanh</p>
+        <p className="text-[11px] text-stone-950 font-bold truncate">Bấm để phát ghi âm chúc mừng</p>
+      </div>
+      {playing && (
+        <div className="flex items-center gap-0.5 h-3">
+          <div className="w-[2px] bg-stone-850 h-full animate-bounce" style={{ animationDelay: "0.1s" }} />
+          <div className="w-[2px] bg-stone-850 h-2/3 animate-bounce" style={{ animationDelay: "0.2s" }} />
+          <div className="w-[2px] bg-stone-850 h-full animate-bounce" style={{ animationDelay: "0.3s" }} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VideoPlayerWidget({ src }: { src: string }) {
+  const isYouTube = src.includes("youtube.com") || src.includes("youtu.be");
+  let embedUrl = src;
+  if (isYouTube) {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = src.match(regExp);
+    if (match && match[2].length === 11) {
+      embedUrl = `https://www.youtube.com/embed/${match[2]}`;
+    }
+  }
+
+  return (
+    <div className="rounded-2xl overflow-hidden border border-amber-900/10 bg-black/5 aspect-video w-full relative shadow-md mt-3">
+      {isYouTube ? (
+        <iframe
+          src={embedUrl}
+          className="w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+        />
+      ) : (
+        <video src={src} controls className="w-full h-full object-cover" />
+      )}
+    </div>
+  );
+}
+
 export default function AnniversaryTimeline({
   recipientName,
   title,
@@ -32,7 +108,8 @@ export default function AnniversaryTimeline({
   photos = [],
   isEditing = false,
   onUpdate,
-}: TemplateProps) {
+  gift,
+}: TemplateProps & { gift?: any }) {
   const [isOpen, setIsOpen] = useState(isEditing ? true : false);
   const [likes, setLikes] = useState(77);
   const [hasLiked, setHasLiked] = useState(false);
@@ -310,6 +387,14 @@ export default function AnniversaryTimeline({
                   </p>
                 )}
               </div>
+
+              {/* Optional Voice / Video Greeting */}
+              {((gift?.hasVoice && gift?.voiceUrl) || (gift?.hasVideo && gift?.videoUrl)) && (
+                <div className="space-y-3 mt-4">
+                  {gift.hasVoice && gift.voiceUrl && <AudioPlayerWidget src={gift.voiceUrl} />}
+                  {gift.hasVideo && gift.videoUrl && <VideoPlayerWidget src={gift.videoUrl} />}
+                </div>
+              )}
             </section>
 
             {/* DÒNG THỜI GIAN KÝ ỨC (TIMELINE SECTION) */}
