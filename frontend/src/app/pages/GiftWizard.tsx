@@ -26,10 +26,9 @@ import { Link } from "react-router";
 import confetti from "canvas-confetti";
 
 // ─── Import Template Components ──────────────────────────────────────────────
-import BirthdayPremium from "../components/templates/birthday/BirthdayPremium";
-import LoveRomantic from "../components/templates/love/LoveRomantic";
-import ChristmasCozy from "../components/templates/christmas/ChristmasCozy";
-import AnniversaryTimeline from "../components/templates/anniversary/AnniversaryTimeline";
+import { BirthdayCanvas3D } from "../components/gift3d/BirthdayCanvas3D";
+import { LoveCanvas3D } from "../components/gift3d/LoveCanvas3D";
+import { GalaxyCanvas3D } from "../components/gift3d/GalaxyCanvas3D";
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -152,33 +151,19 @@ export function RenderLiveTemplate({
   isEditing?: boolean;
   onUpdate?: (fields: Partial<GiftData>) => void;
 }) {
-  const props = {
-    recipientName: gift.recipientName,
-    title: gift.title,
-    message: gift.message,
-    photos: gift.photos,
-    isEditing,
-    onUpdate,
-    gift,
-  };
+  const theme = gift.theme;
 
-  switch (gift.templateId) {
-    case "sinh-nhat-premium":
-      return <BirthdayPremium {...props} />;
-    case "love-romantic":
-      return <LoveRomantic {...props} />;
-    case "anniversary-timeline":
-      return <AnniversaryTimeline {...props} />;
-    case "christmas-cozy":
-      return <ChristmasCozy {...props} />;
-    default:
-      return (
-        <div className="w-full h-full p-6 flex flex-col justify-center items-center text-center bg-stone-100 text-stone-400">
-          <Sparkles className="w-8 h-8 mb-2 animate-pulse" />
-          <p className="text-xs font-medium">Vui lòng chọn mẫu thiệp ở Bước 1</p>
-        </div>
-      );
+  if (theme === "sinh-nhat" || gift.templateId === "sinh-nhat-premium") {
+    return <BirthdayCanvas3D gift={gift} />;
   }
+  if (theme === "tinh-yeu" || gift.templateId === "love-romantic" || gift.templateId === "christmas-cozy") {
+    return <LoveCanvas3D gift={gift} />;
+  }
+  if (theme === "ky-niem" || gift.templateId === "anniversary-timeline") {
+    return <GalaxyCanvas3D gift={gift} />;
+  }
+
+  return <LoveCanvas3D gift={gift} />;
 }
 
 // ─── Direct Preview (no phone shell) ─────────────────────────────────────────
@@ -193,14 +178,12 @@ function DirectPreview({
   onUpdate?: (fields: Partial<GiftData>) => void;
 }) {
   return (
-    <div className="w-full rounded-2xl overflow-hidden border border-stone-200/60 shadow-lg bg-white">
-      <div className="w-full overflow-y-auto max-h-[600px] no-scrollbar">
-        <RenderLiveTemplate
-          gift={gift}
-          isEditing={isEditing}
-          onUpdate={onUpdate}
-        />
-      </div>
+    <div className="w-full h-[650px] relative rounded-2xl overflow-hidden border border-stone-200/60 shadow-lg bg-white">
+      <RenderLiveTemplate
+        gift={gift}
+        isEditing={isEditing}
+        onUpdate={onUpdate}
+      />
     </div>
   );
 }

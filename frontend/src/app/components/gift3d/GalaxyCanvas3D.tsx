@@ -110,7 +110,7 @@ export function GalaxyCanvas3D({ gift }: { gift: any }) {
   };
 
   return (
-    <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-[#030712] flex items-center justify-center">
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#030712] flex items-center justify-center">
       {/* 3D R3F Canvas */}
       <div className="absolute inset-0 w-full h-full pointer-events-auto">
         <Canvas camera={{ position: [0, 6, 20], fov: 60 }} gl={{ antialias: true }}>
