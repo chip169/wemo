@@ -638,13 +638,17 @@ app.get("/api/templates", async (req, res) => {
 
 app.post("/api/templates", authMiddleware, async (req, res) => {
   const { id, name, category, categoryLabel, preview, status, videoUrl, sampleMessage, photos, features } = req.body;
-  if (!id || !name || !category || !categoryLabel || !preview) {
+  if (!name || !category || !categoryLabel || !preview) {
     return res.status(400).json({ error: "Vui lòng nhập đầy đủ các trường thông tin mẫu thiết kế." });
   }
 
+  // Auto-generate random ID if not provided
+  const crypto = require("crypto");
+  const templateId = id || ("tpl-" + crypto.randomBytes(6).toString("hex"));
+
   try {
     const newTemplate = {
-      id,
+      id: templateId,
       name,
       category,
       categoryLabel,
@@ -662,7 +666,7 @@ app.post("/api/templates", authMiddleware, async (req, res) => {
       await templateDoc.save();
     } else {
       const list = await getTemplates();
-      if (list.some((t) => t.id === id)) {
+      if (list.some((t) => t.id === templateId)) {
         return res.status(400).json({ error: "Mẫu thiết kế này đã tồn tại." });
       }
       list.push(newTemplate);
