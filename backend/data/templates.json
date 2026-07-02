@@ -1,47 +1,62 @@
 [
   {
-    "id": "TPL-001",
-    "name": "Sinh Nhật Rực Rỡ",
-    "category": "celebration",
-    "categoryLabel": "Sinh nhật & Lễ hội",
-    "usageCount": 435,
-    "status": "active",
-    "preview": "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400"
-  },
-  {
-    "id": "TPL-002",
-    "name": "Kỷ Ức Lãng Mạn",
+    "id": "love-romantic",
+    "name": "Mãi Yêu Thương (Mạng Lưới 3D)",
     "category": "romance",
     "categoryLabel": "Tình yêu & Lãng mạn",
     "usageCount": 378,
     "status": "active",
-    "preview": "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400"
+    "preview": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+    "videoUrl": "",
+    "sampleMessage": "Anh/Em yêu, mỗi khoảnh khắc bên em/anh đều là một trang ký ức đẹp nhất trong cuốn sách cuộc đời. Cảm ơn em/anh đã là ánh nắng của ngày tôi, là bến bờ của những giông tố. Tôi yêu em/anh mãi mãi.",
+    "photos": [
+      "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&h=300&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1551850985-5e6cd6e2dd8c?w=400&h=300&fit=crop&auto=format"
+    ],
+    "features": [
+      "Tối đa 6 ảnh kỷ niệm",
+      "Mạng lưới trái tim rơi",
+      "Nhạc nền tình yêu",
+      "Dòng thời gian hẹn hò",
+      "Hộp thư bí mật"
+    ]
   },
   {
-    "id": "TPL-003",
-    "name": "Giáng Sinh Ấm Áp",
-    "category": "holiday",
-    "categoryLabel": "Ngày lễ & Giáng Sinh",
-    "usageCount": 289,
+    "id": "solid-heart",
+    "name": "Mẫu Tinh Cầu 3D Vũ Trụ",
+    "category": "romance",
+    "categoryLabel": "Tình yêu & Lãng mạn",
+    "usageCount": 12,
     "status": "active",
-    "preview": "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=400"
-  },
-  {
-    "id": "TPL-004",
-    "name": "Hành Trình Kỷ Niệm",
-    "category": "milestone",
-    "categoryLabel": "Kỷ niệm",
-    "usageCount": 245,
-    "status": "active",
-    "preview": "https://images.unsplash.com/photo-1523521803700-b3bcaeab0150?w=400"
-  },
-  {
-    "id": "TPL-005",
-    "name": "Ngày Tốt Nghiệp",
-    "category": "achievement",
-    "categoryLabel": "Thành tựu",
-    "usageCount": 187,
-    "status": "archived",
-    "preview": "https://images.unsplash.com/photo-1623461487986-9400110de28e?w=400"
+    "preview": "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=400",
+    "videoUrl": "",
+    "sampleMessage": "Em ơi, một năm bên nhau là một năm anh cảm thấy mình là người hạnh phúc nhất thế giới. Cảm ơn em đã bước vào cuộc sống của anh và vẽ nên bức tranh tình yêu lấp lánh như ngàn tinh tú. Anh yêu em mãi mãi! 💖",
+    "photos": [
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+      "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=400&q=80",
+      "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80",
+      "https://images.unsplash.com/photo-1464746133101-a2c3f88e0dd9?w=400&q=80",
+      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
+      "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=400&q=80",
+      "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400&q=80",
+      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80",
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80",
+      "https://images.unsplash.com/photo-1501901604252-bb626cc1d545?w=400&q=80",
+      "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80",
+      "https://images.unsplash.com/photo-1494972308805-463bc619d34e?w=400&q=80",
+      "https://images.unsplash.com/photo-1507504038482-7621c3c786d7?w=400&q=80"
+    ],
+    "features": [
+      "Tối đa 16 ảnh kỷ niệm",
+      "Hành tinh tinh cầu 3D tương tác",
+      "Sao băng rơi đa góc luân phiên",
+      "Vành đai Saturn hạt sao",
+      "Nhạc nền lãng mạn"
+    ]
   }
 ]

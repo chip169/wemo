@@ -1,33 +1,11 @@
 import { useParams, Link } from "react-router";
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Heart, Music, Image, Mic, Clock, Sparkles, Play, Star } from "lucide-react";
+import { ArrowLeft, Heart, Music, Image, Mic, Clock, Sparkles, Play, Star, Video } from "lucide-react";
 
 /* ─── Template data ─────────────────────────────────────────── */
 
 const TEMPLATES: Record<string, TemplateConfig> = {
-  "sinh-nhat": {
-    slug: "sinh-nhat",
-    title: "Sinh Nhật Rực Rỡ",
-    subtitle: "Kỷ niệm thêm một năm tuổi với niềm vui và confetti rực rỡ",
-    bg: "linear-gradient(135deg, #FF9A9E 0%, #FECFEF 50%, #FFD4D4 100%)",
-    cardBg: "#FFF0F3",
-    accent: "#FF6B8A",
-    accentLight: "#FFD4D4",
-    emoji: "🎂",
-    confettiColors: ["#FF6B8A", "#FFD4D4", "#FF9A9E", "#FECFEF", "#FFB3BA"],
-    heroImg: "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=1200&h=700&fit=crop&auto=format",
-    photos: [
-      "https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&auto=format",
-    ],
-    sampleMessage: "Chúc mừng sinh nhật người đặc biệt nhất cuộc đời tôi! 🎉 Mỗi năm qua đi, chúng ta lại có thêm những ký ức tuyệt vời. Chúc bạn luôn vui tươi, hạnh phúc và tỏa sáng như chính con người bạn.",
-    sender: "Từ người luôn yêu quý bạn ❤️",
-    features: ["Pháo hoa confetti tự động", "Nhạc chúc mừng sinh nhật", "Slideshow ảnh kỷ niệm", "Đếm ngược sinh nhật", "Tin nhắn giọng nói cá nhân"],
-    mood: "Vui tươi · Rực rỡ · Đầy năng lượng",
-  },
   "lang-man": {
     slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
@@ -47,96 +25,42 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     ],
     sampleMessage: "Anh/Em yêu, mỗi khoảnh khắc bên em/anh đều là một trang ký ức đẹp nhất trong cuốn sách cuộc đời. Cảm ơn em/anh đã là ánh nắng của ngày tôi, là bến bờ của những giông tố. Tôi yêu em/anh mãi mãi.",
     sender: "Của anh/em, người luôn bên cạnh 💕",
-    features: ["Trái tim rơi lãng mạn", "Nhạc nền tình yêu", "Dòng thời gian hẹn hò", "Ảnh đôi lãng mạn", "Hộp thư bí mật"],
+    features: ["Tối đa 6 ảnh kỷ niệm", "Mạng lưới trái tim rơi", "Nhạc nền tình yêu", "Dòng thời gian hẹn hò", "Hộp thư bí mật"],
     mood: "Lãng mạn · Ấm áp · Chân thành",
   },
-  "giang-sinh": {
-    slug: "giang-sinh",
-    title: "Giáng Sinh Diệu Kỳ",
-    subtitle: "Chia sẻ sự ấm áp và kỳ diệu của mùa lễ hội với những người thân yêu",
-    bg: "linear-gradient(135deg, #2D5016 0%, #4A7C2F 40%, #D4AF78 100%)",
-    cardBg: "#F5F9F2",
-    accent: "#2D5016",
-    accentLight: "#D4AF78",
-    emoji: "🎄",
-    confettiColors: ["#D4AF78", "#2D5016", "#FF4444", "#FFFFFF", "#4A7C2F"],
-    heroImg: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=1200&h=700&fit=crop&auto=format",
+  "tinh-cau-3d": {
+    slug: "tinh-cau-3d",
+    title: "Mẫu Tinh Cầu 3D Vũ Trụ",
+    subtitle: "Thiết kế tương tác không gian vũ trụ tinh vân lấp lánh và ảnh bay lượn vòng tròn",
+    bg: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
+    cardBg: "#0D0214",
+    accent: "#E11D48",
+    accentLight: "#FF80BF",
+    emoji: "🪐",
+    confettiColors: ["#FF1E82", "#E11D48", "#FFFFFF", "#8B5CF6", "#38BDF8"],
+    heroImg: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=1200&h=700&fit=crop&auto=format",
     photos: [
-      "https://images.unsplash.com/photo-1543584752-0d31a4b3a49e?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1512389142860-9c449e58a543?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1510771463146-e89e6e86560e?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?w=400&h=300&fit=crop&auto=format",
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+      "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=400&q=80",
+      "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80",
+      "https://images.unsplash.com/photo-1464746133101-a2c3f88e0dd9?w=400&q=80",
+      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
+      "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=400&q=80",
+      "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400&q=80",
+      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80",
+      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80",
+      "https://images.unsplash.com/photo-1501901604252-bb626cc1d545?w=400&q=80",
+      "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80",
+      "https://images.unsplash.com/photo-1494972308805-463bc619d34e?w=400&q=80",
+      "https://images.unsplash.com/photo-1507504038482-7621c3c786d7?w=400&q=80"
     ],
-    sampleMessage: "Kính chúc gia đình và bạn bè một mùa Giáng Sinh tràn đầy yêu thương, ấm áp và diệu kỳ! 🎁 Mong rằng năm mới sẽ mang đến thật nhiều niềm vui, sức khỏe và hạnh phúc cho tất cả mọi người.",
-    sender: "Với tình yêu thương mùa Giáng Sinh ❄️",
-    features: ["Tuyết rơi hoạt ảnh", "Nhạc Giáng Sinh cổ điển", "Đếm ngược lễ hội", "Thiệp Noel tùy chỉnh", "Hộp quà bí ẩn"],
-    mood: "Ấm áp · Kỳ diệu · Lễ hội",
-  },
-  "tot-nghiep": {
-    slug: "tot-nghiep",
-    title: "Ngày Tốt Nghiệp",
-    subtitle: "Ghi dấu thành tích và những khởi đầu mới đầy hứng khởi cùng người thân yêu",
-    bg: "linear-gradient(135deg, #6B4FA0 0%, #9B87C4 50%, #B8A4D4 100%)",
-    cardBg: "#F7F5FB",
-    accent: "#6B4FA0",
-    accentLight: "#B8A4D4",
-    emoji: "🎓",
-    confettiColors: ["#B8A4D4", "#6B4FA0", "#9B87C4", "#D4AF78", "#F7F5FB"],
-    heroImg: "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=1200&h=700&fit=crop&auto=format",
-    photos: [
-      "https://images.unsplash.com/photo-1627556704302-624286467c65?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1606761568499-6d2451b23c66?w=400&h=300&fit=crop&auto=format",
-    ],
-    sampleMessage: "Chúc mừng tốt nghiệp! 🎓 Bốn năm đại học với biết bao nỗ lực, khó khăn và kỷ niệm đẹp. Hôm nay là ngày kết thúc một chương và mở ra vô số trang mới. Tương lai đang chờ đón bạn với tất cả tài năng và nhiệt huyết!",
-    sender: "Tự hào về bạn mỗi ngày 🌟",
-    features: ["Hành trình 4 năm đại học", "Lời nhắn từ thầy cô & bạn bè", "Album kỷ niệm trường học", "Pháo hoa học thuật", "Lời chúc cho tương lai"],
-    mood: "Tự hào · Hứng khởi · Hy vọng",
-  },
-  "chao-don-be": {
-    slug: "chao-don-be",
-    title: "Chào Đón Em Bé",
-    subtitle: "Ghi lại những khoảnh khắc đầu tiên quý giá và ký ức cột mốc đáng nhớ",
-    bg: "linear-gradient(135deg, #A8D4E8 0%, #C5E8F5 50%, #E8F7FF 100%)",
-    cardBg: "#F0F9FF",
-    accent: "#3B9AC8",
-    accentLight: "#A8D4E8",
-    emoji: "👶",
-    confettiColors: ["#A8D4E8", "#3B9AC8", "#C5E8F5", "#FFD4D4", "#FFFFFF"],
-    heroImg: "https://images.unsplash.com/photo-1519689680058-324335c77eba?w=1200&h=700&fit=crop&auto=format",
-    photos: [
-      "https://images.unsplash.com/photo-1555252333-9f8e92e65df9?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1493894473891-10fc1e5dbd22?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1590004953392-5aba2e72269a?w=400&h=300&fit=crop&auto=format",
-    ],
-    sampleMessage: "Chào mừng thiên thần nhỏ đến với thế giới này! 👶 Con đã mang lại biết bao niềm vui và hạnh phúc cho tất cả mọi người. Mong con lớn lên khỏe mạnh, vui tươi và luôn được bao bọc bởi tình yêu thương.",
-    sender: "Yêu con nhiều hơn cả bầu trời 🌈",
-    features: ["Cột mốc tháng tuổi", "Lời nhắn từ gia đình khắp nơi", "Album ảnh đầu đời", "Hộp thời gian 18 năm", "Bài hát ru của mẹ"],
-    mood: "Ngọt ngào · Trong sáng · Hy vọng",
-  },
-  "ky-niem": {
-    slug: "ky-niem",
-    title: "Dòng Thời Gian Kỷ Niệm",
-    subtitle: "Sống lại hành trình cùng nhau từng năm một — câu chuyện tình yêu đẹp nhất",
-    bg: "linear-gradient(135deg, #8B7355 0%, #C4B498 50%, #D4C4A8 100%)",
-    cardBg: "#FAF7F4",
-    accent: "#8B7355",
-    accentLight: "#D4C4A8",
-    emoji: "💍",
-    confettiColors: ["#D4C4A8", "#8B7355", "#C4B498", "#D4AF78", "#FAF7F4"],
-    heroImg: "https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=1200&h=700&fit=crop&auto=format",
-    photos: [
-      "https://images.unsplash.com/photo-1537633552985-df8429e8048b?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1523438885200-e635ba2c371e?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=300&fit=crop&auto=format",
-      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=300&fit=crop&auto=format",
-    ],
-    sampleMessage: "Mỗi năm qua đi là thêm một chương đẹp trong câu chuyện của chúng ta 💍 Từ cái nhìn đầu tiên đến hôm nay, mỗi khoảnh khắc đều là kho báu vô giá. Cảm ơn em/anh đã chọn tôi, chọn chúng ta, chọn hành trình này.",
-    sender: "Mãi mãi là của nhau 💎",
-    features: ["Dòng thời gian tương tác theo năm", "Ảnh kỷ niệm từng giai đoạn", "Nhạc nền theo năm tháng", "Lời hứa & ước nguyện", "Bản đồ hành trình tình yêu"],
-    mood: "Sâu lắng · Trân trọng · Vĩnh cửu",
+    sampleMessage: "Em ơi, một năm bên nhau là một năm anh cảm thấy mình là người hạnh phúc nhất thế giới. Cảm ơn em đã bước vào cuộc sống của anh và vẽ nên bức tranh tình yêu lấp lánh như ngàn tinh tú. Anh yêu em mãi mãi! 💖",
+    sender: "Của em, người đồng hành trọn đời ❤️",
+    features: ["Tối đa 16 ảnh kỷ niệm", "Hành tinh tinh cầu 3D tương tác", "Sao băng rơi đa góc luân phiên", "Vành đai Saturn hạt sao", "Nhạc nền lãng mạn"],
+    mood: "Huyền ảo · Lãng mạn · Tương tác 3D",
   },
 };
 
@@ -201,10 +125,10 @@ function PhotoGallery({ photos, accent }: { photos: string[]; accent: string }) 
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-4 gap-1.5">
+      <div className="grid grid-cols-4 gap-1.5 max-h-48 overflow-y-auto no-scrollbar">
         {photos.map((src, i) => (
           <button key={i} onClick={() => setActive(i)} className="relative rounded-lg overflow-hidden" style={{ aspectRatio: "1" }}>
-            <img src={src} alt="" className="w-full h-full object-cover" />
+            <img src={src} alt="" className="w-full h-full object-cover animate-fade" />
             {i === active && (
               <motion.div layoutId="gallery-active" className="absolute inset-0 rounded-lg" style={{ border: `2px solid ${accent}` }} />
             )}
@@ -241,14 +165,43 @@ function TimelineRow({ year, event, accent }: { year: string; event: string; acc
 /* ─── Main component ────────────────────────────────────────── */
 export function TemplateDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const tpl = TEMPLATES[slug ?? ""] ?? TEMPLATES["sinh-nhat"];
+  const staticTpl = TEMPLATES[slug ?? ""] ?? TEMPLATES["lang-man"];
   const [playing, setPlaying] = useState(false);
   const [showFull, setShowFull] = useState(false);
+
+  // Dynamic template details from API database
+  const [dbTpl, setDbTpl] = useState<any>(null);
+
+  useEffect(() => {
+    fetch("/api/templates")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: any[]) => {
+        const targetId = slug === "tinh-cau-3d" ? "solid-heart" : "love-romantic";
+        const found = data.find((t) => t.id === targetId);
+        if (found) {
+          setDbTpl(found);
+        }
+      })
+      .catch((err) => console.error("Error fetching templates:", err));
+  }, [slug]);
+
+  // Merge static stylings with database content
+  const tpl = {
+    ...staticTpl,
+    title: dbTpl?.name || staticTpl.title,
+    sampleMessage: dbTpl?.sampleMessage || staticTpl.sampleMessage,
+    photos: (dbTpl?.photos && dbTpl.photos.length > 0) ? dbTpl.photos : staticTpl.photos,
+    features: (dbTpl?.features && dbTpl.features.length > 0) ? dbTpl.features : staticTpl.features,
+    videoUrl: dbTpl?.videoUrl || "",
+  };
 
   // Scroll to top on mount
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
 
   const isAnniversary = slug === "ky-niem";
+  const isDarkCard = tpl.cardBg === "#0D0214";
+  const textColor = isDarkCard ? "#F3F4F6" : "#2A2A2A";
+  const subTextColor = isDarkCard ? "#9CA3AF" : "#9B9B9B";
 
   return (
     <div className="pt-20 min-h-screen" style={{ background: "#FAF8F5" }}>
@@ -331,10 +284,10 @@ export function TemplateDetailPage() {
                 </div>
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: tpl.accent }}>Lời Nhắn Cảm Xúc</div>
-                  <div className="text-xs" style={{ color: "#9B9B9B" }}>Mẫu tin nhắn cá nhân hóa</div>
+                  <div className="text-xs" style={{ color: subTextColor }}>Mẫu tin nhắn cá nhân hóa</div>
                 </div>
               </div>
-              <p className="leading-relaxed mb-4" style={{ color: "#2A2A2A", fontSize: "1rem", lineHeight: 1.8, fontStyle: "italic" }}>
+              <p className="leading-relaxed mb-4" style={{ color: textColor, fontSize: "1rem", lineHeight: 1.8, fontStyle: "italic" }}>
                 "{tpl.sampleMessage}"
               </p>
               <div className="text-sm font-medium" style={{ color: tpl.accent }}>{tpl.sender}</div>
@@ -354,6 +307,34 @@ export function TemplateDetailPage() {
               </div>
               <PhotoGallery photos={tpl.photos} accent={tpl.accent} />
             </motion.div>
+
+            {/* Video player card */}
+            {tpl.videoUrl && (
+              <motion.div
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="rounded-3xl p-6"
+                style={{ background: "white", border: "1px solid rgba(0,0,0,0.07)" }}
+              >
+                <div className="flex items-center gap-2 mb-4">
+                  <Video className="w-4 h-4" style={{ color: tpl.accent }} />
+                  <span className="text-sm font-semibold" style={{ color: "#1A1818" }}>Video Mô Phỏng Mẫu</span>
+                </div>
+                <div className="relative rounded-2xl overflow-hidden aspect-video bg-black shadow-sm">
+                  {tpl.videoUrl.includes("youtube.com") || tpl.videoUrl.includes("youtu.be") ? (
+                    <iframe
+                      src={tpl.videoUrl.replace("watch?v=", "embed/")}
+                      className="w-full h-full border-0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video src={tpl.videoUrl} controls className="w-full h-full object-contain" />
+                  )}
+                </div>
+              </motion.div>
+            )}
 
             {/* Audio player mockup */}
             <motion.div

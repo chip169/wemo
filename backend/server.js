@@ -433,7 +433,7 @@ app.post("/api/orders", authMiddleware, async (req, res) => {
 
   try {
     // Generate order ID
-    const randomNum = Math.floor(1000 + Math.random() * 9000);
+    const randomNum = Math.floor(100000 + Math.random() * 900000);
     const orderId = `ORD-${randomNum}`;
 
     const newOrder = {
@@ -637,7 +637,7 @@ app.get("/api/templates", async (req, res) => {
 });
 
 app.post("/api/templates", authMiddleware, async (req, res) => {
-  const { id, name, category, categoryLabel, preview, status } = req.body;
+  const { id, name, category, categoryLabel, preview, status, videoUrl, sampleMessage, photos, features } = req.body;
   if (!id || !name || !category || !categoryLabel || !preview) {
     return res.status(400).json({ error: "Vui lòng nhập đầy đủ các trường thông tin mẫu thiết kế." });
   }
@@ -650,7 +650,11 @@ app.post("/api/templates", authMiddleware, async (req, res) => {
       categoryLabel,
       usageCount: 0,
       status: status || "active",
-      preview
+      preview,
+      videoUrl: videoUrl || "",
+      sampleMessage: sampleMessage || "",
+      photos: photos || [],
+      features: features || []
     };
 
     if (getDbMode() === "mongodb") {
@@ -672,7 +676,7 @@ app.post("/api/templates", authMiddleware, async (req, res) => {
 
 app.put("/api/templates/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
-  const { name, category, categoryLabel, preview, status, usageCount } = req.body;
+  const { name, category, categoryLabel, preview, status, usageCount, videoUrl, sampleMessage, photos, features } = req.body;
 
   try {
     if (getDbMode() === "mongodb") {
@@ -685,6 +689,10 @@ app.put("/api/templates/:id", authMiddleware, async (req, res) => {
       if (preview !== undefined) template.preview = preview;
       if (status !== undefined) template.status = status;
       if (usageCount !== undefined) template.usageCount = usageCount;
+      if (videoUrl !== undefined) template.videoUrl = videoUrl;
+      if (sampleMessage !== undefined) template.sampleMessage = sampleMessage;
+      if (photos !== undefined) template.photos = photos;
+      if (features !== undefined) template.features = features;
 
       await template.save();
       res.json({ success: true, template });
@@ -700,6 +708,10 @@ app.put("/api/templates/:id", authMiddleware, async (req, res) => {
       if (preview !== undefined) template.preview = preview;
       if (status !== undefined) template.status = status;
       if (usageCount !== undefined) template.usageCount = usageCount;
+      if (videoUrl !== undefined) template.videoUrl = videoUrl;
+      if (sampleMessage !== undefined) template.sampleMessage = sampleMessage;
+      if (photos !== undefined) template.photos = photos;
+      if (features !== undefined) template.features = features;
 
       list[idx] = template;
       await saveTemplatesList(list);

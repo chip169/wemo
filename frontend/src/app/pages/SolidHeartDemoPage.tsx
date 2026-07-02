@@ -1,11 +1,10 @@
 /**
- * HeartDemoPage.tsx
- * Trang demo độc lập để xem thử mẫu thiệp HeartCanvas3D.
- * Truy cập: http://localhost:5173/demo-thiep
+ * SolidHeartDemoPage.tsx
+ * Standalone demo page to view the new SolidHeartCanvas3D template.
+ * URL: http://localhost:5173/demo-thiep-3d
  */
-import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
+import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
 
-// Dữ liệu thiệp mẫu
 const DEMO_GIFT = {
   recipientName: "Khánh Ly",
   senderName: "Kim Xuân Hiếu",
@@ -21,13 +20,14 @@ const DEMO_GIFT = {
     "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80",
   ],
   theme: "tinh-yeu",
+  templateId: "solid-heart",
   music: "romantic",
 };
 
-export function HeartDemoPage() {
+export function SolidHeartDemoPage() {
   return (
     <div className="fixed inset-0 w-screen h-screen overflow-hidden">
-      <HeartCanvas3D gift={DEMO_GIFT} />
+      <SolidHeartCanvas3D gift={DEMO_GIFT} />
     </div>
   );
 }

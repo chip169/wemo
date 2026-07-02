@@ -1,26 +1,20 @@
 [
-    {
-        "sessionId": "Session-112233",
-        "sender": "user",
-        "text": "Xin chào, tôi muốn hỏi cách liên kết chip NFC với thiệp?",
-        "timestamp": "2026-06-15T12:40:17.853Z"
-    },
-    {
-        "sessionId": "Session-112233",
-        "sender": "admin",
-        "text": "Chào bạn! Sau khi thiết kế xong thiệp ở Bước 4, bạn bấm 'Gắn Chip NFC' và chạm mặt sau điện thoại vào thẻ WEMO để lưu liên kết nhé.",
-        "timestamp": "2026-06-15T12:46:17.854Z"
-    },
-    {
-        "sessionId": "Session-112233",
-        "sender": "user",
-        "text": "Vâng mình cảm ơn, mình làm được rồi ạ!",
-        "timestamp": "2026-06-15T12:52:17.854Z"
-    },
-    {
-        "sessionId": "Client-297WR5",
-        "sender": "user",
-        "text": "alo",
-        "timestamp": "2026-06-15T14:59:07.629Z"
-    }
+  {
+    "sessionId": "Session-112233",
+    "sender": "user",
+    "text": "Xin chào, tôi muốn hỏi cách liên kết chip NFC với thiệp?",
+    "timestamp": "2026-07-02T03:08:41.114Z"
+  },
+  {
+    "sessionId": "Session-112233",
+    "sender": "admin",
+    "text": "Chào bạn! Sau khi thiết kế xong thiệp ở Bước 4, bạn bấm 'Gắn Chip NFC' và chạm mặt sau điện thoại vào thẻ WEMO để lưu liên kết nhé.",
+    "timestamp": "2026-07-02T03:14:41.115Z"
+  },
+  {
+    "sessionId": "Session-112233",
+    "sender": "user",
+    "text": "Vâng mình cảm ơn, mình làm được rồi ạ!",
+    "timestamp": "2026-07-02T03:20:41.115Z"
+  }
 ]

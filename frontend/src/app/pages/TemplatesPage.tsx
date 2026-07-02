@@ -4,64 +4,24 @@ import { Link } from "react-router";
 
 const templates = [
   {
-    slug: "sinh-nhat",
-    title: "Sinh Nhật Rực Rỡ",
-    description: "Kỷ niệm thêm một năm tuổi với niềm vui và confetti rực rỡ. Hoàn hảo để gửi lời chúc tới người thân yêu.",
-    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGJpcnRoZGF5JTIwY2VsZWJyYXRpb24lMjBjb25mZXR0aXxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#FFD4D4",
-    gradient: "linear-gradient(135deg, #FFD4D4 0%, #FFB3BA 100%)",
-    tag: "Phổ biến nhất",
-    features: ["Confetti tự động", "Nhạc chúc mừng", "Slideshow ảnh", "Tin nhắn giọng nói"],
-  },
-  {
     slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
-    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Dành cho những kỷ niệm không thể quên.",
+    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
     image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
     color: "#E8B4A8",
     gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-    tag: "Được yêu thích",
-    features: ["Dòng thời gian tình yêu", "Nhạc nền lãng mạn", "Hiệu ứng trái tim", "Hộp thời gian bí mật"],
+    tag: "Mạng lưới 3D",
+    features: ["Tối đa 6 ảnh kỷ niệm", "Mạng lưới trái tim rơi", "Nhạc nền lãng mạn", "Hộp thư bí mật"],
   },
   {
-    slug: "giang-sinh",
-    title: "Giáng Sinh Diệu Kỳ",
-    description: "Chia sẻ sự ấm áp và kỳ diệu của mùa lễ hội với gia đình và bạn bè trên toàn thế giới.",
-    image: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjBob2xpZGF5JTIwZGVjb3JhdGlvbiUyMGZlc3RpdmV8ZW58MXx8fHwxNzc5NjExODMzfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#D4AF78",
-    gradient: "linear-gradient(135deg, #D4AF78 0%, #C4A568 100%)",
-    tag: "Theo mùa",
-    features: ["Tuyết rơi hoạt ảnh", "Nhạc Giáng Sinh", "Lịch đếm ngược", "Thiệp điện tử"],
-  },
-  {
-    slug: "tot-nghiep",
-    title: "Ngày Tốt Nghiệp",
-    description: "Ghi dấu thành tích và những khởi đầu mới đầy hứng khởi cùng những người quan trọng nhất.",
-    image: "https://images.unsplash.com/photo-1623461487986-9400110de28e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFkdWF0aW9uJTIwY2VyZW1vbnklMjBjYXAlMjBnb3dufGVufDF8fHx8MTc3OTU0NDExMXww&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#B8A4D4",
-    gradient: "linear-gradient(135deg, #B8A4D4 0%, #9B87C4 100%)",
-    tag: "Dịp đặc biệt",
-    features: ["Hành trình học tập", "Lời nhắn từ thầy cô", "Album kỷ niệm", "Lời chúc tương lai"],
-  },
-  {
-    slug: "chao-don-be",
-    title: "Chào Đón Em Bé",
-    description: "Ghi lại những khoảnh khắc đầu tiên quý giá và ký ức cột mốc để bé yêu nhìn lại khi lớn lên.",
-    image: "https://images.unsplash.com/photo-1543342384-1f1350e27861?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXdib3JuJTIwYmFieSUyMGZhbWlseSUyMG1vbWVudHxlbnwxfHx8fDE3Nzk2MTE4MzN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#A8D4E8",
-    gradient: "linear-gradient(135deg, #A8D4E8 0%, #8BC4D8 100%)",
-    tag: "Gia đình",
-    features: ["Lời nhắn từ gia đình", "Cột mốc tháng tuổi", "Album ảnh đầu đời", "Hộp thời gian 18 năm"],
-  },
-  {
-    slug: "ky-niem",
-    title: "Dòng Thời Gian Kỷ Niệm",
-    description: "Sống lại hành trình cùng nhau từng năm một — những kỷ niệm đẹp nhất được kể lại theo thứ tự thời gian.",
-    image: "https://images.unsplash.com/photo-1523521803700-b3bcaeab0150?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbm5pdmVyc2FyeSUyMGNvdXBsZSUyMGNlbGVicmF0aW9uJTIwdG9hc3R8ZW58MXx8fHwxNzc5NjExODM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#D4C4A8",
-    gradient: "linear-gradient(135deg, #D4C4A8 0%, #C4B498 100%)",
-    tag: "Kỷ niệm",
-    features: ["Dòng thời gian tương tác", "Ảnh theo từng năm", "Nhạc theo giai đoạn", "Câu chuyện tình yêu"],
+    slug: "tinh-cau-3d",
+    title: "Mẫu Tinh Cầu 3D Vũ Trụ",
+    description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
+    image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#E11D48",
+    gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
+    tag: "Độc quyền 3D",
+    features: ["Tối đa 16 ảnh kỷ niệm", "Hành tinh điểm sáng 3D", "Sao băng đa hướng luân phiên", "Vòng xoay ảnh kỷ niệm"],
   },
 ];
 
@@ -84,14 +44,14 @@ export function TemplatesPage() {
             Chọn Mẫu Hoàn Hảo
           </h1>
           <p className="max-w-2xl mx-auto" style={{ fontSize: "1.125rem", color: "#6B6B6B", lineHeight: 1.6 }}>
-            6 mẫu được thiết kế chuyên nghiệp cho mọi dịp đặc biệt. Mỗi mẫu đều có thể tùy chỉnh hoàn toàn theo ý bạn.
+            2 mẫu thiết kế 3D tương tác độc đáo cho nửa kia của bạn. Mỗi mẫu đều có thể tùy chỉnh hoàn toàn theo ý bạn.
           </p>
         </motion.div>
       </section>
 
       {/* Templates grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {templates.map((template, index) => (
             <motion.div
               key={index}
@@ -149,8 +109,8 @@ export function TemplatesPage() {
                   {template.features.map((f, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 rounded-full text-xs font-medium"
-                      style={{ background: `${template.color}30`, color: "#1A1818" }}
+                      className="px-2.5 py-1 rounded-full text-xs font-semibold"
+                      style={{ background: `${template.color}15`, color: template.color }}
                     >
                       {f}
                     </span>

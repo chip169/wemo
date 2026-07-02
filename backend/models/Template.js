@@ -8,6 +8,10 @@ const TemplateSchema = new mongoose.Schema({
   usageCount: { type: Number, default: 0 },
   status: { type: String, default: "active" },
   preview: { type: String, required: true },
+  videoUrl: { type: String, default: "" },
+  sampleMessage: { type: String, default: "" },
+  photos: [{ type: String }],
+  features: [{ type: String }],
 });
 
 module.exports = mongoose.model("Template", TemplateSchema);

@@ -1,23 +1,23 @@
 [
-    {
-        "id": "NFC-7001",
-        "uid": "04:A1:B2:C3:D4:E5:F6",
-        "status": "assigned",
-        "giftId": "g1b2c3",
-        "lastTapped": "2026-06-14 18:22"
-    },
-    {
-        "id": "NFC-7002",
-        "uid": "04:B2:C3:D4:E5:F6:A1",
-        "status": "assigned",
-        "giftId": "l5v6r7",
-        "lastTapped": "2026-06-15 09:11"
-    },
-    {
-        "id": "NFC-7003",
-        "uid": "04:C3:D4:E5:F6:A1:B2",
-        "status": "unassigned",
-        "giftId": "",
-        "lastTapped": ""
-    }
+  {
+    "id": "NFC-7001",
+    "uid": "04:A1:B2:C3:D4:E5:F6",
+    "status": "assigned",
+    "giftId": "g1b2c3",
+    "lastTapped": "2026-06-14 18:22"
+  },
+  {
+    "id": "NFC-7002",
+    "uid": "04:B2:C3:D4:E5:F6:A1",
+    "status": "assigned",
+    "giftId": "l5v6r7",
+    "lastTapped": "2026-06-15 09:11"
+  },
+  {
+    "id": "NFC-7003",
+    "uid": "04:C3:D4:E5:F6:A1:B2",
+    "status": "unassigned",
+    "giftId": "",
+    "lastTapped": ""
+  }
 ]

@@ -18,12 +18,25 @@ const initStorage = () => {
     "templates.json": JSON.stringify([
       {
         id: "love-romantic",
-        name: "Mãi Yêu Thương (Trái Tim 3D)",
+        name: "Mãi Yêu Thương (Mạng Lưới 3D)",
         category: "romance",
         categoryLabel: "Tình yêu & Lãng mạn",
         usageCount: 378,
         status: "active",
         preview: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+        videoUrl: "",
+        sampleMessage: "Anh/Em yêu, mỗi khoảnh khắc bên em/anh đều là một trang ký ức đẹp nhất trong cuốn sách cuộc đời. Cảm ơn em/anh đã là ánh nắng của ngày tôi, là bến bờ của những giông tố. Tôi yêu em/anh mãi mãi."
+      },
+      {
+        id: "solid-heart",
+        name: "Mẫu Tinh Cầu 3D Vũ Trụ",
+        category: "romance",
+        categoryLabel: "Tình yêu & Lãng mạn",
+        usageCount: 12,
+        status: "active",
+        preview: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=400",
+        videoUrl: "",
+        sampleMessage: "Em ơi, một năm bên nhau là một năm anh cảm thấy mình là người hạnh phúc nhất thế giới. Cảm ơn em đã bước vào cuộc sống của anh và vẽ nên bức tranh tình yêu lấp lánh như ngàn tinh tú. Anh yêu em mãi mãi! 💖"
       }
     ], null, 2),
   };

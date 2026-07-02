@@ -30,6 +30,7 @@ import { BirthdayCanvas3D } from "../components/gift3d/BirthdayCanvas3D";
 import { LoveCanvas3D } from "../components/gift3d/LoveCanvas3D";
 import { GalaxyCanvas3D } from "../components/gift3d/GalaxyCanvas3D";
 import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
+import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -70,11 +71,20 @@ const THEMES = [
 const TEMPLATES = [
   {
     id: "love-romantic",
-    name: "Mãi Yêu Thương",
+    name: "Mãi Yêu Thương (Mạng Lưới 3D)",
     emoji: "💖",
     color: "#FF4D4D",
     light: "#FFF5F5",
     img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+    theme: "tinh-yeu",
+  },
+  {
+    id: "solid-heart",
+    name: "Trái Tim Bay Bổng 3D",
+    emoji: "❤️",
+    color: "#FF1E56",
+    light: "#0F0015",
+    img: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80",
     theme: "tinh-yeu",
   },
 ];
@@ -107,6 +117,9 @@ export function RenderLiveTemplate({
 
   if (theme === "sinh-nhat" || gift.templateId === "sinh-nhat-premium") {
     return <BirthdayCanvas3D gift={gift} />;
+  }
+  if (gift.templateId === "solid-heart") {
+    return <SolidHeartCanvas3D gift={gift} />;
   }
   if (theme === "tinh-yeu" || gift.templateId === "love-romantic" || gift.templateId === "christmas-cozy") {
     return <HeartCanvas3D gift={gift} />;
@@ -294,7 +307,7 @@ function OrderCheckGateway({
                 type="text"
                 value={orderId}
                 onChange={(e) => setOrderId(e.target.value)}
-                placeholder="Ví dụ: ORD-1001"
+                placeholder="Ví dụ: 1 hoặc ORD-572913"
                 className="w-full px-5 py-3 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-center font-mono font-bold tracking-wider text-stone-800 bg-white"
                 disabled={loading}
               />
@@ -566,6 +579,7 @@ function Step2({
 }) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const maxPhotos = gift.templateId === "solid-heart" ? 16 : 6;
 
   // AI Chibi states
   const [aiExpanded, setAiExpanded] = useState(false);
@@ -691,8 +705,8 @@ function Step2({
 
   const handleAddChibiToAlbum = () => {
     if (!aiResultUrl) return;
-    if (gift.photos.length >= 6) {
-      alert("Bộ sưu tập ảnh thiệp đã đầy (Tối đa 6 ảnh). Vui lòng xóa bớt ảnh trước khi thêm.");
+    if (gift.photos.length >= maxPhotos) {
+      alert(`Bộ sưu tập ảnh thiệp đã đầy (Tối đa ${maxPhotos} ảnh). Vui lòng xóa bớt ảnh trước khi thêm.`);
       return;
     }
     setGift({ ...gift, photos: [...gift.photos, aiResultUrl] });
@@ -946,7 +960,7 @@ function Step2({
           {/* Card 2: Photos Section */}
           <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm">
             <h3 className="font-bold text-sm text-stone-800 mb-3 flex items-center gap-2">
-              📸 Bộ Sưu Tập Ảnh ({gift.photos.length}/6)
+              📸 Bộ Sưu Tập Ảnh ({gift.photos.length}/{maxPhotos})
             </h3>
             <div className="flex flex-wrap gap-3">
               {gift.photos.map((src, i) => (
@@ -968,7 +982,7 @@ function Step2({
                   <Loader2 className="w-4 h-4 animate-spin text-[#E8B4A8]" />
                 </div>
               )}
-              {!uploading && gift.photos.length < 6 && (
+              {!uploading && gift.photos.length < maxPhotos && (
                 <>
                   <input
                     type="file"
