@@ -1,67 +1,46 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
-import { Plus, Eye, Edit, Trash2 } from "lucide-react";
+import { Sparkles, Loader2, Eye } from "lucide-react";
+import { adminFetch } from "../../utils/api";
 
-const mockTemplates = [
-  {
-    id: "TPL-001",
-    name: "Sinh Nhật Rực Rỡ",
-    category: "celebration",
-    categoryLabel: "Sinh nhật & Lễ hội",
-    usageCount: 435,
-    status: "active",
-    preview:
-      "https://images.unsplash.com/photo-1513151233558-d860c5398176?w=400",
-  },
-  {
-    id: "TPL-002",
-    name: "Kỷ Ức Lãng Mạn",
-    category: "romance",
-    categoryLabel: "Tình yêu & Lãng mạn",
-    usageCount: 378,
-    status: "active",
-    preview:
-      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400",
-  },
-  {
-    id: "TPL-003",
-    name: "Giáng Sinh Ấm Áp",
-    category: "holiday",
-    categoryLabel: "Ngày lễ & Giáng Sinh",
-    usageCount: 289,
-    status: "active",
-    preview:
-      "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?w=400",
-  },
-  {
-    id: "TPL-004",
-    name: "Hành Trình Kỷ Niệm",
-    category: "milestone",
-    categoryLabel: "Kỷ niệm",
-    usageCount: 245,
-    status: "active",
-    preview:
-      "https://images.unsplash.com/photo-1523521803700-b3bcaeab0150?w=400",
-  },
-  {
-    id: "TPL-005",
-    name: "Ngày Tốt Nghiệp",
-    category: "achievement",
-    categoryLabel: "Thành tựu",
-    usageCount: 187,
-    status: "archived",
-    preview:
-      "https://images.unsplash.com/photo-1623461487986-9400110de28e?w=400",
-  },
-];
+interface Template {
+  id: string;
+  name: string;
+  category: string;
+  categoryLabel: string;
+  usageCount: number;
+  status: string;
+  preview: string;
+}
 
 export function TemplatesPage() {
+  const [templates, setTemplates] = useState<Template[]>([]);
+  const [loading, setLoading] = useState(true);
   const [categoryFilter, setCategoryFilter] = useState("all");
 
-  const filteredTemplates = mockTemplates.filter((template) => {
+  const fetchTemplates = () => {
+    setLoading(true);
+    adminFetch("/api/templates")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        setTemplates(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchTemplates();
+  }, []);
+
+  // Only display active templates currently available in system
+  const filteredTemplates = templates.filter((template) => {
     return (
-      categoryFilter === "all" ||
-      template.category.toLowerCase() === categoryFilter
+      template.status === "active" &&
+      (categoryFilter === "all" || template.category.toLowerCase() === categoryFilter)
     );
   });
 
@@ -70,30 +49,13 @@ export function TemplatesPage() {
       {/* Page header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1
-            style={{ fontSize: "1.875rem", fontWeight: 700, color: "#111827" }}
-          >
+          <h1 style={{ fontSize: "1.875rem", fontWeight: 700, color: "#111827" }}>
             Quản lý Mẫu thiết kế
           </h1>
-          <p
-            style={{ fontSize: "0.875rem", color: "#6B7280", marginTop: "4px" }}
-          >
-            Quản lý các mẫu thiệp quà tặng điện tử
+          <p style={{ fontSize: "0.875rem", color: "#6B7280", marginTop: "4px" }}>
+            Danh sách các mẫu thiệp 3D kỹ thuật số hiện tại trên hệ thống
           </p>
         </div>
-        <motion.button
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          className="flex items-center gap-2 px-4 py-2 rounded-xl"
-          style={{
-            background: "#E8B4A8",
-            color: "white",
-            fontWeight: 600,
-          }}
-        >
-          <Plus className="w-4 h-4" />
-          Tạo Mẫu thiết kế
-        </motion.button>
       </div>
 
       {/* Filter */}
@@ -107,10 +69,7 @@ export function TemplatesPage() {
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="px-4 py-2 rounded-lg outline-none text-xs bg-stone-50 text-stone-700 font-semibold"
-          style={{
-            border: "1px solid #E5E7EB",
-          }}
+          className="px-4 py-2.5 rounded-lg outline-none text-xs bg-stone-50 text-stone-700 font-semibold cursor-pointer border border-stone-200"
         >
           <option value="all">Tất cả danh mục</option>
           <option value="celebration">Sinh nhật & Lễ hội</option>
@@ -122,136 +81,85 @@ export function TemplatesPage() {
       </div>
 
       {/* Templates grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredTemplates.map((template, index) => (
-          <motion.div
-            key={template.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
-            style={{
-              background: "white",
-              border: "1px solid #E5E7EB",
-            }}
-          >
-            {/* Preview */}
-            <div
-              className="relative h-48 overflow-hidden"
-              style={{ background: "#F3F4F6" }}
+      {loading ? (
+        <div className="p-12 text-center text-stone-400 text-xs font-bold flex flex-col items-center gap-2">
+          <Loader2 className="w-6 h-6 animate-spin text-[#E8B4A8]" />
+          Đang tải danh sách mẫu...
+        </div>
+      ) : filteredTemplates.length === 0 ? (
+        <div className="p-12 text-center text-stone-400 text-xs font-bold">
+          Không tìm thấy mẫu thiết kế nào.
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredTemplates.map((template, index) => (
+            <motion.div
+              key={template.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+              className="rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300"
+              style={{
+                background: "white",
+                border: "1px solid #E5E7EB",
+              }}
             >
-              <img
-                src={template.preview}
-                alt={template.name}
-                className="w-full h-full object-cover"
-              />
-              {template.status === "archived" && (
-                <div
-                  className="absolute top-3 right-3 px-3 py-1 rounded-full"
-                  style={{
-                    background: "#6B7280",
-                    color: "white",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
-                  }}
-                >
-                  Đã lưu trữ
-                </div>
-              )}
-            </div>
+              {/* Preview image */}
+              <div className="relative h-48 overflow-hidden bg-stone-100">
+                <img
+                  src={template.preview}
+                  alt={template.name}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                />
+              </div>
 
-            {/* Info */}
-            <div className="p-6">
-              <div className="flex items-start justify-between mb-3">
-                <div className="flex-1">
-                  <h3
-                    style={{
-                      fontSize: "1.125rem",
-                      fontWeight: 600,
-                      color: "#111827",
-                    }}
-                  >
-                    {template.name}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: "0.875rem",
-                      color: "#6B7280",
-                      marginTop: "4px",
-                    }}
-                  >
+              {/* Template details */}
+              <div className="p-5 space-y-4">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 style={{ fontSize: "1.125rem", fontWeight: 650, color: "#111827" }}>
+                      {template.name}
+                    </h3>
+                    <p style={{ fontSize: "0.75rem", color: "#8B5CF6", fontWeight: 600, marginTop: "2px" }}>
+                      Mã: {template.id}
+                    </p>
+                  </div>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] bg-stone-100 text-stone-500 font-semibold border">
                     {template.categoryLabel}
-                  </p>
+                  </span>
                 </div>
-              </div>
 
-              <div
-                className="flex items-center gap-2 mb-4 pb-4"
-                style={{ borderBottom: "1px solid #E5E7EB" }}
-              >
                 <div
-                  className="flex-1 text-center py-2 px-3 rounded-lg"
-                  style={{ background: "#F9FAFB" }}
+                  className="flex items-center gap-2 py-2 px-3 rounded-xl bg-stone-50"
+                  style={{ border: "1px solid #F3F4F6" }}
                 >
-                  <div
-                    style={{
-                      fontSize: "1.5rem",
-                      fontWeight: 700,
-                      color: "#E8B4A8",
-                    }}
-                  >
-                    {template.usageCount}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "0.75rem",
-                      color: "#6B7280",
-                      marginTop: "2px",
-                    }}
-                  >
-                    Lượt dùng
+                  <div className="flex-1 text-center">
+                    <div style={{ fontSize: "1.125rem", fontWeight: 800, color: "#E8B4A8" }}>
+                      {template.usageCount || 0}
+                    </div>
+                    <div style={{ fontSize: "0.65rem", color: "#9CA3AF", fontWeight: 600, marginTop: "1px" }}>
+                      Lượt sử dụng hoạt động
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Actions */}
-              <div className="flex items-center gap-2">
-                <button
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                  style={{
-                    border: "1px solid #E5E7EB",
-                    color: "#374151",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  <Eye className="w-4 h-4" />
-                  Xem thử
-                </button>
-                <button
-                  className="flex-1 flex items-center justify-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
-                  style={{
-                    border: "1px solid #E5E7EB",
-                    color: "#374151",
-                    fontSize: "0.875rem",
-                  }}
-                >
-                  <Edit className="w-4 h-4" />
-                  Sửa
-                </button>
-                <button
-                  className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-                  style={{
-                    border: "1px solid #E5E7EB",
-                    color: "#DC2626",
-                  }}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+                {/* Preview Actions */}
+                <div className="pt-2">
+                  <a
+                    href="/demo-thiep"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-bold bg-[#E8B4A8] text-white rounded-xl hover:opacity-90 transition-opacity cursor-pointer shadow-md no-underline decoration-transparent"
+                  >
+                    <Eye className="w-4 h-4" />
+                    Xem thử mẫu 3D
+                  </a>
+                </div>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
