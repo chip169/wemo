@@ -52,5 +52,104 @@
     "status": "completed",
     "paymentStatus": "paid",
     "createdDate": "2026-07-02"
+  },
+  {
+    "id": "ORD-911016",
+    "customerName": "Nguyễn Văn A",
+    "product": "Sinh Nhật Rực Rỡ",
+    "amount": 199000,
+    "status": "completed",
+    "paymentStatus": "paid",
+    "createdDate": "2026-06-01"
+  },
+  {
+    "id": "ORD-315612",
+    "customerName": "Trần Thị B",
+    "product": "Ký Ức Lãng Mạn",
+    "amount": 250000,
+    "status": "processing",
+    "paymentStatus": "paid",
+    "createdDate": "2026-06-05"
+  },
+  {
+    "id": "ORD-177780",
+    "customerName": "Lê Văn C",
+    "product": "Dòng Thời Gian Kỷ Niệm",
+    "amount": 350000,
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdDate": "2026-06-12"
+  },
+  {
+    "id": "ORD-225112",
+    "customerName": "Phạm Hồng D",
+    "product": "Giáng Sinh Diệu Kỳ",
+    "amount": 299000,
+    "status": "completed",
+    "paymentStatus": "paid",
+    "createdDate": "2026-06-14"
+  },
+  {
+    "id": "ORD-439389",
+    "customerName": "Đỗ Gia Bảo",
+    "product": "Chào Đón Em Bé",
+    "amount": 199000,
+    "status": "cancelled",
+    "paymentStatus": "refunded",
+    "createdDate": "2026-06-15"
+  },
+  {
+    "id": 1,
+    "customerName": "Khách Hàng Test",
+    "product": "Sản phẩm Test ngẫu nhiên",
+    "amount": 99000,
+    "status": "completed",
+    "paymentStatus": "paid",
+    "createdDate": "2026-07-02"
+  },
+  {
+    "id": "ORD-787244",
+    "customerName": "Nguyễn Văn A",
+    "product": "Sinh Nhật Rực Rỡ",
+    "amount": 199000,
+    "status": "completed",
+    "paymentStatus": "paid",
+    "createdDate": "2026-06-01"
+  },
+  {
+    "id": "ORD-706222",
+    "customerName": "Trần Thị B",
+    "product": "Ký Ức Lãng Mạn",
+    "amount": 250000,
+    "status": "processing",
+    "paymentStatus": "paid",
+    "createdDate": "2026-06-05"
+  },
+  {
+    "id": "ORD-753612",
+    "customerName": "Lê Văn C",
+    "product": "Dòng Thời Gian Kỷ Niệm",
+    "amount": 350000,
+    "status": "pending",
+    "paymentStatus": "unpaid",
+    "createdDate": "2026-06-12"
+  },
+  {
+    "id": "ORD-884605",
+    "customerName": "Phạm Hồng D",
+    "product": "Giáng Sinh Diệu Kỳ",
+    "amount": 299000,
+    "status": "completed",
+    "paymentStatus": "paid",
+    "createdDate": "2026-06-14"
+  },
+  {
+    "id": "ORD-689008",
+    "customerName": "Đỗ Gia Bảo",
+    "product": "Chào Đón Em Bé",
+    "amount": 199000,
+    "status": "cancelled",
+    "paymentStatus": "refunded",
+    "createdDate": "2026-06-15"
   }
 ]

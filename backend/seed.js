@@ -146,25 +146,67 @@ const mockMessages = [
   },
 ];
 
-const seedJSON = () => {
+const seedJSON = async () => {
   console.log("Seeding Local JSON Database...");
   const { hashPassword } = require("./utils/auth");
+  const { readJsonFile, writeJsonFile } = require("./utils/storage");
   initStorage();
-  writeJsonFile("orders.json", mockOrders);
-  writeJsonFile("gifts.json", mockGifts);
-  writeJsonFile("nfc.json", mockNFC);
-  writeJsonFile("messages.json", mockMessages);
+
+  const mergeSeed = async (filename, mockData) => {
+    const existing = await readJsonFile(filename);
+    const merged = [...existing];
+    let changed = false;
+    for (const item of mockData) {
+      if (!existing.some((x) => x.id === item.id)) {
+        merged.push(item);
+        changed = true;
+      }
+    }
+    if (changed || existing.length === 0) {
+      await writeJsonFile(filename, merged);
+    }
+  };
+
+  const mergeTemplates = async (filename, mockData) => {
+    const existing = await readJsonFile(filename);
+    let changed = false;
+    const merged = [...existing];
+    for (const item of mockData) {
+      const idx = merged.findIndex((x) => x.id === item.id);
+      if (idx > -1) {
+        let diff = false;
+        for (const k in item) {
+          if (JSON.stringify(merged[idx][k]) !== JSON.stringify(item[k])) {
+            merged[idx][k] = item[k];
+            diff = true;
+          }
+        }
+        if (diff) changed = true;
+      } else {
+        merged.push(item);
+        changed = true;
+      }
+    }
+    if (changed || existing.length === 0) {
+      await writeJsonFile(filename, merged);
+    }
+  };
+
+  await mergeSeed("orders.json", mockOrders);
+  await mergeSeed("gifts.json", mockGifts);
+  await mergeSeed("nfc.json", mockNFC);
+  await mergeSeed("messages.json", mockMessages);
 
   // Seed templates.json as well
   const mockTemplates = [
     {
       id: "love-romantic",
-      name: "Mãi Yêu Thương (Mạng Lưới 3D)",
+      name: "Ký Ức Lãng Mạn",
       category: "romance",
       categoryLabel: "Tình yêu & Lãng mạn",
       usageCount: 378,
       status: "active",
-      preview: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      preview: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
       videoUrl: "",
       sampleMessage: "Anh/Em yêu, mỗi khoảnh khắc bên em/anh đều là một trang ký ức đẹp nhất trong cuốn sách cuộc đời. Cảm ơn em/anh đã là ánh nắng của ngày tôi, là bến bờ của những giông tố. Tôi yêu em/anh mãi mãi.",
       photos: [
@@ -188,7 +230,7 @@ const seedJSON = () => {
       categoryLabel: "Tình yêu & Lãng mạn",
       usageCount: 12,
       status: "active",
-      preview: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=400",
+      preview: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
       videoUrl: "",
       sampleMessage: "Em ơi, một năm bên nhau là một năm anh cảm thấy mình là người hạnh phúc nhất thế giới. Cảm ơn em đã bước vào cuộc sống của anh và vẽ nên bức tranh tình yêu lấp lánh như ngàn tinh tú. Anh yêu em mãi mãi! 💖",
       photos: [
@@ -218,14 +260,17 @@ const seedJSON = () => {
       ]
     }
   ];
-  writeJsonFile("templates.json", mockTemplates);
+  await mergeTemplates("templates.json", mockTemplates);
 
-  writeJsonFile("admins.json", [
-    {
-      username: "admin",
-      password: hashPassword("admin123")
-    }
-  ]);
+  const admins = await readJsonFile("admins.json");
+  if (admins.length === 0) {
+    await writeJsonFile("admins.json", [
+      {
+        username: "admin",
+        password: hashPassword("admin123")
+      }
+    ]);
+  }
   console.log("Seeding completed successfully for JSON files!");
 };
 
@@ -243,28 +288,17 @@ const seedMongo = async () => {
     const { hashPassword } = require("./utils/auth");
 
     const Template = require("./models/Template");
-    // Clean existing tables
-    await Gift.deleteMany({});
-    await Order.deleteMany({});
-    await NFC.deleteMany({});
-    await Message.deleteMany({});
-    await Admin.deleteMany({});
-    await Template.deleteMany({});
 
-    // Insert seeds
-    await Order.insertMany(mockOrders);
-    await Gift.insertMany(mockGifts);
-    await NFC.insertMany(mockNFC);
-    await Message.insertMany(mockMessages);
-    await Template.insertMany([
+    // Upsert templates so we update their attributes without deleting the collection
+    const templatesToSeed = [
       {
         id: "love-romantic",
-        name: "Mãi Yêu Thương (Mạng Lưới 3D)",
+        name: "Ký Ức Lãng Mạn",
         category: "romance",
         categoryLabel: "Tình yêu & Lãng mạn",
         usageCount: 378,
         status: "active",
-        preview: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+        preview: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
         videoUrl: "",
         sampleMessage: "Anh/Em yêu, mỗi khoảnh khắc bên em/anh đều là một trang ký ức đẹp nhất trong cuốn sách cuộc đời. Cảm ơn em/anh đã là ánh nắng của ngày tôi, là bến bờ của những giông tố. Tôi yêu em/anh mãi mãi.",
         photos: [
@@ -288,7 +322,7 @@ const seedMongo = async () => {
         categoryLabel: "Tình yêu & Lãng mạn",
         usageCount: 12,
         status: "active",
-        preview: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=400",
+        preview: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
         videoUrl: "",
         sampleMessage: "Em ơi, một năm bên nhau là một năm anh cảm thấy mình là người hạnh phúc nhất thế giới. Cảm ơn em đã bước vào cuộc sống của anh và vẽ nên bức tranh tình yêu lấp lánh như ngàn tinh tú. Anh yêu em mãi mãi! 💖",
         photos: [
@@ -297,7 +331,7 @@ const seedMongo = async () => {
           "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
           "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
           "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=400&q=80",
-          "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80",
+          "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&h=300&fit=crop&auto=format",
           "https://images.unsplash.com/photo-1464746133101-a2c3f88e0dd9?w=400&q=80",
           "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
           "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=400&q=80",
@@ -317,12 +351,32 @@ const seedMongo = async () => {
           "Nhạc nền lãng mạn"
         ]
       }
-    ]);
+    ];
 
-    await Admin.create({
-      username: "admin",
-      password: hashPassword("admin123")
-    });
+    for (const tpl of templatesToSeed) {
+      await Template.findOneAndUpdate({ id: tpl.id }, tpl, { upsert: true });
+    }
+
+    // Insert seeds only if empty
+    if ((await Order.countDocuments()) === 0) {
+      await Order.insertMany(mockOrders);
+    }
+    if ((await Gift.countDocuments()) === 0) {
+      await Gift.insertMany(mockGifts);
+    }
+    if ((await NFC.countDocuments()) === 0) {
+      await NFC.insertMany(mockNFC);
+    }
+    if ((await Message.countDocuments()) === 0) {
+      await Message.insertMany(mockMessages);
+    }
+
+    if ((await Admin.countDocuments()) === 0) {
+      await Admin.create({
+        username: "admin",
+        password: hashPassword("admin123")
+      });
+    }
 
     console.log("Seeding completed successfully for MongoDB!");
     await mongoose.disconnect();
@@ -335,14 +389,9 @@ const seedMongo = async () => {
 
 const run = async () => {
   if (MONGO_URI) {
-    const success = await seedMongo();
-    if (!success) {
-      console.log("Falling back to local JSON database seeding...");
-      seedJSON();
-    }
-  } else {
-    seedJSON();
+    await seedMongo();
   }
+  await seedJSON();
 };
 
 run();

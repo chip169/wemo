@@ -71,21 +71,29 @@ const THEMES = [
 const TEMPLATES = [
   {
     id: "love-romantic",
-    name: "Mãi Yêu Thương (Mạng Lưới 3D)",
-    emoji: "💖",
-    color: "#FF4D4D",
+    name: "Ký Ức Lãng Mạn",
+    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
+    emoji: "💕",
+    color: "#E8B4A8",
+    gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
     light: "#FFF5F5",
-    img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+    img: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
     theme: "tinh-yeu",
+    tag: "Mạng lưới 3D",
+    features: ["Tối đa 6 ảnh kỷ niệm", "Mạng lưới trái tim rơi", "Nhạc nền lãng mạn", "Hộp thư bí mật"],
   },
   {
     id: "solid-heart",
-    name: "Trái Tim Bay Bổng 3D",
-    emoji: "❤️",
-    color: "#FF1E56",
+    name: "Mẫu Tinh Cầu 3D Vũ Trụ",
+    description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
+    emoji: "🪐",
+    color: "#E11D48",
+    gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
     light: "#0F0015",
-    img: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80",
+    img: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     theme: "tinh-yeu",
+    tag: "Độc quyền 3D",
+    features: ["Tối đa 16 ảnh kỷ niệm", "Hành tinh điểm sáng 3D", "Sao băng đa hướng luân phiên", "Vòng xoay ảnh kỷ niệm"],
   },
 ];
 
@@ -438,53 +446,99 @@ function Step1({
         Khởi đầu với một phôi giao diện thiết kế chuyên nghiệp tương ứng với chủ đề đã chọn
       </p>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid sm:grid-cols-2 gap-6">
         {filteredTemplates.map((tpl) => {
           const selected = gift.templateId === tpl.id;
           return (
-            <motion.button
+            <motion.div
               key={tpl.id}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ y: -6 }}
               onClick={() => setGift({ ...gift, templateId: tpl.id })}
-              className="relative rounded-2xl overflow-hidden text-left transition-all bg-white shadow-sm flex flex-col"
+              className="group overflow-hidden rounded-3xl cursor-pointer text-left transition-all bg-white relative flex flex-col"
               style={{
-                border: selected
-                  ? `2.5px solid ${tpl.color}`
-                  : "2.5px solid transparent",
+                boxShadow: selected
+                  ? `0 0 0 3px ${tpl.color}, 0 8px 30px rgba(0,0,0,0.12)`
+                  : "0 4px 20px rgba(0,0,0,0.06)",
+                border: "1px solid rgba(0,0,0,0.06)",
               }}
             >
-              <div className="relative h-28 overflow-hidden bg-stone-100 w-full">
+              {/* Image */}
+              <div className="relative h-44 overflow-hidden bg-stone-100 w-full">
                 <img
                   src={tpl.img}
                   alt={tpl.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 />
-                <div className="absolute inset-0 bg-black/10" />
-                <div className="absolute bottom-2 left-2 text-xl">{tpl.emoji}</div>
-                {selected && (
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)" }}
+                />
+                {/* Tag */}
+                <div
+                  className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-semibold text-white"
+                  style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(8px)" }}
+                >
+                  {tpl.tag}
+                </div>
+                {/* Selection Indicator / Gradient Circle */}
+                {selected ? (
                   <div
-                    className="absolute top-2 right-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-[10px]"
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-white"
                     style={{ background: tpl.color }}
                   >
-                    <Check className="w-3 h-3" />
+                    <Check className="w-4 h-4" />
                   </div>
+                ) : (
+                  <div
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full shadow"
+                    style={{ background: tpl.gradient }}
+                  />
                 )}
               </div>
 
-              <div className="p-3 flex items-center justify-between gap-1 w-full mt-auto">
-                <p className="font-bold text-[11px] text-stone-800 truncate">
-                  {tpl.name}
-                </p>
-                <button
-                  type="button"
-                  onClick={(e) => handleOpenDemo(e, tpl)}
-                  className="px-2 py-0.5 rounded bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-[9px] transition-colors"
-                >
-                  Xem thử
-                </button>
+              {/* Content */}
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="mb-2 text-base font-bold text-stone-900 flex items-center gap-1.5">
+                    <span className="text-lg">{tpl.emoji}</span>
+                    {tpl.name}
+                  </h3>
+                  <p className="mb-4 text-xs text-stone-550 leading-relaxed min-h-[36px]">
+                    {tpl.description}
+                  </p>
+                  <div className="flex flex-wrap gap-1.5 mb-5">
+                    {tpl.features.map((f, i) => (
+                      <span
+                        key={i}
+                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                        style={{ background: `${tpl.color}15`, color: tpl.color }}
+                      >
+                        {f}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between border-t border-stone-100 pt-3 mt-auto">
+                  <span className="text-xs font-bold transition-all flex items-center gap-1" style={{ color: tpl.color }}>
+                    {selected ? (
+                      <>
+                        <Check className="w-3.5 h-3.5" /> Đã chọn mẫu
+                      </>
+                    ) : (
+                      "Chọn mẫu này"
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={(e) => handleOpenDemo(e, tpl)}
+                    className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-[10px] transition-colors border-0 cursor-pointer"
+                  >
+                    Xem thử
+                  </button>
+                </div>
               </div>
-            </motion.button>
+            </motion.div>
           );
         })}
       </div>
@@ -501,7 +555,7 @@ function Step1({
             >
               <button
                 onClick={() => setDemoTemplate(null)}
-                className="absolute top-4 right-4 p-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600"
+                className="absolute top-4 right-4 p-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-600 border-0 cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -514,7 +568,7 @@ function Step1({
                   setGift({ ...gift, templateId: demoTemplate.templateId });
                   setDemoTemplate(null);
                 }}
-                className="w-full py-2.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-bold mt-5 shadow"
+                className="w-full py-2.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-bold mt-5 shadow border-0 cursor-pointer"
               >
                 Chọn Mẫu Này
               </button>
