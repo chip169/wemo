@@ -11,6 +11,7 @@ const orderId2 = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 const orderId3 = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 const orderId4 = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 const orderId5 = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
+const orderId6 = `ORD-${Math.floor(100000 + Math.random() * 900000)}`;
 
 const mockOrders = [
   {
@@ -59,9 +60,9 @@ const mockOrders = [
     createdDate: "2026-06-15",
   },
   {
-    id: "1",
+    id: 1,
     customerName: "Khách Hàng Test",
-    product: "Sản phẩm Test cố định",
+    product: "Sản phẩm Test ngẫu nhiên",
     amount: 99000,
     status: "completed",
     paymentStatus: "paid",
@@ -72,7 +73,7 @@ const mockOrders = [
 const mockGifts = [
   {
     id: "g1b2c3",
-    templateId: "sinh-nhat-party",
+    templateId: "solid-heart",
     photos: ["https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80"],
     hasVideo: false,
     hasVoice: false,
@@ -153,7 +154,7 @@ const seedJSON = () => {
   writeJsonFile("gifts.json", mockGifts);
   writeJsonFile("nfc.json", mockNFC);
   writeJsonFile("messages.json", mockMessages);
-  
+
   // Seed templates.json as well
   const mockTemplates = [
     {
@@ -215,48 +216,6 @@ const seedJSON = () => {
         "Vành đai Saturn hạt sao",
         "Nhạc nền lãng mạn"
       ]
-    },
-    {
-      id: "birthday-3d",
-      name: "Mẫu Sinh Nhật Rực Rỡ 3D",
-      category: "birthday",
-      categoryLabel: "Sinh nhật & Kỷ niệm",
-      usageCount: 24,
-      status: "active",
-      preview: "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400",
-      videoUrl: "",
-      sampleMessage: "Chúc mừng sinh nhật! Chúc tuổi mới thật nhiều niềm vui, sức khoẻ và đạt được mọi ước mơ của mình nhé! 🎉🎂",
-      photos: [
-        "https://images.unsplash.com/photo-1530103862676-de8c9debad1d?w=400",
-        "https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=400"
-      ],
-      features: [
-        "Bánh sinh nhật 3D lung linh",
-        "Pháo hoa rơi rực rỡ",
-        "Nhạc mừng sinh nhật",
-        "Hộp quà tương tác sinh nhật"
-      ]
-    },
-    {
-      id: "galaxy-3d",
-      name: "Mẫu Kỷ Niệm Ngân Hà 3D",
-      category: "anniversary",
-      categoryLabel: "Sinh nhật & Kỷ niệm",
-      usageCount: 45,
-      status: "active",
-      preview: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400",
-      videoUrl: "",
-      sampleMessage: "Kỷ niệm chặng đường bên nhau, cảm ơn anh/em đã đồng hành trong mọi khoảnh khắc ngọt ngào lẫn gian khó. Hãy tiếp tục viết tiếp những chương thật đẹp nhé! ✨",
-      photos: [
-        "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400",
-        "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400"
-      ],
-      features: [
-        "Không gian dải ngân hà 3D",
-        "Sao băng lấp lánh tương tác",
-        "Nhạc piano nhẹ nhàng",
-        "Vòng xoay ảnh kỷ niệm"
-      ]
     }
   ];
   writeJsonFile("templates.json", mockTemplates);
@@ -274,7 +233,7 @@ const seedMongo = async () => {
   console.log("Seeding MongoDB Atlas Database...");
   try {
     await mongoose.connect(MONGO_URI);
-    
+
     // Dynamically load models
     const Gift = require("./models/Gift");
     const Order = require("./models/Order");
@@ -359,7 +318,7 @@ const seedMongo = async () => {
         ]
       }
     ]);
-    
+
     await Admin.create({
       username: "admin",
       password: hashPassword("admin123")

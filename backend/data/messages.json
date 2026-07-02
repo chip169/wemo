@@ -3,18 +3,18 @@
     "sessionId": "Session-112233",
     "sender": "user",
     "text": "Xin chào, tôi muốn hỏi cách liên kết chip NFC với thiệp?",
-    "timestamp": "2026-07-02T03:08:41.114Z"
+    "timestamp": "2026-07-02T07:43:53.642Z"
   },
   {
     "sessionId": "Session-112233",
     "sender": "admin",
     "text": "Chào bạn! Sau khi thiết kế xong thiệp ở Bước 4, bạn bấm 'Gắn Chip NFC' và chạm mặt sau điện thoại vào thẻ WEMO để lưu liên kết nhé.",
-    "timestamp": "2026-07-02T03:14:41.115Z"
+    "timestamp": "2026-07-02T07:49:53.642Z"
   },
   {
     "sessionId": "Session-112233",
     "sender": "user",
     "text": "Vâng mình cảm ơn, mình làm được rồi ạ!",
-    "timestamp": "2026-07-02T03:20:41.115Z"
+    "timestamp": "2026-07-02T07:55:53.642Z"
   }
 ]

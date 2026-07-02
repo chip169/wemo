@@ -1,6 +1,6 @@
 [
   {
-    "id": "ORD-894854",
+    "id": "ORD-635281",
     "customerName": "Nguyễn Văn A",
     "product": "Sinh Nhật Rực Rỡ",
     "amount": 199000,
@@ -9,7 +9,7 @@
     "createdDate": "2026-06-01"
   },
   {
-    "id": "ORD-835519",
+    "id": "ORD-438964",
     "customerName": "Trần Thị B",
     "product": "Ký Ức Lãng Mạn",
     "amount": 250000,
@@ -18,7 +18,7 @@
     "createdDate": "2026-06-05"
   },
   {
-    "id": "ORD-717941",
+    "id": "ORD-610825",
     "customerName": "Lê Văn C",
     "product": "Dòng Thời Gian Kỷ Niệm",
     "amount": 350000,
@@ -27,7 +27,7 @@
     "createdDate": "2026-06-12"
   },
   {
-    "id": "ORD-634739",
+    "id": "ORD-586858",
     "customerName": "Phạm Hồng D",
     "product": "Giáng Sinh Diệu Kỳ",
     "amount": 299000,
@@ -36,7 +36,7 @@
     "createdDate": "2026-06-14"
   },
   {
-    "id": "ORD-898805",
+    "id": "ORD-156314",
     "customerName": "Đỗ Gia Bảo",
     "product": "Chào Đón Em Bé",
     "amount": 199000,
@@ -45,9 +45,9 @@
     "createdDate": "2026-06-15"
   },
   {
-    "id": "1",
+    "id": "ORD-551243",
     "customerName": "Khách Hàng Test",
-    "product": "Sản phẩm Test cố định",
+    "product": "Sản phẩm Test ngẫu nhiên",
     "amount": 99000,
     "status": "completed",
     "paymentStatus": "paid",

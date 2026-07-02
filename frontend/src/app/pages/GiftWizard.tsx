@@ -307,7 +307,7 @@ function OrderCheckGateway({
                 type="text"
                 value={orderId}
                 onChange={(e) => setOrderId(e.target.value)}
-                placeholder="Ví dụ: 1 hoặc ORD-572913"
+                placeholder="Ví dụ: ORD-572913"
                 className="w-full px-5 py-3 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-center font-mono font-bold tracking-wider text-stone-800 bg-white"
                 disabled={loading}
               />
@@ -506,7 +506,7 @@ function Step1({
                 <X className="w-4 h-4" />
               </button>
               <h3 className="font-bold text-stone-900 text-sm mb-4">Xem thử giao diện mẫu</h3>
-              
+
               <DirectPreview gift={demoTemplate} />
 
               <button
@@ -912,7 +912,7 @@ function Step2({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         {/* Left Column: Form & Upload Panel (1/3) */}
         <div className="lg:col-span-1 space-y-4 max-h-[680px] overflow-y-auto pr-2 no-scrollbar">
-          
+
           {/* Card 1: Thông tin thiệp */}
           <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm space-y-4">
             <div className="flex items-center gap-2 mb-1">
@@ -1157,7 +1157,7 @@ function Step2({
             <h3 className="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
               🎥 Video Đính Kèm {gift.videoUrl && "✅"}
             </h3>
-            
+
             <div className="flex gap-2 p-0.5 bg-stone-100 rounded-xl">
               <button
                 type="button"
@@ -1227,7 +1227,7 @@ function Step2({
             <h3 className="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
               🎙️ Ghi Âm Lời Chúc {gift.voiceUrl && "✅"}
             </h3>
-            
+
             <div className="flex gap-2 p-0.5 bg-stone-100 rounded-xl">
               <button
                 type="button"
@@ -1597,9 +1597,8 @@ function SuccessScreen({
           </span>
           <button
             onClick={copy}
-            className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer select-none ${
-              copied ? "bg-green-600 text-white shadow" : "bg-stone-900 text-white hover:bg-stone-800"
-            }`}
+            className={`px-4 py-2 rounded-xl text-xs font-black transition-all cursor-pointer select-none ${copied ? "bg-green-600 text-white shadow" : "bg-stone-900 text-white hover:bg-stone-800"
+              }`}
           >
             {copied ? "Đã chép! ✓" : "Sao Chép"}
           </button>
@@ -1651,7 +1650,7 @@ function SuccessScreen({
                 <X className="w-4 h-4" />
               </button>
               <h3 className="font-black text-stone-900 text-sm mb-4">Mã QR Quà Tặng</h3>
-              
+
               <div className="bg-white p-4 rounded-3xl border border-stone-200/60 inline-block shadow-inner mb-4">
                 <img
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(giftUrl)}`}
@@ -1705,7 +1704,7 @@ function SuccessScreen({
                       <p className="text-[11px] text-stone-600 leading-relaxed text-center font-medium">
                         Trình duyệt/HĐH hiện tại không hỗ trợ ghi NFC trực tiếp (iOS Safari/Chrome/Facebook Browser).
                       </p>
-                      
+
                       <div className="space-y-2 pt-1.5">
                         <div className="p-3 bg-stone-50 border border-stone-100 rounded-xl text-left">
                           <p className="text-[10px] font-bold text-stone-800 mb-1">Cách 1: Sử dụng Mã QR</p>
@@ -1713,7 +1712,7 @@ function SuccessScreen({
                             Quét hoặc in mã QR từ màn hình trước để dán lên quà. Người nhận quét QR là mở được thiệp tức thì.
                           </p>
                         </div>
-                        
+
                         <div className="p-3 bg-stone-50 border border-stone-100 rounded-xl text-left">
                           <p className="text-[10px] font-bold text-stone-800 mb-1">Cách 2: Ghi qua app NFC Tools (Khuyên dùng)</p>
                           <ol className="list-decimal list-inside text-[9px] text-stone-500 space-y-1 mt-1 leading-relaxed">
