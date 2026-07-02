@@ -364,7 +364,7 @@ export function TemplatesPage() {
                 {/* Actions */}
                 <div className="pt-4 grid grid-cols-2 gap-3 border-t border-stone-100">
                   <a
-                    href={template.id === "solid-heart" ? "/templates/tinh-cau-3d" : "/templates/lang-man"}
+                    href={"/admin/preview/" + template.id}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-1 px-3 py-2.5 text-xs font-bold bg-[#E8B4A8]/10 text-[#E8B4A8] rounded-xl hover:bg-[#E8B4A8]/20 transition-all cursor-pointer no-underline"

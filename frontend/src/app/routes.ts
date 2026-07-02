@@ -9,6 +9,7 @@ import { FAQPage } from "./pages/FAQPage";
 import { GiftWizard } from "./pages/GiftWizard";
 import { GiftViewPage } from "./pages/GiftViewPage";
 import { Admin } from "./components/admin/Admin";
+import { AdminTemplatePreviewPage } from "./pages/AdminTemplatePreviewPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AIChibiPage } from "./pages/AIChibiPage";
 
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
   {
     path: "admin",
     Component: Admin,
+  },
+  {
+    path: "admin/preview/:templateId",
+    Component: AdminTemplatePreviewPage,
   },
   {
     path: "/",
