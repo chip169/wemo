@@ -590,7 +590,7 @@ const compressImage = (file: File): Promise<string> => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (event) => {
-      const img = new Image();
+      const img = new window.Image();
       img.src = event.target?.result as string;
       img.onload = () => {
         const canvas = document.createElement("canvas");
@@ -834,46 +834,61 @@ function Step2({
 
     try {
       for (const file of filesToUpload) {
-        // Compress and convert to Base64 first (locally)
+        // Step 1: Compress image using canvas
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
-          reader.onload = (event) => {
-            const img = new Image();
+
+          reader.onloadend = () => {
+            // ✅ Use reader.result directly — event.target?.result is unreliable
+            const dataUrl = reader.result as string;
+            if (!dataUrl || typeof dataUrl !== "string") {
+              reject(new Error("Không thể đọc file ảnh."));
+              return;
+            }
+
+            const img = new window.Image();
             img.onload = () => {
-              const canvas = document.createElement("canvas");
-              let width = img.width;
-              let height = img.height;
-              const MAX_WIDTH = 800;
-              const MAX_HEIGHT = 600;
-              if (width > height) {
-                if (width > MAX_WIDTH) {
-                  height *= MAX_WIDTH / width;
-                  width = MAX_WIDTH;
+              try {
+                const canvas = document.createElement("canvas");
+                let width = img.width;
+                let height = img.height;
+                const MAX_SIZE = 800;
+                // Scale down while maintaining aspect ratio
+                if (width > height && width > MAX_SIZE) {
+                  height = Math.round((height * MAX_SIZE) / width);
+                  width = MAX_SIZE;
+                } else if (height > MAX_SIZE) {
+                  width = Math.round((width * MAX_SIZE) / height);
+                  height = MAX_SIZE;
                 }
-              } else {
-                if (height > MAX_HEIGHT) {
-                  width *= MAX_HEIGHT / height;
-                  height = MAX_HEIGHT;
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                if (ctx) {
+                  ctx.drawImage(img, 0, 0, width, height);
+                  resolve(canvas.toDataURL("image/jpeg", 0.85));
+                } else {
+                  // Canvas context not available — use raw data URL
+                  resolve(dataUrl);
                 }
-              }
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext("2d");
-              if (ctx) {
-                ctx.drawImage(img, 0, 0, width, height);
-                resolve(canvas.toDataURL("image/jpeg", 0.8));
-              } else {
-                resolve(event.target?.result as string);
+              } catch (canvasErr) {
+                // Canvas failed (e.g., security error) — use raw
+                resolve(dataUrl);
               }
             };
-            img.onerror = () => reject(new Error("Không thể xử lý hình ảnh."));
-            img.src = event.target?.result as string;
+            img.onerror = () => {
+              // Image failed to parse — use raw data URL anyway
+              resolve(dataUrl);
+            };
+            img.src = dataUrl;
           };
-          reader.onerror = () => reject(new Error("Không thể đọc tệp."));
+
+          reader.onerror = () => reject(new Error("Không thể đọc tệp ảnh."));
           reader.readAsDataURL(file);
         });
 
-        // Now upload the compressed base64 to Cloudinary via backend API
+        // Step 2: Upload to Cloudinary via backend
+        console.log(`📤 Uploading image: ${file.name}, size: ${Math.round(base64.length / 1024)}KB`);
         const res = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -884,25 +899,28 @@ function Step2({
         });
         const data = await res.json();
         if (res.ok && data.url) {
+          console.log(`✅ Image uploaded: ${data.url}`);
           uploadedUrls.push(data.url);
         } else {
           throw new Error(data.error || "Tải ảnh lên thất bại.");
         }
       }
 
-      // Merge uploaded URLs with current photos using closure value
+      // Step 3: Update gift with new photos
       setGift({ ...gift, photos: [...gift.photos, ...uploadedUrls] });
 
       if (skipped) {
         alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
       }
     } catch (err: any) {
+      console.error("❌ Image upload error:", err);
       alert(err.message || "Có lỗi xảy ra khi xử lý ảnh.");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
       }
+
     }
   };
 
