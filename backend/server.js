@@ -790,21 +790,16 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
 
       // 1) Zalo ZNS (khi có OA)
       if (savedOrder.phone) {
-        try {
-          const { sendZNSOrderConfirmation } = require("./utils/zaloNotify");
-          sendZNSOrderConfirmation({
-            phone: savedOrder.phone,
-            orderId: id,
-            customerName: savedOrder.customerName,
-            product: savedOrder.product || "Figure Chibi 3D",
-            depositAmount: savedOrder.depositAmount || 200000,
-            giftLink,
-          }).then((r) => {
-            if (!r.skipped) console.log(r.success ? `📱 ZNS gửi OK cho ${savedOrder.phone}` : `❌ ZNS lỗi: ${r.error}`);
-          }).catch(() => {});
-        } catch (e) {
-          console.error("ZNS module load error:", e);
-        }
+        sendZNSOrderConfirmation({
+          phone: savedOrder.phone,
+          orderId: id,
+          customerName: savedOrder.customerName,
+          product: savedOrder.product || "Figure Chibi 3D",
+          depositAmount: savedOrder.depositAmount || 200000,
+          giftLink,
+        }).then((r) => {
+          if (!r.skipped) console.log(r.success ? `📱 ZNS gửi OK cho ${savedOrder.phone}` : `❌ ZNS lỗi: ${r.error}`);
+        }).catch(() => {});
       }
 
       // 2) Email xác nhận cho khách
@@ -821,6 +816,8 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
         }).catch(() => {});
+      } else {
+        console.log(`ℹ️ Đơn ${id}: Không có email khách hàng — bỏ qua email xác nhận.`);
       }
 
       // 3) Telegram alert cho admin
