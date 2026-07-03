@@ -246,7 +246,7 @@ app.post("/api/upload", async (req, res) => {
     }
 
     // Extract raw base64 data
-    const base64Data = file.replace(/^data:\w+\/\w+;base64,/, "");
+    const base64Data = file.includes(";base64,") ? file.split(";base64,").pop() : file;
     const buffer = Buffer.from(base64Data, "base64");
 
     // Generate unique file name
@@ -262,7 +262,7 @@ app.post("/api/upload", async (req, res) => {
     res.status(201).json({ url: fileUrl });
   } catch (err) {
     console.error("Upload Error:", err);
-    res.status(500).json({ error: "Lỗi hệ thống khi xử lý tải tệp lên." });
+    res.status(500).json({ error: err.message || "Lỗi hệ thống khi xử lý tải tệp lên." });
   }
 });
 
