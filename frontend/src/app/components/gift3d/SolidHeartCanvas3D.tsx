@@ -554,12 +554,14 @@ function GalaxyScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onO
     const original = gift.photos || [];
     if (original.length === 0) return [];
 
-    let list = [...original];
-    // Fill up to at least 16 cards for the orbiting ring effect
+    let list: { url: string; stableKey: string }[] = original.map((url: string, i: number) => ({ url, stableKey: `orig-${i}-${url}` }));
+    let cycle = 0;
     while (list.length < 16) {
-      list = [...list, ...original];
+      cycle++;
+      const toAdd = original.map((url: string, i: number) => ({ url, stableKey: `dup-${cycle}-${i}-${url}` }));
+      list = [...list, ...toAdd];
     }
-    return list;
+    return list.slice(0, Math.max(16, original.length));
   }, [gift.photos]);
 
   return (
@@ -588,10 +590,10 @@ function GalaxyScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onO
 
       {/* Orbiting Polaroid Cards with rounded corners */}
       {opened &&
-        displayPhotos.map((url: string, i: number) => (
+        displayPhotos.map((item: { url: string; stableKey: string }, i: number) => (
           <OrbitingPhoto
-            key={i}
-            url={url}
+            key={item.stableKey}
+            url={item.url}
             index={i}
             total={displayPhotos.length}
             radius={6.2 + (i % 3) * 1.0}
