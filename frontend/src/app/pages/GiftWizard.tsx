@@ -640,6 +640,14 @@ function Step2({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const maxPhotos = gift.templateId === "solid-heart" ? 16 : 6;
 
+  const getPlayableVoiceUrl = (url: string) => {
+    if (!url) return "";
+    if (url.includes("cloudinary.com") && url.endsWith(".webm")) {
+      return url.replace(/\.webm$/, ".mp3");
+    }
+    return url;
+  };
+
   // AI Chibi states
   const [aiExpanded, setAiExpanded] = useState(false);
   const [portraitImage, setPortraitImage] = useState<string | null>(null);
@@ -818,34 +826,58 @@ function Step2({
     }
 
     setUploading(true);
-    const uploadedUrls: string[] = [];
+    const compressedBase64s: string[] = [];
 
     try {
       for (const file of filesToUpload) {
-        const compressedBase64 = await compressImage(file);
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            file: compressedBase64,
-            fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
-          }),
+        const base64 = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const img = new Image();
+            img.onload = () => {
+              const canvas = document.createElement("canvas");
+              let width = img.width;
+              let height = img.height;
+              const MAX_WIDTH = 800;
+              const MAX_HEIGHT = 600;
+              if (width > height) {
+                if (width > MAX_WIDTH) {
+                  height *= MAX_WIDTH / width;
+                  width = MAX_WIDTH;
+                }
+              } else {
+                if (height > MAX_HEIGHT) {
+                  width *= MAX_HEIGHT / height;
+                  height = MAX_HEIGHT;
+                }
+              }
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext("2d");
+              if (ctx) {
+                ctx.drawImage(img, 0, 0, width, height);
+                resolve(canvas.toDataURL("image/jpeg", 0.8));
+              } else {
+                resolve(event.target?.result as string);
+              }
+            };
+            img.onerror = () => reject(new Error("Không thể xử lý hình ảnh."));
+            img.src = event.target?.result as string;
+          };
+          reader.onerror = () => reject(new Error("Không thể đọc tệp."));
+          reader.readAsDataURL(file);
         });
-        const data = await res.json();
-        if (res.ok && data.url) {
-          uploadedUrls.push(data.url);
-        } else {
-          throw new Error(data.error || "Tải ảnh lên thất bại.");
-        }
+
+        compressedBase64s.push(base64);
       }
 
-      setGift(prev => ({ ...prev, photos: [...prev.photos, ...uploadedUrls] }));
+      setGift(prev => prev ? { ...prev, photos: [...prev.photos, ...compressedBase64s] } : null);
 
       if (skipped) {
-        alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
+        alert(`Đã thêm ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
       }
     } catch (err: any) {
-      alert(err.message || "Có lỗi xảy ra trong quá trình tải ảnh.");
+      alert(err.message || "Có lỗi xảy ra khi xử lý ảnh.");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -1167,7 +1199,7 @@ function Step2({
                   </div>
                 ) : gift.voiceUrl && !recording ? (
                   <div className="w-full space-y-3 text-center">
-                    <audio src={gift.voiceUrl} controls className="mx-auto" />
+                    <audio src={getPlayableVoiceUrl(gift.voiceUrl)} controls preload="auto" className="w-full max-w-full mx-auto" style={{ minWidth: "200px" }} />
                     <button
                       onClick={() => setGift({ ...gift, voiceUrl: "" })}
                       className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
@@ -1199,7 +1231,7 @@ function Step2({
                   </div>
                 ) : gift.voiceUrl ? (
                   <div className="w-full space-y-3 text-center">
-                    <audio src={gift.voiceUrl} controls className="mx-auto" />
+                    <audio src={getPlayableVoiceUrl(gift.voiceUrl)} controls preload="auto" className="w-full max-w-full mx-auto" style={{ minWidth: "200px" }} />
                     <button
                       onClick={() => setGift({ ...gift, voiceUrl: "" })}
                       className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
