@@ -235,22 +235,6 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
 </table>
 </body>
 </html>`;
-};ocaleString("vi-VN")}đ`],
-            ].map(([k, v]) => `
-            <tr>
-              <td style="padding:5px 0;color:#888;font-size:12px;width:130px;">${k}</td>
-              <td style="padding:5px 0;color:#E8B4A8;font-size:13px;font-weight:700;">${v}</td>
-            </tr>`).join("")}
-          </table>
-          <div style="margin-top:20px;padding:12px 16px;background:#1e1e1e;border-radius:8px;border-left:3px solid #D4AF78;">
-            <p style="margin:0;color:#aaa;font-size:11px;">Truy cập admin panel để xem chi tiết và xác nhận đơn hàng.</p>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </td></tr>
-</table>
-</body></html>`;
 };
 
 // ─── Send Order Confirmation to Customer ─────────────────────────────────────
