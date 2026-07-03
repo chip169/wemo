@@ -271,7 +271,7 @@ function HeartScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onOp
       {opened &&
         (gift.photos || []).map((url: string, i: number) => (
           <OrbitingPhoto
-            key={i}
+            key={url}
             url={url}
             index={i}
             total={(gift.photos || []).length}
