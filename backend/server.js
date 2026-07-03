@@ -210,12 +210,39 @@ app.get("/api/auth/verify", authMiddleware, (req, res) => {
   res.json({ valid: true, user: req.admin });
 });
 
-// B. Upload Route (Local Storage with Base64 payload)
+// B. Cloudinary Configuration & Upload Route
+const useCloudinary = !!(
+  process.env.CLOUDINARY_CLOUD_NAME &&
+  process.env.CLOUDINARY_API_KEY &&
+  process.env.CLOUDINARY_API_SECRET
+);
+
+if (useCloudinary) {
+  const cloudinary = require("cloudinary").v2;
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+  console.log("☁️ Cloudinary storage is configured and active.");
+} else {
+  console.log("📁 Cloudinary credentials not found in env. Falling back to local storage.");
+}
+
 app.post("/api/upload", async (req, res) => {
   try {
     const { file, fileName } = req.body;
     if (!file || !fileName) {
       return res.status(400).json({ error: "Thiếu dữ liệu tệp tải lên." });
+    }
+
+    if (useCloudinary) {
+      const cloudinary = require("cloudinary").v2;
+      const uploadResult = await cloudinary.uploader.upload(file, {
+        folder: "wemo_uploads",
+        resource_type: "auto",
+      });
+      return res.status(201).json({ url: uploadResult.secure_url });
     }
 
     // Extract raw base64 data
