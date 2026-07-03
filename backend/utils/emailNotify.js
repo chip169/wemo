@@ -16,37 +16,23 @@
 
 const nodemailer = require("nodemailer");
 
-// ─── Create reusable transporter ─────────────────────────────────────────────
-let _transporter = null;
-
+// ─── Create transporter on each call (avoids stale/null singleton on cloud deploys) ────
 const getTransporter = () => {
-  // Always re-create if not yet initialized (handles env vars loaded after module init)
-  if (_transporter) return _transporter;
-
-  const user = process.env.GMAIL_USER?.trim();
-  const pass = process.env.GMAIL_APP_PASSWORD?.trim();
+  const user = (process.env.GMAIL_USER || "").trim();
+  const pass = (process.env.GMAIL_APP_PASSWORD || "").trim();
 
   if (!user || !pass) {
-    console.warn("⚠️ Email: Chưa cấu hình GMAIL_USER hoặc GMAIL_APP_PASSWORD trong .env.");
+    console.warn("⚠️ Email: Thiếu GMAIL_USER hoặc GMAIL_APP_PASSWORD trong .env");
     return null;
   }
 
-  _transporter = nodemailer.createTransport({
+  return nodemailer.createTransport({
     service: "gmail",
     auth: { user, pass },
+    // Force TLS — required for Gmail App Password
+    secure: false,
+    tls: { rejectUnauthorized: false },
   });
-
-  // Verify connection on first create
-  _transporter.verify((err) => {
-    if (err) {
-      console.error("❌ Gmail SMTP xác thực thất bại:", err.message);
-      _transporter = null; // Reset so next call retries
-    } else {
-      console.log("✅ Gmail SMTP kết nối thành công:", user);
-    }
-  });
-
-  return _transporter;
 };
 
 // ─── HTML Email Template: Order Deposit Confirmed ─────────────────────────────
@@ -251,15 +237,16 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
 
 // ─── Send Order Confirmation to Customer ─────────────────────────────────────
 const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, depositAmount, amount, paidAt, giftLink }) => {
+  console.log(`📧 [Email] sendOrderConfirmEmail called — to: ${email}, orderId: ${orderId}`);
   const transporter = getTransporter();
 
   if (!transporter) {
-    console.warn("⚠️ Email: Chưa cấu hình GMAIL_USER hoặc GMAIL_APP_PASSWORD trong .env. Bỏ qua.");
+    console.warn("⚠️ [Email] Bỏ qua — thiếu GMAIL credentials.");
     return { skipped: true, reason: "Missing Gmail credentials" };
   }
 
   if (!email) {
-    console.warn("⚠️ Email: Khách hàng không có email. Bỏ qua.");
+    console.warn("⚠️ [Email] Bỏ qua — không có email khách hàng.");
     return { skipped: true, reason: "No customer email" };
   }
 
@@ -271,22 +258,27 @@ const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, de
       html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink }),
     });
 
-    console.log(`✅ Email đã gửi đến ${email} — Message ID: ${info.messageId}`);
+    console.log(`✅ [Email] Gửi thành công đến ${email} — Message ID: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`❌ Email lỗi: ${err.message}`);
+    console.error(`❌ [Email] Lỗi gửi email khách hàng:`, err.message, err.code || "");
     return { success: false, error: err.message };
   }
 };
 
 // ─── Send Admin Alert ─────────────────────────────────────────────────────────
 const sendAdminAlertEmail = async (orderData) => {
+  console.log(`📧 [Email] sendAdminAlertEmail called — orderId: ${orderData?.orderId}`);
   const transporter = getTransporter();
-  const adminEmail = process.env.ADMIN_EMAIL;
+  const adminEmail = (process.env.ADMIN_EMAIL || "").trim();
 
-  if (!transporter || !adminEmail) {
-    console.warn("⚠️ Admin Email: Chưa cấu hình ADMIN_EMAIL. Bỏ qua.");
-    return { skipped: true };
+  if (!transporter) {
+    console.warn("⚠️ [Email] Admin alert bỏ qua — thiếu GMAIL credentials.");
+    return { skipped: true, reason: "Missing Gmail credentials" };
+  }
+  if (!adminEmail) {
+    console.warn("⚠️ [Email] Admin alert bỏ qua — thiếu ADMIN_EMAIL trong .env.");
+    return { skipped: true, reason: "Missing ADMIN_EMAIL" };
   }
 
   try {
@@ -297,10 +289,10 @@ const sendAdminAlertEmail = async (orderData) => {
       html: buildAdminAlertHTML(orderData),
     });
 
-    console.log(`✅ Admin alert gửi đến ${adminEmail}`);
+    console.log(`✅ [Email] Admin alert gửi OK đến ${adminEmail} — Message ID: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`❌ Admin email lỗi: ${err.message}`);
+    console.error(`❌ [Email] Lỗi gửi admin alert:`, err.message, err.code || "");
     return { success: false, error: err.message };
   }
 };
