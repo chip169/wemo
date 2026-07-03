@@ -96,7 +96,7 @@ export function AdminTemplatePreviewPage() {
             Trang xem thử 3D này chỉ dành cho quản trị viên. Vui lòng đăng nhập Admin trước.
           </p>
           <Link
-            to="/admin"
+            to="/adminWemo"
             className="w-full py-3 bg-gradient-to-r from-stone-800 to-stone-950 text-white rounded-xl text-xs font-bold shadow-md hover:opacity-95 text-center block cursor-pointer"
           >
             Đăng Nhập Admin
@@ -135,7 +135,7 @@ export function AdminTemplatePreviewPage() {
           <h2 className="text-lg font-extrabold text-stone-900 mb-2">Lỗi</h2>
           <p className="text-xs text-stone-500 max-w-xs mb-6 leading-relaxed">{error}</p>
           <Link
-            to="/admin"
+            to="/adminWemo"
             className="w-full py-3 bg-gradient-to-r from-stone-800 to-stone-950 text-white rounded-xl text-xs font-bold shadow-md hover:opacity-95 text-center block cursor-pointer"
           >
             Quay Lại Admin
@@ -160,7 +160,7 @@ export function AdminTemplatePreviewPage() {
       {/* Admin overlay: back button + label */}
       <div className="absolute top-4 left-4 z-30 pointer-events-auto flex items-center gap-3">
         <button
-          onClick={() => navigate("/admin")}
+          onClick={() => navigate("/adminWemo")}
           className="w-10 h-10 rounded-full bg-white/80 backdrop-blur-sm border border-stone-200 shadow-lg flex items-center justify-center text-stone-700 hover:bg-white transition-all cursor-pointer"
         >
           <ArrowLeft className="w-5 h-5" />
