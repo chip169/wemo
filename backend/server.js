@@ -42,9 +42,10 @@ app.use("/uploads", express.static(UPLOADS_DIR));
 
 const getGifts = async () => {
   if (getDbMode() === "mongodb") {
-    return await Gift.find({});
+    return await Gift.find({}).sort({ _id: -1 });
   } else {
-    return await readJsonFile("gifts.json");
+    const list = await readJsonFile("gifts.json");
+    return [...list].reverse();
   }
 };
 
@@ -74,17 +75,19 @@ const saveTemplatesList = async (list) => {
 
 const getOrders = async () => {
   if (getDbMode() === "mongodb") {
-    return await Order.find({});
+    return await Order.find({}).sort({ _id: -1 });
   } else {
-    return await readJsonFile("orders.json");
+    const list = await readJsonFile("orders.json");
+    return [...list].reverse();
   }
 };
 
 const getNFCTags = async () => {
   if (getDbMode() === "mongodb") {
-    return await NFC.find({});
+    return await NFC.find({}).sort({ _id: -1 });
   } else {
-    return await readJsonFile("nfc.json");
+    const list = await readJsonFile("nfc.json");
+    return [...list].reverse();
   }
 };
 
