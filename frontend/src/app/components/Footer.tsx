@@ -131,10 +131,9 @@ export function Footer() {
           ))}
         </div>
 
-        {/* Bottom bar */}
         <div className="pt-8 border-t border-[#4A3728]/10 flex flex-col sm:flex-row justify-between items-center gap-4">
           <p className="text-[#5C4839]/80 text-sm text-center sm:text-left font-medium">
-            © 2026 WEMO. Bảo lưu mọi quyền. Được tạo với{" "}
+            <a href="/adminWemo" className="cursor-default select-none hover:text-inherit">©</a> 2026 WEMO. Bảo lưu mọi quyền. Được tạo với{" "}
             <Heart className="w-3.5 h-3.5 inline text-white fill-white mx-0.5 animate-pulse" />{" "}
             cho những kết nối ý nghĩa.
           </p>
