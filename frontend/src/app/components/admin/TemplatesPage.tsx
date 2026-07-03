@@ -113,16 +113,7 @@ export function TemplatesPage() {
         reader.readAsDataURL(file);
       });
 
-      const res = await adminFetch("/api/upload", {
-        method: "POST",
-        body: JSON.stringify({
-          file: base64,
-          fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Tải ảnh lên thất bại.");
-      setEditPreview(data.url);
+      setEditPreview(base64);
     } catch (err: any) {
       alert(err.message);
     } finally {
@@ -187,18 +178,8 @@ export function TemplatesPage() {
         reader.readAsDataURL(file);
       });
 
-      const res = await adminFetch("/api/upload", {
-        method: "POST",
-        body: JSON.stringify({
-          file: base64,
-          fileName: `sample-${Date.now()}-${file.name.replace(/\.[^/.]+$/, "")}.jpg`,
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Tải ảnh mẫu thất bại.");
-      
       const updated = [...editPhotos];
-      updated[idx] = data.url;
+      updated[idx] = base64;
       setEditPhotos(updated);
     } catch (err: any) {
       alert(err.message);
@@ -364,7 +345,7 @@ export function TemplatesPage() {
                 {/* Actions */}
                 <div className="pt-4 grid grid-cols-2 gap-3 border-t border-stone-100">
                   <a
-                    href={"/admin/preview/" + template.id}
+                    href={"/adminWemo/preview/" + template.id}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-1 px-3 py-2.5 text-xs font-bold bg-[#E8B4A8]/10 text-[#E8B4A8] rounded-xl hover:bg-[#E8B4A8]/20 transition-all cursor-pointer no-underline"
@@ -440,12 +421,15 @@ export function TemplatesPage() {
                       placeholder="Nhập đường dẫn URL ảnh..."
                       className="w-full px-4 py-2 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-[11px] transition-colors"
                     />
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="text-xs text-stone-500 file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#E8B4A8]/10 file:text-[#E8B4A8] hover:file:bg-[#E8B4A8]/20 cursor-pointer"
-                    />
+                    <label className="inline-block px-3 py-1.5 rounded-full text-xs font-semibold bg-[#E8B4A8]/10 text-[#E8B4A8] hover:bg-[#E8B4A8]/20 cursor-pointer transition-all w-fit">
+                      Chọn tệp ảnh bìa
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                      />
+                    </label>
                     {uploadingImage && (
                       <span className="text-[10px] text-stone-400 font-medium block">
                         Đang tải ảnh lên...
@@ -519,12 +503,15 @@ export function TemplatesPage() {
                             placeholder="Đường dẫn URL ảnh mẫu..."
                             className="w-full px-3 py-1.5 rounded-lg border border-stone-200 outline-none focus:border-[#E8B4A8] text-[10px] transition-colors"
                           />
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleSamplePhotoUpload(e, idx)}
-                            className="text-[10px] text-stone-500 file:mr-2 file:py-0.5 file:px-2 file:rounded-full file:border-0 file:text-[9px] file:font-semibold file:bg-[#E8B4A8]/10 file:text-[#E8B4A8] hover:file:bg-[#E8B4A8]/20 cursor-pointer"
-                          />
+                          <label className="inline-block px-2 py-1 rounded-full text-[9px] font-semibold bg-[#E8B4A8]/10 text-[#E8B4A8] hover:bg-[#E8B4A8]/20 cursor-pointer transition-all w-fit">
+                            Chọn tệp ảnh mẫu
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleSamplePhotoUpload(e, idx)}
+                              className="hidden"
+                            />
+                          </label>
                         </div>
                         <button
                           type="button"
