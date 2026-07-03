@@ -1890,9 +1890,12 @@ function SuccessScreen({
 
 // ─── Main Component ──────────────────────────────────────────────────────────
 
-const defaultGift = (orderId: string, orderSignature: string): GiftData => {
+const defaultGift = (orderId: string, orderSignature: string, chibiUrlOverride?: string): GiftData => {
   const params = new URLSearchParams(window.location.search);
-  const chibiUrl = params.get("chibiUrl");
+  // Check chibiUrl from URL param (old flow) or sessionStorage (new flow)
+  const chibiUrl = chibiUrlOverride || params.get("chibiUrl") || sessionStorage.getItem("wemo_chibi_url") || "";
+  // Clear sessionStorage after reading
+  if (chibiUrl) sessionStorage.removeItem("wemo_chibi_url");
   return {
     theme: "tinh-yeu",
     templateId: "love-romantic",
@@ -1916,6 +1919,7 @@ export function GiftWizard() {
   const [done, setDone] = useState(false);
   const [createdGiftId, setCreatedGiftId] = useState("");
   const [saving, setSaving] = useState(false);
+  const [bypassLoading, setBypassLoading] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // Load dynamic template settings from DB to allow admin modifications to reflect immediately
@@ -1939,6 +1943,30 @@ export function GiftWizard() {
         setTemplates(merged);
       })
       .catch((err) => console.error("Error loading templates:", err));
+  }, []);
+
+  // Auto-bypass gateway when arriving from payment flow (orderId in URL param)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlOrderId = params.get("orderId");
+    if (!urlOrderId) return;
+
+    setBypassLoading(true);
+    // Verify order is deposited, then bypass gateway
+    fetch(`/api/orders/check-payment/${urlOrderId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.deposited || data.status === "deposited") {
+          // Use a pseudo-signature since we verified payment server-side
+          const pseudoSignature = "payment_verified";
+          setValidatedOrderId(urlOrderId);
+          setOrderSignature(pseudoSignature);
+          setGift(defaultGift(urlOrderId, pseudoSignature));
+          setStep(0);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setBypassLoading(false));
   }, []);
 
   const handleValidOrder = (orderId: string, signature: string) => {
@@ -1989,6 +2017,19 @@ export function GiftWizard() {
       setSaving(false);
     }
   };
+
+  if (bypassLoading) {
+    return (
+      <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78] flex items-center justify-center mx-auto animate-pulse">
+            <Sparkles className="w-8 h-8 text-white" />
+          </div>
+          <p className="text-sm font-bold text-stone-600">Đang tải thiết kế thiệp...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!validatedOrderId || !gift) {
     return (
