@@ -11,7 +11,7 @@ const authMiddleware = require("./middleware/authMiddleware");
 const rateLimiter = require("./middleware/rateLimiter");
 const { sendZNSOrderConfirmation } = require("./utils/zaloZNS");
 const { sendOrderConfirmEmail, sendAdminAlertEmail } = require("./utils/emailNotify");
-const { notifyNewOrder, notifyGiftCreated } = require("./utils/telegramNotify");
+const { notifyNewOrder, notifyGiftCreated, notifyPendingPayment } = require("./utils/telegramNotify");
 
 const Gift = require("./models/Gift");
 const Order = require("./models/Order");
@@ -475,6 +475,17 @@ app.post("/api/orders/create-draft", async (req, res) => {
       orders.push(newOrder);
       await writeJsonFile("orders.json", orders);
     }
+
+    // Gửi thông báo Telegram chờ cọc (fire-and-forget)
+    notifyPendingPayment({
+      orderId,
+      customerName: newOrder.customerName,
+      phone: newOrder.phone || "N/A",
+      address: newOrder.address || "",
+      product: newOrder.product || "Figure Chibi 3D",
+      amount: newOrder.amount,
+      depositAmount: newOrder.depositAmount,
+    }).catch(() => {});
 
     res.status(201).json({ success: true, orderId, depositAmount: newOrder.depositAmount });
   } catch (err) {
