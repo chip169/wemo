@@ -108,7 +108,7 @@ export function PricingPage() {
 
   return (
     <div
-      className="pt-24 relative overflow-hidden"
+      className="pt-28 relative overflow-hidden"
       style={{ background: "#FAF8F5" }}
     >
       {/* Ambient Background Glows */}
