@@ -791,14 +791,19 @@ function Step2({
   const [voiceMode, setVoiceMode] = useState<"record" | "upload">("record");
   const [recording, setRecording] = useState(false);
   const [recordDuration, setRecordDuration] = useState(0);
+  // localVoiceUrl: blob URL for immediate local playback (no need to wait for upload)
+  const [localVoiceUrl, setLocalVoiceUrl] = useState<string>("");
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<any>(null);
   const voiceInputRef = useRef<HTMLInputElement>(null);
+  const localVoiceUrlRef = useRef<string>(""); // track for revoke
 
   useEffect(() => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
+      // Revoke blob URL to free memory
+      if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
     };
   }, []);
 
@@ -885,7 +890,8 @@ function Step2({
         }
       }
 
-      setGift(prev => prev ? { ...prev, photos: [...prev.photos, ...uploadedUrls] } : null);
+      // Merge uploaded URLs with current photos using closure value
+      setGift({ ...gift, photos: [...gift.photos, ...uploadedUrls] });
 
       if (skipped) {
         alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
@@ -901,7 +907,7 @@ function Step2({
   };
 
   const removePhoto = (i: number) => {
-    setGift((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }));
+    setGift({ ...gift, photos: gift.photos.filter((_, idx) => idx !== i) });
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -924,7 +930,7 @@ function Step2({
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Tải video lên thất bại.");
-        setGift(prev => ({ ...prev, videoUrl: data.url }));
+        setGift({ ...gift, videoUrl: data.url });
       } catch (err: any) {
         alert(err.message);
       } finally {
@@ -938,7 +944,15 @@ function Step2({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
-      const mediaRecorder = new MediaRecorder(stream);
+
+      // Prefer audio/mp4 (AAC) for iOS/Safari compatibility, fallback to webm
+      const mimeType = MediaRecorder.isTypeSupported("audio/mp4")
+        ? "audio/mp4"
+        : MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : "audio/webm";
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
       mediaRecorderRef.current = mediaRecorder;
 
       mediaRecorder.ondataavailable = (event) => {
@@ -948,32 +962,44 @@ function Step2({
       };
 
       mediaRecorder.onstop = async () => {
-        const mimeType = mediaRecorderRef.current?.mimeType || "audio/webm";
-        const ext = mimeType.includes("mp4") ? "mp4" : mimeType.includes("ogg") ? "ogg" : "webm";
-        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
+        const finalMime = mediaRecorderRef.current?.mimeType || mimeType;
+        const ext = finalMime.includes("mp4") ? "mp4" : finalMime.includes("ogg") ? "ogg" : "webm";
+        const audioBlob = new Blob(audioChunksRef.current, { type: finalMime });
+
+        // 1) Create local blob URL immediately for playback (no upload wait)
+        if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
+        const blobUrl = URL.createObjectURL(audioBlob);
+        localVoiceUrlRef.current = blobUrl;
+        setLocalVoiceUrl(blobUrl);
+        // Set a placeholder so the player shows up immediately
+        setGift({ ...gift, voiceUrl: "local://pending" });
+
+        // 2) Upload to server in background
         setVoiceUploading(true);
-        const reader = new FileReader();
-        reader.readAsDataURL(audioBlob);
-        reader.onloadend = async () => {
-          try {
-            const base64data = reader.result as string;
-            const res = await fetch("/api/upload", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                file: base64data,
-                fileName: `voice-${Date.now()}.${ext}`,
-              }),
-            });
-            const data = await res.json();
-            if (!res.ok) throw new Error(data.error || "Tải ghi âm lên thất bại.");
-            setGift(prev => ({ ...prev, voiceUrl: data.url }));
-          } catch (err: any) {
-            alert(err.message);
-          } finally {
-            setVoiceUploading(false);
-          }
-        };
+        try {
+          const reader = new FileReader();
+          const base64data = await new Promise<string>((resolve, reject) => {
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = () => reject(new Error("Read error"));
+            reader.readAsDataURL(audioBlob);
+          });
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              file: base64data,
+              fileName: `voice-${Date.now()}.${ext}`,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Tải ghi âm lên thất bại.");
+          // Replace placeholder with real server URL
+          setGift({ ...gift, voiceUrl: data.url });
+        } catch (err: any) {
+          alert("Ghi âm đã lưu cục bộ nhưng tải lên thất bại: " + err.message);
+        } finally {
+          setVoiceUploading(false);
+        }
 
         stream.getTracks().forEach((track) => track.stop());
       };
@@ -1154,7 +1180,7 @@ function Step2({
                 <div className="w-full space-y-3 text-center">
                   <video src={gift.videoUrl} controls className="w-full max-h-[140px] rounded-lg bg-black" />
                   <button
-                    onClick={() => setGift(prev => prev ? { ...prev, videoUrl: "" } : null)}
+                    onClick={() => setGift({ ...gift, videoUrl: "" })}
                     className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
                   >
                     Xóa Video
@@ -1206,25 +1232,35 @@ function Step2({
 
             {voiceMode === "record" ? (
               <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-5 bg-stone-50/50">
-                {voiceUploading ? (
-                  <div className="flex flex-col items-center gap-2 py-2">
-                    <Loader2 className="w-6 h-6 animate-spin text-[#E8B4A8]" />
-                    <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang tải bản thu...</span>
-                  </div>
-                ) : gift.voiceUrl && !recording ? (
-                  <div className="w-full space-y-3 text-center overflow-hidden">
+                {/* Has a recording ready (local or uploaded) */}
+                {(gift.voiceUrl || localVoiceUrl) && !recording ? (
+                  <div className="w-full space-y-2 text-center overflow-hidden">
+                    {/* Playback uses localVoiceUrl (blob) for instant audio, falls back to server URL */}
                     <div className="w-full overflow-hidden">
                       <audio
-                        key={gift.voiceUrl}
-                        src={getPlayableVoiceUrl(gift.voiceUrl)}
+                        key={localVoiceUrl || gift.voiceUrl}
+                        src={localVoiceUrl || gift.voiceUrl}
                         controls
                         preload="auto"
                         className="w-full block"
                         style={{ maxWidth: "100%", minWidth: 0 }}
                       />
                     </div>
+                    {/* Upload progress indicator */}
+                    {voiceUploading && (
+                      <div className="flex items-center justify-center gap-2 py-1">
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#E8B4A8]" />
+                        <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang lưu lên máy chủ...</span>
+                      </div>
+                    )}
                     <button
-                      onClick={() => setGift({ ...gift, voiceUrl: "" })}
+                      onClick={() => {
+                        // Revoke blob URL
+                        if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
+                        localVoiceUrlRef.current = "";
+                        setLocalVoiceUrl("");
+                        setGift({ ...gift, voiceUrl: "" });
+                      }}
                       className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
                     >
                       Xóa Bản Thu Âm
