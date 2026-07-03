@@ -285,7 +285,7 @@ export function OrderFormPage() {
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-3xl border border-stone-200/60 shadow-xl overflow-hidden">
+        <div className="bg-white rounded-3xl border border-stone-200/60 shadow-xl overflow-hidden relative">
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78]" />
 
           <AnimatePresence mode="wait">
