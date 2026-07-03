@@ -92,7 +92,7 @@ const convertToBase64 = (file: File): Promise<string> => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
-      const img = new Image();
+      const img = new window.Image();
       img.src = e.target?.result as string;
       img.onload = () => {
         const canvas = document.createElement("canvas");
