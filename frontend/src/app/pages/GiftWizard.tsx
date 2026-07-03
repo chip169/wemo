@@ -7,6 +7,7 @@ import {
   Check,
   Music,
   Mic,
+  Square,
   Video,
   Image,
   Gift,
@@ -799,27 +800,52 @@ function Step2({
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const currentPhotos = gift.photos;
+    const spaceLeft = maxPhotos - currentPhotos.length;
+    if (spaceLeft <= 0) {
+      alert(`Bộ sưu tập ảnh thiệp đã đầy (Tối đa ${maxPhotos} ảnh). Vui lòng xóa bớt ảnh trước khi thêm.`);
+      return;
+    }
+
+    let filesToUpload = files;
+    let skipped = false;
+    if (files.length > spaceLeft) {
+      filesToUpload = files.slice(0, spaceLeft);
+      skipped = true;
+    }
 
     setUploading(true);
+    const uploadedUrls: string[] = [];
+
     try {
-      const compressedBase64 = await compressImage(file);
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          file: compressedBase64,
-          fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
-        }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        throw new Error(data.error || "Tải ảnh lên thất bại.");
+      for (const file of filesToUpload) {
+        const compressedBase64 = await compressImage(file);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file: compressedBase64,
+            fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+          }),
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          uploadedUrls.push(data.url);
+        } else {
+          throw new Error(data.error || "Tải ảnh lên thất bại.");
+        }
       }
-      setGift({ ...gift, photos: [...gift.photos, data.url] });
+
+      setGift(prev => ({ ...prev, photos: [...prev.photos, ...uploadedUrls] }));
+
+      if (skipped) {
+        alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
+      }
     } catch (err: any) {
-      alert(err.message);
+      alert(err.message || "Có lỗi xảy ra trong quá trình tải ảnh.");
     } finally {
       setUploading(false);
       if (fileInputRef.current) {
@@ -875,7 +901,9 @@ function Step2({
       };
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: "audio/wav" });
+        const mimeType = mediaRecorderRef.current?.mimeType || "audio/webm";
+        const ext = mimeType.includes("mp4") ? "mp4" : mimeType.includes("ogg") ? "ogg" : "webm";
+        const audioBlob = new Blob(audioChunksRef.current, { type: mimeType });
         setVoiceUploading(true);
         const reader = new FileReader();
         reader.readAsDataURL(audioBlob);
@@ -887,7 +915,7 @@ function Step2({
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({
                 file: base64data,
-                fileName: `voice-${Date.now()}.wav`,
+                fileName: `voice-${Date.now()}.${ext}`,
               }),
             });
             const data = await res.json();
@@ -1047,6 +1075,7 @@ function Step2({
                     ref={fileInputRef}
                     onChange={handleFileChange}
                     accept="image/*"
+                    multiple
                     style={{ display: "none" }}
                   />
                   <button
