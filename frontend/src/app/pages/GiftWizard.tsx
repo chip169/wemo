@@ -642,9 +642,8 @@ function Step2({
 
   const getPlayableVoiceUrl = (url: string) => {
     if (!url) return "";
-    if (url.includes("cloudinary.com") && url.endsWith(".webm")) {
-      return url.replace(/\.webm$/, ".mp3");
-    }
+    // Return the URL as-is; let the browser handle the format
+    // Cloudinary auto-transcodes audio on the fly based on Accept headers
     return url;
   };
 
@@ -1098,9 +1097,9 @@ function Step2({
             </h3>
             <div className="flex flex-wrap gap-3">
               {gift.photos.map((src, i) => (
-                <motion.div
-                  key={i}
-                  className="relative rounded-xl overflow-hidden shadow-sm w-16 h-16 border"
+                <div
+                  key={src}
+                  className="relative rounded-xl overflow-hidden shadow-sm w-16 h-16 border flex-shrink-0"
                 >
                   <img src={src} alt="" className="w-full h-full object-cover" />
                   <button
@@ -1109,7 +1108,7 @@ function Step2({
                   >
                     <X className="w-2.5 h-2.5 text-white" />
                   </button>
-                </motion.div>
+                </div>
               ))}
               {uploading && (
                 <div className="w-16 h-16 rounded-xl flex items-center justify-center border border-stone-200 bg-stone-50">
@@ -1213,8 +1212,17 @@ function Step2({
                     <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang tải bản thu...</span>
                   </div>
                 ) : gift.voiceUrl && !recording ? (
-                  <div className="w-full space-y-3 text-center">
-                    <audio src={getPlayableVoiceUrl(gift.voiceUrl)} controls preload="auto" className="w-full max-w-full mx-auto" style={{ minWidth: "200px" }} />
+                  <div className="w-full space-y-3 text-center overflow-hidden">
+                    <div className="w-full overflow-hidden">
+                      <audio
+                        key={gift.voiceUrl}
+                        src={getPlayableVoiceUrl(gift.voiceUrl)}
+                        controls
+                        preload="auto"
+                        className="w-full block"
+                        style={{ maxWidth: "100%", minWidth: 0 }}
+                      />
+                    </div>
                     <button
                       onClick={() => setGift({ ...gift, voiceUrl: "" })}
                       className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
@@ -1245,8 +1253,17 @@ function Step2({
                     <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang tải tệp âm thanh...</span>
                   </div>
                 ) : gift.voiceUrl ? (
-                  <div className="w-full space-y-3 text-center">
-                    <audio src={getPlayableVoiceUrl(gift.voiceUrl)} controls preload="auto" className="w-full max-w-full mx-auto" style={{ minWidth: "200px" }} />
+                  <div className="w-full space-y-3 text-center overflow-hidden">
+                    <div className="w-full overflow-hidden">
+                      <audio
+                        key={gift.voiceUrl}
+                        src={getPlayableVoiceUrl(gift.voiceUrl)}
+                        controls
+                        preload="auto"
+                        className="w-full block"
+                        style={{ maxWidth: "100%", minWidth: 0 }}
+                      />
+                    </div>
                     <button
                       onClick={() => setGift({ ...gift, voiceUrl: "" })}
                       className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
