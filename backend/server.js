@@ -9,6 +9,9 @@ const { readJsonFile, writeJsonFile } = require("./utils/storage");
 const { hashPassword, generateToken, signOrderId, verifyOrderIdSignature } = require("./utils/auth");
 const authMiddleware = require("./middleware/authMiddleware");
 const rateLimiter = require("./middleware/rateLimiter");
+const { sendZNSOrderConfirmation } = require("./utils/zaloZNS");
+const { sendOrderConfirmEmail, sendAdminAlertEmail } = require("./utils/emailNotify");
+const { notifyNewOrder, notifyGiftCreated } = require("./utils/telegramNotify");
 
 const Gift = require("./models/Gift");
 const Order = require("./models/Order");
@@ -97,6 +100,23 @@ const getMessagesList = async () => {
 
 const sseClients = new Map(); // sessionId -> Array of Response objects
 const adminClients = []; // Array of Response objects
+
+// ─── AI Chibi Rate Limiter (lifetime 3 calls per IP, in-memory) ───────────────
+const chibiUsageMap = new Map(); // ip -> count
+const CHIBI_MAX_CALLS = 3;
+
+const chibiRateLimiter = (req, res, next) => {
+  const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket?.remoteAddress || "unknown";
+  const count = chibiUsageMap.get(ip) || 0;
+  if (count >= CHIBI_MAX_CALLS) {
+    return res.status(429).json({
+      error: "Bạn đã sử dụng hết 3 lượt tạo ảnh Chibi miễn phí. Vui lòng đặt hàng để tiếp tục trải nghiệm!",
+      limitReached: true
+    });
+  }
+  chibiUsageMap.set(ip, count + 1);
+  next();
+};
 
 app.get("/api/support/stream", (req, res) => {
   const { sessionId, isAdmin } = req.query;
@@ -416,6 +436,192 @@ app.put("/api/gifts/:id", authMiddleware, async (req, res) => {
 });
 
 // 3. Orders Endpoints
+
+// 3a. Create Draft Order (Public — no auth) — Called from OrderFormPage
+app.post("/api/orders/create-draft", async (req, res) => {
+  const { customerName, phone, email, address, note, chibiUrl, productConfig, amount, depositAmount } = req.body;
+  if (!customerName || !phone || !amount) {
+    return res.status(400).json({ error: "Vui lòng điền đầy đủ: Họ tên, Số điện thoại." });
+  }
+
+  try {
+    const randomNum = Math.floor(100000 + Math.random() * 900000);
+    const orderId = `ORD-${randomNum}`;
+
+    const newOrder = {
+      id: orderId,
+      customerName,
+      phone: phone || "",
+      email: email || "",
+      address: address || "",
+      note: note || "",
+      chibiUrl: chibiUrl || "",
+      productConfig: productConfig || { size: "10cm", quantity: 1, base: "none", led: false },
+      product: `Figure Chibi 3D ${productConfig?.size || "10cm"} x${productConfig?.quantity || 1}`,
+      amount: Number(amount),
+      depositAmount: Number(depositAmount) || 200000,
+      status: "pending_payment",
+      paymentStatus: "unpaid",
+      paidAt: "",
+      giftId: "",
+      createdDate: new Date().toISOString().split("T")[0],
+    };
+
+    if (getDbMode() === "mongodb") {
+      const orderDoc = new Order(newOrder);
+      await orderDoc.save();
+    } else {
+      const orders = await readJsonFile("orders.json");
+      orders.push(newOrder);
+      await writeJsonFile("orders.json", orders);
+    }
+
+    res.status(201).json({ success: true, orderId, depositAmount: newOrder.depositAmount });
+  } catch (err) {
+    console.error("Create draft order error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 3b. Check Payment Status (Public Polling)
+app.get("/api/orders/check-payment/:orderId", async (req, res) => {
+  const { orderId } = req.params;
+  try {
+    let order = null;
+    if (getDbMode() === "mongodb") {
+      order = await Order.findOne({ id: orderId });
+    } else {
+      const orders = await readJsonFile("orders.json");
+      order = orders.find((o) => o.id === orderId);
+    }
+
+    if (!order) {
+      return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
+    }
+
+    const deposited = order.status === "deposited" || order.paymentStatus === "paid";
+    res.json({
+      orderId,
+      status: order.status,
+      paymentStatus: order.paymentStatus,
+      deposited,
+      customerName: order.customerName,
+      depositAmount: order.depositAmount,
+      paidAt: order.paidAt || "",
+      adminPhone: process.env.ADMIN_PHONE || "",
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 3c. Payment Webhook (Simulate bank callback — also used for admin manual confirm)
+app.post("/api/webhook/payment", async (req, res) => {
+  const { orderId, secret } = req.body;
+  // Simple shared secret for webhook security (admin can also call this manually)
+  const WEBHOOK_SECRET = process.env.WEBHOOK_SECRET || "wemo_payment_2026";
+  if (!orderId) {
+    return res.status(400).json({ error: "Thiếu orderId." });
+  }
+  if (secret && secret !== WEBHOOK_SECRET) {
+    return res.status(403).json({ error: "Webhook secret không hợp lệ." });
+  }
+
+  try {
+    const paidAt = new Date().toISOString();
+    let savedOrder = null;
+
+    if (getDbMode() === "mongodb") {
+      const order = await Order.findOne({ id: orderId });
+      if (!order) return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
+      order.status = "deposited";
+      order.paymentStatus = "paid";
+      order.paidAt = paidAt;
+      await order.save();
+      savedOrder = order.toObject ? order.toObject() : order;
+    } else {
+      const orders = await readJsonFile("orders.json");
+      const idx = orders.findIndex((o) => o.id === orderId);
+      if (idx === -1) return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
+      orders[idx].status = "deposited";
+      orders[idx].paymentStatus = "paid";
+      orders[idx].paidAt = paidAt;
+      await writeJsonFile("orders.json", orders);
+      savedOrder = orders[idx];
+    }
+
+    console.log(`✅ Payment confirmed for order ${orderId} at ${paidAt}`);
+
+    // ─── Gửi thông báo (fire-and-forget) ─────────────────────────────────────
+    if (savedOrder) {
+      const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+      const host = req.get("host");
+      const giftLink = `${protocol}://${host}/create?orderId=${orderId}`;
+
+      // 1) Zalo ZNS (khi có OA)
+      if (savedOrder.phone) {
+        sendZNSOrderConfirmation({
+          phone: savedOrder.phone,
+          orderId,
+          customerName: savedOrder.customerName,
+          product: savedOrder.product || "Figure Chibi 3D",
+          depositAmount: savedOrder.depositAmount || 200000,
+          giftLink,
+        }).then((r) => {
+          if (!r.skipped) console.log(r.success ? `📱 ZNS gửi OK cho ${savedOrder.phone}` : `❌ ZNS lỗi: ${r.error}`);
+        }).catch(() => {});
+      }
+
+      // 2) Email xác nhận cho khách
+      if (savedOrder.email) {
+        sendOrderConfirmEmail({
+          email: savedOrder.email,
+          customerName: savedOrder.customerName,
+          orderId,
+          product: savedOrder.product || "Figure Chibi 3D",
+          depositAmount: savedOrder.depositAmount || 200000,
+          amount: savedOrder.amount,
+          paidAt,
+          giftLink,
+        }).then((r) => {
+          if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
+        }).catch(() => {});
+      }
+
+      // 3) Telegram alert cho admin
+      notifyNewOrder({
+        orderId,
+        customerName: savedOrder.customerName,
+        phone: savedOrder.phone || "N/A",
+        address: savedOrder.address || "",
+        product: savedOrder.product || "Figure Chibi 3D",
+        amount: savedOrder.amount,
+        depositAmount: savedOrder.depositAmount || 200000,
+        paidAt,
+      }).then((r) => {
+        if (!r.skipped) console.log(r.success ? `🤖 Telegram alert gửi OK` : `❌ Telegram lỗi: ${r.error}`);
+      }).catch(() => {});
+
+      // 4) Admin email alert
+      sendAdminAlertEmail({
+        orderId,
+        customerName: savedOrder.customerName,
+        phone: savedOrder.phone || "N/A",
+        address: savedOrder.address || "",
+        product: savedOrder.product || "Figure Chibi 3D",
+        amount: savedOrder.amount,
+        depositAmount: savedOrder.depositAmount || 200000,
+        paidAt,
+      }).catch(() => {});
+    }
+
+    res.json({ success: true, orderId, paidAt });
+  } catch (err) {
+    console.error("Webhook payment error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.get("/api/orders", authMiddleware, async (req, res) => {
   try {
     const orders = await getOrders();
@@ -921,8 +1127,8 @@ const fetchImageWithHttps = (url, headers = {}, body = null) => {
   });
 };
 
-// 9. AI Chibi Generator Route
-app.post("/api/ai/generate-chibi", async (req, res) => {
+// 9. AI Chibi Generator Route (rate limited: 3 times per IP lifetime)
+app.post("/api/ai/generate-chibi", chibiRateLimiter, async (req, res) => {
   try {
     const { image, style } = req.body;
     if (!image) {
