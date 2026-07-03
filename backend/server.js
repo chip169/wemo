@@ -691,11 +691,15 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
   const { customerName, product, amount, status, paymentStatus } = req.body;
 
   try {
+    let oldStatus = "";
+    let savedOrder = null;
+
     if (getDbMode() === "mongodb") {
       const order = await Order.findOne({ id });
       if (!order) {
         return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
       }
+      oldStatus = order.status;
 
       if (customerName !== undefined) order.customerName = customerName;
       if (product !== undefined) order.product = product;
@@ -703,7 +707,16 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       if (status !== undefined) order.status = status;
       if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
 
+      // Update payment status automatically if status is manually set to deposited
+      if (status === "deposited" && oldStatus !== "deposited") {
+        order.paymentStatus = "paid";
+        if (!order.paidAt) {
+          order.paidAt = new Date().toISOString();
+        }
+      }
+
       await order.save();
+      savedOrder = order.toObject ? order.toObject() : order;
       res.json(order);
     } else {
       const orders = await readJsonFile("orders.json");
@@ -713,15 +726,102 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       }
 
       const order = orders[orderIndex];
+      oldStatus = order.status;
+
       if (customerName !== undefined) order.customerName = customerName;
       if (product !== undefined) order.product = product;
       if (amount !== undefined) order.amount = Number(amount);
       if (status !== undefined) order.status = status;
       if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
 
+      if (status === "deposited" && oldStatus !== "deposited") {
+        order.paymentStatus = "paid";
+        if (!order.paidAt) {
+          order.paidAt = new Date().toISOString();
+        }
+      }
+
       orders[orderIndex] = order;
       await writeJsonFile("orders.json", orders);
+      savedOrder = order;
       res.json(order);
+    }
+
+    // Trigger emails and notifications when transitioning to deposited
+    if (status === "deposited" && oldStatus !== "deposited" && savedOrder) {
+      const paidAt = savedOrder.paidAt || new Date().toISOString();
+      const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+      const host = req.get("host");
+      const giftLink = `${protocol}://${host}/create?orderId=${id}`;
+
+      // 1) Zalo ZNS (khi có OA)
+      if (savedOrder.phone) {
+        try {
+          const { sendZNSOrderConfirmation } = require("./utils/zaloNotify");
+          sendZNSOrderConfirmation({
+            phone: savedOrder.phone,
+            orderId: id,
+            customerName: savedOrder.customerName,
+            product: savedOrder.product || "Figure Chibi 3D",
+            depositAmount: savedOrder.depositAmount || 200000,
+            giftLink,
+          }).then((r) => {
+            if (!r.skipped) console.log(r.success ? `📱 ZNS gửi OK cho ${savedOrder.phone}` : `❌ ZNS lỗi: ${r.error}`);
+          }).catch(() => {});
+        } catch (e) {
+          console.error("ZNS module load error:", e);
+        }
+      }
+
+      // 2) Email xác nhận cho khách
+      if (savedOrder.email) {
+        sendOrderConfirmEmail({
+          email: savedOrder.email,
+          customerName: savedOrder.customerName,
+          orderId: id,
+          product: savedOrder.product || "Figure Chibi 3D",
+          depositAmount: savedOrder.depositAmount || 200000,
+          amount: savedOrder.amount,
+          paidAt,
+          giftLink,
+        }).then((r) => {
+          if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
+        }).catch(() => {});
+      }
+
+      // 3) Telegram alert cho admin
+      try {
+        const { notifyNewOrder } = require("./utils/telegramNotify");
+        notifyNewOrder({
+          orderId: id,
+          customerName: savedOrder.customerName,
+          phone: savedOrder.phone || "N/A",
+          address: savedOrder.address || "",
+          product: savedOrder.product || "Figure Chibi 3D",
+          amount: savedOrder.amount,
+          depositAmount: savedOrder.depositAmount || 200000,
+          paidAt,
+        }).then((r) => {
+          if (!r.skipped) console.log(r.success ? `🤖 Telegram alert gửi OK` : `❌ Telegram lỗi: ${r.error}`);
+        }).catch(() => {});
+      } catch (e) {
+        console.error("Telegram module load error:", e);
+      }
+
+      // 4) Admin email alert
+      sendAdminAlertEmail({
+        orderId: id,
+        customerName: savedOrder.customerName,
+        phone: savedOrder.phone || "N/A",
+        address: savedOrder.address || "",
+        product: savedOrder.product || "Figure Chibi 3D",
+        amount: savedOrder.amount,
+        depositAmount: savedOrder.depositAmount || 200000,
+        paidAt,
+        giftLink,
+      }).then((r) => {
+        if (!r.skipped) console.log(r.success ? `📧 Admin email alert gửi OK` : `❌ Admin email lỗi: ${r.error}`);
+      }).catch(() => {});
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
