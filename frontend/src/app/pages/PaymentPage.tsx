@@ -42,7 +42,22 @@ export function PaymentPage() {
   const { orderId } = useParams<{ orderId: string }>();
   const navigate = useNavigate();
 
-  const [countdown, setCountdown] = useState(COUNTDOWN_SECONDS);
+  const [countdown, setCountdown] = useState(() => {
+    if (orderId) {
+      try {
+        const key = `wemo_payment_expiry_${orderId}`;
+        const stored = localStorage.getItem(key);
+        if (stored) {
+          const expiry = parseInt(stored, 10);
+          const remaining = Math.max(0, Math.floor((expiry - Date.now()) / 1000));
+          return remaining;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    return COUNTDOWN_SECONDS;
+  });
   const [paid, setPaid] = useState(false);
   const [polling, setPolling] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -86,6 +101,20 @@ export function PaymentPage() {
   };
 
   useEffect(() => {
+    if (!orderId) return;
+
+    // Set expiry in localStorage if not set yet
+    try {
+      const key = `wemo_payment_expiry_${orderId}`;
+      const stored = localStorage.getItem(key);
+      if (!stored) {
+        const expiry = Date.now() + COUNTDOWN_SECONDS * 1000;
+        localStorage.setItem(key, String(expiry));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
     // Initial fetch
     checkPayment();
 
@@ -94,14 +123,37 @@ export function PaymentPage() {
 
     // Countdown timer
     countdownRef.current = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(countdownRef.current);
-          setPolling(false);
-          return 0;
+      try {
+        const key = `wemo_payment_expiry_${orderId}`;
+        const stored = localStorage.getItem(key);
+        if (stored) {
+          const expiry = parseInt(stored, 10);
+          const remaining = Math.max(0, Math.floor((expiry - Date.now()) / 1000));
+          setCountdown(remaining);
+          if (remaining === 0) {
+            clearInterval(countdownRef.current);
+            setPolling(false);
+          }
+        } else {
+          setCountdown((prev) => {
+            if (prev <= 1) {
+              clearInterval(countdownRef.current);
+              setPolling(false);
+              return 0;
+            }
+            return prev - 1;
+          });
         }
-        return prev - 1;
-      });
+      } catch (e) {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(countdownRef.current);
+            setPolling(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }
     }, 1000);
 
     return () => {
@@ -269,7 +321,7 @@ export function PaymentPage() {
                     </p>
                     <div className="flex items-center gap-2">
                       <img
-                        src="https://img.vietqr.io/image/tpbank-logo.png"
+                        src="https://api.vietqr.io/img/TPB.png"
                         alt="TPBank"
                         className="h-5 object-contain"
                         onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
