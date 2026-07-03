@@ -150,6 +150,56 @@ Thiệp đã sẵn sàng, đính kèm vào đơn sản xuất.`;
 };
 
 /**
+ * Thông báo đơn hàng mới đang chờ đặt cọc
+ */
+const notifyPendingPayment = async (order) => {
+  const {
+    orderId,
+    customerName,
+    phone,
+    address,
+    product,
+    amount,
+    depositAmount,
+  } = order;
+
+  const formattedDeposit = Number(depositAmount).toLocaleString("vi-VN");
+  const formattedTotal = Number(amount).toLocaleString("vi-VN");
+  const remaining = (Number(amount) - Number(depositAmount)).toLocaleString("vi-VN");
+  const formattedDate = new Date().toLocaleString("vi-VN", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    day: "2-digit", month: "2-digit", year: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  });
+
+  const message = `⏳ <b>ĐƠN HÀNG MỚI — ĐANG CHỜ CỌC</b>
+
+🧾 <b>Mã đơn:</b> <code>${orderId}</code>
+👤 <b>Khách:</b> ${customerName}
+📱 <b>SĐT:</b> <code>${phone}</code>
+📍 <b>Địa chỉ:</b> ${address || "Chưa điền"}
+
+📦 <b>Sản phẩm:</b> ${product || "Figure Chibi 3D"}
+💰 <b>Tổng tiền:</b> ${formattedTotal}đ
+⏳ <b>Cần cọc:</b> <b>${formattedDeposit}đ</b>
+⏳ <b>Còn lại:</b> ${remaining}đ
+
+🕐 <b>Thời gian tạo:</b> ${formattedDate}
+
+👉 Khách hàng đang ở trang thanh toán quét mã VietQR.`;
+
+  const result = await sendTelegramMessage(message);
+
+  if (result.skipped) {
+    console.warn("⚠️ Telegram: bỏ qua (chưa cấu hình).");
+  } else if (result.success) {
+    console.log(`📱 Telegram: Đã gửi alert chờ cọc cho đơn ${orderId}`);
+  }
+
+  return result;
+};
+
+/**
  * Gửi thông báo tùy chỉnh (dùng cho debug/alerts khác)
  */
 const notifyCustom = (text) => sendTelegramMessage(text);
@@ -157,5 +207,7 @@ const notifyCustom = (text) => sendTelegramMessage(text);
 module.exports = {
   notifyNewOrder,
   notifyGiftCreated,
+  notifyPendingPayment,
   notifyCustom,
 };
+
