@@ -236,9 +236,16 @@ app.post("/api/upload", async (req, res) => {
       return res.status(400).json({ error: "Thiếu dữ liệu tệp tải lên." });
     }
 
+    let uploadPayload = file;
+    if (file.startsWith("data:") && file.includes(";base64,")) {
+      const parts = file.split(";base64,");
+      const mimeType = parts[0].split(";")[0];
+      uploadPayload = `${mimeType};base64,${parts[1]}`;
+    }
+
     if (useCloudinary) {
       const cloudinary = require("cloudinary").v2;
-      const uploadResult = await cloudinary.uploader.upload(file, {
+      const uploadResult = await cloudinary.uploader.upload(uploadPayload, {
         folder: "wemo_uploads",
         resource_type: "auto",
       });
@@ -246,7 +253,7 @@ app.post("/api/upload", async (req, res) => {
     }
 
     // Extract raw base64 data
-    const base64Data = file.includes(";base64,") ? file.split(";base64,").pop() : file;
+    const base64Data = uploadPayload.includes(";base64,") ? uploadPayload.split(";base64,").pop() : uploadPayload;
     const buffer = Buffer.from(base64Data, "base64");
 
     // Generate unique file name
