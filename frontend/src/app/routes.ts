@@ -12,6 +12,9 @@ import { Admin } from "./components/admin/Admin";
 import { AdminTemplatePreviewPage } from "./pages/AdminTemplatePreviewPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
 import { AIChibiPage } from "./pages/AIChibiPage";
+import { OrderFormPage } from "./pages/OrderFormPage";
+import { PaymentPage } from "./pages/PaymentPage";
+import { OrderSuccessPage } from "./pages/OrderSuccessPage";
 
 export const router = createBrowserRouter([
   {
@@ -21,6 +24,18 @@ export const router = createBrowserRouter([
   {
     path: "gift/:giftId",
     Component: GiftViewPage,
+  },
+  {
+    path: "order",
+    Component: OrderFormPage,
+  },
+  {
+    path: "payment/:orderId",
+    Component: PaymentPage,
+  },
+  {
+    path: "order-success/:orderId",
+    Component: OrderSuccessPage,
   },
   {
     path: "admin",
