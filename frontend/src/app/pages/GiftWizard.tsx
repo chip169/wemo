@@ -826,10 +826,11 @@ function Step2({
     }
 
     setUploading(true);
-    const compressedBase64s: string[] = [];
+    const uploadedUrls: string[] = [];
 
     try {
       for (const file of filesToUpload) {
+        // Compress and convert to Base64 first (locally)
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onload = (event) => {
@@ -868,13 +869,27 @@ function Step2({
           reader.readAsDataURL(file);
         });
 
-        compressedBase64s.push(base64);
+        // Now upload the compressed base64 to Cloudinary via backend API
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file: base64,
+            fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+          }),
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          uploadedUrls.push(data.url);
+        } else {
+          throw new Error(data.error || "Tải ảnh lên thất bại.");
+        }
       }
 
-      setGift(prev => prev ? { ...prev, photos: [...prev.photos, ...compressedBase64s] } : null);
+      setGift(prev => prev ? { ...prev, photos: [...prev.photos, ...uploadedUrls] } : null);
 
       if (skipped) {
-        alert(`Đã thêm ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
+        alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
       }
     } catch (err: any) {
       alert(err.message || "Có lỗi xảy ra khi xử lý ảnh.");
