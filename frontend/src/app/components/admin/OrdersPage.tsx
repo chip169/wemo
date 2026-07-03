@@ -17,12 +17,14 @@ interface Order {
   customerName: string;
   product: string;
   amount: number;
-  status: "pending" | "processing" | "completed" | "cancelled";
+  status: "pending_payment" | "deposited" | "pending" | "processing" | "completed" | "cancelled";
   paymentStatus: "paid" | "unpaid" | "refunded";
   createdDate: string;
 }
 
 const statusColors = {
+  pending_payment: { bg: "#FFEDD5", text: "#EA580C", label: "Chờ đặt cọc" },
+  deposited: { bg: "#E0F2FE", text: "#0369A1", label: "Đã đặt cọc" },
   pending: { bg: "#FEF3C7", text: "#D97706", label: "Chờ xử lý" },
   processing: { bg: "#DBEAFE", text: "#2563EB", label: "Đang xử lý" },
   completed: { bg: "#DCFCE7", text: "#16A34A", label: "Đã hoàn thành" },
@@ -347,22 +349,22 @@ export function OrdersPage() {
                         <span
                           className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold"
                           style={{
-                            background: statusColors[order.status].bg,
-                            color: statusColors[order.status].text,
+                            background: (statusColors[order.status] || { bg: "#E5E7EB", text: "#374151" }).bg,
+                            color: (statusColors[order.status] || { bg: "#E5E7EB", text: "#374151" }).text,
                           }}
                         >
-                          {statusColors[order.status].label}
+                          {(statusColors[order.status] || { label: order.status }).label}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <span
                           className="inline-flex px-2 py-0.5 rounded-full text-[10px] font-bold"
                           style={{
-                            background: paymentStatusColors[order.paymentStatus].bg,
-                            color: paymentStatusColors[order.paymentStatus].text,
+                            background: (paymentStatusColors[order.paymentStatus] || { bg: "#E5E7EB", text: "#374151" }).bg,
+                            color: (paymentStatusColors[order.paymentStatus] || { bg: "#E5E7EB", text: "#374151" }).text,
                           }}
                         >
-                          {paymentStatusColors[order.paymentStatus].label}
+                          {(paymentStatusColors[order.paymentStatus] || { label: order.paymentStatus }).label}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -519,6 +521,8 @@ export function OrdersPage() {
                       onChange={(e) => setFormStatus(e.target.value as any)}
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
+                      <option value="pending_payment">Chờ đặt cọc</option>
+                      <option value="deposited">Đã đặt cọc</option>
                       <option value="pending">Chờ xử lý</option>
                       <option value="processing">Đang xử lý</option>
                       <option value="completed">Đã hoàn thành</option>
@@ -629,6 +633,8 @@ export function OrdersPage() {
                       onChange={(e) => setEditStatus(e.target.value as any)}
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
+                      <option value="pending_payment">Chờ đặt cọc</option>
+                      <option value="deposited">Đã đặt cọc</option>
                       <option value="pending">Chờ xử lý</option>
                       <option value="processing">Đang xử lý</option>
                       <option value="completed">Đã hoàn thành</option>
