@@ -1,8 +1,9 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
-const templates = [
+const STATIC_TEMPLATES = [
   {
     slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
@@ -26,6 +27,28 @@ const templates = [
 ];
 
 export function TemplatesPage() {
+  const [templates, setTemplates] = useState(STATIC_TEMPLATES);
+
+  useEffect(() => {
+    fetch("/api/templates")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: any[]) => {
+        const merged = STATIC_TEMPLATES.map((staticTpl) => {
+          const dbId = staticTpl.slug === "tinh-cau-3d" ? "solid-heart" : "love-romantic";
+          const dbTpl = data.find((t) => t.id === dbId);
+          if (!dbTpl) return staticTpl;
+          return {
+            ...staticTpl,
+            title: dbTpl.name || staticTpl.title,
+            description: dbTpl.sampleMessage || staticTpl.description,
+            image: dbTpl.preview || staticTpl.image,
+            features: (dbTpl.features && dbTpl.features.length > 0) ? dbTpl.features : staticTpl.features,
+          };
+        });
+        setTemplates(merged);
+      })
+      .catch((err) => console.error("Error loading templates:", err));
+  }, []);
   return (
     <div className="pt-20" style={{ background: "#FAF8F5" }}>
       {/* Hero */}
