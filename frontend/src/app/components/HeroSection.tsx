@@ -1,5 +1,6 @@
 import { motion } from "motion/react";
-import { Sparkles } from "lucide-react";
+import { Sparkles, ArrowRight, Wand2 } from "lucide-react";
+import { Link } from "react-router";
 
 export function HeroSection() {
   // Đường dẫn ảnh sản phẩm gốc để bóc tách chi tiết 3D
@@ -174,6 +175,25 @@ export function HeroSection() {
               lưu giữ trọn vẹn những thước phim, hình ảnh và lời chúc chân thành
               nhất.
             </p>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-wrap gap-3 mb-8 justify-center lg:justify-start">
+              <Link
+                to="/ai-chibi"
+                id="hero-cta-chibi"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white text-sm font-black shadow-lg hover:opacity-90 transition-all hover:scale-105"
+              >
+                <Wand2 className="w-4 h-4" />
+                Thử Chibi AI Miễn Phí
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                to="/pricing"
+                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white border border-stone-200 text-stone-700 text-sm font-bold hover:bg-stone-50 transition-all shadow-sm"
+              >
+                Xem Bảng Giá
+              </Link>
+            </div>
 
             {/* Block số liệu dạng phẳng tối giản bên dưới */}
             <div className="pt-8 border-t border-gray-200/60 grid grid-cols-3 gap-4 max-w-sm mx-auto lg:mx-0 w-full">
