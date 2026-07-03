@@ -38,11 +38,11 @@ export const router = createBrowserRouter([
     Component: OrderSuccessPage,
   },
   {
-    path: "admin",
+    path: "adminWemo",
     Component: Admin,
   },
   {
-    path: "admin/preview/:templateId",
+    path: "adminWemo/preview/:templateId",
     Component: AdminTemplatePreviewPage,
   },
   {
