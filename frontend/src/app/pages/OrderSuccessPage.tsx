@@ -90,7 +90,7 @@ export function OrderSuccessPage() {
             <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight mb-3">
               Đặt Hàng Thành Công! 🎉
             </h1>
-            <p className="text-stone-500 text-sm leading-relaxed max-w-md mx-auto">
+            <p className="text-stone-600 text-sm leading-relaxed max-w-md mx-auto font-medium">
               WEMO đã nhận được khoản cọc của bạn. Đội sản xuất sẽ bắt đầu xử lý đơn hàng trong vòng 24 giờ.
             </p>
           </motion.div>
@@ -101,7 +101,7 @@ export function OrderSuccessPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-3xl border border-stone-200/60 shadow-xl p-6 sm:p-8 mb-6"
+          className="bg-white rounded-3xl border border-stone-200/60 shadow-xl p-6 sm:p-8 mb-6 relative overflow-hidden"
         >
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-emerald-400 to-[#D4AF78] rounded-t-3xl" />
 
@@ -176,7 +176,7 @@ export function OrderSuccessPage() {
                       </span>
                     )}
                   </p>
-                  <p className="text-xs text-stone-400 mt-0.5 leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-stone-500 mt-0.5 leading-relaxed font-medium">{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -192,7 +192,7 @@ export function OrderSuccessPage() {
                 </div>
                 <div>
                   <p className="font-black text-sm mb-1">Bước tiếp theo: Tạo Thiệp 3D</p>
-                  <p className="text-xs text-stone-400 leading-relaxed">
+                  <p className="text-xs text-stone-200 leading-relaxed font-medium">
                     Thiết kế thiệp kỹ thuật số kèm chip NFC — chọn mẫu, thêm ảnh kỷ niệm và viết lời chúc yêu thương.
                   </p>
                 </div>

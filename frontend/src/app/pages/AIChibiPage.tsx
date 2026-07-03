@@ -121,8 +121,10 @@ export function AIChibiPage() {
 
   // Usage limit state
   const [usageCount, setUsageCount] = useState(getUsageCount());
-  const remainingGen = Math.max(0, MAX_FREE_GEN - usageCount);
-  const isLimitReached = remainingGen === 0;
+  const [bypassCode, setBypassCode] = useState("");
+  const isBypassed = bypassCode === "1901";
+  const remainingGen = isBypassed ? 9999 : Math.max(0, MAX_FREE_GEN - usageCount);
+  const isLimitReached = !isBypassed && remainingGen === 0;
 
   // States
   const [sourceImage, setSourceImage] = useState<string | null>(null);
@@ -268,8 +270,8 @@ export function AIChibiPage() {
 
     // Frontend check
     const currentCount = getUsageCount();
-    if (currentCount >= MAX_FREE_GEN) {
-      setError("Bạn đã dùng hết 3 lượt miễn phí. Hãy đặt hàng để tiếp tục!");
+    if (currentCount >= MAX_FREE_GEN && !isBypassed) {
+      setError("Bạn đã dùng hết 3 lượt miễn phí. Hãy đặt hàng hoặc nhập mã kích hoạt để tiếp tục!");
       return;
     }
 
@@ -284,21 +286,24 @@ export function AIChibiPage() {
         body: JSON.stringify({
           image: sourceImage,
           style: selectedStyle,
+          code: bypassCode,
         }),
       });
 
       const data = await res.json();
       if (!res.ok) {
-        if (data.limitReached) {
+        if (data.limitReached && !isBypassed) {
           const newCount = incrementUsage();
           setUsageCount(newCount);
         }
         throw new Error(data.error || "Tạo hình chibi thất bại.");
       }
 
-      // Increment usage on success
-      const newCount = incrementUsage();
-      setUsageCount(newCount);
+      // Increment usage on success if not bypassed
+      if (!isBypassed) {
+        const newCount = incrementUsage();
+        setUsageCount(newCount);
+      }
 
       setGeneratedUrl(data.url);
       setPromptUsed(data.prompt || "");
@@ -374,6 +379,8 @@ export function AIChibiPage() {
           <div className={`inline-flex items-center gap-2.5 px-5 py-2.5 rounded-2xl border font-bold text-xs shadow-sm ${
             isLimitReached
               ? "bg-rose-50 border-rose-200 text-rose-700"
+              : isBypassed
+              ? "bg-purple-50 border-purple-200 text-purple-700 animate-pulse"
               : remainingGen === 1
               ? "bg-amber-50 border-amber-200 text-amber-700"
               : "bg-emerald-50 border-emerald-200 text-emerald-700"
@@ -382,6 +389,11 @@ export function AIChibiPage() {
               <>
                 <Lock className="w-3.5 h-3.5" />
                 Bạn đã dùng hết {MAX_FREE_GEN} lượt miễn phí
+              </>
+            ) : isBypassed ? (
+              <>
+                <Star className="w-3.5 h-3.5 fill-current text-purple-500 animate-spin" />
+                Đã kích hoạt chế độ VIP (Mã: 1901) — Tạo ảnh không giới hạn
               </>
             ) : (
               <>
@@ -806,7 +818,20 @@ export function AIChibiPage() {
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-stone-100">
+              <div className="pt-3 border-t border-stone-100 space-y-3">
+                <div className="space-y-1.5">
+                  <label className="block text-[10px] font-bold text-stone-500 uppercase tracking-wider">
+                    Mã Kích Hoạt VIP (Nếu có)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Nhập mã 1901 để tạo thêm..."
+                    value={bypassCode}
+                    onChange={(e) => setBypassCode(e.target.value)}
+                    className="w-full px-3.5 py-2 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium transition-colors"
+                  />
+                </div>
+
                 {isLimitReached ? (
                   <button
                     onClick={() => navigate("/order")}

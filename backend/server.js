@@ -106,6 +106,11 @@ const chibiUsageMap = new Map(); // ip -> count
 const CHIBI_MAX_CALLS = 3;
 
 const chibiRateLimiter = (req, res, next) => {
+  const { code } = req.body;
+  if (code === "1901") {
+    return next();
+  }
+
   const ip = req.headers["x-forwarded-for"]?.split(",")[0] || req.socket?.remoteAddress || "unknown";
   const count = chibiUsageMap.get(ip) || 0;
   if (count >= CHIBI_MAX_CALLS) {

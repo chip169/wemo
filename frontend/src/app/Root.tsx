@@ -1,12 +1,18 @@
 import { useEffect, useRef } from "react";
-import { Outlet, useNavigate } from "react-router";
+import { Outlet, useNavigate, useLocation } from "react-router";
 import { Header } from "./components/Header";
 import { Footer } from "./components/Footer";
 import { SupportChatWidget } from "./components/SupportChatWidget";
 
 export function Root() {
   const navigate = useNavigate();
+  const location = useLocation();
   const lastKeyPressTime = useRef<number>(0);
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
