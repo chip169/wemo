@@ -4,6 +4,7 @@ import { OrbitControls, Stars, Float } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles, Star, X } from "lucide-react";
+import { AudioPlayerWidget, VideoPlayerWidget } from "./GiftContentOverlay";
 
 // ─── Interactive Pink Planet with Sparkling Surface ─────────────────────────
 function InteractivePlanet({ onClick, opened }: { onClick: () => void; opened: boolean }) {
@@ -690,6 +691,35 @@ function MessageOverlay({ gift, onClose }: { gift: any; onClose: () => void }) {
               </motion.span>
             ))}
           </motion.div>
+
+          {/* Voice voice message */}
+          {gift.voiceUrl && (
+            <div className="mb-4 pointer-events-auto">
+              <AudioPlayerWidget
+                src={gift.voiceUrl}
+                themeStyle={{
+                  cardBg: "bg-white/10",
+                  borderColor: "border-white/10",
+                  accentBg: "bg-pink-500",
+                  accentText: "text-pink-300",
+                  textMain: "text-white",
+                  textSub: "text-zinc-400",
+                }}
+              />
+            </div>
+          )}
+
+          {/* Video message */}
+          {gift.videoUrl && (
+            <div className="mb-4 pointer-events-auto">
+              <VideoPlayerWidget
+                src={gift.videoUrl}
+                themeStyle={{
+                  borderColor: "border-white/10",
+                }}
+              />
+            </div>
+          )}
 
           {gift.senderName && (
             <div className="flex items-center justify-end gap-1.5 pt-3 border-t border-white/10">

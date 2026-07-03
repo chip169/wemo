@@ -82,6 +82,13 @@ const STATIC_TEMPLATES = [
     theme: "tinh-yeu",
     tag: "Mạng lưới 3D",
     features: ["Tối đa 6 ảnh kỷ niệm", "Mạng lưới trái tim rơi", "Nhạc nền lãng mạn", "Hộp thư bí mật"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 6,
+      video: false,
+      voice: false,
+      music: false,
+    }
   },
   {
     id: "solid-heart",
@@ -95,6 +102,13 @@ const STATIC_TEMPLATES = [
     theme: "tinh-yeu",
     tag: "Độc quyền 3D",
     features: ["Tối đa 16 ảnh kỷ niệm", "Hành tinh điểm sáng 3D", "Sao băng đa hướng luân phiên", "Vòng xoay ảnh kỷ niệm"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 16,
+      video: false,
+      voice: false,
+      music: false,
+    }
   },
 ];
 
@@ -627,23 +641,56 @@ const compressImage = (file: File): Promise<string> => {
     reader.onerror = () => reject(new Error("Không thể đọc tệp tin."));
   });
 };
-
 // Bước 2: Thiết Kế & Tải Tệp
 function Step2({
   gift,
   setGift,
+  templates = STATIC_TEMPLATES,
 }: {
   gift: GiftData;
   setGift: (g: GiftData) => void;
+  templates?: any[];
 }) {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const maxPhotos = gift.templateId === "solid-heart" ? 16 : 6;
+
+  // Dynamic allowedFeatures from template config
+  const currentTemplate = templates.find((t) => t.id === gift.templateId);
+  const allowedFeatures = currentTemplate?.allowedFeatures || {
+    photos: true,
+    maxPhotos: 6,
+    video: true,
+    voice: true,
+    music: true,
+  };
+  const maxPhotos = allowedFeatures.maxPhotos || 6;
+
+  // Video States
+  const [videoUploading, setVideoUploading] = useState(false);
+  const [videoMode, setVideoMode] = useState<"upload" | "youtube">("upload");
+  const videoInputRef = useRef<HTMLInputElement>(null);
+
+  // Voice States
+  const [voiceUploading, setVoiceUploading] = useState(false);
+  const [voiceMode, setVoiceMode] = useState<"record" | "upload">("record");
+  const [recording, setRecording] = useState(false);
+  const [recordDuration, setRecordDuration] = useState(0);
+  const [localVoiceUrl, setLocalVoiceUrl] = useState<string>("");
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const timerRef = useRef<any>(null);
+  const voiceInputRef = useRef<HTMLInputElement>(null);
+  const localVoiceUrlRef = useRef<string>("");
+
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+      if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
+    };
+  }, []);
 
   const getPlayableVoiceUrl = (url: string) => {
     if (!url) return "";
-    // Return the URL as-is; let the browser handle the format
-    // Cloudinary auto-transcodes audio on the fly based on Accept headers
     return url;
   };
 
@@ -781,32 +828,6 @@ function Step2({
     setAiExpanded(false);
   };
 
-  // Video States
-  const [videoUploading, setVideoUploading] = useState(false);
-  const [videoMode, setVideoMode] = useState<"upload" | "youtube">("upload");
-  const videoInputRef = useRef<HTMLInputElement>(null);
-
-  // Voice States
-  const [voiceUploading, setVoiceUploading] = useState(false);
-  const [voiceMode, setVoiceMode] = useState<"record" | "upload">("record");
-  const [recording, setRecording] = useState(false);
-  const [recordDuration, setRecordDuration] = useState(0);
-  // localVoiceUrl: blob URL for immediate local playback (no need to wait for upload)
-  const [localVoiceUrl, setLocalVoiceUrl] = useState<string>("");
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
-  const timerRef = useRef<any>(null);
-  const voiceInputRef = useRef<HTMLInputElement>(null);
-  const localVoiceUrlRef = useRef<string>(""); // track for revoke
-
-  useEffect(() => {
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-      // Revoke blob URL to free memory
-      if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
-    };
-  }, []);
-
   const addPhoto = () => {
     fileInputRef.current?.click();
   };
@@ -834,18 +855,14 @@ function Step2({
 
     try {
       for (const file of filesToUpload) {
-        // Step 1: Compress image using canvas
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
-
           reader.onloadend = () => {
-            // ✅ Use reader.result directly — event.target?.result is unreliable
             const dataUrl = reader.result as string;
             if (!dataUrl || typeof dataUrl !== "string") {
               reject(new Error("Không thể đọc file ảnh."));
               return;
             }
-
             const img = new window.Image();
             img.onload = () => {
               try {
@@ -853,7 +870,6 @@ function Step2({
                 let width = img.width;
                 let height = img.height;
                 const MAX_SIZE = 800;
-                // Scale down while maintaining aspect ratio
                 if (width > height && width > MAX_SIZE) {
                   height = Math.round((height * MAX_SIZE) / width);
                   width = MAX_SIZE;
@@ -868,22 +884,194 @@ function Step2({
                   ctx.drawImage(img, 0, 0, width, height);
                   resolve(canvas.toDataURL("image/jpeg", 0.85));
                 } else {
-                  // Canvas context not available — use raw data URL
                   resolve(dataUrl);
                 }
               } catch (canvasErr) {
-                // Canvas failed (e.g., security error) — use raw
                 resolve(dataUrl);
               }
             };
-            img.onerror = () => {
-              // Image failed to parse — use raw data URL anyway
-              resolve(dataUrl);
-            };
+            img.onerror = () => resolve(dataUrl);
             img.src = dataUrl;
           };
-
           reader.onerror = () => reject(new Error("Không thể đọc tệp ảnh."));
+          reader.readAsDataURL(file);
+        });
+
+        console.log(`📤 Uploading image: ${file.name}, size: ${Math.round(base64.length / 1024)}KB`);
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file: base64,
+            fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+          }),
+        });
+        const data = await res.json();
+        if (res.ok && data.url) {
+          console.log(`✅ Image uploaded: ${data.url}`);
+          uploadedUrls.push(data.url);
+        } else {
+          throw new Error(data.error || "Tải ảnh lên thất bại.");
+        }
+      }
+
+      setGift({ ...gift, photos: [...gift.photos, ...uploadedUrls] });
+      if (skipped) {
+        alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
+      }
+    } catch (err: any) {
+      console.error("❌ Image upload error:", err);
+      alert(err.message || "Có lỗi xảy ra khi xử lý ảnh.");
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  };
+
+  const removePhoto = (i: number) => {
+    setGift({ ...gift, photos: gift.photos.filter((_, idx) => idx !== i) });
+  };
+
+  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setVideoUploading(true);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = async () => {
+      try {
+        const base64data = reader.result as string;
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file: base64data,
+            fileName: file.name,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Tải video lên thất bại.");
+        setGift({ ...gift, videoUrl: data.url });
+      } catch (err: any) {
+        alert(err.message);
+      } finally {
+        setVideoUploading(false);
+        if (videoInputRef.current) videoInputRef.current.value = "";
+      }
+    };
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+      const mimeType = MediaRecorder.isTypeSupported("audio/mp4")
+        ? "audio/mp4"
+        : MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+        ? "audio/webm;codecs=opus"
+        : "audio/webm";
+
+      const mediaRecorder = new MediaRecorder(stream, { mimeType });
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) audioChunksRef.current.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const finalMime = mediaRecorderRef.current?.mimeType || mimeType;
+        const ext = finalMime.includes("mp4") ? "mp4" : finalMime.includes("ogg") ? "ogg" : "webm";
+        const audioBlob = new Blob(audioChunksRef.current, { type: finalMime });
+
+        if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
+        const blobUrl = URL.createObjectURL(audioBlob);
+        localVoiceUrlRef.current = blobUrl;
+        setLocalVoiceUrl(blobUrl);
+        setGift({ ...gift, voiceUrl: "local://pending" });
+
+        setVoiceUploading(true);
+        try {
+          const reader = new FileReader();
+          const base64data = await new Promise<string>((resolve, reject) => {
+            reader.onloadend = () => resolve(reader.result as string);
+            reader.onerror = () => reject(new Error("Read error"));
+            reader.readAsDataURL(audioBlob);
+          });
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              file: base64data,
+              fileName: `voice-${Date.now()}.${ext}`,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || "Tải ghi âm lên thất bại.");
+          setGift({ ...gift, voiceUrl: data.url });
+        } catch (err: any) {
+          alert("Ghi âm đã lưu cục bộ nhưng tải lên thất bại: " + err.message);
+        } finally {
+          setVoiceUploading(false);
+        }
+        stream.getTracks().forEach((track) => track.stop());
+      };
+
+      mediaRecorder.start();
+      setRecording(true);
+      setRecordDuration(0);
+      timerRef.current = setInterval(() => {
+        setRecordDuration((d) => d + 1);
+      }, 1000);
+    } catch (err) {
+      alert("Không thể truy cập microphone. Vui lòng kiểm tra quyền truy cập microphone của bạn.");
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && recording) {
+      mediaRecorderRef.current.stop();
+      setRecording(false);
+      if (timerRef.current) clearInterval(timerRef.current);
+    }
+  };
+
+  const handleVoiceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setVoiceUploading(true);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      try {
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            file: reader.result as string,
+            fileName: file.name,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Tải tệp âm thanh thất bại.");
+        setGift({ ...gift, voiceUrl: data.url });
+      } catch (err: any) {
+        alert(err.message);
+      } finally {
+        setVoiceUploading(false);
+        if (voiceInputRef.current) voiceInputRef.current.value = "";
+      }
+    };
+  };
+
+  const formatDuration = (sec: number) => {
+    const m = Math.floor(sec / 60).toString().padStart(2, "0");
+    const s = (sec % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
+  const updateField = (fields: Partial<GiftData>) =>
+    setGift({ ...gift, ...fields });ect(new Error("Không thể đọc tệp ảnh."));
           reader.readAsDataURL(file);
         });
 
@@ -928,153 +1116,7 @@ function Step2({
     setGift({ ...gift, photos: gift.photos.filter((_, idx) => idx !== i) });
   };
 
-  const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
 
-    setVideoUploading(true);
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = async () => {
-      try {
-        const base64data = reader.result as string;
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            file: base64data,
-            fileName: file.name,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Tải video lên thất bại.");
-        setGift({ ...gift, videoUrl: data.url });
-      } catch (err: any) {
-        alert(err.message);
-      } finally {
-        setVideoUploading(false);
-        if (videoInputRef.current) videoInputRef.current.value = "";
-      }
-    };
-  };
-
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioChunksRef.current = [];
-
-      // Prefer audio/mp4 (AAC) for iOS/Safari compatibility, fallback to webm
-      const mimeType = MediaRecorder.isTypeSupported("audio/mp4")
-        ? "audio/mp4"
-        : MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
-        ? "audio/webm;codecs=opus"
-        : "audio/webm";
-
-      const mediaRecorder = new MediaRecorder(stream, { mimeType });
-      mediaRecorderRef.current = mediaRecorder;
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        const finalMime = mediaRecorderRef.current?.mimeType || mimeType;
-        const ext = finalMime.includes("mp4") ? "mp4" : finalMime.includes("ogg") ? "ogg" : "webm";
-        const audioBlob = new Blob(audioChunksRef.current, { type: finalMime });
-
-        // 1) Create local blob URL immediately for playback (no upload wait)
-        if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
-        const blobUrl = URL.createObjectURL(audioBlob);
-        localVoiceUrlRef.current = blobUrl;
-        setLocalVoiceUrl(blobUrl);
-        // Set a placeholder so the player shows up immediately
-        setGift({ ...gift, voiceUrl: "local://pending" });
-
-        // 2) Upload to server in background
-        setVoiceUploading(true);
-        try {
-          const reader = new FileReader();
-          const base64data = await new Promise<string>((resolve, reject) => {
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.onerror = () => reject(new Error("Read error"));
-            reader.readAsDataURL(audioBlob);
-          });
-          const res = await fetch("/api/upload", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              file: base64data,
-              fileName: `voice-${Date.now()}.${ext}`,
-            }),
-          });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || "Tải ghi âm lên thất bại.");
-          // Replace placeholder with real server URL
-          setGift({ ...gift, voiceUrl: data.url });
-        } catch (err: any) {
-          alert("Ghi âm đã lưu cục bộ nhưng tải lên thất bại: " + err.message);
-        } finally {
-          setVoiceUploading(false);
-        }
-
-        stream.getTracks().forEach((track) => track.stop());
-      };
-
-      mediaRecorder.start();
-      setRecording(true);
-      setRecordDuration(0);
-      timerRef.current = setInterval(() => {
-        setRecordDuration((d) => d + 1);
-      }, 1000);
-    } catch (err) {
-      alert("Không thể truy cập microphone. Vui lòng kiểm tra quyền truy cập microphone của bạn.");
-    }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && recording) {
-      mediaRecorderRef.current.stop();
-      setRecording(false);
-      if (timerRef.current) clearInterval(timerRef.current);
-    }
-  };
-
-  const handleVoiceUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setVoiceUploading(true);
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      try {
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            file: reader.result as string,
-            fileName: file.name,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Tải tệp âm thanh thất bại.");
-        setGift({ ...gift, voiceUrl: data.url });
-      } catch (err: any) {
-        alert(err.message);
-      } finally {
-        setVoiceUploading(false);
-        if (voiceInputRef.current) voiceInputRef.current.value = "";
-      }
-    };
-  };
-
-  const formatDuration = (sec: number) => {
-    const m = Math.floor(sec / 60).toString().padStart(2, "0");
-    const s = (sec % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
 
   const updateField = (fields: Partial<GiftData>) =>
     setGift({ ...gift, ...fields });
@@ -1181,189 +1223,190 @@ function Step2({
             </div>
           </div>
 
-
           {/* 4. Video Section */}
-          <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm space-y-4">
-            <h3 className="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
-              🎥 Video Đính Kèm {gift.videoUrl && "✅"}
-            </h3>
+          {allowedFeatures.video && (
+            <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm space-y-4">
+              <h3 className="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
+                🎥 Video Đính Kèm {gift.videoUrl && "✅"}
+              </h3>
 
-            <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-4 bg-stone-50/50">
-              {videoUploading ? (
-                <div className="flex flex-col items-center gap-2 py-4">
-                  <Loader2 className="w-6 h-6 animate-spin text-[#E8B4A8]" />
-                  <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Đang tải video...</span>
-                </div>
-              ) : gift.videoUrl ? (
-                <div className="w-full space-y-3 text-center">
-                  <video src={gift.videoUrl} controls className="w-full max-h-[140px] rounded-lg bg-black" />
-                  <button
-                    onClick={() => setGift({ ...gift, videoUrl: "" })}
-                    className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
-                  >
-                    Xóa Video
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <input
-                    type="file"
-                    ref={videoInputRef}
-                    onChange={handleVideoUpload}
-                    accept="video/*"
-                    style={{ display: "none" }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => videoInputRef.current?.click()}
-                    className="px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-bold rounded-xl shadow-sm cursor-pointer transition-colors"
-                  >
-                    Chọn Tệp Video (MP4)
-                  </button>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* 5. Ghi âm Lời chúc */}
-          <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm space-y-4">
-            <h3 className="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
-              🎙️ Ghi Âm Lời Chúc {gift.voiceUrl && "✅"}
-            </h3>
-
-            <div className="flex gap-2 p-0.5 bg-stone-100 rounded-xl">
-              <button
-                type="button"
-                onClick={() => setVoiceMode("record")}
-                className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${voiceMode === "record" ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
-              >
-                Thu Âm Trực Tiếp
-              </button>
-              <button
-                type="button"
-                onClick={() => setVoiceMode("upload")}
-                className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${voiceMode === "upload" ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
-              >
-                Tải Tệp Âm Thanh
-              </button>
-            </div>
-
-            {voiceMode === "record" ? (
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-5 bg-stone-50/50">
-                {/* Has a recording ready (local or uploaded) */}
-                {(gift.voiceUrl || localVoiceUrl) && !recording ? (
-                  <div className="w-full space-y-2 text-center overflow-hidden">
-                    {/* Playback uses localVoiceUrl (blob) for instant audio, falls back to server URL */}
-                    <div className="w-full overflow-hidden">
-                      <audio
-                        key={localVoiceUrl || gift.voiceUrl}
-                        src={localVoiceUrl || gift.voiceUrl}
-                        controls
-                        preload="auto"
-                        className="w-full block"
-                        style={{ maxWidth: "100%", minWidth: 0 }}
-                      />
-                    </div>
-                    {/* Upload progress indicator */}
-                    {voiceUploading && (
-                      <div className="flex items-center justify-center gap-2 py-1">
-                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#E8B4A8]" />
-                        <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang lưu lên máy chủ...</span>
-                      </div>
-                    )}
-                    <button
-                      onClick={() => {
-                        // Revoke blob URL
-                        if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
-                        localVoiceUrlRef.current = "";
-                        setLocalVoiceUrl("");
-                        setGift({ ...gift, voiceUrl: "" });
-                      }}
-                      className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
-                    >
-                      Xóa Bản Thu Âm
-                    </button>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={recording ? stopRecording : startRecording}
-                      className={`w-14 h-14 rounded-full flex items-center justify-center transition-all cursor-pointer shadow border-none ${recording ? "bg-red-500 animate-pulse text-white" : "bg-[#E8B4A8]/10 text-[#E8B4A8] border border-[#E8B4A8]/30 hover:bg-[#E8B4A8]/20"}`}
-                    >
-                      {recording ? <Square className="w-5 h-5 fill-white text-white border-0" /> : <Mic className="w-6 h-6" />}
-                    </button>
-                    <span className="text-xs font-bold text-stone-700">
-                      {recording ? `Đang ghi âm... ${formatDuration(recordDuration)}` : "Nhấn để thu âm"}
-                    </span>
-                  </div>
-                )}
-              </div>
-            ) : (
               <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-4 bg-stone-50/50">
-                {voiceUploading ? (
+                {videoUploading ? (
                   <div className="flex flex-col items-center gap-2 py-4">
-                    <Loader2 className="w-6 h-6 animate-spin text-[#D4AF78]" />
-                    <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang tải tệp âm thanh...</span>
+                    <Loader2 className="w-6 h-6 animate-spin text-[#E8B4A8]" />
+                    <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Đang tải video...</span>
                   </div>
-                ) : gift.voiceUrl ? (
-                  <div className="w-full space-y-3 text-center overflow-hidden">
-                    <div className="w-full overflow-hidden">
-                      <audio
-                        key={gift.voiceUrl}
-                        src={getPlayableVoiceUrl(gift.voiceUrl)}
-                        controls
-                        preload="auto"
-                        className="w-full block"
-                        style={{ maxWidth: "100%", minWidth: 0 }}
-                      />
-                    </div>
+                ) : gift.videoUrl ? (
+                  <div className="w-full space-y-3 text-center">
+                    <video src={gift.videoUrl} controls className="w-full max-h-[140px] rounded-lg bg-black" />
                     <button
-                      onClick={() => setGift({ ...gift, voiceUrl: "" })}
+                      onClick={() => setGift({ ...gift, videoUrl: "" })}
                       className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
                     >
-                      Xóa Tệp Âm Thanh
+                      Xóa Video
                     </button>
                   </div>
                 ) : (
                   <>
                     <input
                       type="file"
-                      ref={voiceInputRef}
-                      onChange={handleVoiceUpload}
-                      accept="audio/*"
+                      ref={videoInputRef}
+                      onChange={handleVideoUpload}
+                      accept="video/*"
                       style={{ display: "none" }}
                     />
                     <button
                       type="button"
-                      onClick={() => voiceInputRef.current?.click()}
+                      onClick={() => videoInputRef.current?.click()}
                       className="px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-bold rounded-xl shadow-sm cursor-pointer transition-colors"
                     >
-                      Chọn Tệp Âm Thanh
+                      Chọn Tệp Video (MP4)
                     </button>
                   </>
                 )}
               </div>
-            )}
-          </div>
+            </div>
+          )}
+
+          {/* 5. Ghi âm Lời chúc */}
+          {allowedFeatures.voice && (
+            <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm space-y-4">
+              <h3 className="font-bold text-sm text-stone-800 mb-1 flex items-center gap-2">
+                🎙️ Ghi Âm Lời Chúc {gift.voiceUrl && "✅"}
+              </h3>
+
+              <div className="flex gap-2 p-0.5 bg-stone-100 rounded-xl">
+                <button
+                  type="button"
+                  onClick={() => setVoiceMode("record")}
+                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${voiceMode === "record" ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
+                >
+                  Thu Âm Trực Tiếp
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVoiceMode("upload")}
+                  className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${voiceMode === "upload" ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
+                >
+                  Tải Tệp Âm Thanh
+                </button>
+              </div>
+
+              {voiceMode === "record" ? (
+                <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-5 bg-stone-50/50">
+                  {(gift.voiceUrl || localVoiceUrl) && !recording ? (
+                    <div className="w-full space-y-2 text-center overflow-hidden">
+                      <div className="w-full overflow-hidden">
+                        <audio
+                          key={localVoiceUrl || gift.voiceUrl}
+                          src={localVoiceUrl || gift.voiceUrl}
+                          controls
+                          preload="auto"
+                          className="w-full block"
+                          style={{ maxWidth: "100%", minWidth: 0 }}
+                        />
+                      </div>
+                      {voiceUploading && (
+                        <div className="flex items-center justify-center gap-2 py-1">
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-[#E8B4A8]" />
+                          <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang lưu lên máy chủ...</span>
+                        </div>
+                      )}
+                      <button
+                        onClick={() => {
+                          if (localVoiceUrlRef.current) URL.revokeObjectURL(localVoiceUrlRef.current);
+                          localVoiceUrlRef.current = "";
+                          setLocalVoiceUrl("");
+                          setGift({ ...gift, voiceUrl: "" });
+                        }}
+                        className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
+                      >
+                        Xóa Bản Thu Âm
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={recording ? stopRecording : startRecording}
+                        className={`w-14 h-14 rounded-full flex items-center justify-center transition-all cursor-pointer shadow border-none ${recording ? "bg-red-500 animate-pulse text-white" : "bg-[#E8B4A8]/10 text-[#E8B4A8] border border-[#E8B4A8]/30 hover:bg-[#E8B4A8]/20"}`}
+                      >
+                        {recording ? <Square className="w-5 h-5 fill-white text-white border-0" /> : <Mic className="w-6 h-6" />}
+                      </button>
+                      <span className="text-xs font-bold text-stone-700">
+                        {recording ? `Đang ghi âm... ${formatDuration(recordDuration)}` : "Nhấn để thu âm"}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-4 bg-stone-50/50">
+                  {voiceUploading ? (
+                    <div className="flex flex-col items-center gap-2 py-4">
+                      <Loader2 className="w-6 h-6 animate-spin text-[#D4AF78]" />
+                      <span className="text-[10px] text-stone-400 font-bold tracking-wider">Đang tải tệp âm thanh...</span>
+                    </div>
+                  ) : gift.voiceUrl ? (
+                    <div className="w-full space-y-3 text-center overflow-hidden">
+                      <div className="w-full overflow-hidden">
+                        <audio
+                          key={gift.voiceUrl}
+                          src={getPlayableVoiceUrl(gift.voiceUrl)}
+                          controls
+                          preload="auto"
+                          className="w-full block"
+                          style={{ maxWidth: "100%", minWidth: 0 }}
+                        />
+                      </div>
+                      <button
+                        onClick={() => setGift({ ...gift, voiceUrl: "" })}
+                        className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
+                      >
+                        Xóa Tệp Âm Thanh
+                      </button>
+                    </div>
+                  ) : (
+                    <>
+                      <input
+                        type="file"
+                        ref={voiceInputRef}
+                        onChange={handleVoiceUpload}
+                        accept="audio/*"
+                        style={{ display: "none" }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => voiceInputRef.current?.click()}
+                        className="px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-bold rounded-xl shadow-sm cursor-pointer transition-colors"
+                      >
+                        Chọn Tệp Âm Thanh
+                      </button>
+                    </>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* 6. Nhạc nền */}
-          <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm">
-            <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2.5">
-              🎵 Nhạc nền đi kèm
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {MUSIC.map((m) => (
-                <button
-                  key={m.id}
-                  onClick={() => updateField({ music: m.id })}
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${gift.music === m.id ? "bg-stone-900 border-stone-900 text-white" : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"}`}
-                >
-                  {m.emoji} {m.name}
-                </button>
-              ))}
+          {allowedFeatures.music && (
+            <div className="bg-white p-5 rounded-2xl border border-stone-200/60 shadow-sm">
+              <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2.5">
+                🎵 Nhạc nền đi kèm
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {MUSIC.map((m) => (
+                  <button
+                    key={m.id}
+                    onClick={() => updateField({ music: m.id })}
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${gift.music === m.id ? "bg-stone-900 border-stone-900 text-white" : "bg-stone-50 border-stone-200 text-stone-600 hover:bg-stone-100"}`}
+                  >
+                    {m.emoji} {m.name}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right Column: Live editable template preview (2/3) */}
@@ -2032,7 +2075,7 @@ export function GiftWizard() {
   const stepComponents = [
     <Step0 gift={gift} setGift={setGift} templates={templates} />,
     <Step1 gift={gift} setGift={setGift} templates={templates} />,
-    <Step2 gift={gift} setGift={setGift} />,
+    <Step2 gift={gift} setGift={setGift} templates={templates} />,
     <Step4 gift={gift} onSave={handleSave} saving={saving} templates={templates} />,
   ];
 

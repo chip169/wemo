@@ -377,7 +377,27 @@ app.post("/api/gifts", async (req, res) => {
   }
 
   // Verify validate token to ensure they went through validation gateway
-  if (!giftData.orderSignature || !verifyOrderIdSignature(giftData.orderId, giftData.orderSignature)) {
+  let isSignatureValid = giftData.orderSignature && verifyOrderIdSignature(giftData.orderId, giftData.orderSignature);
+
+  if (!isSignatureValid && giftData.orderSignature === "payment_verified") {
+    // Fallback: check database directly to see if order is deposited/paid
+    try {
+      let orderDoc = null;
+      if (getDbMode() === "mongodb") {
+        orderDoc = await Order.findOne({ id: giftData.orderId });
+      } else {
+        const orders = await getOrders();
+        orderDoc = orders.find((o) => o.id === giftData.orderId);
+      }
+      if (orderDoc && (orderDoc.status === "deposited" || orderDoc.paymentStatus === "paid")) {
+        isSignatureValid = true;
+      }
+    } catch (err) {
+      console.error("Error validating payment_verified signature:", err);
+    }
+  }
+
+  if (!isSignatureValid) {
     return res.status(403).json({ error: "Chữ ký đơn hàng không hợp lệ hoặc đã hết hạn xác thực." });
   }
 
@@ -399,14 +419,44 @@ app.post("/api/gifts", async (req, res) => {
       createdAt: new Date().toISOString(),
     };
 
+    let customerName = "Khách hàng";
+
     if (getDbMode() === "mongodb") {
       const giftDoc = new Gift(newGift);
       await giftDoc.save();
+
+      // Update order to link giftId
+      const orderDoc = await Order.findOne({ id: giftData.orderId });
+      if (orderDoc) {
+        orderDoc.giftId = giftId;
+        await orderDoc.save();
+        customerName = orderDoc.customerName;
+      }
     } else {
       const gifts = await getGifts();
       gifts.push(newGift);
       await saveGiftsList(gifts);
+
+      // Update order in json storage
+      const orders = await readJsonFile("orders.json");
+      const orderIdx = orders.findIndex((o) => o.id === giftData.orderId);
+      if (orderIdx !== -1) {
+        orders[orderIdx].giftId = giftId;
+        await writeJsonFile("orders.json", orders);
+        customerName = orders[orderIdx].customerName;
+      }
     }
+
+    // Send Telegram alert (fire-and-forget)
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+    const host = req.get("host");
+    const giftLink = `${protocol}://${host}/gift/${giftId}`;
+    notifyGiftCreated({
+      orderId: giftData.orderId,
+      customerName,
+      giftId,
+      giftLink,
+    }).catch(() => {});
 
     res.status(201).json(newGift);
   } catch (err) {

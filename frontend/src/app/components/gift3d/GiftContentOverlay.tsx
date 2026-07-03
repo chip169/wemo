@@ -17,7 +17,7 @@ type GiftContentOverlayProps = {
   };
 };
 
-function AudioPlayerWidget({ src, themeStyle }: { src: string; themeStyle: any }) {
+export function AudioPlayerWidget({ src, themeStyle }: { src: string; themeStyle: any }) {
   const [playing, setPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -66,7 +66,7 @@ function AudioPlayerWidget({ src, themeStyle }: { src: string; themeStyle: any }
   );
 }
 
-function VideoPlayerWidget({ src, themeStyle }: { src: string; themeStyle: any }) {
+export function VideoPlayerWidget({ src, themeStyle }: { src: string; themeStyle: any }) {
   const isYouTube = src.includes("youtube.com") || src.includes("youtu.be");
   let embedUrl = src;
   if (isYouTube) {
