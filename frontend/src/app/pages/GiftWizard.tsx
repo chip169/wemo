@@ -855,7 +855,7 @@ function Step2({
   };
 
   const removePhoto = (i: number) => {
-    setGift({ ...gift, photos: gift.photos.filter((_, idx) => idx !== i) });
+    setGift((prev) => ({ ...prev, photos: prev.photos.filter((_, idx) => idx !== i) }));
   };
 
   const handleVideoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -865,19 +865,20 @@ function Step2({
     setVideoUploading(true);
     const reader = new FileReader();
     reader.readAsDataURL(file);
-    reader.onload = async () => {
+    reader.onloadend = async () => {
       try {
+        const base64data = reader.result as string;
         const res = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            file: reader.result as string,
+            file: base64data,
             fileName: file.name,
           }),
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || "Tải video lên thất bại.");
-        setGift({ ...gift, videoUrl: data.url });
+        setGift(prev => ({ ...prev, videoUrl: data.url }));
       } catch (err: any) {
         alert(err.message);
       } finally {
@@ -920,7 +921,7 @@ function Step2({
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Tải ghi âm lên thất bại.");
-            setGift({ ...gift, voiceUrl: data.url });
+            setGift(prev => ({ ...prev, voiceUrl: data.url }));
           } catch (err: any) {
             alert(err.message);
           } finally {
@@ -1245,68 +1246,41 @@ function Step2({
               🎥 Video Đính Kèm {gift.videoUrl && "✅"}
             </h3>
 
-            <div className="flex gap-2 p-0.5 bg-stone-100 rounded-xl">
-              <button
-                type="button"
-                onClick={() => setVideoMode("upload")}
-                className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${videoMode === "upload" ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
-              >
-                Tải Video Lên
-              </button>
-              <button
-                type="button"
-                onClick={() => setVideoMode("youtube")}
-                className={`flex-1 py-1.5 rounded-lg text-[10px] font-bold transition-all ${videoMode === "youtube" ? "bg-white text-stone-800 shadow-sm" : "text-stone-500 hover:text-stone-700"}`}
-              >
-                YouTube / Tiktok
-              </button>
+            <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-4 bg-stone-50/50">
+              {videoUploading ? (
+                <div className="flex flex-col items-center gap-2 py-4">
+                  <Loader2 className="w-6 h-6 animate-spin text-[#E8B4A8]" />
+                  <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Đang tải video...</span>
+                </div>
+              ) : gift.videoUrl ? (
+                <div className="w-full space-y-3 text-center">
+                  <video src={gift.videoUrl} controls className="w-full max-h-[140px] rounded-lg bg-black" />
+                  <button
+                    onClick={() => setGift(prev => prev ? { ...prev, videoUrl: "" } : null)}
+                    className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
+                  >
+                    Xóa Video
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="file"
+                    ref={videoInputRef}
+                    onChange={handleVideoUpload}
+                    accept="video/*"
+                    style={{ display: "none" }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => videoInputRef.current?.click()}
+                    className="px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-bold rounded-xl shadow-sm cursor-pointer transition-colors"
+                  >
+                    Chọn Tệp Video (MP4)
+                  </button>
+                </>
+              )}
             </div>
-
-            {videoMode === "upload" ? (
-              <div className="flex flex-col items-center justify-center border-2 border-dashed border-stone-200 rounded-xl p-4 bg-stone-50/50">
-                {videoUploading ? (
-                  <div className="flex flex-col items-center gap-2 py-4">
-                    <Loader2 className="w-6 h-6 animate-spin text-[#E8B4A8]" />
-                    <span className="text-[10px] text-stone-400 font-bold uppercase tracking-wider">Đang tải video...</span>
-                  </div>
-                ) : gift.videoUrl && !gift.videoUrl.includes("youtube.com") && !gift.videoUrl.includes("youtu.be") && !gift.videoUrl.includes("tiktok.com") ? (
-                  <div className="w-full space-y-3 text-center">
-                    <video src={gift.videoUrl} controls className="w-full max-h-[140px] rounded-lg bg-black" />
-                    <button
-                      onClick={() => setGift({ ...gift, videoUrl: "" })}
-                      className="text-xs text-rose-500 font-bold hover:underline block mx-auto border-0 bg-transparent cursor-pointer"
-                    >
-                      Xóa Video
-                    </button>
-                  </div>
-                ) : (
-                  <>
-                    <input
-                      type="file"
-                      ref={videoInputRef}
-                      onChange={handleVideoUpload}
-                      accept="video/*"
-                      style={{ display: "none" }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => videoInputRef.current?.click()}
-                      className="px-4 py-2 border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-bold rounded-xl shadow-sm cursor-pointer transition-colors"
-                    >
-                      Chọn Tệp Video (MP4)
-                    </button>
-                  </>
-                )}
-              </div>
-            ) : (
-              <input
-                type="text"
-                placeholder="Dán link YouTube hoặc Tiktok..."
-                value={gift.videoUrl || ""}
-                onChange={(e) => setGift({ ...gift, videoUrl: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs transition-colors"
-              />
-            )}
           </div>
 
           {/* 5. Ghi âm Lời chúc */}
