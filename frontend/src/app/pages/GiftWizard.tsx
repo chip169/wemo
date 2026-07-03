@@ -68,7 +68,7 @@ const THEMES = [
   },
 ];
 
-const TEMPLATES = [
+const STATIC_TEMPLATES = [
   {
     id: "love-romantic",
     name: "Ký Ức Lãng Mạn",
@@ -355,9 +355,11 @@ function OrderCheckGateway({
 function Step0({
   gift,
   setGift,
+  templates,
 }: {
   gift: GiftData;
   setGift: (g: GiftData) => void;
+  templates: any[];
 }) {
   return (
     <div>
@@ -375,7 +377,7 @@ function Step0({
               whileTap={{ scale: 0.98 }}
               onClick={() => {
                 // Find first template of this theme
-                const defaultTpl = TEMPLATES.find((t) => t.theme === theme.id);
+                const defaultTpl = templates.find((t) => t.theme === theme.id);
                 setGift({
                   ...gift,
                   theme: theme.id,
@@ -414,12 +416,14 @@ function Step0({
 function Step1({
   gift,
   setGift,
+  templates,
 }: {
   gift: GiftData;
   setGift: (g: GiftData) => void;
+  templates: any[];
 }) {
   const [demoTemplate, setDemoTemplate] = useState<any | null>(null);
-  const filteredTemplates = TEMPLATES.filter((t) => t.theme === gift.theme);
+  const filteredTemplates = templates.filter((t) => t.theme === gift.theme);
 
   const handleOpenDemo = (e: React.MouseEvent, tpl: any) => {
     e.stopPropagation();
@@ -1414,12 +1418,14 @@ function Step4({
   gift,
   onSave,
   saving,
+  templates,
 }: {
   gift: GiftData;
   onSave: () => void;
   saving: boolean;
+  templates: any[];
 }) {
-  const tpl = TEMPLATES.find((t) => t.id === gift.templateId) || TEMPLATES[0];
+  const tpl = templates.find((t) => t.id === gift.templateId) || templates[0];
   const rows = [
     { label: "Mã Đơn Hàng (Order ID)", value: gift.orderId, icon: "🏷️" },
     { label: "Chủ đề thiệp", value: `${THEMES.find((t) => t.id === gift.theme)?.emoji} ${THEMES.find((t) => t.id === gift.theme)?.name}`, icon: "🎨" },
@@ -1528,16 +1534,18 @@ function SuccessScreen({
   gift,
   giftId,
   onReset,
+  templates,
 }: {
   gift: GiftData;
   giftId: string;
   onReset: () => void;
+  templates: any[];
 }) {
   const [copied, setCopied] = useState(false);
   const [showQrModal, setShowQrModal] = useState(false);
   const [showNfcModal, setShowNfcModal] = useState(false);
   const [nfcStatus, setNfcStatus] = useState<"idle" | "listening" | "success" | "error">("idle");
-  const tpl = TEMPLATES.find((t) => t.id === gift.templateId) || TEMPLATES[0];
+  const tpl = templates.find((t) => t.id === gift.templateId) || templates[0];
   const giftUrl = `${window.location.origin}/gift/${giftId}`;
 
   useEffect(() => {
@@ -1910,6 +1918,29 @@ export function GiftWizard() {
   const [saving, setSaving] = useState(false);
   const contentRef = useRef<HTMLDivElement>(null);
 
+  // Load dynamic template settings from DB to allow admin modifications to reflect immediately
+  const [templates, setTemplates] = useState(STATIC_TEMPLATES);
+
+  useEffect(() => {
+    fetch("/api/templates")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: any[]) => {
+        const merged = STATIC_TEMPLATES.map((staticTpl) => {
+          const dbTpl = data.find((t) => t.id === staticTpl.id);
+          if (!dbTpl) return staticTpl;
+          return {
+            ...staticTpl,
+            name: dbTpl.name || staticTpl.name,
+            description: dbTpl.sampleMessage || staticTpl.description,
+            img: dbTpl.preview || staticTpl.img,
+            features: (dbTpl.features && dbTpl.features.length > 0) ? dbTpl.features : staticTpl.features,
+          };
+        });
+        setTemplates(merged);
+      })
+      .catch((err) => console.error("Error loading templates:", err));
+  }, []);
+
   const handleValidOrder = (orderId: string, signature: string) => {
     setValidatedOrderId(orderId);
     setOrderSignature(signature);
@@ -1980,14 +2011,15 @@ export function GiftWizard() {
           setDone(false);
           setCreatedGiftId("");
         }}
+        templates={templates}
       />
     );
 
   const stepComponents = [
-    <Step0 gift={gift} setGift={setGift} />,
-    <Step1 gift={gift} setGift={setGift} />,
+    <Step0 gift={gift} setGift={setGift} templates={templates} />,
+    <Step1 gift={gift} setGift={setGift} templates={templates} />,
     <Step2 gift={gift} setGift={setGift} />,
-    <Step4 gift={gift} onSave={handleSave} saving={saving} />,
+    <Step4 gift={gift} onSave={handleSave} saving={saving} templates={templates} />,
   ];
 
   return (
