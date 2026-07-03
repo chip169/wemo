@@ -20,18 +20,30 @@ const nodemailer = require("nodemailer");
 let _transporter = null;
 
 const getTransporter = () => {
+  // Always re-create if not yet initialized (handles env vars loaded after module init)
   if (_transporter) return _transporter;
 
-  const user = process.env.GMAIL_USER;
-  const pass = process.env.GMAIL_APP_PASSWORD;
+  const user = process.env.GMAIL_USER?.trim();
+  const pass = process.env.GMAIL_APP_PASSWORD?.trim();
 
   if (!user || !pass) {
+    console.warn("⚠️ Email: Chưa cấu hình GMAIL_USER hoặc GMAIL_APP_PASSWORD trong .env.");
     return null;
   }
 
   _transporter = nodemailer.createTransport({
     service: "gmail",
     auth: { user, pass },
+  });
+
+  // Verify connection on first create
+  _transporter.verify((err) => {
+    if (err) {
+      console.error("❌ Gmail SMTP xác thực thất bại:", err.message);
+      _transporter = null; // Reset so next call retries
+    } else {
+      console.log("✅ Gmail SMTP kết nối thành công:", user);
+    }
   });
 
   return _transporter;
