@@ -14,7 +14,7 @@ const plans = [
       "Tối đa 20 ảnh",
       "Tối đa 3 video",
       "1 tin nhắn giọng nói",
-      "Chọn từ 6 mẫu thiết kế",
+      "Chọn từ 2 mẫu thiết kế 3D",
       "Mã QR thay thế",
       "Tối ưu hóa di động",
       "Hỗ trợ qua email",

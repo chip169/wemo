@@ -119,18 +119,24 @@ export function GiftsPage() {
   const handleReset = (id: string) => {
     if (window.confirm(`Bạn có chắc chắn muốn RESET món quà ${id} về trạng thái chưa tạo? Điều này sẽ xóa toàn bộ nội dung thiệp và cho phép thiết kế lại.`)) {
       adminFetch(`/api/gifts/${id}/reset`, { method: "POST" })
-        .then((res) => res.json())
-        .then((data) => {
-          if (data.error) {
-            alert(data.error);
-          } else {
-            alert(data.message || "Đã reset quà tặng về trạng thái chưa tạo thành công.");
-            fetchGifts();
+        .then(async (res) => {
+          if (!res.ok) {
+            try {
+              const errData = await res.json();
+              throw new Error(errData.error || `Mã lỗi: ${res.status}`);
+            } catch {
+              throw new Error(`Mã lỗi: ${res.status} (${res.statusText})`);
+            }
           }
+          return res.json();
+        })
+        .then((data) => {
+          alert(data.message || "Đã reset quà tặng về trạng thái chưa tạo thành công.");
+          fetchGifts();
         })
         .catch((err) => {
           console.error(err);
-          alert("Lỗi hệ thống khi reset quà tặng.");
+          alert(`Lỗi khi reset quà tặng: ${err.message}`);
         });
     }
   };

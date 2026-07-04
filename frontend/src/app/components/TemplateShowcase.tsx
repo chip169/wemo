@@ -3,46 +3,18 @@ import { Card } from "./ui/card";
 
 const templates = [
   {
-    title: "Sinh Nhật Rực Rỡ",
-    description: "Kỷ niệm thêm một năm tuổi với niềm vui và confetti rực rỡ",
-    image: "https://images.unsplash.com/photo-1513151233558-d860c5398176?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYXBweSUyMGJpcnRoZGF5JTIwY2VsZWJyYXRpb24lMjBjb25mZXR0aXxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#FFD4D4",
-    gradient: "linear-gradient(135deg, #FFD4D4 0%, #FFB3BA 100%)",
-  },
-  {
     title: "Ký Ức Lãng Mạn",
-    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành",
+    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
     image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
     color: "#E8B4A8",
     gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
   },
   {
-    title: "Giáng Sinh Diệu Kỳ",
-    description: "Chia sẻ sự ấm áp và kỳ diệu của mùa lễ hội",
-    image: "https://images.unsplash.com/photo-1482517967863-00e15c9b44be?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjaHJpc3RtYXMlMjBob2xpZGF5JTIwZGVjb3JhdGlvbiUyMGZlc3RpdmV8ZW58MXx8fHwxNzc5NjExODMzfDA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#D4AF78",
-    gradient: "linear-gradient(135deg, #D4AF78 0%, #C4A568 100%)",
-  },
-  {
-    title: "Ngày Tốt Nghiệp",
-    description: "Ghi dấu thành tích và những khởi đầu mới đầy hứng khởi",
-    image: "https://images.unsplash.com/photo-1623461487986-9400110de28e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxncmFkdWF0aW9uJTIwY2VyZW1vbnklMjBjYXAlMjBnb3dufGVufDF8fHx8MTc3OTU0NDExMXww&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#B8A4D4",
-    gradient: "linear-gradient(135deg, #B8A4D4 0%, #9B87C4 100%)",
-  },
-  {
-    title: "Chào Đón Em Bé",
-    description: "Ghi lại những khoảnh khắc đầu tiên quý giá và ký ức cột mốc",
-    image: "https://images.unsplash.com/photo-1543342384-1f1350e27861?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxuZXdib3JuJTIwYmFieSUyMGZhbWlseSUyMG1vbWVudHxlbnwxfHx8fDE3Nzk2MTE4MzN8MA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#A8D4E8",
-    gradient: "linear-gradient(135deg, #A8D4E8 0%, #8BC4D8 100%)",
-  },
-  {
-    title: "Dòng Thời Gian Kỷ Niệm",
-    description: "Sống lại hành trình cùng nhau từng năm một",
-    image: "https://images.unsplash.com/photo-1523521803700-b3bcaeab0150?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhbm5pdmVyc2FyeSUyMGNvdXBsZSUyMGNlbGVicmF0aW9uJTIwdG9hc3R8ZW58MXx8fHwxNzc5NjExODM0fDA&ixlib=rb-4.1.0&q=80&w=1080",
-    color: "#D4C4A8",
-    gradient: "linear-gradient(135deg, #D4C4A8 0%, #C4B498 100%)",
+    title: "Mẫu Tinh Cầu 3D Vũ Trụ",
+    description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
+    image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#E11D48",
+    gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
   },
 ];
 

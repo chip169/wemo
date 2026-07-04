@@ -801,7 +801,7 @@ app.post("/api/orders", authMiddleware, async (req, res) => {
       customerName: orderData.customerName,
       product: orderData.product,
       amount: Number(orderData.amount),
-      status: orderData.status || "pending",
+      status: orderData.status || "pending_payment",
       paymentStatus: orderData.paymentStatus || "unpaid",
       createdDate: new Date().toISOString().split("T")[0],
     };

@@ -41,6 +41,7 @@ export function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
+  const [paymentFilter, setPaymentFilter] = useState("all");
   const [currentPage, setCurrentPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,7 +49,7 @@ export function OrdersPage() {
   const [formName, setFormName] = useState("");
   const [formProduct, setFormProduct] = useState("Sinh Nhật Rực Rỡ");
   const [formAmount, setFormAmount] = useState("");
-  const [formStatus, setFormStatus] = useState<Order["status"]>("pending");
+  const [formStatus, setFormStatus] = useState<Order["status"]>("pending_payment");
   const [formPayment, setFormPayment] = useState<Order["paymentStatus"]>("unpaid");
   const [submitting, setSubmitting] = useState(false);
 
@@ -58,7 +59,7 @@ export function OrdersPage() {
   const [editName, setEditName] = useState("");
   const [editProduct, setEditProduct] = useState("");
   const [editAmount, setEditAmount] = useState("");
-  const [editStatus, setEditStatus] = useState<Order["status"]>("pending");
+  const [editStatus, setEditStatus] = useState<Order["status"]>("pending_payment");
   const [editPayment, setEditPayment] = useState<Order["paymentStatus"]>("unpaid");
   const [editSubmitting, setEditSubmitting] = useState(false);
 
@@ -159,7 +160,7 @@ export function OrdersPage() {
         setFormName("");
         setFormProduct("Sinh Nhật Rực Rỡ");
         setFormAmount("");
-        setFormStatus("pending");
+        setFormStatus("pending_payment");
         setFormPayment("unpaid");
         fetchOrders();
       })
@@ -173,10 +174,12 @@ export function OrdersPage() {
   };
 
   const filteredOrders = orders.filter((order) => {
-    return (
+    const matchesSearch =
       order.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      order.id.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+      order.id.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesPayment =
+      paymentFilter === "all" || order.paymentStatus === paymentFilter;
+    return matchesSearch && matchesPayment;
   });
 
   const itemsPerPage = 8;
@@ -221,25 +224,42 @@ export function OrdersPage() {
           border: "1px solid #E5E7EB",
         }}
       >
-        <div className="relative">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
-            style={{ color: "#9CA3AF" }}
-          />
-          <input
-            type="text"
-            placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value);
-              setCurrentPage(1);
-            }}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg outline-none text-sm bg-stone-50"
-            style={{
-              border: "1px solid #E5E7EB",
-              color: "#111827",
-            }}
-          />
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="relative flex-1">
+            <Search
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4"
+              style={{ color: "#9CA3AF" }}
+            />
+            <input
+              type="text"
+              placeholder="Tìm kiếm theo mã đơn hàng hoặc tên khách hàng..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full pl-10 pr-4 py-2.5 rounded-lg outline-none text-sm bg-stone-50"
+              style={{
+                border: "1px solid #E5E7EB",
+                color: "#111827",
+              }}
+            />
+          </div>
+          <div className="w-full md:w-56">
+            <select
+              value={paymentFilter}
+              onChange={(e) => {
+                setPaymentFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="w-full px-4 py-2.5 rounded-lg outline-none text-xs bg-stone-50 text-stone-700 font-semibold cursor-pointer border border-stone-200"
+            >
+              <option value="all">Tất cả trạng thái thanh toán</option>
+              <option value="unpaid">Chưa thanh toán</option>
+              <option value="paid">Đã thanh toán</option>
+              <option value="refunded">Đã hoàn tiền</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -523,7 +543,6 @@ export function OrdersPage() {
                     >
                       <option value="pending_payment">Chờ đặt cọc</option>
                       <option value="deposited">Đã đặt cọc</option>
-                      <option value="pending">Chờ xử lý</option>
                       <option value="processing">Đang xử lý</option>
                       <option value="completed">Đã hoàn thành</option>
                       <option value="cancelled">Đã hủy</option>
@@ -635,7 +654,6 @@ export function OrdersPage() {
                     >
                       <option value="pending_payment">Chờ đặt cọc</option>
                       <option value="deposited">Đã đặt cọc</option>
-                      <option value="pending">Chờ xử lý</option>
                       <option value="processing">Đang xử lý</option>
                       <option value="completed">Đã hoàn thành</option>
                       <option value="cancelled">Đã hủy</option>
