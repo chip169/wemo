@@ -1071,54 +1071,6 @@ function Step2({
   };
 
   const updateField = (fields: Partial<GiftData>) =>
-    setGift({ ...gift, ...fields });ect(new Error("Không thể đọc tệp ảnh."));
-          reader.readAsDataURL(file);
-        });
-
-        // Step 2: Upload to Cloudinary via backend
-        console.log(`📤 Uploading image: ${file.name}, size: ${Math.round(base64.length / 1024)}KB`);
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            file: base64,
-            fileName: file.name.replace(/\.[^/.]+$/, "") + ".jpg",
-          }),
-        });
-        const data = await res.json();
-        if (res.ok && data.url) {
-          console.log(`✅ Image uploaded: ${data.url}`);
-          uploadedUrls.push(data.url);
-        } else {
-          throw new Error(data.error || "Tải ảnh lên thất bại.");
-        }
-      }
-
-      // Step 3: Update gift with new photos
-      setGift({ ...gift, photos: [...gift.photos, ...uploadedUrls] });
-
-      if (skipped) {
-        alert(`Đã tải lên ${filesToUpload.length} ảnh. Bỏ qua các ảnh thừa do vượt quá giới hạn tối đa ${maxPhotos} ảnh.`);
-      }
-    } catch (err: any) {
-      console.error("❌ Image upload error:", err);
-      alert(err.message || "Có lỗi xảy ra khi xử lý ảnh.");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
-
-    }
-  };
-
-  const removePhoto = (i: number) => {
-    setGift({ ...gift, photos: gift.photos.filter((_, idx) => idx !== i) });
-  };
-
-
-
-  const updateField = (fields: Partial<GiftData>) =>
     setGift({ ...gift, ...fields });
 
   return (
