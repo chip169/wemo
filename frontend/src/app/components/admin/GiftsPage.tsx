@@ -8,6 +8,7 @@ import {
   ChevronRight,
   Sparkles,
   RefreshCw,
+  RotateCcw,
 } from "lucide-react";
 import { adminFetch } from "../../utils/api";
 
@@ -111,6 +112,25 @@ export function GiftsPage() {
         .catch((err) => {
           console.error(err);
           alert("Lỗi hệ thống khi khôi phục quà tặng.");
+        });
+    }
+  };
+
+  const handleReset = (id: string) => {
+    if (window.confirm(`Bạn có chắc chắn muốn RESET món quà ${id} về trạng thái chưa tạo? Điều này sẽ xóa toàn bộ nội dung thiệp và cho phép thiết kế lại.`)) {
+      adminFetch(`/api/gifts/${id}/reset`, { method: "POST" })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.error) {
+            alert(data.error);
+          } else {
+            alert(data.message || "Đã reset quà tặng về trạng thái chưa tạo thành công.");
+            fetchGifts();
+          }
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("Lỗi hệ thống khi reset quà tặng.");
         });
     }
   };
@@ -310,6 +330,13 @@ export function GiftsPage() {
                                 <Eye className="w-4 h-4" />
                               </a>
                             )}
+                            <button
+                              onClick={() => handleReset(gift.id)}
+                              className="p-1.5 hover:bg-amber-50 text-amber-600 rounded transition-colors cursor-pointer border-0 bg-transparent"
+                              title="Reset quà tặng"
+                            >
+                              <RotateCcw className="w-4 h-4" />
+                            </button>
                             {gift.status !== "deleted" ? (
                               <button
                                 onClick={() => handleDelete(gift.id)}
