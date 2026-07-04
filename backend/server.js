@@ -776,6 +776,75 @@ app.post("/api/webhook/payment", async (req, res) => {
   }
 });
 
+// 3d. Diagnostic Endpoint for Email Notification Service
+app.get("/api/debug/test-email", async (req, res) => {
+  const user = (process.env.GMAIL_USER || "").trim();
+  const pass = (process.env.GMAIL_APP_PASSWORD || "").trim();
+  const adminEmail = (process.env.ADMIN_EMAIL || "").trim();
+
+  if (!user || !pass) {
+    return res.status(400).json({
+      success: false,
+      error: "Missing GMAIL_USER or GMAIL_APP_PASSWORD in environment variables",
+      env: {
+        GMAIL_USER: user ? "configured" : "missing",
+        GMAIL_APP_PASSWORD: pass ? "configured" : "missing",
+        ADMIN_EMAIL: adminEmail ? "configured" : "missing"
+      }
+    });
+  }
+
+  const results = {};
+
+  // 1. Test Admin Email Alert
+  try {
+    console.log("⚡ Running sendAdminAlertEmail diagnostic...");
+    const adminResult = await sendAdminAlertEmail({
+      orderId: "TEST_ADMIN_ALERT_" + Math.floor(1000 + Math.random() * 9000),
+      customerName: "Khách Hàng Thử Nghiệm",
+      phone: "0901234567",
+      address: "123 Đường Thử Nghiệm, Quận 1, TP. HCM",
+      product: "Figure Chibi 3D 15cm x1",
+      amount: 450000,
+      depositAmount: 200000,
+      paidAt: new Date().toISOString(),
+    });
+    results.adminAlertEmail = adminResult;
+  } catch (err) {
+    console.error("❌ Diagnostic sendAdminAlertEmail failed:", err);
+    results.adminAlertEmail = { success: false, error: err.message, stack: err.stack };
+  }
+
+  // 2. Test Customer Email Confirmation
+  try {
+    console.log("⚡ Running sendOrderConfirmEmail diagnostic...");
+    const customerResult = await sendOrderConfirmEmail({
+      email: adminEmail || user, // Send to adminEmail as a test
+      customerName: "Khách Hàng Thử Nghiệm",
+      orderId: "TEST_CUSTOMER_CONFIRM_" + Math.floor(1000 + Math.random() * 9000),
+      product: "Figure Chibi 3D 15cm x1",
+      depositAmount: 200000,
+      amount: 450000,
+      paidAt: new Date().toISOString(),
+      giftLink: `https://${req.get("host")}/create?orderId=TEST_CUSTOMER_CONFIRM_1234`,
+    });
+    results.customerConfirmEmail = customerResult;
+  } catch (err) {
+    console.error("❌ Diagnostic sendOrderConfirmEmail failed:", err);
+    results.customerConfirmEmail = { success: false, error: err.message, stack: err.stack };
+  }
+
+  res.json({
+    success: (results.adminAlertEmail?.success === true) && (results.customerConfirmEmail?.success === true),
+    results,
+    env: {
+      GMAIL_USER: user,
+      ADMIN_EMAIL: adminEmail,
+    }
+  });
+});
+
+
 app.get("/api/orders", authMiddleware, async (req, res) => {
   try {
     const orders = await getOrders();
