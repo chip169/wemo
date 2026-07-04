@@ -26,11 +26,12 @@ const getTransporter = () => {
     return null;
   }
 
+  // Sử dụng cấu hình SMTP tường minh qua cổng 465 (SSL) giúp hoạt động ổn định trên cloud deploy
   return nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: { user, pass },
-    // Force TLS — required for Gmail App Password
-    secure: false,
     tls: { rejectUnauthorized: false },
   });
 };
@@ -261,8 +262,8 @@ const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, de
     console.log(`✅ [Email] Gửi thành công đến ${email} — Message ID: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`❌ [Email] Lỗi gửi email khách hàng:`, err.message, err.code || "");
-    return { success: false, error: err.message };
+    console.error(`❌ [Email] Lỗi gửi email khách hàng:`, err);
+    return { success: false, error: err.message || String(err) };
   }
 };
 
@@ -292,8 +293,8 @@ const sendAdminAlertEmail = async (orderData) => {
     console.log(`✅ [Email] Admin alert gửi OK đến ${adminEmail} — Message ID: ${info.messageId}`);
     return { success: true, messageId: info.messageId };
   } catch (err) {
-    console.error(`❌ [Email] Lỗi gửi admin alert:`, err.message, err.code || "");
-    return { success: false, error: err.message };
+    console.error(`❌ [Email] Lỗi gửi admin alert:`, err);
+    return { success: false, error: err.message || String(err) };
   }
 };
 
