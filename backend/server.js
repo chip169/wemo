@@ -487,6 +487,57 @@ app.delete("/api/gifts/:id", authMiddleware, async (req, res) => {
   }
 });
 
+app.post("/api/gifts/:id/reset", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  try {
+    let gift = null;
+    let orderId = null;
+
+    if (getDbMode() === "mongodb") {
+      gift = await Gift.findOne({ id });
+      if (gift) {
+        orderId = gift.orderId;
+        await Gift.deleteOne({ id });
+      }
+    } else {
+      const gifts = await getGifts();
+      const giftIndex = gifts.findIndex((g) => g.id === id);
+      if (giftIndex !== -1) {
+        gift = gifts[giftIndex];
+        orderId = gift.orderId;
+        gifts.splice(giftIndex, 1);
+        await saveGiftsList(gifts);
+      }
+    }
+
+    if (!gift) {
+      return res.status(404).json({ error: "Không tìm thấy quà tặng." });
+    }
+
+    // Clear giftId in the corresponding order
+    if (orderId) {
+      if (getDbMode() === "mongodb") {
+        const orderDoc = await Order.findOne({ id: orderId });
+        if (orderDoc) {
+          orderDoc.giftId = null;
+          await orderDoc.save();
+        }
+      } else {
+        const orders = await readJsonFile("orders.json");
+        const orderIdx = orders.findIndex((o) => o.id === orderId);
+        if (orderIdx !== -1) {
+          orders[orderIdx].giftId = null;
+          await writeJsonFile("orders.json", orders);
+        }
+      }
+    }
+
+    res.json({ success: true, message: "Đã reset quà tặng về trạng thái chưa tạo thành công." });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.put("/api/gifts/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
   const { orderId, recipientName, templateId, status } = req.body;
