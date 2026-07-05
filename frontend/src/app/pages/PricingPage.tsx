@@ -1,107 +1,82 @@
-import { useState } from "react";
 import { motion } from "motion/react";
-import { Check, Sparkles, Crown, Layers, ArrowRight } from "lucide-react";
+import { Check, Sparkles, Crown, Building2, ArrowRight } from "lucide-react";
 import { Link } from "react-router";
 
 const faqs = [
   {
-    q: "Kích thước 6cm và 9cm khác nhau như thế nào về tính năng?",
-    a: "Cả hai phiên bản đều sở hữu công nghệ Memobox độc quyền. Bản 9cm mang lại không gian hiển thị lớn hơn, trải nghiệm hình ảnh sống động hơn và được mở khóa các tính năng cao cấp như không giới hạn dung lượng ảnh/video và tùy chỉnh hiệu ứng chuyển động.",
+    q: "Kích thước 9cm và 12cm khác nhau như thế nào?",
+    a: "Phiên bản 9cm nhỏ gọn, tinh tế và rất thích hợp để trang trí bàn học/làm việc. Phiên bản 12cm có kích thước lớn hơn, được dựng hình phôi 3D thủ công sắc nét và tỉ mỉ hơn, giúp các chi tiết khuôn mặt và trang phục hiển thị nổi bật, sống động hơn.",
   },
   {
-    q: "Tôi có được giảm giá khi mua số lượng lớn cho sự kiện không?",
-    a: "Có! Gói Combo 6 là giải pháp thiết kế sẵn để tối ưu chi phí cho bạn. Nếu bạn có nhu cầu đặt số lượng lớn hơn cho doanh nghiệp hoặc tiệc cưới, vui lòng liên hệ bộ phận chăm sóc khách hàng để nhận báo giá chi tiết.",
+    q: "Tôi có được giảm giá khi đặt số lượng lớn cho sự kiện/đám cưới không?",
+    a: "Có! Chúng tôi có chính sách chiết khấu vô cùng hấp dẫn (lên đến 30%) cho các đơn hàng từ 5 sản phẩm trở lên. Ngoài ra WEMO hỗ trợ tùy biến riêng bao bì, thiệp chúc và khắc tên/logo lên phần đế gỗ cho các đơn sự kiện.",
   },
   {
-    q: "Nội dung hình ảnh và video trên Memobox có lưu trữ mãi mãi không?",
-    a: "Hoàn toàn mãi mãi. Sau khi mua và kích hoạt sản phẩm, hệ thống lưu trữ đám mây của chúng tôi đảm bảo người nhận có thể quét và xem lại những thước phim kỷ niệm bất cứ lúc nào mà không phát sinh thêm chi phí tháng.",
+    q: "Chip NFC ẩn trên mô hình Figure hoạt động như thế nào?",
+    a: "Mỗi mô hình Figure của WEMO đều được tích hợp một chip NFC ẩn thông minh bên dưới đế. Khi người nhận dùng điện thoại chạm nhẹ vào đế Figure, màn hình điện thoại sẽ tự động mở ra trang thiệp 3D độc bản chứa lời chúc, âm nhạc và những hình ảnh kỷ niệm của hai bạn.",
   },
 ];
 
 export function PricingPage() {
-  // State quản lý size cho gói Combo 6 ('6cm' hoặc '9cm')
-  const [comboSize, setComboSize] = useState<"6cm" | "9cm">("6cm");
-
-  // Dữ liệu động của gói Combo 6 dựa trên state size
-  const comboDetails = {
-    "6cm": {
-      price: "3.200.000đ",
-      originalPrice: "3.600.000đ",
-      saving: "400.000đ",
-      sizeText: "Kích thước khối: 6cm x 6cm (Trọn bộ 6 hộp)",
-    },
-    "9cm": {
-      price: "3.700.000đ",
-      originalPrice: "4.200.000đ",
-      saving: "500.000đ",
-      sizeText: "Kích thước lớn: 9cm x 9cm (Trọn bộ 6 hộp Premium)",
-    },
-  };
-
   const plans = [
     {
-      name: "Standard (6cm)",
+      name: "Figure Chibi 9cm",
       icon: Sparkles,
-      price: "600.000đ",
-      hasToggle: false,
-      description:
-        "Kích thước tiêu chuẩn tinh tế, hoàn hảo cho món quà cá nhân lưu giữ kỷ niệm.",
-      color: "#FFD4D4",
-      textColor: "#9C4141",
-      features: [
-        "Kích thước khối: 6cm x 6cm",
-        "Công nghệ hiển thị Memobox",
-        "Tích hợp chip NFC cao cấp",
-        "Tối đa 20 hình ảnh kỷ niệm",
-        "Tối đa 3 video ngắn",
-        "Hỗ trợ cài đặt âm nhạc nền",
-        "Bảo hành kỹ thuật 12 tháng",
-      ],
-      cta: "Chọn Gói Standard",
-      popular: false,
-    },
-    {
-      name: "Premium (9cm)",
-      icon: Crown,
-      price: "800.000đ",
-      hasToggle: false,
-      description:
-        "Phiên bản cao cấp kích thước lớn, trải nghiệm thị giác sống động và sang trọng vượt trội.",
+      price: "350.000đ",
+      period: "/sản phẩm",
+      description: "Kích thước tiêu chuẩn tinh tế, phù hợp để bàn làm việc.",
       color: "#E8B4A8",
       textColor: "#8A4F43",
       features: [
-        "Kích thước lớn: 9cm x 9cm",
-        "Không gian hiển thị rộng rãi hơn 1.5x",
-        "Tải ảnh & video không giới hạn",
-        "Tích hợp tin nhắn giọng nói độc quyền",
-        "Tùy chỉnh giao diện hiển thị mẫu",
-        "Hiệu ứng chuyển động (Animation) cao cấp",
-        "Hỗ trợ ưu tiên 24/7",
+        "Kích thước chiều cao: 9cm",
+        "Vẽ chân dung Chibi AI miễn phí",
+        "Dựng hình mô hình 3D độc bản",
+        "Chất liệu nhựa in 3D cao cấp",
+        "Tùy chọn đế mica / đế gỗ khắc tên",
+        "Tích hợp chip NFC ẩn thông minh",
+        "Hộp quà & thiệp chúc thiết kế riêng",
       ],
-      cta: "Sở Hữu Bản Premium",
-      popular: true,
+      cta: "Tạo Chibi Ngay",
+      popular: false,
     },
     {
-      name: "Combo 6 bánh tùy size",
-      icon: Layers,
-      price: comboDetails[comboSize].price,
-      originalPrice: comboDetails[comboSize].originalPrice,
-      saving: comboDetails[comboSize].saving,
-      hasToggle: true,
-      description:
-        "Giải pháp hoàn hảo cho quà tặng sự kiện, đám cưới, gia đình hoặc doanh nghiệp.",
+      name: "Figure Chibi 12cm",
+      icon: Crown,
+      price: "450.000đ",
+      period: "/sản phẩm",
+      description: "Bản cao cấp sắc nét, cân đối và được ưa chuộng nhất.",
       color: "#D4AF78",
       textColor: "#735629",
       features: [
-        "Bao gồm trọn bộ 6 hộp Memobox",
-        comboDetails[comboSize].sizeText,
-        `Tiết kiệm ngay ${comboDetails[comboSize].saving} so với mua lẻ`,
-        "Hỗ trợ thiết kế giao diện hàng loạt theo yêu cầu",
-        "Tích hợp logo thương hiệu/nội dung tùy biến",
-        "Quản lý nội dung tất cả các hộp tập trung",
-        "Giao hàng miễn phí toàn quốc",
+        "Kích thước chiều cao: 12cm",
+        "Vẽ chân dung Chibi AI không giới hạn",
+        "Chi tiết mô hình sắc nét vượt trội",
+        "Dựng hình phôi 3D tỉ mỉ thủ công",
+        "Tặng kèm đế mica hoặc đế gỗ",
+        "Tích hợp chip NFC ẩn thông minh",
+        "Hỗ trợ ưu tiên & Giao hàng nhanh",
       ],
-      cta: "Đặt Hàng Combo",
+      cta: "Tạo Chibi Ngay",
+      popular: true,
+    },
+    {
+      name: "Sự Kiện / Doanh Nghiệp",
+      icon: Building2,
+      price: "Liên Hệ",
+      period: "",
+      description: "Đặt số lượng lớn cho sự kiện, tiệc cưới, quà tặng doanh nghiệp.",
+      color: "#1C1917",
+      textColor: "#5C5C5C",
+      features: [
+        "Áp dụng đơn hàng từ 5 sản phẩm",
+        "Chiết khấu đặc biệt lên đến 30%",
+        "Thiết kế chibi đồng loạt theo chủ đề",
+        "Tùy biến bao bì & thiệp chúc thương hiệu",
+        "Khắc tên/Logo thương hiệu lên đế gỗ",
+        "Hỗ trợ giao nhận đa địa chỉ",
+        "Thiết kế mẫu duyệt trước miễn phí",
+      ],
+      cta: "Nhận Báo Giá",
       popular: false,
     },
   ];
@@ -126,7 +101,7 @@ export function PricingPage() {
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 shadow-sm"
             style={{ background: "rgba(232,180,168,0.15)", color: "#8A4F43" }}
           >
-            <Sparkles className="w-3.5 h-3.5" /> MEMOBOX PRICING
+            <Sparkles className="w-3.5 h-3.5" /> WEMO PRICING
           </span>
           <h1
             className="mb-6 tracking-tight"
@@ -137,14 +112,13 @@ export function PricingPage() {
               lineHeight: 1.15,
             }}
           >
-            Lưu Giữ Kỷ Niệm <span style={{ color: "#E8B4A8" }}>Trọn Vẹn</span>
+            Sở Hữu Figure Chibi <span style={{ color: "#E8B4A8" }}>Độc Bản</span>
           </h1>
           <p
             className="max-w-2xl mx-auto"
             style={{ fontSize: "1.25rem", color: "#5A5A5A", lineHeight: 1.6 }}
           >
-            Chọn kích thước phù hợp với không gian của bạn. Mỗi hộp Memobox là
-            một câu chuyện tình yêu và ký ức được bảo tồn mãi mãi.
+            Chọn kích thước phù hợp với sở thích của bạn. Mỗi mô hình Figure Chibi 3D là một tác phẩm nghệ thuật cá nhân hóa được lưu giữ mãi mãi.
           </p>
         </motion.div>
       </section>
@@ -194,31 +168,7 @@ export function PricingPage() {
                     <plan.icon className="w-6 h-6 text-white" />
                   </div>
 
-                  {/* Inline Size Selector Toggle ONLY for Combo Card */}
-                  {plan.hasToggle && (
-                    <div className="flex bg-neutral-100 p-1 rounded-xl border border-neutral-200 shadow-inner">
-                      <button
-                        onClick={() => setComboSize("6cm")}
-                        className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
-                          comboSize === "6cm"
-                            ? "bg-white text-neutral-900 shadow-sm"
-                            : "text-neutral-400 hover:text-neutral-600"
-                        }`}
-                      >
-                        6cm
-                      </button>
-                      <button
-                        onClick={() => setComboSize("9cm")}
-                        className={`px-3 py-1 text-xs font-bold rounded-lg transition-all ${
-                          comboSize === "9cm"
-                            ? "bg-white text-neutral-900 shadow-sm"
-                            : "text-neutral-400 hover:text-neutral-600"
-                        }`}
-                      >
-                        9cm
-                      </button>
-                    </div>
-                  )}
+
 
                   {plan.popular && (
                     <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#E8B4A8]/10 text-[#8A4F43]">
@@ -275,7 +225,7 @@ export function PricingPage() {
                       {plan.price}
                     </span>
                     <span className="text-sm font-medium text-neutral-400 ml-1">
-                      /bộ
+                      {plan.period}
                     </span>
                   </div>
                 </div>
@@ -302,7 +252,7 @@ export function PricingPage() {
 
                 {/* CTA Button */}
                 <Link
-                  to="/order"
+                  to={plan.price === "Liên Hệ" ? "/faq" : "/ai-chibi"}
                   className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md"
                   style={
                     plan.popular

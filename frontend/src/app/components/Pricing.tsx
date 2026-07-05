@@ -1,69 +1,63 @@
 import { motion } from "motion/react";
 import { Check, Sparkles, Crown, Building2 } from "lucide-react";
+import { Link } from "react-router";
 
 const plans = [
   {
-    name: "Cơ Bản",
+    name: "Figure Chibi 9cm",
     icon: Sparkles,
-    price: "199.000đ",
-    period: "/quà",
-    description: "Hoàn hảo để khám phá WEMO",
-    color: "#FFD4D4",
+    price: "350.000đ",
+    period: "/sản phẩm",
+    description: "Nhỏ gọn tinh tế, tuyệt vời để bàn làm việc.",
+    color: "#E8B4A8",
     features: [
-      "1 trải nghiệm quà NFC",
-      "Tối đa 20 ảnh",
-      "Tối đa 3 video",
-      "1 tin nhắn giọng nói",
-      "Chọn từ 2 mẫu thiết kế 3D",
-      "Mã QR thay thế",
-      "Tối ưu hóa di động",
-      "Hỗ trợ qua email",
+      "Kích thước chiều cao: 9cm",
+      "Vẽ chân dung Chibi AI miễn phí",
+      "Dựng hình mô hình 3D độc bản",
+      "Chất liệu nhựa in 3D cao cấp",
+      "Tùy chọn đế mica / đế gỗ khắc tên",
+      "Tích hợp chip NFC ẩn thông minh",
+      "Hộp quà & thiệp chúc thiết kế riêng",
     ],
-    cta: "Bắt Đầu",
+    cta: "Tạo Chibi Ngay",
     popular: false,
   },
   {
-    name: "Cao Cấp",
+    name: "Figure Chibi 12cm",
     icon: Crown,
-    price: "499.000đ",
-    period: "/quà",
-    description: "Phổ biến nhất cho các dịp đặc biệt",
-    color: "#E8B4A8",
+    price: "450.000đ",
+    period: "/sản phẩm",
+    description: "Bản cao cấp sắc nét, cân đối và nổi bật nhất.",
+    color: "#D4AF78",
     features: [
-      "Ảnh & video không giới hạn",
-      "Tin nhắn giọng nói không giới hạn",
-      "Tích hợp âm nhạc",
-      "Tất cả mẫu cao cấp",
-      "Thương hiệu tùy chỉnh",
-      "Hoạt ảnh nâng cao",
-      "Tính năng hộp thời gian",
-      "Hỗ trợ ưu tiên",
-      "Phân tích quà tặng",
-      "Cập nhật bất cứ lúc nào",
+      "Kích thước chiều cao: 12cm",
+      "Vẽ chân dung Chibi AI không giới hạn",
+      "Chi tiết mô hình sắc nét vượt trội",
+      "Dựng hình phôi 3D tỉ mỉ thủ công",
+      "Tặng kèm đế mica hoặc đế gỗ",
+      "Tích hợp chip NFC ẩn thông minh",
+      "Hỗ trợ ưu tiên & Giao hàng nhanh",
     ],
-    cta: "Dùng Cao Cấp",
+    cta: "Tạo Chibi Ngay",
     popular: true,
   },
   {
-    name: "Doanh Nghiệp",
+    name: "Sự Kiện / Doanh Nghiệp",
     icon: Building2,
     price: "Liên Hệ",
-    period: "/báo giá",
-    description: "Cho sự kiện, đám cưới & quà doanh nghiệp",
-    color: "#D4AF78",
+    period: "",
+    description: "Đặt số lượng lớn cho sự kiện, tiệc cưới, quà tặng doanh nghiệp.",
+    color: "#1C1917",
     features: [
-      "Tất cả trong gói Cao Cấp",
-      "Tạo quà hàng loạt",
-      "Thiết kế mẫu tùy chỉnh",
-      "Tùy chọn nhãn trắng",
-      "Truy cập API",
-      "Cộng tác nhóm",
-      "Quản lý tài khoản riêng",
-      "Bảng phân tích",
-      "Tên miền tùy chỉnh",
-      "SLA doanh nghiệp",
+      "Áp dụng đơn hàng từ 5 sản phẩm",
+      "Chiết khấu đặc biệt lên đến 30%",
+      "Thiết kế chibi đồng loạt theo chủ đề",
+      "Tùy biến bao bì & thiệp chúc thương hiệu",
+      "Khắc tên/Logo thương hiệu lên đế gỗ",
+      "Hỗ trợ giao nhận đa địa chỉ",
+      "Thiết kế mẫu duyệt trước miễn phí",
     ],
-    cta: "Liên Hệ Tư Vấn",
+    cta: "Nhận Báo Giá",
     popular: false,
   },
 ];
@@ -207,6 +201,20 @@ export function Pricing() {
                     </li>
                   ))}
                 </ul>
+
+                {/* CTA Button */}
+                <Link
+                  to={plan.price === "Liên Hệ" ? "/faq" : "/ai-chibi"}
+                  className="w-full py-3.5 rounded-2xl text-xs font-black tracking-widest uppercase transition-all duration-300 flex items-center justify-center gap-1.5 shadow-md hover:scale-102 mt-auto text-center"
+                  style={{
+                    background: plan.popular
+                      ? "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)"
+                      : "#1C1917",
+                    color: "#ffffff",
+                  }}
+                >
+                  {plan.cta}
+                </Link>
               </div>
             </motion.div>
           ))}

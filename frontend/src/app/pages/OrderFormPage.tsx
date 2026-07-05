@@ -24,33 +24,26 @@ import { Link, useNavigate } from "react-router";
 
 // ─── Pricing Table ─────────────────────────────────────────────────────────────
 const PRICES = {
-  size: { "10cm": 350000, "15cm": 450000, "20cm": 600000 },
+  size: { "9cm": 350000, "12cm": 450000 },
   base: { none: 0, mica: 30000, wood: 50000 },
   led: 80000,
 };
 
 const SIZE_OPTIONS = [
   {
-    id: "10cm",
-    label: "10 cm",
+    id: "9cm",
+    label: "9 cm",
     emoji: "🤏",
-    desc: "Nhỏ gọn, để bàn làm việc",
-    price: PRICES.size["10cm"],
+    desc: "Nhỏ gọn, để bàn làm việc tinh tế",
+    price: PRICES.size["9cm"],
   },
   {
-    id: "15cm",
-    label: "15 cm",
+    id: "12cm",
+    label: "12 cm",
     emoji: "👌",
-    desc: "Phổ biến nhất, cân đối đẹp",
-    price: PRICES.size["15cm"],
+    desc: "Được ưa chuộng nhất, sắc nét và nổi bật",
+    price: PRICES.size["12cm"],
     recommended: true,
-  },
-  {
-    id: "20cm",
-    label: "20 cm",
-    emoji: "🖐",
-    desc: "Nổi bật, làm quà sang trọng",
-    price: PRICES.size["20cm"],
   },
 ];
 
@@ -71,7 +64,7 @@ const calcTotal = (config: OrderConfig): number => {
 };
 
 interface OrderConfig {
-  size: "10cm" | "15cm" | "20cm";
+  size: "9cm" | "12cm";
   quantity: number;
   base: "none" | "mica" | "wood";
   led: boolean;
@@ -125,7 +118,7 @@ export function OrderFormPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [config, setConfig] = useState<OrderConfig>({
-    size: "15cm",
+    size: "12cm",
     quantity: 1,
     base: "none",
     led: false,
@@ -689,6 +682,16 @@ export function OrderFormPage() {
                     <p className="text-[10px] text-stone-400 mt-1">Còn lại {formatPrice(totalPrice - DEPOSIT)} thanh toán khi nhận hàng</p>
                   </div>
                   <div className="text-4xl">🔒</div>
+                </div>
+
+                {/* Deposit Policy Notice */}
+                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/50 text-left space-y-1">
+                  <p className="text-[10px] font-black text-amber-800 uppercase tracking-wider flex items-center gap-1">
+                    ⚠️ CHÍNH SÁCH ĐẶT CỌC & NHẬN HÀNG
+                  </p>
+                  <p className="text-[11px] text-amber-700 leading-relaxed font-medium">
+                    Do sản phẩm Figure được thiết kế cá nhân hóa độc bản theo hình ảnh của bạn, quý khách vui lòng lưu ý: <b>Trường hợp đơn hàng đã đặt cọc nhưng quý khách không nhận hàng (bom hàng), số tiền cọc {formatPrice(DEPOSIT)} sẽ không được hoàn trả.</b>
+                  </p>
                 </div>
 
                 {submitError && (

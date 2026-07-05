@@ -415,13 +415,23 @@ export function TrackOrderPage() {
                       </div>
                     </div>
 
-                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 text-left space-y-1.5">
-                      <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest">
-                        💡 Hỗ trợ từ WEMO
-                      </h4>
-                      <p className="text-[11px] text-amber-700 leading-relaxed font-medium">
-                        Nếu bạn cần thay đổi thông tin vận chuyển, đổi địa chỉ hoặc điều chỉnh thiết kế, hãy nhanh chóng liên hệ WEMO qua Zalo hoặc Hotline để bộ phận thiết kế xử lý kịp thời trước khi in 3D.
-                      </p>
+                    <div className="p-4 rounded-2xl bg-amber-50 border border-amber-200/50 text-left space-y-2.5">
+                      <div>
+                        <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest">
+                          💡 Hỗ trợ từ WEMO
+                        </h4>
+                        <p className="text-[11px] text-amber-700 leading-relaxed font-medium mt-1">
+                          Nếu bạn cần thay đổi thông tin vận chuyển, đổi địa chỉ hoặc điều chỉnh thiết kế, hãy nhanh chóng liên hệ WEMO qua Zalo hoặc Hotline để bộ phận thiết kế xử lý kịp thời trước khi in 3D.
+                        </p>
+                      </div>
+                      <div className="pt-2 border-t border-amber-200/40">
+                        <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest flex items-center gap-1">
+                          ⚠️ CHÍNH SÁCH ĐẶT CỌC & NHẬN HÀNG
+                        </h4>
+                        <p className="text-[11px] text-amber-700 leading-relaxed font-medium mt-1">
+                          Mô hình Figure được thiết kế độc bản. Trong trường hợp quý khách không nhận hàng, số tiền đặt cọc ({formatPrice(order.depositAmount)}) sẽ không được hoàn trả.
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </motion.div>

@@ -569,7 +569,15 @@ export function OrdersPage() {
                     </label>
                     <select
                       value={formStatus}
-                      onChange={(e) => setFormStatus(e.target.value as any)}
+                      onChange={(e) => {
+                        const newStatus = e.target.value as any;
+                        setFormStatus(newStatus);
+                        if (newStatus === "completed") {
+                          setFormPayment("paid");
+                        } else if (newStatus === "cancelled") {
+                          setFormPayment("refunded");
+                        }
+                      }}
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
                       <option value="pending_payment">Chờ đặt cọc</option>
@@ -681,7 +689,15 @@ export function OrdersPage() {
                     </label>
                     <select
                       value={editStatus}
-                      onChange={(e) => setEditStatus(e.target.value as any)}
+                      onChange={(e) => {
+                        const newStatus = e.target.value as any;
+                        setEditStatus(newStatus);
+                        if (newStatus === "completed") {
+                          setEditPayment("paid");
+                        } else if (newStatus === "cancelled") {
+                          setEditPayment("refunded");
+                        }
+                      }}
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
                       <option value="pending_payment">Chờ đặt cọc</option>

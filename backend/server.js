@@ -1006,8 +1006,12 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       if (status !== undefined) order.status = status;
       if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
 
-      // Update payment status automatically if status is manually set to deposited
-      if (status === "deposited" && oldStatus !== "deposited") {
+      // Update payment status automatically based on order status transition
+      if (status === "completed") {
+        order.paymentStatus = "paid";
+      } else if (status === "cancelled") {
+        order.paymentStatus = "refunded";
+      } else if (status === "deposited" && oldStatus !== "deposited") {
         order.paymentStatus = "paid";
         if (!order.paidAt) {
           order.paidAt = new Date().toISOString();
@@ -1033,7 +1037,12 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       if (status !== undefined) order.status = status;
       if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
 
-      if (status === "deposited" && oldStatus !== "deposited") {
+      // Update payment status automatically based on order status transition
+      if (status === "completed") {
+        order.paymentStatus = "paid";
+      } else if (status === "cancelled") {
+        order.paymentStatus = "refunded";
+      } else if (status === "deposited" && oldStatus !== "deposited") {
         order.paymentStatus = "paid";
         if (!order.paidAt) {
           order.paidAt = new Date().toISOString();
