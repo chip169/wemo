@@ -22,7 +22,7 @@ export function PricingPage() {
     {
       name: "Figure Chibi 9cm",
       icon: Sparkles,
-      price: "350.000đ",
+      price: "650.000đ",
       period: "/sản phẩm",
       description: "Kích thước tiêu chuẩn tinh tế, phù hợp để bàn làm việc.",
       color: "#E8B4A8",
@@ -42,7 +42,7 @@ export function PricingPage() {
     {
       name: "Figure Chibi 12cm",
       icon: Crown,
-      price: "450.000đ",
+      price: "800.000đ",
       period: "/sản phẩm",
       description: "Bản cao cấp sắc nét, cân đối và được ưa chuộng nhất.",
       color: "#D4AF78",
@@ -257,15 +257,15 @@ export function PricingPage() {
                   style={
                     plan.popular
                       ? {
-                          background:
-                            "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-                          color: "white",
-                        }
+                        background:
+                          "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+                        color: "white",
+                      }
                       : {
-                          background: "white",
-                          color: "#1A1818",
-                          border: `1.5px solid ${plan.color}`,
-                        }
+                        background: "white",
+                        color: "#1A1818",
+                        border: `1.5px solid ${plan.color}`,
+                      }
                   }
                 >
                   {plan.cta}

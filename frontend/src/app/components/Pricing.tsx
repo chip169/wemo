@@ -6,7 +6,7 @@ const plans = [
   {
     name: "Figure Chibi 9cm",
     icon: Sparkles,
-    price: "350.000đ",
+    price: "650.000đ",
     period: "/sản phẩm",
     description: "Nhỏ gọn tinh tế, tuyệt vời để bàn làm việc.",
     color: "#E8B4A8",
@@ -25,7 +25,7 @@ const plans = [
   {
     name: "Figure Chibi 12cm",
     icon: Crown,
-    price: "450.000đ",
+    price: "800.000đ",
     period: "/sản phẩm",
     description: "Bản cao cấp sắc nét, cân đối và nổi bật nhất.",
     color: "#D4AF78",

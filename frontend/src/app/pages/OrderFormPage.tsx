@@ -24,7 +24,7 @@ import { Link, useNavigate } from "react-router";
 
 // ─── Pricing Table ─────────────────────────────────────────────────────────────
 const PRICES = {
-  size: { "9cm": 350000, "12cm": 450000 },
+  size: { "9cm": 650000, "12cm": 800000 },
   base: { none: 0, mica: 30000, wood: 50000 },
   led: 80000,
 };
@@ -254,8 +254,8 @@ export function OrderFormPage() {
                         i < step
                           ? "linear-gradient(135deg, #E8B4A8, #D4AF78)"
                           : i === step
-                          ? "#E8B4A8"
-                          : "rgba(0,0,0,0.06)",
+                            ? "#E8B4A8"
+                            : "rgba(0,0,0,0.06)",
                       color: i <= step ? "white" : "#999",
                       border: i === step ? "2px solid #E8B4A8" : "2px solid transparent",
                     }}
@@ -386,11 +386,10 @@ export function OrderFormPage() {
                         key={s.id}
                         type="button"
                         onClick={() => setConfig({ ...config, size: s.id as OrderConfig["size"] })}
-                        className={`relative p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${
-                          config.size === s.id
+                        className={`relative p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${config.size === s.id
                             ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-md"
                             : "border-stone-150 bg-white hover:border-stone-300"
-                        }`}
+                          }`}
                       >
                         {s.recommended && (
                           <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#D4AF78] text-white text-[9px] font-black whitespace-nowrap">
@@ -449,11 +448,10 @@ export function OrderFormPage() {
                         key={b.id}
                         type="button"
                         onClick={() => setConfig({ ...config, base: b.id as OrderConfig["base"] })}
-                        className={`p-3 rounded-2xl border-2 text-center transition-all cursor-pointer ${
-                          config.base === b.id
+                        className={`p-3 rounded-2xl border-2 text-center transition-all cursor-pointer ${config.base === b.id
                             ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-sm"
                             : "border-stone-150 bg-white hover:border-stone-300"
-                        }`}
+                          }`}
                       >
                         <div className="text-xl mb-1">{b.emoji}</div>
                         <div className="font-bold text-xs text-stone-800">{b.label}</div>
@@ -473,11 +471,10 @@ export function OrderFormPage() {
                   <button
                     type="button"
                     onClick={() => setConfig({ ...config, led: !config.led })}
-                    className={`w-full p-4 rounded-2xl border-2 text-left flex items-center justify-between transition-all cursor-pointer ${
-                      config.led
+                    className={`w-full p-4 rounded-2xl border-2 text-left flex items-center justify-between transition-all cursor-pointer ${config.led
                         ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-sm"
                         : "border-stone-150 bg-white hover:border-stone-300"
-                    }`}
+                      }`}
                   >
                     <div className="flex items-center gap-3">
                       <span className="text-2xl">💡</span>
@@ -572,11 +569,10 @@ export function OrderFormPage() {
                         value={contact.email}
                         onChange={(e) => setContact({ ...contact, email: e.target.value })}
                         placeholder="email@example.com"
-                        className={`w-full px-4 py-3 rounded-xl border outline-none text-stone-800 text-sm font-medium bg-white transition-colors ${
-                          contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim())
+                        className={`w-full px-4 py-3 rounded-xl border outline-none text-stone-800 text-sm font-medium bg-white transition-colors ${contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim())
                             ? "border-rose-400 focus:border-rose-500"
                             : "border-stone-200 focus:border-[#E8B4A8]"
-                        }`}
+                          }`}
                       />
                       {contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()) && (
                         <p className="text-[10px] text-rose-500 font-medium mt-1">
