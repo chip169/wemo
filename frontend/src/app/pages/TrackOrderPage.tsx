@@ -22,6 +22,7 @@ interface TrackedOrder {
   customerName: string;
   product: string;
   amount: number;
+  depositAmount: number;
   status: "pending_payment" | "deposited" | "pending" | "processing" | "completed" | "cancelled";
   paymentStatus: "paid" | "unpaid" | "refunded";
   createdDate: string;
@@ -51,7 +52,10 @@ const getStatusStepIndex = (status: string) => {
   return -1; // cancelled or other
 };
 
-const formatPrice = (p: number) => p.toLocaleString("vi-VN") + "đ";
+const formatPrice = (p: number | undefined | null) => {
+  if (p === undefined || p === null || isNaN(p)) return "0đ";
+  return p.toLocaleString("vi-VN") + "đ";
+};
 
 export function TrackOrderPage() {
   const { orderId } = useParams<{ orderId: string }>();
