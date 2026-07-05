@@ -169,7 +169,7 @@ export function DashboardLayout({
               className="w-11 h-11 object-contain"
             />
             <span
-              style={{ fontSize: "1.25rem", fontWeight: 700, color: "#111827" }}
+              style={{ fontSize: "1.45rem", fontWeight: 700, color: "#E8B4A8" }}
             >
               WEMO
             </span>
