@@ -684,30 +684,45 @@ app.post("/api/webhook/payment", async (req, res) => {
   try {
     const paidAt = new Date().toISOString();
     let savedOrder = null;
+    let alreadyDeposited = false;
 
     if (getDbMode() === "mongodb") {
       const order = await Order.findOne({ id: orderId });
       if (!order) return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
+      
+      if (order.status === "deposited" || order.paymentStatus === "paid") {
+        alreadyDeposited = true;
+      }
+      
       order.status = "deposited";
       order.paymentStatus = "paid";
-      order.paidAt = paidAt;
+      if (!order.paidAt) {
+        order.paidAt = paidAt;
+      }
       await order.save();
       savedOrder = order.toObject ? order.toObject() : order;
     } else {
       const orders = await readJsonFile("orders.json");
       const idx = orders.findIndex((o) => o.id === orderId);
       if (idx === -1) return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
+      
+      if (orders[idx].status === "deposited" || orders[idx].paymentStatus === "paid") {
+        alreadyDeposited = true;
+      }
+      
       orders[idx].status = "deposited";
       orders[idx].paymentStatus = "paid";
-      orders[idx].paidAt = paidAt;
+      if (!orders[idx].paidAt) {
+        orders[idx].paidAt = paidAt;
+      }
       await writeJsonFile("orders.json", orders);
       savedOrder = orders[idx];
     }
 
-    console.log(`✅ Payment confirmed for order ${orderId} at ${paidAt}`);
+    console.log(`✅ Payment confirmed for order ${orderId} at ${paidAt} (alreadyDeposited: ${alreadyDeposited})`);
 
     // ─── Gửi thông báo (fire-and-forget) ─────────────────────────────────────
-    if (savedOrder) {
+    if (savedOrder && !alreadyDeposited) {
       const protocol = req.headers["x-forwarded-proto"] || req.protocol;
       const host = req.get("host");
       const giftLink = `${protocol}://${host}/create?orderId=${orderId}`;
