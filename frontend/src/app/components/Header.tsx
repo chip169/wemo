@@ -46,7 +46,7 @@ export function Header() {
               <img
                 src="/favicon.png"
                 alt="WEMO Logo"
-                className="w-10 h-10 object-contain"
+                className="w-11 h-11 object-contain"
               />
               <span
                 className="font-bold"

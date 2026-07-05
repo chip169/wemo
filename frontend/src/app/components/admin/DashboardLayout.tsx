@@ -166,7 +166,7 @@ export function DashboardLayout({
             <img
               src="/favicon.png"
               alt="WEMO Logo"
-              className="w-10 h-10 object-contain"
+              className="w-11 h-11 object-contain"
             />
             <span
               style={{ fontSize: "1.25rem", fontWeight: 700, color: "#111827" }}
