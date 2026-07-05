@@ -165,7 +165,8 @@ export function OrderFormPage() {
   const canProceedStep2 =
     contact.name.trim().length >= 2 &&
     contact.phone.trim().length >= 9 &&
-    contact.address.trim().length >= 5;
+    contact.address.trim().length >= 5 &&
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim());
 
   const handleSubmit = async () => {
     setSubmitting(true);
@@ -564,15 +565,24 @@ export function OrderFormPage() {
                     </div>
                     <div className="space-y-1.5">
                       <label className="text-xs font-black text-stone-600 uppercase tracking-wider flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5 text-[#E8B4A8]" /> Email
+                        <Mail className="w-3.5 h-3.5 text-[#E8B4A8]" /> Email *
                       </label>
                       <input
                         type="email"
                         value={contact.email}
                         onChange={(e) => setContact({ ...contact, email: e.target.value })}
                         placeholder="email@example.com"
-                        className="w-full px-4 py-3 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-stone-800 text-sm font-medium bg-white transition-colors"
+                        className={`w-full px-4 py-3 rounded-xl border outline-none text-stone-800 text-sm font-medium bg-white transition-colors ${
+                          contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim())
+                            ? "border-rose-400 focus:border-rose-500"
+                            : "border-stone-200 focus:border-[#E8B4A8]"
+                        }`}
                       />
+                      {contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()) && (
+                        <p className="text-[10px] text-rose-500 font-medium mt-1">
+                          Vui lòng nhập đúng định dạng email (ví dụ: email@example.com).
+                        </p>
+                      )}
                     </div>
                   </div>
 
