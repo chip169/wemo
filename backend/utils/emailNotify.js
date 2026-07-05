@@ -1,39 +1,50 @@
 /**
  * Email Notification Service — WEMO
- * Sử dụng Nodemailer + Gmail SMTP (hoàn toàn miễn phí)
+ * Sử dụng Resend HTTP API (thay thế cho Nodemailer SMTP để tránh lỗi chặn cổng trên Render)
  *
  * Cấu hình trong .env:
- *   GMAIL_USER=your_gmail@gmail.com
- *   GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx   (App Password — KHÔNG phải mật khẩu Gmail)
- *   ADMIN_EMAIL=admin@wemo.vn                 (email nhận thông báo nội bộ)
- *
- * Hướng dẫn tạo Gmail App Password:
- *   1. Vào myaccount.google.com > Bảo mật > Xác minh 2 bước (bật lên nếu chưa có)
- *   2. Vào myaccount.google.com > Bảo mật > Mật khẩu ứng dụng
- *   3. Chọn "Thư" + "Khác (tên tùy chỉnh)" > đặt tên "WEMO"
- *   4. Google sẽ tạo mật khẩu 16 ký tự — copy vào GMAIL_APP_PASSWORD
+ *   RESEND_API_KEY=re_xxxxxxxxx
+ *   RESEND_FROM_EMAIL=WEMO Studio <onboarding@resend.dev>  (nếu đã verify domain thì cấu hình ví dụ: WEMO Studio <hello@wemo.vn>)
+ *   ADMIN_EMAIL=admin@wemo.vn
  */
 
-const nodemailer = require("nodemailer");
-
-// ─── Create transporter on each call (avoids stale/null singleton on cloud deploys) ────
-const getTransporter = () => {
-  const user = (process.env.GMAIL_USER || "").trim();
-  const pass = (process.env.GMAIL_APP_PASSWORD || "").trim();
-
-  if (!user || !pass) {
-    console.warn("⚠️ Email: Thiếu GMAIL_USER hoặc GMAIL_APP_PASSWORD trong .env");
-    return null;
+// Hàm gửi email qua HTTP API của Resend (sử dụng cổng 443 HTTPS chuẩn, không bao giờ bị chặn)
+const sendEmailViaResend = async ({ to, subject, html }) => {
+  const apiKey = (process.env.RESEND_API_KEY || "").trim();
+  if (!apiKey) {
+    console.warn("⚠️ [Resend] Bỏ qua — thiếu RESEND_API_KEY trong .env");
+    return { skipped: true, reason: "Missing RESEND_API_KEY" };
   }
 
-  // Sử dụng cấu hình SMTP tường minh qua cổng 465 (SSL) giúp hoạt động ổn định trên cloud deploy
-  return nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: { user, pass },
-    tls: { rejectUnauthorized: false },
-  });
+  const fromEmail = (process.env.RESEND_FROM_EMAIL || "WEMO Studio <onboarding@resend.dev>").trim();
+
+  try {
+    const response = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        from: fromEmail,
+        to,
+        subject,
+        html
+      })
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      console.log(`✅ [Resend] Gửi thành công đến ${to} — ID: ${data.id}`);
+      return { success: true, messageId: data.id };
+    } else {
+      console.error(`❌ [Resend] Lỗi phản hồi từ API:`, data);
+      return { success: false, error: data.message || JSON.stringify(data) };
+    }
+  } catch (err) {
+    console.error(`❌ [Resend] Lỗi kết nối gửi email:`, err);
+    return { success: false, error: err.message || String(err) };
+  }
 };
 
 // ─── HTML Email Template: Order Deposit Confirmed ─────────────────────────────
@@ -239,63 +250,34 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
 // ─── Send Order Confirmation to Customer ─────────────────────────────────────
 const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, depositAmount, amount, paidAt, giftLink }) => {
   console.log(`📧 [Email] sendOrderConfirmEmail called — to: ${email}, orderId: ${orderId}`);
-  const transporter = getTransporter();
-
-  if (!transporter) {
-    console.warn("⚠️ [Email] Bỏ qua — thiếu GMAIL credentials.");
-    return { skipped: true, reason: "Missing Gmail credentials" };
-  }
 
   if (!email) {
     console.warn("⚠️ [Email] Bỏ qua — không có email khách hàng.");
     return { skipped: true, reason: "No customer email" };
   }
 
-  try {
-    const info = await transporter.sendMail({
-      from: `"WEMO Studio" <${process.env.GMAIL_USER}>`,
-      to: email,
-      subject: `🎉 WEMO — Xác nhận đặt cọc đơn hàng ${orderId}`,
-      html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink }),
-    });
-
-    console.log(`✅ [Email] Gửi thành công đến ${email} — Message ID: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
-  } catch (err) {
-    console.error(`❌ [Email] Lỗi gửi email khách hàng:`, err);
-    return { success: false, error: err.message || String(err) };
-  }
+  return sendEmailViaResend({
+    to: email,
+    subject: `🎉 WEMO — Xác nhận đặt cọc đơn hàng ${orderId}`,
+    html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink }),
+  });
 };
 
 // ─── Send Admin Alert ─────────────────────────────────────────────────────────
 const sendAdminAlertEmail = async (orderData) => {
   console.log(`📧 [Email] sendAdminAlertEmail called — orderId: ${orderData?.orderId}`);
-  const transporter = getTransporter();
   const adminEmail = (process.env.ADMIN_EMAIL || "").trim();
 
-  if (!transporter) {
-    console.warn("⚠️ [Email] Admin alert bỏ qua — thiếu GMAIL credentials.");
-    return { skipped: true, reason: "Missing Gmail credentials" };
-  }
   if (!adminEmail) {
     console.warn("⚠️ [Email] Admin alert bỏ qua — thiếu ADMIN_EMAIL trong .env.");
     return { skipped: true, reason: "Missing ADMIN_EMAIL" };
   }
 
-  try {
-    const info = await transporter.sendMail({
-      from: `"WEMO System" <${process.env.GMAIL_USER}>`,
-      to: adminEmail,
-      subject: `🔔 [WEMO] Đơn mới đặt cọc — ${orderData.orderId}`,
-      html: buildAdminAlertHTML(orderData),
-    });
-
-    console.log(`✅ [Email] Admin alert gửi OK đến ${adminEmail} — Message ID: ${info.messageId}`);
-    return { success: true, messageId: info.messageId };
-  } catch (err) {
-    console.error(`❌ [Email] Lỗi gửi admin alert:`, err);
-    return { success: false, error: err.message || String(err) };
-  }
+  return sendEmailViaResend({
+    to: adminEmail,
+    subject: `🔔 [WEMO] Đơn mới đặt cọc — ${orderData.orderId}`,
+    html: buildAdminAlertHTML(orderData),
+  });
 };
 
 module.exports = {
