@@ -36,7 +36,7 @@ export function PricingPage() {
         "Tích hợp chip NFC ẩn thông minh",
         "Hộp quà & thiệp chúc thiết kế riêng",
       ],
-      cta: "Tạo Chibi Ngay",
+      cta: "Mua Ngay",
       popular: false,
     },
     {
@@ -56,7 +56,7 @@ export function PricingPage() {
         "Tích hợp chip NFC ẩn thông minh",
         "Hỗ trợ ưu tiên & Giao hàng nhanh",
       ],
-      cta: "Tạo Chibi Ngay",
+      cta: "Mua Ngay",
       popular: true,
     },
     {
@@ -252,7 +252,7 @@ export function PricingPage() {
 
                 {/* CTA Button */}
                 <Link
-                  to={plan.price === "Liên Hệ" ? "/faq" : "/ai-chibi"}
+                  to={plan.price === "Liên Hệ" ? "/faq" : "/order"}
                   className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md"
                   style={
                     plan.popular
