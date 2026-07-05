@@ -51,7 +51,7 @@ export function Header() {
               <span
                 className="font-bold"
                 style={{
-                  fontSize: "1.5rem",
+                  fontSize: "1.75rem",
                   color: "#E8B4A8",
                 }}
               >
