@@ -26,7 +26,7 @@ export function OrderSuccessPage() {
       fetch(`/api/orders/check-payment/${orderId}`)
         .then((r) => r.json())
         .then((d) => setOrderData(d))
-        .catch(() => {});
+        .catch(() => { });
     }
 
     // Celebration confetti burst
@@ -88,7 +88,7 @@ export function OrderSuccessPage() {
               <Check className="w-3.5 h-3.5" /> ĐÃ NHẬN ĐẶT CỌC
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight mb-3">
-              Đặt Hàng Thành Công! 🎉
+              Đặt Hàng Thành Công
             </h1>
             <p className="text-stone-600 text-sm leading-relaxed max-w-md mx-auto font-medium">
               WEMO đã nhận được khoản cọc của bạn. Đội sản xuất sẽ bắt đầu xử lý đơn hàng trong vòng 24 giờ.
@@ -153,18 +153,16 @@ export function OrderSuccessPage() {
             ].map((item, i) => (
               <div key={i} className={`flex gap-3 ${i < 3 ? "pb-4 border-b border-stone-100" : ""}`}>
                 <div
-                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
-                    item.done
+                  className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${item.done
                       ? "bg-emerald-100"
                       : item.active
-                      ? "bg-[#E8B4A8]/20 border-2 border-[#E8B4A8]"
-                      : "bg-stone-100"
-                  }`}
+                        ? "bg-[#E8B4A8]/20 border-2 border-[#E8B4A8]"
+                        : "bg-stone-100"
+                    }`}
                 >
                   <item.icon
-                    className={`w-4 h-4 ${
-                      item.done ? "text-emerald-500" : item.active ? "text-[#E8B4A8]" : "text-stone-300"
-                    }`}
+                    className={`w-4 h-4 ${item.done ? "text-emerald-500" : item.active ? "text-[#E8B4A8]" : "text-stone-300"
+                      }`}
                   />
                 </div>
                 <div>
