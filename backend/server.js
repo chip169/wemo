@@ -703,6 +703,43 @@ app.get("/api/orders/check-payment/:orderId", async (req, res) => {
   }
 });
 
+// 3b2. Track Order Status (Public — Safe Details)
+app.get("/api/orders/track/:orderId", async (req, res) => {
+  const { orderId } = req.params;
+  try {
+    let order = null;
+    if (getDbMode() === "mongodb") {
+      order = await Order.findOne({ id: orderId });
+    } else {
+      const orders = await readJsonFile("orders.json");
+      order = orders.find((o) => o.id === orderId);
+    }
+
+    if (!order) {
+      return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
+    }
+
+    res.json({
+      success: true,
+      order: {
+        id: order.id,
+        customerName: order.customerName,
+        product: order.product,
+        amount: order.amount,
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        createdDate: order.createdDate,
+        chibiUrl: order.chibiUrl || "",
+        originalUrl: order.originalUrl || "",
+        productConfig: order.productConfig || { size: "10cm", quantity: 1, base: "none", led: false },
+        paidAt: order.paidAt || "",
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // 3c. Payment Webhook (Simulate bank callback — also used for admin manual confirm)
 app.post("/api/webhook/payment", async (req, res) => {
   const { orderId, secret } = req.body;
@@ -760,6 +797,7 @@ app.post("/api/webhook/payment", async (req, res) => {
       const protocol = req.headers["x-forwarded-proto"] || req.protocol;
       const host = req.get("host");
       const giftLink = `${protocol}://${host}/create?orderId=${orderId}`;
+      const trackLink = `${protocol}://${host}/track/${orderId}`;
 
       // 1) Zalo ZNS (khi có OA)
       if (savedOrder.phone) {
@@ -786,6 +824,7 @@ app.post("/api/webhook/payment", async (req, res) => {
           amount: savedOrder.amount,
           paidAt,
           giftLink,
+          trackLink,
           address: savedOrder.address,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);

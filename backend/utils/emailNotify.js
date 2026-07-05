@@ -48,7 +48,7 @@ const sendEmailViaResend = async ({ to, subject, html }) => {
 };
 
 // ─── HTML Email Template: Order Deposit Confirmed ─────────────────────────────
-const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, paidAt, giftLink, address }) => {
+const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, paidAt, giftLink, trackLink, address }) => {
   const formattedDeposit = Number(depositAmount).toLocaleString("vi-VN") + "đ";
   const formattedDate = new Date(paidAt).toLocaleString("vi-VN", {
     timeZone: "Asia/Ho_Chi_Minh",
@@ -144,9 +144,19 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
             Bước tiếp theo: Thiết kế thiệp 3D & Chip NFC của riêng bạn
           </p>
           <a href="${giftLink}"
-             style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#E8B4A8 0%,#D4AF78 100%);color:#ffffff;text-decoration:none;border-radius:14px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:2px;box-shadow:0 6px 20px rgba(232,180,168,0.25);">
+             style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#E8B4A8 0%,#D4AF78 100%);color:#ffffff;text-decoration:none;border-radius:14px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:2px;box-shadow:0 6px 20px rgba(232,180,168,0.25);margin-bottom:12px;">
             Tạo Thiệp 3D Ngay
           </a>
+          ${trackLink ? `
+          <div style="margin-top:16px;">
+            <p style="margin:0 0 8px;font-size:13px;color:#8E847B;line-height:1.5;">
+              Bạn cũng có thể theo dõi tiến độ sản xuất mô hình Chibi tại đây:
+            </p>
+            <a href="${trackLink}"
+               style="display:inline-block;padding:10px 24px;border:1px solid #C4A482;color:#C4A482;text-decoration:none;border-radius:10px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1px;background-color:#ffffff;">
+              Theo Dõi Trạng Thế Đơn Hàng
+            </a>
+          </div>` : ""}
         </td>
       </tr>
 
@@ -255,7 +265,7 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
 };
 
 // ─── Send Order Confirmation to Customer ─────────────────────────────────────
-const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, depositAmount, amount, paidAt, giftLink, address }) => {
+const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, depositAmount, amount, paidAt, giftLink, trackLink, address }) => {
   console.log(`📧 [Email] sendOrderConfirmEmail called — to: ${email}, orderId: ${orderId}`);
 
   if (!email) {
@@ -266,7 +276,7 @@ const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, de
   return sendEmailViaResend({
     to: email,
     subject: `🎉 WEMO — Xác nhận đặt cọc đơn hàng ${orderId}`,
-    html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink, address }),
+    html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink, trackLink, address }),
   });
 };
 

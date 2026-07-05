@@ -15,6 +15,7 @@ import { AIChibiPage } from "./pages/AIChibiPage";
 import { OrderFormPage } from "./pages/OrderFormPage";
 import { PaymentPage } from "./pages/PaymentPage";
 import { OrderSuccessPage } from "./pages/OrderSuccessPage";
+import { TrackOrderPage } from "./pages/TrackOrderPage";
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +57,8 @@ export const router = createBrowserRouter([
       { path: "pricing", Component: PricingPage },
       { path: "faq", Component: FAQPage },
       { path: "ai-chibi", Component: AIChibiPage },
+      { path: "track", Component: TrackOrderPage },
+      { path: "track/:orderId", Component: TrackOrderPage },
     ],
   },
   {
