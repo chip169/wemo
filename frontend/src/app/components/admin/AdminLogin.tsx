@@ -46,9 +46,11 @@ export function AdminLogin({ onLogin }: { onLogin: () => void }) {
         className="w-full max-w-md p-8 rounded-3xl bg-white/70 border border-white/40 shadow-2xl backdrop-blur-md"
       >
         <div className="text-center mb-8">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78] flex items-center justify-center mx-auto mb-3 text-white">
-            <Heart className="w-6 h-6 fill-white" />
-          </div>
+          <img
+            src="/favicon.png"
+            alt="WEMO Logo"
+            className="w-12 h-12 object-contain mx-auto mb-3"
+          />
           <h2 className="text-2xl font-black text-stone-900">Quản Trị WEMO</h2>
           <p className="text-xs text-stone-500 mt-1">Đăng nhập để vào hệ thống quản lý SaaS</p>
         </div>

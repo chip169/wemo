@@ -43,15 +43,11 @@ export function Header() {
               className="flex items-center gap-2 cursor-pointer"
               whileHover={{ scale: 1.05 }}
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                style={{
-                  background:
-                    "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-                }}
-              >
-                <Heart className="w-6 h-6 text-white fill-white" />
-              </div>
+              <img
+                src="/favicon.png"
+                alt="WEMO Logo"
+                className="w-10 h-10 object-contain"
+              />
               <span
                 className="font-bold"
                 style={{

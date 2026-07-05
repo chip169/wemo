@@ -163,14 +163,11 @@ export function DashboardLayout({
           style={{ borderBottom: "1px solid #E5E7EB" }}
         >
           <div className="flex items-center gap-3">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center"
-              style={{
-                background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-              }}
-            >
-              <Gift className="w-6 h-6 text-white" />
-            </div>
+            <img
+              src="/favicon.png"
+              alt="WEMO Logo"
+              className="w-10 h-10 object-contain"
+            />
             <span
               style={{ fontSize: "1.25rem", fontWeight: 700, color: "#111827" }}
             >
