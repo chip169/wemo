@@ -106,21 +106,21 @@ const notifyNewOrder = async (order) => {
     hour: "2-digit", minute: "2-digit",
   });
 
-  const message = `🔔 <b>ĐƠN HÀNG MỚI — ĐÃ ĐẶT CỌC</b>
+  const message = `🎉 <b>[ĐÃ CỌC THÀNH CÔNG] ĐƠN HÀNG MỚI</b>
 
-🧾 <b>Mã đơn:</b> <code>${orderId}</code>
-👤 <b>Khách:</b> ${customerName}
-📱 <b>SĐT:</b> <code>${phone}</code>
-📍 <b>Địa chỉ:</b> ${address || "Chưa điền"}
+🟢 <b>Mã đơn:</b> <code>${orderId}</code>
+🟢 <b>Khách hàng:</b> <b>${customerName}</b>
+🟢 <b>Số điện thoại:</b> <code>${phone}</code>
+🟢 <b>Nơi giao hàng:</b> ${address || "Chưa điền"}
 
 📦 <b>Sản phẩm:</b> ${product || "Figure Chibi 3D"}
 💰 <b>Tổng tiền:</b> ${formattedTotal}đ
-✅ <b>Đã cọc:</b> <b>${formattedDeposit}đ</b>
+✅ <b>Số tiền cọc:</b> <b>${formattedDeposit}đ</b> (ĐÃ THANH TOÁN)
 ⏳ <b>Còn lại:</b> ${remaining}đ
 
-🕐 <b>Thời gian:</b> ${formattedDate}
+🕐 <b>Thời gian cọc:</b> ${formattedDate}
 
-👉 Vào admin panel để xác nhận và xử lý đơn.`;
+🚀 Đơn hàng đã chuyển sang trạng thái chờ sản xuất.`;
 
   const result = await sendTelegramMessage(message);
 
@@ -172,16 +172,16 @@ const notifyPendingPayment = async (order) => {
     hour: "2-digit", minute: "2-digit",
   });
 
-  const message = `⏳ <b>ĐƠN HÀNG MỚI — ĐANG CHỜ CỌC</b>
+  const message = `⏳ <b>[CHỜ ĐẶT CỌC] ĐƠN HÀNG MỚI</b>
 
-🧾 <b>Mã đơn:</b> <code>${orderId}</code>
-👤 <b>Khách:</b> ${customerName}
-📱 <b>SĐT:</b> <code>${phone}</code>
-📍 <b>Địa chỉ:</b> ${address || "Chưa điền"}
+🟡 <b>Mã đơn:</b> <code>${orderId}</code>
+🟡 <b>Khách hàng:</b> <b>${customerName}</b>
+🟡 <b>Số điện thoại:</b> <code>${phone}</code>
+🟡 <b>Nơi giao hàng:</b> ${address || "Chưa điền"}
 
 📦 <b>Sản phẩm:</b> ${product || "Figure Chibi 3D"}
 💰 <b>Tổng tiền:</b> ${formattedTotal}đ
-⏳ <b>Cần cọc:</b> <b>${formattedDeposit}đ</b>
+⏳ <b>Yêu cầu cọc:</b> <b>${formattedDeposit}đ</b> (CHƯA THANH TOÁN)
 ⏳ <b>Còn lại:</b> ${remaining}đ
 
 🕐 <b>Thời gian tạo:</b> ${formattedDate}

@@ -752,6 +752,7 @@ app.post("/api/webhook/payment", async (req, res) => {
           amount: savedOrder.amount,
           paidAt,
           giftLink,
+          address: savedOrder.address,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
         }).catch(() => {});
@@ -842,6 +843,7 @@ app.get("/api/debug/test-email", async (req, res) => {
       amount: 450000,
       paidAt: new Date().toISOString(),
       giftLink: `https://${req.get("host")}/create?orderId=TEST_CUSTOMER_CONFIRM_1234`,
+      address: "123 Đường Thử Nghiệm, Quận 1, TP. HCM",
     });
     results.customerConfirmEmail = customerResult;
   } catch (err) {
@@ -1000,6 +1002,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
           amount: savedOrder.amount,
           paidAt,
           giftLink,
+          address: savedOrder.address,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
         }).catch(() => {});

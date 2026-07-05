@@ -48,7 +48,7 @@ const sendEmailViaResend = async ({ to, subject, html }) => {
 };
 
 // ─── HTML Email Template: Order Deposit Confirmed ─────────────────────────────
-const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, paidAt, giftLink }) => {
+const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, paidAt, giftLink, address }) => {
   const formattedDeposit = Number(depositAmount).toLocaleString("vi-VN") + "đ";
   const formattedDate = new Date(paidAt).toLocaleString("vi-VN", {
     timeZone: "Asia/Ho_Chi_Minh",
@@ -110,6 +110,14 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
                     <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:700;font-family:monospace;letter-spacing:0.5px;">${orderId}</td>
                   </tr>
                   <tr>
+                    <td style="padding:8px 0;font-size:13px;color:#8E847B;">Người đặt hàng</td>
+                    <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:600;">${customerName}</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:8px 0;font-size:13px;color:#8E847B;">Nơi giao hàng</td>
+                    <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:600;">${address || "Chưa cung cấp"}</td>
+                  </tr>
+                  <tr>
                     <td style="padding:8px 0;font-size:13px;color:#8E847B;">Sản phẩm</td>
                     <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:600;">${product || "Figure Chibi 3D"}</td>
                   </tr>
@@ -139,7 +147,6 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
              style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#E8B4A8 0%,#D4AF78 100%);color:#ffffff;text-decoration:none;border-radius:14px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:2px;box-shadow:0 6px 20px rgba(232,180,168,0.25);">
             Tạo Thiệp 3D Ngay
           </a>
-          <p style="margin:14px 0 0;font-size:11px;color:#A89E95;">Đường dẫn tạo thiệp có giá trị trong vòng 30 ngày.</p>
         </td>
       </tr>
 
@@ -248,7 +255,7 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
 };
 
 // ─── Send Order Confirmation to Customer ─────────────────────────────────────
-const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, depositAmount, amount, paidAt, giftLink }) => {
+const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, depositAmount, amount, paidAt, giftLink, address }) => {
   console.log(`📧 [Email] sendOrderConfirmEmail called — to: ${email}, orderId: ${orderId}`);
 
   if (!email) {
@@ -259,7 +266,7 @@ const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, de
   return sendEmailViaResend({
     to: email,
     subject: `🎉 WEMO — Xác nhận đặt cọc đơn hàng ${orderId}`,
-    html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink }),
+    html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink, address }),
   });
 };
 

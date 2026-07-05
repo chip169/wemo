@@ -264,18 +264,15 @@ export function GiftsPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.03 }}
-                      className="hover:bg-gray-50 transition-colors"
-                      style={{
-                        borderBottom: "1px solid #F3F4F6",
-                      }}
+                      className="border-b border-gray-100 dark:border-zinc-800 hover:bg-gray-50/50 dark:hover:bg-[#202023]/50 transition-colors"
                     >
                       <td className="px-6 py-4">
-                        <span className="text-xs font-mono font-bold text-[#111827]">
+                        <span className="text-xs font-mono font-bold text-[#111827] dark:text-stone-200">
                           {gift.id}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs font-semibold text-[#374151]">
+                        <span className="text-xs font-semibold text-[#374151] dark:text-stone-300">
                           {gift.recipientName}
                         </span>
                       </td>
@@ -285,7 +282,7 @@ export function GiftsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs text-stone-700">
+                        <span className="text-xs text-stone-700 dark:text-stone-300">
                           {gift.templateId}
                         </span>
                       </td>
@@ -318,7 +315,7 @@ export function GiftsPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs font-bold text-[#111827]">
+                        <span className="text-xs font-bold text-[#111827] dark:text-stone-200">
                           {gift.views}
                         </span>
                       </td>

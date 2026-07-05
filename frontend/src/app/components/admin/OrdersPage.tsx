@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Sparkles,
   X,
+  Check,
 } from "lucide-react";
 import { adminFetch } from "../../utils/api";
 
@@ -122,6 +123,25 @@ export function OrdersPage() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  const handleQuickConfirm = (id: string) => {
+    if (window.confirm(`Xác nhận đơn hàng ${id} đã thanh toán đặt cọc?`)) {
+      adminFetch(`/api/orders/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({ status: "deposited" }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Cập nhật trạng thái thất bại.");
+          return res.json();
+        })
+        .then(() => {
+          fetchOrders();
+        })
+        .catch((err) => {
+          alert("Lỗi xác nhận cọc nhanh: " + err.message);
+        });
+    }
+  };
 
   const handleDelete = (id: string) => {
     if (window.confirm(`Bạn có chắc chắn muốn xóa đơn hàng ${id}?`)) {
@@ -340,28 +360,29 @@ export function OrdersPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ delay: index * 0.03 }}
-                      className="hover:bg-gray-50 transition-colors"
-                      style={{
-                        borderBottom: "1px solid #F3F4F6",
-                      }}
+                      className={`border-b border-gray-100 dark:border-zinc-800 transition-colors ${
+                        order.status === "pending_payment"
+                          ? "bg-amber-50/60 dark:bg-amber-950/10 hover:bg-amber-100/60 dark:hover:bg-amber-900/20"
+                          : "hover:bg-gray-50/50 dark:hover:bg-[#202023]/50"
+                      }`}
                     >
                       <td className="px-6 py-4">
-                        <span className="text-xs font-mono font-bold text-[#111827]">
+                        <span className="text-xs font-mono font-bold text-[#111827] dark:text-stone-200">
                           {order.id}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs font-semibold text-[#374151]">
+                        <span className="text-xs font-semibold text-[#374151] dark:text-stone-300">
                           {order.customerName}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs text-stone-700">
+                        <span className="text-xs text-stone-700 dark:text-stone-300">
                           {order.product}
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs font-bold text-[#111827]">
+                        <span className="text-xs font-bold text-[#111827] dark:text-stone-200">
                           {order.amount.toLocaleString()}đ
                         </span>
                       </td>
@@ -388,22 +409,31 @@ export function OrdersPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-xs text-[#6B7280]">
+                        <span className="text-xs text-[#6B7280] dark:text-stone-400">
                           {new Date(order.createdDate).toLocaleDateString()}
                         </span>
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-2">
+                          {order.status === "pending_payment" && (
+                            <button
+                              onClick={() => handleQuickConfirm(order.id)}
+                              className="p-1.5 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded transition-colors"
+                              title="Xác nhận đã cọc nhanh"
+                            >
+                              <Check className="w-4 h-4" />
+                            </button>
+                          )}
                           <button
                             onClick={() => handleOpenEditModal(order)}
-                            className="p-1.5 hover:bg-stone-100 text-stone-600 rounded transition-colors"
+                            className="p-1.5 hover:bg-stone-100 dark:hover:bg-stone-850 text-stone-600 dark:text-stone-400 rounded transition-colors"
                             title="Chỉnh sửa đơn hàng"
                           >
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handleDelete(order.id)}
-                            className="p-1.5 hover:bg-rose-50 text-rose-500 rounded transition-colors"
+                            className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-500 rounded transition-colors"
                             title="Xóa đơn hàng"
                           >
                             <Trash2 className="w-4 h-4" />
