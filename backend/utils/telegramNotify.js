@@ -260,48 +260,11 @@ Thiệp đã sẵn sàng, đính kèm vào đơn sản xuất.`;
  * Thông báo đơn hàng mới đang chờ đặt cọc
  */
 const notifyPendingPayment = async (order) => {
-  const {
-    orderId,
-    customerName,
-    phone,
-    address,
-    product,
-    amount,
-    depositAmount,
-    chibiUrl,
-    originalUrl,
-  } = order;
+  const { orderId, customerName } = order;
 
-  const formattedDeposit = Number(depositAmount).toLocaleString("vi-VN");
-  const formattedTotal = Number(amount).toLocaleString("vi-VN");
-  const remaining = (Number(amount) - Number(depositAmount)).toLocaleString("vi-VN");
-  const formattedDate = new Date().toLocaleString("vi-VN", {
-    timeZone: "Asia/Ho_Chi_Minh",
-    day: "2-digit", month: "2-digit", year: "numeric",
-    hour: "2-digit", minute: "2-digit",
-  });
+  const message = `⏳ <b>[CHỜ XÁC NHẬN CỌC]</b> Khách hàng <b>${customerName}</b> đang chờ xác nhận cọc cho đơn hàng <code>${orderId}</code>.`;
 
-  const message = `⏳ <b>[CHỜ ĐẶT CỌC] ĐƠN HÀNG MỚI</b>
-
-🟡 <b>Mã đơn:</b> <code>${orderId}</code>
-🟡 <b>Khách hàng:</b> <b>${customerName}</b>
-🟡 <b>Số điện thoại:</b> <code>${phone}</code>
-🟡 <b>Nơi giao hàng:</b> ${address || "Chưa điền"}
-
-📦 <b>Sản phẩm:</b> ${product || "Figure Chibi 3D"}
-💰 <b>Tổng tiền:</b> ${formattedTotal}đ
-⏳ <b>Yêu cầu cọc:</b> <b>${formattedDeposit}đ</b> (CHƯA THANH TOÁN)
-⏳ <b>Còn lại:</b> ${remaining}đ
-
-🕐 <b>Thời gian tạo:</b> ${formattedDate}
-
-👉 Khách hàng đang ở trang thanh toán quét mã VietQR.`;
-
-  const files = [];
-  if (originalUrl) files.push({ url: originalUrl, label: "Ảnh Gốc" });
-  if (chibiUrl) files.push({ url: chibiUrl, label: "Ảnh Chibi" });
-
-  const result = await sendTelegramMediaGroup(message, files);
+  const result = await sendTelegramMessage(message);
 
   if (result.skipped) {
     console.warn("⚠️ Telegram: bỏ qua (chưa cấu hình).");
