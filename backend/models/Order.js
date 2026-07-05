@@ -21,6 +21,7 @@ const OrderSchema = new mongoose.Schema({
 
   // Chibi image & product config
   chibiUrl: { type: String, default: "" },
+  originalUrl: { type: String, default: "" },
   productConfig: { type: ProductConfigSchema, default: () => ({}) },
   depositAmount: { type: Number, default: 200000 },
 

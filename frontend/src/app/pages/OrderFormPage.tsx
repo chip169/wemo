@@ -120,6 +120,7 @@ export function OrderFormPage() {
 
   const [step, setStep] = useState(0);
   const [chibiUrl, setChibiUrl] = useState<string>("");
+  const [originalUrl, setOriginalUrl] = useState<string>("");
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
@@ -141,11 +142,15 @@ export function OrderFormPage() {
   const totalPrice = calcTotal(config);
   const DEPOSIT = 200000;
 
-  // Load chibiUrl from sessionStorage on mount
+  // Load chibiUrl and originalUrl from sessionStorage on mount
   useEffect(() => {
     const saved = sessionStorage.getItem("wemo_chibi_url");
     if (saved) {
       setChibiUrl(saved);
+    }
+    const savedOriginal = sessionStorage.getItem("wemo_original_url");
+    if (savedOriginal) {
+      setOriginalUrl(savedOriginal);
     }
   }, []);
 
@@ -182,6 +187,7 @@ export function OrderFormPage() {
           address: contact.address,
           note: contact.note,
           chibiUrl,
+          originalUrl,
           productConfig: config,
           amount: totalPrice,
           depositAmount: DEPOSIT,
@@ -191,6 +197,7 @@ export function OrderFormPage() {
       if (!res.ok) throw new Error(data.error || "Tạo đơn hàng thất bại.");
       // Clear session storage after order created
       sessionStorage.removeItem("wemo_chibi_url");
+      sessionStorage.removeItem("wemo_original_url");
       navigate(`/payment/${data.orderId}`);
     } catch (err: any) {
       setSubmitError(err.message);

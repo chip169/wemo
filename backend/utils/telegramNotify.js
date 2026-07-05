@@ -18,6 +18,8 @@
  */
 
 const https = require("https");
+const fs = require("fs");
+const path = require("path");
 
 /**
  * Gửi message đến Telegram chat (hỗ trợ Markdown)
@@ -83,6 +85,105 @@ const sendTelegramMessage = (text) => {
 };
 
 /**
+ * Helper to check if file is local and get path
+ */
+const getLocalPath = (fileUrl) => {
+  if (!fileUrl) return null;
+  if (fileUrl.includes("/uploads/")) {
+    const parts = fileUrl.split("/uploads/");
+    const filename = parts[parts.length - 1];
+    const absolutePath = path.join(__dirname, "..", "uploads", filename);
+    if (fs.existsSync(absolutePath)) {
+      return absolutePath;
+    }
+  }
+  return null;
+};
+
+/**
+ * Gửi Album ảnh kèm message đến Telegram chat
+ */
+const sendTelegramMediaGroup = async (caption, files) => {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+
+  if (!token || !chatId) {
+    console.warn("⚠️ Telegram: Chưa cấu hình TELEGRAM_BOT_TOKEN hoặc TELEGRAM_CHAT_ID. Bỏ qua.");
+    return { skipped: true };
+  }
+
+  // Filter valid files
+  const validFiles = files.filter((f) => f.url);
+  if (validFiles.length === 0) {
+    return sendTelegramMessage(caption);
+  }
+
+  const formData = new FormData();
+  formData.append("chat_id", chatId);
+
+  const media = [];
+  let attachedCount = 0;
+
+  for (let i = 0; i < validFiles.length; i++) {
+    const fUrl = validFiles[i].url;
+    const localPath = getLocalPath(fUrl);
+
+    if (localPath) {
+      attachedCount++;
+      const fileKey = `photo_${attachedCount}`;
+      try {
+        const fileBuffer = fs.readFileSync(localPath);
+        const blob = new Blob([fileBuffer], { type: "image/jpeg" });
+        formData.append(fileKey, blob, path.basename(localPath));
+
+        media.push({
+          type: "photo",
+          media: `attach://${fileKey}`,
+          caption: i === 0 ? caption : undefined,
+          parse_mode: i === 0 ? "HTML" : undefined,
+        });
+      } catch (err) {
+        console.error(`❌ Failed to read local file ${localPath}:`, err.message);
+        // Fallback to sending remote URL directly if file read fails
+        media.push({
+          type: "photo",
+          media: fUrl,
+          caption: i === 0 ? caption : undefined,
+          parse_mode: i === 0 ? "HTML" : undefined,
+        });
+      }
+    } else {
+      media.push({
+        type: "photo",
+        media: fUrl,
+        caption: i === 0 ? caption : undefined,
+        parse_mode: i === 0 ? "HTML" : undefined,
+      });
+    }
+  }
+
+  formData.append("media", JSON.stringify(media));
+
+  try {
+    const response = await fetch(`https://api.telegram.org/bot${token}/sendMediaGroup`, {
+      method: "POST",
+      body: formData,
+    });
+    const result = await response.json();
+    if (result.ok) {
+      return { success: true };
+    } else {
+      console.error(`❌ Telegram sendMediaGroup error: ${result.description}`);
+      // Fallback to sending text message if media sending failed
+      return sendTelegramMessage(caption);
+    }
+  } catch (err) {
+    console.error("❌ Telegram sendMediaGroup exception:", err.message);
+    return sendTelegramMessage(caption);
+  }
+};
+
+/**
  * Thông báo đơn hàng mới đặt cọc thành công
  */
 const notifyNewOrder = async (order) => {
@@ -95,6 +196,8 @@ const notifyNewOrder = async (order) => {
     amount,
     depositAmount,
     paidAt,
+    chibiUrl,
+    originalUrl,
   } = order;
 
   const formattedDeposit = Number(depositAmount).toLocaleString("vi-VN");
@@ -122,12 +225,16 @@ const notifyNewOrder = async (order) => {
 
 🚀 Đơn hàng đã chuyển sang trạng thái chờ sản xuất.`;
 
-  const result = await sendTelegramMessage(message);
+  const files = [];
+  if (originalUrl) files.push({ url: originalUrl, label: "Ảnh Gốc" });
+  if (chibiUrl) files.push({ url: chibiUrl, label: "Ảnh Chibi" });
+
+  const result = await sendTelegramMediaGroup(message, files);
 
   if (result.skipped) {
     console.warn("⚠️ Telegram: bỏ qua (chưa cấu hình).");
   } else if (result.success) {
-    console.log(`📱 Telegram: Đã gửi alert đơn ${orderId}`);
+    console.log(`📱 Telegram: Đã gửi alert Album đơn ${orderId}`);
   }
 
   return result;
@@ -161,6 +268,8 @@ const notifyPendingPayment = async (order) => {
     product,
     amount,
     depositAmount,
+    chibiUrl,
+    originalUrl,
   } = order;
 
   const formattedDeposit = Number(depositAmount).toLocaleString("vi-VN");
@@ -188,7 +297,11 @@ const notifyPendingPayment = async (order) => {
 
 👉 Khách hàng đang ở trang thanh toán quét mã VietQR.`;
 
-  const result = await sendTelegramMessage(message);
+  const files = [];
+  if (originalUrl) files.push({ url: originalUrl, label: "Ảnh Gốc" });
+  if (chibiUrl) files.push({ url: chibiUrl, label: "Ảnh Chibi" });
+
+  const result = await sendTelegramMediaGroup(message, files);
 
   if (result.skipped) {
     console.warn("⚠️ Telegram: bỏ qua (chưa cấu hình).");

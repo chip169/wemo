@@ -158,6 +158,7 @@ export function AIChibiPage() {
   const [selectedStyle, setSelectedStyle] = useState("cute-3d");
   const [generating, setGenerating] = useState(false);
   const [generatedUrl, setGeneratedUrl] = useState<string | null>(null);
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
   const [promptUsed, setPromptUsed] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -331,6 +332,7 @@ export function AIChibiPage() {
       setUsageCount(newCount);
 
       setGeneratedUrl(data.url);
+      setOriginalImageUrl(data.originalUrl || null);
       setPromptUsed(data.prompt || "");
       if (data.isDemo) {
         setIsDemo(true);
@@ -344,14 +346,18 @@ export function AIChibiPage() {
 
   const handleOrderNow = () => {
     if (!generatedUrl) return;
-    // Save chibi URL to sessionStorage so OrderFormPage can pick it up
+    // Save chibi URL and original URL to sessionStorage so OrderFormPage can pick them up
     sessionStorage.setItem("wemo_chibi_url", generatedUrl);
+    if (originalImageUrl) {
+      sessionStorage.setItem("wemo_original_url", originalImageUrl);
+    }
     navigate("/order");
   };
 
   const handleReset = () => {
     setSourceImage(null);
     setGeneratedUrl(null);
+    setOriginalImageUrl(null);
     setPromptUsed("");
     setError(null);
     if (fileInputRef.current) fileInputRef.current.value = "";

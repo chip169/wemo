@@ -582,7 +582,7 @@ app.put("/api/gifts/:id", authMiddleware, async (req, res) => {
 
 // 3a. Create Draft Order (Public — no auth) — Called from OrderFormPage
 app.post("/api/orders/create-draft", async (req, res) => {
-  const { customerName, phone, email, address, note, chibiUrl, productConfig, amount, depositAmount } = req.body;
+  const { customerName, phone, email, address, note, chibiUrl, originalUrl, productConfig, amount, depositAmount } = req.body;
   if (!customerName || !phone || !amount) {
     return res.status(400).json({ error: "Vui lòng điền đầy đủ: Họ tên, Số điện thoại." });
   }
@@ -591,6 +591,37 @@ app.post("/api/orders/create-draft", async (req, res) => {
     const randomNum = Math.floor(100000 + Math.random() * 900000);
     const orderId = `ORD-${randomNum}`;
 
+    let finalChibiUrl = chibiUrl || "";
+    let finalOriginalUrl = originalUrl || "";
+
+    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
+    const host = req.get("host");
+
+    // Helper to save base64 to file
+    const saveBase64Image = async (base64Str, prefix) => {
+      try {
+        const matches = base64Str.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+        if (matches && matches.length === 3) {
+          const extension = matches[1] === "png" ? "png" : "jpg";
+          const base64Data = matches[2];
+          const filename = `${prefix}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.${extension}`;
+          const savePath = path.join(UPLOADS_DIR, filename);
+          await fs.promises.writeFile(savePath, Buffer.from(base64Data, "base64"));
+          return `${protocol}://${host}/uploads/${filename}`;
+        }
+      } catch (err) {
+        console.error(`Failed to save base64 image with prefix ${prefix}:`, err);
+      }
+      return base64Str;
+    };
+
+    if (finalChibiUrl.startsWith("data:image/")) {
+      finalChibiUrl = await saveBase64Image(finalChibiUrl, "chibi-upload");
+    }
+    if (finalOriginalUrl.startsWith("data:image/")) {
+      finalOriginalUrl = await saveBase64Image(finalOriginalUrl, "original-upload");
+    }
+
     const newOrder = {
       id: orderId,
       customerName,
@@ -598,7 +629,8 @@ app.post("/api/orders/create-draft", async (req, res) => {
       email: email || "",
       address: address || "",
       note: note || "",
-      chibiUrl: chibiUrl || "",
+      chibiUrl: finalChibiUrl,
+      originalUrl: finalOriginalUrl,
       productConfig: productConfig || { size: "10cm", quantity: 1, base: "none", led: false },
       product: `Figure Chibi 3D ${productConfig?.size || "10cm"} x${productConfig?.quantity || 1}`,
       amount: Number(amount),
@@ -628,6 +660,8 @@ app.post("/api/orders/create-draft", async (req, res) => {
       product: newOrder.product || "Figure Chibi 3D",
       amount: newOrder.amount,
       depositAmount: newOrder.depositAmount,
+      chibiUrl: newOrder.chibiUrl,
+      originalUrl: newOrder.originalUrl,
     }).catch(() => {});
 
     res.status(201).json({ success: true, orderId, depositAmount: newOrder.depositAmount });
@@ -768,6 +802,8 @@ app.post("/api/webhook/payment", async (req, res) => {
         amount: savedOrder.amount,
         depositAmount: savedOrder.depositAmount || 200000,
         paidAt,
+        chibiUrl: savedOrder.chibiUrl || "",
+        originalUrl: savedOrder.originalUrl || "",
       }).then((r) => {
         if (!r.skipped) console.log(r.success ? `🤖 Telegram alert gửi OK` : `❌ Telegram lỗi: ${r.error}`);
       }).catch(() => {});
@@ -1687,9 +1723,18 @@ app.post("/api/ai/generate-chibi", chibiRateLimiter, async (req, res) => {
     const fileUrl = `${protocol}://${req.get("host")}/uploads/${uniqueFileName}`;
     console.log(`✅ Successfully generated image using ${providerName} and saved to:`, fileUrl);
 
+    // Save original image to uploads folder
+    const uniqueOriginalName = `original-${Date.now()}-${Math.random().toString(36).substring(2, 9)}.jpg`;
+    const originalFilePath = path.join(UPLOADS_DIR, uniqueOriginalName);
+    const originalBuffer = Buffer.from(base64Data, "base64");
+    await fs.promises.writeFile(originalFilePath, originalBuffer);
+    const originalUrl = `${protocol}://${req.get("host")}/uploads/${uniqueOriginalName}`;
+    console.log(`✅ Saved original photo to:`, originalUrl);
+
     return res.status(201).json({
       success: true,
       url: fileUrl,
+      originalUrl: originalUrl,
       prompt: chibiPromptVi,
       provider: providerName
     });
