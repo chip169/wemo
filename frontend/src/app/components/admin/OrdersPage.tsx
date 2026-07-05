@@ -18,7 +18,7 @@ interface Order {
   customerName: string;
   product: string;
   amount: number;
-  status: "pending_payment" | "deposited" | "pending" | "processing" | "completed" | "cancelled";
+  status: "pending_payment" | "deposited" | "pending" | "processing" | "shipping" | "completed" | "cancelled";
   paymentStatus: "paid" | "unpaid" | "refunded";
   createdDate: string;
 }
@@ -27,7 +27,8 @@ const statusColors = {
   pending_payment: { bg: "#FFEDD5", text: "#EA580C", label: "Chờ đặt cọc" },
   deposited: { bg: "#E0F2FE", text: "#0369A1", label: "Đã đặt cọc" },
   pending: { bg: "#FEF3C7", text: "#D97706", label: "Chờ xử lý" },
-  processing: { bg: "#DBEAFE", text: "#2563EB", label: "Đang xử lý" },
+  processing: { bg: "#DBEAFE", text: "#2563EB", label: "Đang sản xuất" },
+  shipping: { bg: "#F3E8FF", text: "#7C3AED", label: "Đang giao hàng" },
   completed: { bg: "#DCFCE7", text: "#16A34A", label: "Đã hoàn thành" },
   cancelled: { bg: "#FEE2E2", text: "#DC2626", label: "Đã hủy" },
 };
@@ -573,7 +574,8 @@ export function OrdersPage() {
                     >
                       <option value="pending_payment">Chờ đặt cọc</option>
                       <option value="deposited">Đã đặt cọc</option>
-                      <option value="processing">Đang xử lý</option>
+                      <option value="processing">Đang sản xuất</option>
+                      <option value="shipping">Đang giao hàng</option>
                       <option value="completed">Đã hoàn thành</option>
                       <option value="cancelled">Đã hủy</option>
                     </select>
@@ -684,7 +686,8 @@ export function OrdersPage() {
                     >
                       <option value="pending_payment">Chờ đặt cọc</option>
                       <option value="deposited">Đã đặt cọc</option>
-                      <option value="processing">Đang xử lý</option>
+                      <option value="processing">Đang sản xuất</option>
+                      <option value="shipping">Đang giao hàng</option>
                       <option value="completed">Đã hoàn thành</option>
                       <option value="cancelled">Đã hủy</option>
                     </select>

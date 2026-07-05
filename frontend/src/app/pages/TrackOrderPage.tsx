@@ -23,7 +23,7 @@ interface TrackedOrder {
   product: string;
   amount: number;
   depositAmount: number;
-  status: "pending_payment" | "deposited" | "pending" | "processing" | "completed" | "cancelled";
+  status: "pending_payment" | "deposited" | "pending" | "processing" | "shipping" | "completed" | "cancelled";
   paymentStatus: "paid" | "unpaid" | "refunded";
   createdDate: string;
   chibiUrl: string;
@@ -38,17 +38,19 @@ interface TrackedOrder {
 }
 
 const statusSteps = [
-  { key: "pending_payment", label: "Chờ đặt cọc", emoji: "⏳", desc: "Đơn hàng đang chờ thanh toán đặt cọc" },
-  { key: "deposited", label: "Đã nhận cọc", emoji: "✅", desc: "WEMO đã xác nhận khoản cọc 200,000đ" },
-  { key: "processing", label: "Đang sản xuất", emoji: "🛠️", desc: "Figure 3D đang được thiết kế và in" },
-  { key: "completed", label: "Đang giao / Xong", emoji: "📦", desc: "Mô hình đã hoàn thiện và gửi tới bạn" }
+  { key: "pending_payment", label: "Chờ đặt cọc", emoji: "⏳", desc: "Đơn hàng đang chờ đặt cọc" },
+  { key: "deposited", label: "Đã nhận cọc", emoji: "✅", desc: "WEMO đã nhận cọc 200,000đ" },
+  { key: "processing", label: "Đang sản xuất", emoji: "🛠️", desc: "Figure 3D đang được thiết kế & in" },
+  { key: "shipping", label: "Đang giao hàng", emoji: "🚚", desc: "Mô hình đang được giao tới bạn" },
+  { key: "completed", label: "Nhận hàng & Feedback", emoji: "⭐", desc: "Đã giao thành công, đánh giá trải nghiệm" }
 ];
 
 const getStatusStepIndex = (status: string) => {
   if (status === "pending_payment") return 0;
   if (status === "deposited" || status === "pending") return 1;
   if (status === "processing") return 2;
-  if (status === "completed") return 3;
+  if (status === "shipping") return 3;
+  if (status === "completed") return 4;
   return -1; // cancelled or other
 };
 
@@ -251,7 +253,7 @@ export function TrackOrderPage() {
                       ) : (
                         <div className="relative flex flex-col md:flex-row justify-between gap-6 md:gap-4 md:items-center">
                           {/* Horizontal line for desktop */}
-                          <div className="absolute hidden md:block top-4 left-[12%] right-[12%] h-[2px] bg-stone-100 -z-10" />
+                          <div className="absolute hidden md:block top-4 left-[10%] right-[10%] h-[2px] bg-stone-100 -z-10" />
 
                           {statusSteps.map((step, idx) => {
                             const isDone = idx <= currentStepIdx;
