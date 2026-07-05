@@ -726,6 +726,7 @@ app.get("/api/orders/track/:orderId", async (req, res) => {
         customerName: order.customerName,
         product: order.product,
         amount: order.amount,
+        depositAmount: order.depositAmount || 200000,
         status: order.status,
         paymentStatus: order.paymentStatus,
         createdDate: order.createdDate,
