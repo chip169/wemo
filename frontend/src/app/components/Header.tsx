@@ -52,7 +52,7 @@ export function Header() {
                 className="font-bold"
                 style={{
                   fontSize: "1.5rem",
-                  color: "#1A1818",
+                  color: "#4A3728",
                 }}
               >
                 WEMO
