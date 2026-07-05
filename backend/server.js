@@ -778,18 +778,18 @@ app.post("/api/webhook/payment", async (req, res) => {
 
 // 3d. Diagnostic Endpoint for Email Notification Service
 app.get("/api/debug/test-email", async (req, res) => {
-  const user = (process.env.GMAIL_USER || "").trim();
-  const pass = (process.env.GMAIL_APP_PASSWORD || "").trim();
+  const apiKey = (process.env.RESEND_API_KEY || "").trim();
   const adminEmail = (process.env.ADMIN_EMAIL || "").trim();
+  const fromEmail = (process.env.RESEND_FROM_EMAIL || "WEMO Studio <onboarding@resend.dev>").trim();
 
-  if (!user || !pass) {
+  if (!apiKey) {
     return res.status(400).json({
       success: false,
-      error: "Missing GMAIL_USER or GMAIL_APP_PASSWORD in environment variables",
+      error: "Missing RESEND_API_KEY in environment variables",
       env: {
-        GMAIL_USER: user ? "configured" : "missing",
-        GMAIL_APP_PASSWORD: pass ? "configured" : "missing",
-        ADMIN_EMAIL: adminEmail ? "configured" : "missing"
+        RESEND_API_KEY: "missing",
+        ADMIN_EMAIL: adminEmail ? "configured" : "missing",
+        RESEND_FROM_EMAIL: fromEmail
       }
     });
   }
@@ -819,7 +819,7 @@ app.get("/api/debug/test-email", async (req, res) => {
   try {
     console.log("⚡ Running sendOrderConfirmEmail diagnostic...");
     const customerResult = await sendOrderConfirmEmail({
-      email: adminEmail || user, // Send to adminEmail as a test
+      email: adminEmail || "hieukimxuan@gmail.com", // Gửi đến adminEmail để test
       customerName: "Khách Hàng Thử Nghiệm",
       orderId: "TEST_CUSTOMER_CONFIRM_" + Math.floor(1000 + Math.random() * 9000),
       product: "Figure Chibi 3D 15cm x1",
@@ -838,11 +838,13 @@ app.get("/api/debug/test-email", async (req, res) => {
     success: (results.adminAlertEmail?.success === true) && (results.customerConfirmEmail?.success === true),
     results,
     env: {
-      GMAIL_USER: user,
+      RESEND_API_KEY: apiKey ? "configured" : "missing",
       ADMIN_EMAIL: adminEmail,
+      RESEND_FROM_EMAIL: fromEmail
     }
   });
 });
+
 
 
 app.get("/api/orders", authMiddleware, async (req, res) => {
