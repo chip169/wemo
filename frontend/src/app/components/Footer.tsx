@@ -68,7 +68,7 @@ export function Footer() {
                   alt="WEMO Logo"
                   className="w-11 h-11 object-contain"
                 />
-                <span className="font-bold text-2xl tracking-wider text-[#E8B4A8]">
+                <span className="font-bold text-3xl tracking-wider text-[#E8B4A8]">
                   WEMO
                 </span>
               </div>
