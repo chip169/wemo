@@ -64,6 +64,27 @@ const THEMES = [
     description: "Lời bày tỏ ngọt ngào, ấm áp cho nửa kia của bạn.",
     color: "from-[#FF8A8A] to-[#FFA3A3]",
   },
+  {
+    id: "sinh-nhat",
+    name: "Sinh Nhật",
+    emoji: "🎂",
+    description: "Gửi lời chúc mừng sinh nhật rực rỡ và ý nghĩa nhất.",
+    color: "from-[#FBC2EB] to-[#A6C1EE]",
+  },
+  {
+    id: "ky-niem",
+    name: "Kỷ Niệm",
+    emoji: "⏳",
+    description: "Lưu giữ những khoảnh khắc, chặng đường ý nghĩa bên nhau.",
+    color: "from-[#84FAB0] to-[#8FD3F4]",
+  },
+  {
+    id: "giang-sinh",
+    name: "Giáng Sinh",
+    emoji: "🎄",
+    description: "Trao gửi không khí Noel an lành, ấm áp tới người thân.",
+    color: "from-[#FAD961] to-[#F76B1C]",
+  },
 ];
 
 const STATIC_TEMPLATES = [
@@ -374,10 +395,9 @@ function Step0({
             <motion.button
               key={theme.id}
               whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
               onClick={() => {
                 // Find first template of this theme
-                const defaultTpl = templates.find((t) => t.theme === theme.id);
+                const defaultTpl = templates.find((t) => t.theme === theme.id) || templates[0];
                 setGift({
                   ...gift,
                   theme: theme.id,
@@ -417,10 +437,12 @@ function Step1({
   gift,
   setGift,
   templates,
+  onBack,
 }: {
   gift: GiftData;
   setGift: (g: GiftData) => void;
   templates: any[];
+  onBack: () => void;
 }) {
   const [demoTemplate, setDemoTemplate] = useState<any | null>(null);
   const filteredTemplates = templates.filter((t) => t.theme === gift.theme);
@@ -450,102 +472,121 @@ function Step1({
         Khởi đầu với một phôi giao diện thiết kế chuyên nghiệp tương ứng với chủ đề đã chọn
       </p>
 
-      <div className="grid sm:grid-cols-2 gap-6">
-        {filteredTemplates.map((tpl) => {
-          const selected = gift.templateId === tpl.id;
-          return (
-            <motion.div
-              key={tpl.id}
-              whileHover={{ y: -6 }}
-              onClick={() => setGift({ ...gift, templateId: tpl.id })}
-              className="group overflow-hidden rounded-3xl cursor-pointer text-left transition-all bg-white relative flex flex-col"
-              style={{
-                boxShadow: selected
-                  ? `0 0 0 3px ${tpl.color}, 0 8px 30px rgba(0,0,0,0.12)`
-                  : "0 4px 20px rgba(0,0,0,0.06)",
-                border: "1px solid rgba(0,0,0,0.06)",
-              }}
-            >
-              {/* Image */}
-              <div className="relative h-44 overflow-hidden bg-stone-100 w-full">
-                <img
-                  src={tpl.img}
-                  alt={tpl.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)" }}
-                />
-                {/* Tag */}
-                <div
-                  className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-semibold text-white"
-                  style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(8px)" }}
-                >
-                  {tpl.tag}
-                </div>
-                {/* Selection Indicator / Gradient Circle */}
-                {selected ? (
-                  <div
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-white"
-                    style={{ background: tpl.color }}
-                  >
-                    <Check className="w-4 h-4" />
-                  </div>
-                ) : (
-                  <div
-                    className="absolute top-3 right-3 w-8 h-8 rounded-full shadow"
-                    style={{ background: tpl.gradient }}
+      {filteredTemplates.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 px-6 text-center bg-white rounded-3xl border border-stone-200/60 shadow-sm min-h-[300px] space-y-4">
+          <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center text-[#D4AF78]">
+            <Sparkles className="w-8 h-8 animate-pulse" />
+          </div>
+          <h3 className="text-base font-bold text-stone-800">Đang Cập Nhật Thiết Kế</h3>
+          <p className="text-xs text-stone-500 max-w-sm leading-relaxed">
+            Mẫu giao diện 3D dành riêng cho chủ đề này đang được thiết kế và sẽ sớm ra mắt. Bạn vui lòng quay lại chọn chủ đề khác nhé!
+          </p>
+          <button
+            type="button"
+            onClick={onBack}
+            className="mt-2 flex items-center gap-1.5 px-4.5 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-bold transition-all cursor-pointer border-0"
+          >
+            Quay Lại Chọn Chủ Đề
+          </button>
+        </div>
+      ) : (
+        <div className="grid sm:grid-cols-2 gap-6">
+          {filteredTemplates.map((tpl) => {
+            const selected = gift.templateId === tpl.id;
+            return (
+              <motion.div
+                key={tpl.id}
+                whileHover={{ y: -6 }}
+                onClick={() => setGift({ ...gift, templateId: tpl.id })}
+                className="group overflow-hidden rounded-3xl cursor-pointer text-left transition-all bg-white relative flex flex-col"
+                style={{
+                  boxShadow: selected
+                    ? `0 0 0 3px ${tpl.color}, 0 8px 30px rgba(0,0,0,0.12)`
+                    : "0 4px 20px rgba(0,0,0,0.06)",
+                  border: "1px solid rgba(0,0,0,0.06)",
+                }}
+              >
+                {/* Image */}
+                <div className="relative h-44 overflow-hidden bg-stone-100 w-full">
+                  <img
+                    src={tpl.img}
+                    alt={tpl.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                )}
-              </div>
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.4) 0%, transparent 60%)" }}
+                  />
+                  {/* Tag */}
+                  <div
+                    className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-semibold text-white"
+                    style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(8px)" }}
+                  >
+                    {tpl.tag}
+                  </div>
+                  {/* Selection Indicator / Gradient Circle */}
+                  {selected ? (
+                    <div
+                      className="absolute top-3 right-3 w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-white"
+                      style={{ background: tpl.color }}
+                    >
+                      <Check className="w-4 h-4" />
+                    </div>
+                  ) : (
+                    <div
+                      className="absolute top-3 right-3 w-8 h-8 rounded-full shadow"
+                      style={{ background: tpl.gradient }}
+                    />
+                  )}
+                </div>
 
-              {/* Content */}
-              <div className="p-5 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="mb-2 text-base font-bold text-stone-900 flex items-center gap-1.5">
-                    <span className="text-lg">{tpl.emoji}</span>
-                    {tpl.name}
-                  </h3>
-                  <p className="mb-4 text-xs text-stone-550 leading-relaxed min-h-[36px]">
-                    {tpl.description}
-                  </p>
-                  <div className="flex flex-wrap gap-1.5 mb-5">
-                    {tpl.features.map((f, i) => (
-                      <span
-                        key={i}
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
-                        style={{ background: `${tpl.color}15`, color: tpl.color }}
-                      >
-                        {f}
-                      </span>
-                    ))}
+                {/* Content */}
+                <div className="p-5 flex-1 flex flex-col justify-between">
+                  <div>
+                    <h3 className="mb-2 text-base font-bold text-stone-900 flex items-center gap-1.5">
+                      <span className="text-lg">{tpl.emoji}</span>
+                      {tpl.name}
+                    </h3>
+                    <p className="mb-4 text-xs text-stone-550 leading-relaxed min-h-[36px]">
+                      {tpl.description}
+                    </p>
+                    <div className="flex flex-wrap gap-1.5 mb-5">
+                      {tpl.features.map((f, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                          style={{ background: `${tpl.color}15`, color: tpl.color }}
+                        >
+                          {f}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between border-t border-stone-100 pt-3 mt-auto">
+                    <span className="text-xs font-bold transition-all flex items-center gap-1" style={{ color: tpl.color }}>
+                      {selected ? (
+                        <>
+                          <Check className="w-3.5 h-3.5" /> Đã chọn mẫu
+                        </>
+                      ) : (
+                        "Chọn mẫu này"
+                      )}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={(e) => handleOpenDemo(e, tpl)}
+                      className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-[10px] transition-colors border-0 cursor-pointer"
+                    >
+                      Xem thử
+                    </button>
                   </div>
                 </div>
-
-                <div className="flex items-center justify-between border-t border-stone-100 pt-3 mt-auto">
-                  <span className="text-xs font-bold transition-all flex items-center gap-1" style={{ color: tpl.color }}>
-                    {selected ? (
-                      <>
-                        <Check className="w-3.5 h-3.5" /> Đã chọn mẫu
-                      </>
-                    ) : (
-                      "Chọn mẫu này"
-                    )}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={(e) => handleOpenDemo(e, tpl)}
-                    className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-[10px] transition-colors border-0 cursor-pointer"
-                  >
-                    Xem thử
-                  </button>
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
-      </div>
+              </motion.div>
+            );
+          })}
+        </div>
+      )}
 
       {/* Demo View Modal */}
       <AnimatePresence>
@@ -2011,7 +2052,7 @@ export function GiftWizard() {
 
   const stepComponents = [
     <Step0 gift={gift} setGift={setGift} templates={templates} />,
-    <Step1 gift={gift} setGift={setGift} templates={templates} />,
+    <Step1 gift={gift} setGift={setGift} templates={templates} onBack={back} />,
     <Step2 gift={gift} setGift={setGift} templates={templates} />,
     <Step4 gift={gift} onSave={handleSave} saving={saving} templates={templates} />,
   ];
