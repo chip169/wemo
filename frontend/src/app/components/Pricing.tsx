@@ -66,12 +66,24 @@ const plans = [
 function PricingCard({ plan }: { plan: typeof plans[0] }) {
   return (
     <div
-      className={`rounded-3xl p-8 h-full flex flex-col justify-between border transition-all duration-300 hover:shadow-lg ${
+      className={`rounded-3xl p-8 h-full flex flex-col justify-between border transition-all duration-300 hover:shadow-lg relative ${
         plan.popular 
           ? 'bg-[#0A0A0A] text-white border-[#D4AF78] shadow-[0_25px_60px_-15px_rgba(232,180,168,0.2)] md:-translate-y-4' 
           : 'bg-white text-stone-850 border-stone-100 shadow-sm hover:-translate-y-1'
       }`}
     >
+      {plan.popular && (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+          <span 
+            className="text-[9px] font-black px-4 py-1.5 rounded-full text-white uppercase tracking-widest shadow-md whitespace-nowrap block"
+            style={{
+              background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+            }}
+          >
+            Được khuyên dùng
+          </span>
+        </div>
+      )}
       <div>
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
@@ -84,17 +96,6 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
           >
             <plan.icon className={`w-5.5 h-5.5 ${plan.popular ? 'text-white' : 'text-stone-700'}`} />
           </div>
-
-          {plan.popular && (
-            <span 
-              className="text-[10px] font-extrabold px-3.5 py-1.5 rounded-full text-white uppercase tracking-widest shadow-sm"
-              style={{
-                background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-              }}
-            >
-              Được khuyên dùng
-            </span>
-          )}
         </div>
 
         {/* Name */}
