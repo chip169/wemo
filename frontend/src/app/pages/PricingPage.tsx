@@ -1,6 +1,7 @@
-import { motion } from "motion/react";
-import { Check, Sparkles, Crown, Building2, ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Check, Sparkles, Crown, Building2, ArrowRight, Plus, Minus } from "lucide-react";
 import { Link } from "react-router";
+import { useState, useRef } from "react";
 
 const faqs = [
   {
@@ -17,114 +18,283 @@ const faqs = [
   },
 ];
 
-export function PricingPage() {
-  const plans = [
-    {
-      name: "Figure Chibi 9cm",
-      icon: Sparkles,
-      price: "650.000đ",
-      period: "/sản phẩm",
-      description: "Kích thước tiêu chuẩn tinh tế, phù hợp để bàn làm việc.",
-      color: "#E8B4A8",
-      textColor: "#8A4F43",
-      features: [
-        "Kích thước chiều cao: 9cm",
-        "Vẽ chân dung Chibi AI miễn phí",
-        "Dựng hình mô hình 3D độc bản",
-        "Chất liệu nhựa in 3D cao cấp",
-        "Tùy chọn đế mica / đế gỗ khắc tên",
-        "Tích hợp chip NFC ẩn thông minh",
-        "Hộp quà & thiệp chúc thiết kế riêng",
-      ],
-      cta: "Mua Ngay",
-      popular: false,
-    },
-    {
-      name: "Figure Chibi 12cm",
-      icon: Crown,
-      price: "800.000đ",
-      period: "/sản phẩm",
-      description: "Bản cao cấp sắc nét, cân đối và được ưa chuộng nhất.",
-      color: "#D4AF78",
-      textColor: "#735629",
-      features: [
-        "Kích thước chiều cao: 12cm",
-        "Vẽ chân dung Chibi AI không giới hạn",
-        "Chi tiết mô hình sắc nét vượt trội",
-        "Dựng hình phôi 3D tỉ mỉ thủ công",
-        "Tặng kèm đế mica hoặc đế gỗ",
-        "Tích hợp chip NFC ẩn thông minh",
-        "Hỗ trợ ưu tiên & Giao hàng nhanh",
-      ],
-      cta: "Mua Ngay",
-      popular: true,
-    },
-    {
-      name: "Sự Kiện / Doanh Nghiệp",
-      icon: Building2,
-      price: "Liên Hệ",
-      period: "",
-      description: "Đặt số lượng lớn cho sự kiện, tiệc cưới, quà tặng doanh nghiệp.",
-      color: "#1C1917",
-      textColor: "#5C5C5C",
-      features: [
-        "Áp dụng đơn hàng từ 5 sản phẩm",
-        "Chiết khấu đặc biệt lên đến 30%",
-        "Thiết kế chibi đồng loạt theo chủ đề",
-        "Tùy biến bao bì & thiệp chúc thương hiệu",
-        "Khắc tên/Logo thương hiệu lên đế gỗ",
-        "Hỗ trợ giao nhận đa địa chỉ",
-        "Thiết kế mẫu duyệt trước miễn phí",
-      ],
-      cta: "Nhận Báo Giá",
-      popular: false,
-    },
-  ];
+const plans = [
+  {
+    name: "Figure Chibi 9cm",
+    icon: Sparkles,
+    price: "650.000đ",
+    period: "/sản phẩm",
+    description: "Kích thước tiêu chuẩn tinh tế, phù hợp để bàn làm việc.",
+    color: "#E8B4A8",
+    features: [
+      "Kích thước chiều cao: 9cm",
+      "Vẽ chân dung Chibi AI miễn phí",
+      "Dựng hình mô hình 3D độc bản",
+      "Chất liệu nhựa in 3D cao cấp",
+      "Tùy chọn đế mica / đế gỗ khắc tên",
+      "Tích hợp chip NFC ẩn thông minh",
+      "Hộp quà & thiệp chúc thiết kế riêng",
+    ],
+    cta: "Mua Ngay",
+    popular: false,
+  },
+  {
+    name: "Figure Chibi 12cm",
+    icon: Crown,
+    price: "800.000đ",
+    period: "/sản phẩm",
+    description: "Bản cao cấp sắc nét, cân đối và được ưa chuộng nhất.",
+    color: "#D4AF78",
+    features: [
+      "Kích thước chiều cao: 12cm",
+      "Vẽ chân dung Chibi AI không giới hạn",
+      "Chi tiết mô hình sắc nét vượt trội",
+      "Dựng hình phôi 3D tỉ mỉ thủ công",
+      "Tặng kèm đế mica hoặc đế gỗ",
+      "Tích hợp chip NFC ẩn thông minh",
+      "Hỗ trợ ưu tiên & Giao hàng nhanh",
+    ],
+    cta: "Mua Ngay",
+    popular: true,
+  },
+  {
+    name: "Sự Kiện / Doanh Nghiệp",
+    icon: Building2,
+    price: "Liên Hệ",
+    period: "",
+    description: "Đặt số lượng lớn cho sự kiện, tiệc cưới, quà tặng doanh nghiệp.",
+    color: "#0A0A0A",
+    features: [
+      "Áp dụng đơn hàng từ 5 sản phẩm",
+      "Chiết khấu đặc biệt lên đến 30%",
+      "Thiết kế chibi đồng loạt theo chủ đề",
+      "Tùy biến bao bì & thiệp chúc thương hiệu",
+      "Khắc tên/Logo thương hiệu lên đế gỗ",
+      "Hỗ trợ giao nhận đa địa chỉ",
+      "Thiết kế mẫu duyệt trước miễn phí",
+    ],
+    cta: "Nhận Báo Giá",
+    popular: false,
+  },
+];
+
+function PricingCard({ plan }: { plan: typeof plans[0] }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [rotateX, setRotateX] = useState(0);
+  const [rotateY, setRotateY] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const xc = rect.width / 2;
+    const yc = rect.height / 2;
+    setRotateX((yc - y) / 12);
+    setRotateY((x - xc) / 12);
+  };
+
+  const handleMouseLeave = () => {
+    setRotateX(0);
+    setRotateY(0);
+  };
 
   return (
     <div
-      className="pt-28 relative overflow-hidden"
-      style={{ background: "#FAF8F5" }}
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="webo-3d-scene w-full h-full"
     >
-      {/* Ambient Background Glows */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#E8B4A8]/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-[#D4AF78]/10 rounded-full blur-3xl pointer-events-none" />
+      <div
+        className={`webo-3d-card rounded-[2rem] p-8 h-full flex flex-col justify-between border transition-all duration-300 ${
+          plan.popular 
+            ? 'bg-[#0A0A0A] text-white border-[#D4AF78] shadow-[0_25px_60px_-15px_rgba(232,180,168,0.2)] md:-translate-y-4' 
+            : 'bg-white text-stone-850 border-stone-100 shadow-sm hover:shadow-md'
+        }`}
+        style={{
+          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+          transformStyle: "preserve-3d"
+        }}
+      >
+        {/* Header content */}
+        <div>
+          {/* Badge & Icon */}
+          <div className="flex items-center justify-between mb-6">
+            <div
+              className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"
+              style={{ 
+                background: plan.popular ? 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)' : '#FAFAFA',
+                border: plan.popular ? 'none' : '1px solid #ECECF0'
+              }}
+            >
+              <plan.icon className={`w-5.5 h-5.5 ${plan.popular ? 'text-white' : 'text-stone-700'}`} />
+            </div>
+
+            {plan.popular && (
+              <span className="text-[9px] font-bold px-3 py-1 rounded-full bg-[#E8B4A8]/10 text-[#E8B4A8] border border-[#E8B4A8]/20 uppercase tracking-widest">
+                Được khuyên dùng
+              </span>
+            )}
+          </div>
+
+          {/* Name */}
+          <h3
+            className="mb-2 text-xl font-bold font-sans"
+            style={{ color: plan.popular ? '#FFFFFF' : '#0A0A0A' }}
+          >
+            {plan.name}
+          </h3>
+
+          {/* Description */}
+          <p
+            className="mb-6 text-xs sm:text-sm leading-relaxed min-h-[40px]"
+            style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}
+          >
+            {plan.description}
+          </p>
+
+          {/* Price */}
+          <div 
+            className="mb-8 py-4 px-5 rounded-2xl flex items-baseline gap-1"
+            style={{ background: plan.popular ? 'rgba(255,255,255,0.03)' : '#FAFAFA' }}
+          >
+            <span
+              className="font-extrabold tracking-tight"
+              style={{
+                fontFamily: "var(--font-display)",
+                fontSize: "2.25rem",
+                color: plan.popular ? '#FFFFFF' : '#0A0A0A',
+              }}
+            >
+              {plan.price}
+            </span>
+            {plan.period && (
+              <span className="text-xs ml-1 opacity-60" style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}>
+                {plan.period}
+              </span>
+            )}
+          </div>
+
+          {/* Features */}
+          <ul className="space-y-3.5 mb-8">
+            {plan.features.map((feature, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <Check
+                  className="w-4 h-4 mt-0.5 flex-shrink-0"
+                  style={{ color: plan.popular ? '#D4AF78' : '#E8B4A8' }}
+                />
+                <span className="text-xs sm:text-sm leading-tight opacity-90 font-medium">
+                  {feature}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* CTA */}
+        <Link
+          to={plan.price === "Liên Hệ" ? "/faq" : "/order"}
+          className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${
+            plan.popular
+              ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg webo-shimmer-shine-hover'
+              : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
+          }`}
+        >
+          {plan.cta}
+          <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+function FaqItem({ faq, index, isOpen, onToggle }: { faq: typeof faqs[0], index: number, isOpen: boolean, onToggle: () => void }) {
+  return (
+    <div 
+      className="rounded-2xl border border-stone-100 bg-white shadow-sm overflow-hidden transition-all duration-300"
+    >
+      <button 
+        onClick={onToggle}
+        className="w-full p-6 text-left flex justify-between items-center gap-4 hover:bg-stone-50 transition-colors"
+      >
+        <h4
+          className="text-sm sm:text-base font-bold flex items-start gap-2.5 text-stone-900"
+        >
+          <span className="text-[#E8B4A8] font-black">Q.</span>
+          {faq.q}
+        </h4>
+        <div className="flex-shrink-0 w-6 h-6 rounded-full border border-stone-100 flex items-center justify-center bg-white text-stone-500">
+          {isOpen ? <Minus className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+        </div>
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            <div className="px-6 pb-6 pt-2 pl-[36px] text-stone-500 text-xs sm:text-sm leading-relaxed border-t border-stone-50">
+              {faq.a}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+export function PricingPage() {
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaq(openFaq === index ? null : index);
+  };
+
+  return (
+    <div className="pt-28 relative overflow-hidden bg-white">
+      {/* Ambient background blur */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[radial-gradient(circle_at_center,rgba(232,180,168,0.05),transparent_70%)] rounded-full pointer-events-none" />
+      <div className="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle_at_center,rgba(212,175,120,0.04),transparent_70%)] rounded-full pointer-events-none" />
 
       {/* Hero */}
-      <section className="py-20 text-center px-4 relative z-10">
+      <section className="py-16 md:py-24 text-center px-4 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
+          className="flex flex-col items-center"
         >
           <span
-            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6 shadow-sm"
-            style={{ background: "rgba(232,180,168,0.15)", color: "#8A4F43" }}
+            className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider mb-6 border border-[#E8B4A8]/30 bg-[#E8B4A8]/5 text-stone-700 shadow-sm"
           >
-            <Sparkles className="w-3.5 h-3.5" /> WEMO PRICING
+            <Sparkles className="w-3 h-3 text-[#E8B4A8]" /> WEMO PRICING
           </span>
           <h1
-            className="mb-6 tracking-tight"
+            className="mb-6 tracking-tight text-stone-900"
             style={{
-              fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
+              fontSize: "clamp(2.5rem, 5.5vw, 4.25rem)",
               fontWeight: 800,
-              color: "#1A1818",
               lineHeight: 1.15,
+              fontFamily: "var(--font-display)"
             }}
           >
-            Sở Hữu Figure Chibi <span style={{ color: "#E8B4A8" }}>Độc Bản</span>
+            Sở Hữu Figure Chibi <span className="bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] bg-clip-text text-transparent">Độc Bản</span>
           </h1>
           <p
-            className="max-w-2xl mx-auto"
-            style={{ fontSize: "1.25rem", color: "#5A5A5A", lineHeight: 1.6 }}
+            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed"
           >
             Chọn kích thước phù hợp với sở thích của bạn. Mỗi mô hình Figure Chibi 3D là một tác phẩm nghệ thuật cá nhân hóa được lưu giữ mãi mãi.
           </p>
         </motion.div>
       </section>
 
-      {/* Plans */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative z-10">
+      {/* Plans Section */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 relative z-10">
         <div className="grid md:grid-cols-3 gap-8 items-stretch">
           {plans.map((plan, index) => (
             <motion.div
@@ -133,173 +303,40 @@ export function PricingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ y: -10, transition: { duration: 0.2 } }}
-              className="relative flex flex-col"
+              className="h-full"
             >
-              {plan.popular && (
-                <div
-                  className="absolute -top-4 left-1/2 -translate-x-1/2 px-6 py-1.5 rounded-full font-bold text-white text-xs uppercase tracking-widest shadow-md z-20"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-                  }}
-                >
-                  Khuyên Dùng
-                </div>
-              )}
-
-              <div
-                className="rounded-3xl p-8 h-full flex flex-col backdrop-blur-sm bg-white/90"
-                style={{
-                  border: plan.popular
-                    ? "2px solid #E8B4A8"
-                    : "1px solid rgba(0,0,0,0.06)",
-                  boxShadow: plan.popular
-                    ? "0 25px 50px -12px rgba(232,180,168,0.3)"
-                    : "0 20px 40px -15px rgba(0,0,0,0.05)",
-                }}
-              >
-                {/* Header Icon & Size Toggle if applicable */}
-                <div className="flex items-center justify-between mb-6">
-                  <div
-                    className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"
-                    style={{ background: plan.color }}
-                  >
-                    <plan.icon className="w-6 h-6 text-white" />
-                  </div>
-
-
-
-                  {plan.popular && (
-                    <span className="text-xs font-semibold px-2.5 py-1 rounded-md bg-[#E8B4A8]/10 text-[#8A4F43]">
-                      Biên tập lựa chọn
-                    </span>
-                  )}
-                </div>
-
-                {/* Plan Name */}
-                <h3
-                  className="mb-2"
-                  style={{
-                    fontSize: "1.65rem",
-                    fontWeight: 800,
-                    color: "#1A1818",
-                  }}
-                >
-                  {plan.name}
-                </h3>
-
-                {/* Description */}
-                <p
-                  className="mb-6 min-h-[44px]"
-                  style={{
-                    color: "#6B6B6B",
-                    fontSize: "0.95rem",
-                    lineHeight: 1.5,
-                  }}
-                >
-                  {plan.description}
-                </p>
-
-                {/* Price block featuring crossed original price */}
-                <div className="mb-8 bg-neutral-50 p-4 rounded-2xl flex flex-col justify-center min-h-[92px]">
-                  {plan.originalPrice && (
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-sm line-through text-neutral-400 font-medium">
-                        {plan.originalPrice}
-                      </span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-green-100 text-green-700 uppercase tracking-wider">
-                        Tiết kiệm {plan.saving}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex items-baseline gap-1">
-                    <span
-                      style={{
-                        fontSize: "2.5rem",
-                        fontWeight: 800,
-                        color: "#1A1818",
-                        letterSpacing: "-0.02em",
-                      }}
-                    >
-                      {plan.price}
-                    </span>
-                    <span className="text-sm font-medium text-neutral-400 ml-1">
-                      {plan.period}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Features List */}
-                <ul className="space-y-3.5 mb-8 flex-1">
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-3 group">
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-                        style={{ background: `${plan.color}30` }}
-                      >
-                        <Check
-                          className="w-3.5 h-3.5"
-                          style={{ color: plan.textColor }}
-                        />
-                      </div>
-                      <span className="text-neutral-700 text-sm font-medium group-hover:text-neutral-900 transition-colors">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA Button */}
-                <Link
-                  to={plan.price === "Liên Hệ" ? "/faq" : "/order"}
-                  className="w-full py-4 rounded-2xl font-bold text-sm flex items-center justify-center gap-2 transition-all shadow-sm hover:shadow-md"
-                  style={
-                    plan.popular
-                      ? {
-                        background:
-                          "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-                        color: "white",
-                      }
-                      : {
-                        background: "white",
-                        color: "#1A1818",
-                        border: `1.5px solid ${plan.color}`,
-                      }
-                  }
-                >
-                  {plan.cta}
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+              <PricingCard plan={plan} />
             </motion.div>
           ))}
         </div>
 
-        {/* Note */}
+        {/* Footnote */}
         <motion.p
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="text-center mt-12 text-sm font-medium flex items-center justify-center gap-2"
-          style={{ color: "#6B6B6B" }}
+          className="text-center mt-14 text-stone-400 text-xs font-bold uppercase tracking-wider flex flex-wrap justify-center items-center gap-3"
         >
           <span>📦 Đổi trả miễn phí trong 7 ngày nếu có lỗi sản xuất</span>
-          <span className="w-1.5 h-1.5 rounded-full bg-neutral-300"></span>
+          <span className="w-1.5 h-1.5 rounded-full bg-stone-200 hidden sm:inline-block"></span>
           <span>Bảo mật dữ liệu tuyệt đối</span>
         </motion.p>
       </section>
 
-      {/* FAQ Section */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 relative z-10 border-t border-neutral-100 pt-20">
+      {/* FAQ Accordion Section */}
+      <section className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-32 relative z-10 border-t border-stone-100 pt-20">
         <h2
-          className="text-center mb-12 tracking-tight"
-          style={{ fontSize: "2.25rem", fontWeight: 800, color: "#1A1818" }}
+          className="text-center mb-12 tracking-tight text-stone-900"
+          style={{ 
+            fontSize: "2.25rem", 
+            fontWeight: 800, 
+            fontFamily: "var(--font-display)" 
+          }}
         >
           Câu Hỏi Thường Gặp
         </h2>
 
-        <div className="grid md:grid-cols-1 gap-4">
+        <div className="flex flex-col gap-4">
           {faqs.map((faq, i) => (
             <motion.div
               key={i}
@@ -307,24 +344,13 @@ export function PricingPage() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="rounded-2xl p-6 bg-white border border-neutral-100"
-              style={{
-                boxShadow: "0 4px 12px rgba(0,0,0,0.02)",
-              }}
             >
-              <h4
-                className="mb-2.5 text-base font-bold flex items-start gap-2.5"
-                style={{ color: "#1A1818" }}
-              >
-                <span className="text-[#E8B4A8] font-black">Q.</span>
-                {faq.q}
-              </h4>
-              <p
-                className="pl-6 text-neutral-600"
-                style={{ lineHeight: 1.6, fontSize: "0.95rem" }}
-              >
-                {faq.a}
-              </p>
+              <FaqItem 
+                faq={faq} 
+                index={i} 
+                isOpen={openFaq === i}
+                onToggle={() => toggleFaq(i)}
+              />
             </motion.div>
           ))}
         </div>

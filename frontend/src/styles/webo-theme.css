@@ -1,127 +1,136 @@
-/* WEBO Premium Theme */
+/* WEBO Premium Theme - Minimalist & 3D Interactive */
 :root {
-  /* WEBO Brand Colors */
-  --webo-cream: #FAF8F5;
-  --webo-beige: #F5EDE4;
-  --webo-warm-black: #1A1818;
+  /* WEBO Minimalist Brand Colors */
+  --webo-bg: #FFFFFF;
+  --webo-bg-alt: #FAFAFA;
+  --webo-bg-dark: #0A0A0A;
+  --webo-text-primary: #0A0A0A;
+  --webo-text-secondary: #6B6B6B;
+  --webo-text-muted: #8E8E93;
   --webo-rose-gold: #E8B4A8;
-  --webo-pastel-pink: #FFD4D4;
-  --webo-soft-pink: #FFF0F0;
   --webo-gold-shimmer: #D4AF78;
-  
-  /* Gradient backgrounds */
-  --webo-gradient-1: linear-gradient(135deg, #FAF8F5 0%, #F5EDE4 100%);
-  --webo-gradient-2: linear-gradient(135deg, #FFD4D4 0%, #E8B4A8 100%);
-  --webo-gradient-3: linear-gradient(135deg, #FFF0F0 0%, #FAF8F5 50%, #F5EDE4 100%);
-  --webo-gradient-rose: linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%);
-  
-  /* Glassmorphism */
-  --webo-glass-white: rgba(255, 255, 255, 0.7);
-  --webo-glass-pink: rgba(255, 212, 212, 0.5);
-  --webo-glass-beige: rgba(245, 237, 228, 0.6);
+  --webo-accent: #E8B4A8;
+
+  /* Custom shadows */
+  --webo-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --webo-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.06);
+  --webo-shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --webo-shadow-xl: 0 20px 50px rgba(0, 0, 0, 0.12);
+  --webo-shadow-glow: 0 0 30px rgba(232, 180, 168, 0.25);
+
+  /* 3D configurations */
+  --webo-perspective: 1200px;
 }
 
-/* Animated gradient background */
-@keyframes gradient-shift {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+/* Base style overrides */
+body {
+  background-color: var(--webo-bg);
+  color: var(--webo-text-primary);
 }
 
-.webo-animated-gradient {
-  background: linear-gradient(
-    135deg,
-    #FAF8F5 0%,
-    #FFD4D4 25%,
-    #F5EDE4 50%,
-    #E8B4A8 75%,
-    #FAF8F5 100%
-  );
-  background-size: 200% 200%;
-  animation: gradient-shift 15s ease infinite;
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display) !important;
+  font-weight: 700;
+  color: var(--webo-text-primary);
 }
 
-/* Glassmorphism card */
+/* Text Gradient */
+.webo-text-gradient {
+  background: linear-gradient(135deg, var(--webo-rose-gold) 0%, var(--webo-gold-shimmer) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism card upgraded for minimal style */
 .webo-glass-card {
-  background: var(--webo-glass-white);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: var(--webo-shadow-md);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.webo-glass-card:hover {
+  box-shadow: var(--webo-shadow-lg);
+  border-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 3D Helpers */
+.webo-3d-scene {
+  perspective: var(--webo-perspective);
+  transform-style: preserve-3d;
+}
+
+.webo-3d-card {
+  transform-style: preserve-3d;
+  transition: transform 0.1s ease-out, box-shadow 0.3s ease;
+}
+
+/* Shimmer shine effect */
+@keyframes shimmer-shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+.webo-shimmer-shine-hover {
+  position: relative;
+  overflow: hidden;
+}
+.webo-shimmer-shine-hover::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transform: skewX(-25deg);
+  transition: 0.75s;
+}
+.webo-shimmer-shine-hover:hover::after {
+  animation: shimmer-shine 0.75s ease-out;
+}
+
+/* NFC Pulsing ripples */
+@keyframes nfc-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.nfc-ripple {
+  position: absolute;
+  border: 2px solid var(--webo-rose-gold);
+  border-radius: 50%;
+  animation: nfc-pulse 2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
 }
 
 /* Floating animation */
-@keyframes float {
+@keyframes float-3d {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0) rotate(0deg);
   }
   50% {
-    transform: translateY(-20px);
+    transform: translateY(-12px) rotate(2deg);
   }
 }
 
-.webo-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-/* Glow effect */
-@keyframes glow {
-  0%, 100% {
-    box-shadow: 0 0 20px rgba(232, 180, 168, 0.3),
-                0 0 40px rgba(232, 180, 168, 0.2);
-  }
-  50% {
-    box-shadow: 0 0 30px rgba(232, 180, 168, 0.5),
-                0 0 60px rgba(232, 180, 168, 0.3);
-  }
-}
-
-.webo-glow {
-  animation: glow 3s ease-in-out infinite;
-}
-
-/* Shimmer effect */
-@keyframes shimmer {
-  0% {
-    background-position: -1000px 0;
-  }
-  100% {
-    background-position: 1000px 0;
-  }
-}
-
-.webo-shimmer {
-  background: linear-gradient(
-    to right,
-    transparent 0%,
-    rgba(232, 180, 168, 0.4) 50%,
-    transparent 100%
-  );
-  background-size: 1000px 100%;
-  animation: shimmer 3s infinite;
-}
-
-/* Particles */
-@keyframes particles-float {
-  0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translate(100px, -100px) rotate(360deg);
-    opacity: 0;
-  }
-}
-
-.webo-particle {
-  animation: particles-float 8s infinite;
+.webo-float-3d {
+  animation: float-3d 6s ease-in-out infinite;
 }

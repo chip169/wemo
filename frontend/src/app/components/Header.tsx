@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useState, useEffect } from "react";
-import { Heart, Menu, X, Gift } from "lucide-react";
+import { Menu, X, Gift } from "lucide-react";
 import { Link, useLocation } from "react-router";
 
 export function Header() {
@@ -9,7 +9,7 @@ export function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 30);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -26,33 +26,37 @@ export function Header() {
 
   return (
     <motion.header
-      initial={{ y: -100 }}
+      initial={{ y: -80 }}
       animate={{ y: 0 }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: isScrolled ? "var(--webo-glass-white)" : "transparent",
-        backdropFilter: isScrolled ? "blur(20px)" : "none",
-        borderBottom: isScrolled ? "1px solid rgba(255,255,255,0.3)" : "none",
+        background: isScrolled ? "rgba(255, 255, 255, 0.85)" : "transparent",
+        backdropFilter: isScrolled ? "blur(24px)" : "none",
+        borderBottom: isScrolled ? "1px solid rgba(0, 0, 0, 0.05)" : "none",
+        boxShadow: isScrolled ? "0 4px 30px rgba(0, 0, 0, 0.02)" : "none",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
+          
           {/* Logo */}
           <Link to="/">
             <motion.div
               className="flex items-center gap-2 cursor-pointer"
-              whileHover={{ scale: 1.05 }}
+              whileHover={{ scale: 1.02 }}
             >
               <img
                 src="/favicon.png"
                 alt="WEMO Logo"
-                className="w-11 h-11 object-contain"
+                className="w-10 h-10 object-contain"
               />
               <span
-                className="font-bold"
+                className="font-black tracking-wider"
                 style={{
-                  fontSize: "1.75rem",
-                  color: "#E8B4A8",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "1.65rem",
+                  color: "#0A0A0A",
                 }}
               >
                 WEMO
@@ -65,17 +69,17 @@ export function Header() {
             {navItems.map((item, index) => {
               const isActive = location.pathname === item.href;
               return (
-                <motion.div key={index} whileHover={{ y: -2 }}>
+                <motion.div key={index} whileHover={{ y: -1 }}>
                   <Link
                     to={item.href}
-                    className="font-medium transition-colors relative"
-                    style={{ color: isActive ? "#E8B4A8" : "#1A1818" }}
+                    className="font-medium text-sm transition-colors relative py-1"
+                    style={{ color: isActive ? "#0A0A0A" : "#6B6B6B" }}
                   >
                     {item.name}
                     {isActive && (
                       <motion.div
                         layoutId="nav-underline"
-                        className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full"
+                        className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full"
                         style={{ background: "#E8B4A8" }}
                       />
                     )}
@@ -86,16 +90,18 @@ export function Header() {
           </nav>
 
           {/* CTA */}
-          <Link
-            to="/create"
-            className="hidden md:flex items-center gap-2 px-5 py-2.5 rounded-full font-semibold text-sm text-white transition-all hover:opacity-90 hover:scale-105"
-            style={{
-              background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-            }}
-          >
-            <Gift className="w-4 h-4" />
-            Tạo Quà
-          </Link>
+          <div className="hidden md:flex items-center">
+            <Link
+              to="/create"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white transition-all shadow-sm hover:shadow-md hover:scale-[1.03] active:scale-[0.98] webo-shimmer-shine-hover"
+              style={{
+                background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+              }}
+            >
+              <Gift className="w-3.5 h-3.5" />
+              Tạo Quà
+            </Link>
+          </div>
 
           {/* Mobile Menu Button */}
           <button
@@ -104,9 +110,9 @@ export function Header() {
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
-              <X className="w-6 h-6" style={{ color: "#1A1818" }} />
+              <X className="w-6 h-6 text-stone-850" />
             ) : (
-              <Menu className="w-6 h-6" style={{ color: "#1A1818" }} />
+              <Menu className="w-6 h-6 text-stone-850" />
             )}
           </button>
         </div>
@@ -117,23 +123,33 @@ export function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden pb-6"
+            className="md:hidden pb-6 border-t border-stone-100"
           >
-            <nav className="flex flex-col gap-4">
+            <nav className="flex flex-col gap-4 pt-4">
               {navItems.map((item, index) => (
                 <Link
                   key={index}
                   to={item.href}
-                  className="font-medium py-2"
+                  className="font-medium text-sm py-2"
                   style={{
-                    color:
-                      location.pathname === item.href ? "#E8B4A8" : "#1A1818",
+                    color: location.pathname === item.href ? "#0A0A0A" : "#6B6B6B",
                   }}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
+              <Link
+                to="/create"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider text-white w-full"
+                style={{
+                  background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+                }}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                <Gift className="w-4 h-4" />
+                Tạo Quà
+              </Link>
             </nav>
           </motion.div>
         )}
