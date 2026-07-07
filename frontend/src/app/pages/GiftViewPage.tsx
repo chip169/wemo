@@ -109,7 +109,7 @@ export function GiftViewPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#FCEBE7] flex flex-col items-center justify-center">
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 360] }}
           transition={{ duration: 1.5, repeat: Infinity }}
@@ -126,7 +126,7 @@ export function GiftViewPage() {
 
   if (error || !gift) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] relative overflow-hidden flex flex-col items-center justify-center p-6 text-center select-none">
+      <div className="min-h-screen bg-[#FCEBE7] relative overflow-hidden flex flex-col items-center justify-center p-6 text-center select-none">
         {/* Glowing shapes */}
         <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#E8B4A8]/10 blur-[80px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 rounded-full bg-[#D4AF78]/10 blur-[80px] pointer-events-none" />

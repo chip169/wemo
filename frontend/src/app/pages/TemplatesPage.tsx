@@ -69,7 +69,7 @@ export function TemplatesPage() {
   }, []);
 
   return (
-    <div className="pt-20" style={{ background: "#FAF8F5" }}>
+    <div className="pt-20" style={{ background: "#FCEBE7" }}>
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }

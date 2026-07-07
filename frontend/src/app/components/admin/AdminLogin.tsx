@@ -37,7 +37,7 @@ export function AdminLogin({ onLogin }: { onLogin: () => void }) {
     <div
       className="min-h-screen flex items-center justify-center p-4"
       style={{
-        background: "linear-gradient(135deg, #FAF8F5 0%, #E6DFD5 100%)",
+        background: "linear-gradient(135deg, #FCEBE7 0%, #E6DFD5 100%)",
       }}
     >
       <motion.div

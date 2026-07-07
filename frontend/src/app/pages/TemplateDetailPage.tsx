@@ -227,7 +227,7 @@ export function TemplateDetailPage() {
   const subTextColor = isDarkCard ? "#9CA3AF" : "#9B9B9B";
 
   return (
-    <div className="pt-20 min-h-screen" style={{ background: "#FAF8F5" }}>
+    <div className="pt-20 min-h-screen" style={{ background: "#FCEBE7" }}>
 
       {/* ── Back nav ── */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">

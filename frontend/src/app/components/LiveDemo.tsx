@@ -115,7 +115,7 @@ export function LiveDemo() {
                     exit={{ opacity: 0, scale: 1.1 }}
                     className="w-full h-full flex flex-col items-center justify-center p-6"
                     style={{
-                      background: 'linear-gradient(135deg, #FAF8F5 0%, #F5EDE4 100%)',
+                      background: 'linear-gradient(135deg, #FCEBE7 0%, #F5EDE4 100%)',
                     }}
                   >
                     {step === 0 && (

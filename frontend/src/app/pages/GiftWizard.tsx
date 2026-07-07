@@ -1574,7 +1574,7 @@ function SuccessScreen({
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-lg bg-[#FAF8F5] rounded-[2.5rem] p-8 text-center shadow-2xl border border-white/50 relative overflow-hidden my-8"
+        className="w-full max-w-lg bg-[#FCEBE7] rounded-[2.5rem] p-8 text-center shadow-2xl border border-white/50 relative overflow-hidden my-8"
       >
         {/* Glow Effects */}
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-[#E8B4A8]/20 rounded-full blur-[80px]" />
@@ -1671,7 +1671,7 @@ function SuccessScreen({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#FAF8F5] rounded-[2.5rem] p-6 w-full max-w-sm relative text-center shadow-2xl border border-white"
+              className="bg-[#FCEBE7] rounded-[2.5rem] p-6 w-full max-w-sm relative text-center shadow-2xl border border-white"
             >
               <button
                 onClick={() => setShowQrModal(false)}
@@ -1714,7 +1714,7 @@ function SuccessScreen({
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#FAF8F5] rounded-[2.5rem] p-6 w-full max-w-sm relative text-center shadow-2xl border border-white"
+              className="bg-[#FCEBE7] rounded-[2.5rem] p-6 w-full max-w-sm relative text-center shadow-2xl border border-white"
             >
               <button
                 onClick={() => setShowNfcModal(false)}
@@ -1988,7 +1988,7 @@ export function GiftWizard() {
 
   if (bypassLoading) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center">
+      <div className="min-h-screen bg-[#FCEBE7] flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78] flex items-center justify-center mx-auto animate-pulse">
             <Sparkles className="w-8 h-8 text-white" />
@@ -2001,7 +2001,7 @@ export function GiftWizard() {
 
   if (!validatedOrderId || !gift) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] pt-20">
+      <div className="min-h-screen bg-[#FCEBE7] pt-20">
         <OrderCheckGateway onValidOrder={handleValidOrder} />
       </div>
     );
@@ -2032,7 +2032,7 @@ export function GiftWizard() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAF8F5]">
+    <div className="min-h-screen flex flex-col bg-[#FCEBE7]">
       {/* Top Navbar */}
       <div className="flex items-center justify-between px-6 py-3.5 border-b border-stone-200/60 bg-white">
         <Link to="/" className="flex items-center gap-2">
@@ -2059,7 +2059,7 @@ export function GiftWizard() {
       {/* Main Layout Workspace */}
       <div className="flex-1 flex overflow-hidden">
         {/* Left Workspace Panel */}
-        <div ref={contentRef} className="flex-1 overflow-y-auto bg-[#FAF8F5] no-scrollbar">
+        <div ref={contentRef} className="flex-1 overflow-y-auto bg-[#FCEBE7] no-scrollbar">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex flex-col h-full justify-between">
             <AnimatePresence mode="wait">
               <motion.div

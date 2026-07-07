@@ -4,7 +4,7 @@ import { Heart, Home, ArrowLeft } from "lucide-react";
 
 export function NotFoundPage() {
   return (
-    <div className="min-h-screen bg-[#FAF8F5] relative overflow-hidden flex flex-col items-center justify-center p-6 text-center select-none">
+    <div className="min-h-screen bg-[#FCEBE7] relative overflow-hidden flex flex-col items-center justify-center p-6 text-center select-none">
       {/* Background soft glowing blur shapes */}
       <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-72 h-72 rounded-full bg-[#E8B4A8]/10 blur-[80px] pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/4 translate-x-1/2 translate-y-1/2 w-80 h-80 rounded-full bg-[#D4AF78]/10 blur-[80px] pointer-events-none" />

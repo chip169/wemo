@@ -6,7 +6,7 @@ interface ConfettiEffectProps {
   colors?: string[];
 }
 
-export function ConfettiEffect({ trigger = false, colors = ['#FFD4D4', '#E8B4A8', '#D4AF78', '#FAF8F5'] }: ConfettiEffectProps) {
+export function ConfettiEffect({ trigger = false, colors = ['#FFD4D4', '#E8B4A8', '#D4AF78', '#FCEBE7'] }: ConfettiEffectProps) {
   const hasTriggered = useRef(false);
 
   useEffect(() => {

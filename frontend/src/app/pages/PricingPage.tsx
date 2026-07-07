@@ -219,7 +219,7 @@ export function PricingPage() {
   return (
     <div
       className="pt-28 relative overflow-hidden"
-      style={{ background: "#FAF8F5" }}
+      style={{ background: "#FCEBE7" }}
     >
       {/* Ambient Background Glows */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#E8B4A8]/10 rounded-full blur-3xl pointer-events-none" />

@@ -88,9 +88,9 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
               Xem chi tiết mẫu <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
-          
+
           {/* Accent Color Tag */}
-          <div 
+          <div
             className="absolute top-4 right-4 w-9 h-9 rounded-full shadow-md border border-white/50"
             style={{ background: template.gradient }}
           />
@@ -99,7 +99,7 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
         {/* Info panel */}
         <div className="p-6 flex-1 flex flex-col justify-between">
           <div>
-            <h3 
+            <h3
               className="mb-2 text-lg font-bold text-stone-900 group-hover:text-[#E8B4A8] transition-colors"
               style={{ fontFamily: 'var(--font-body)' }}
             >
@@ -155,7 +155,8 @@ export function TemplateShowcase() {
 
   return (
     <section className="relative py-24 md:py-32 bg-[#FCEBE7] overflow-hidden">
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
@@ -168,7 +169,7 @@ export function TemplateShowcase() {
       `}} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
+
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -176,20 +177,18 @@ export function TemplateShowcase() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100 text-stone-600 text-xs font-bold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5 text-[#E8B4A8]" /> Template Collection
-          </div>
-          <h2 
+
+          <h2
             className="mb-4 font-black text-stone-900 tracking-tight"
             style={{
               fontFamily: 'var(--font-display)',
               fontSize: 'clamp(2.25rem, 4vw, 3.5rem)',
             }}
           >
-            Mẫu Thiết Kế Đẹp Mắt
+            Mẫu Thiết Kế Độc Đáo
           </h2>
           <p
-            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed"
+            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed whitespace-nowrap"
           >
             Chọn từ các mẫu thiết kế chuyên nghiệp hoặc tùy chỉnh trải nghiệm độc đáo của riêng bạn
           </p>

@@ -86,7 +86,7 @@ export function AdminTemplatePreviewPage() {
   // ── Not authenticated ──
   if (authed === false) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-[#FCEBE7] flex flex-col items-center justify-center p-6 text-center">
         <div className="w-full max-w-sm p-8 rounded-[2.5rem] bg-white/70 border border-white/40 shadow-2xl backdrop-blur-md flex flex-col items-center">
           <div className="w-16 h-16 rounded-2xl bg-rose-50 flex items-center justify-center text-rose-500 mb-5 border border-rose-100">
             <ShieldAlert className="w-8 h-8" />
@@ -109,7 +109,7 @@ export function AdminTemplatePreviewPage() {
   // ── Loading ──
   if (authed === null || (!template && !error)) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center">
+      <div className="min-h-screen bg-[#FCEBE7] flex flex-col items-center justify-center">
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 360] }}
           transition={{ duration: 1.5, repeat: Infinity }}
@@ -127,7 +127,7 @@ export function AdminTemplatePreviewPage() {
   // ── Error ──
   if (error) {
     return (
-      <div className="min-h-screen bg-[#FAF8F5] flex flex-col items-center justify-center p-6 text-center">
+      <div className="min-h-screen bg-[#FCEBE7] flex flex-col items-center justify-center p-6 text-center">
         <div className="w-full max-w-sm p-8 rounded-[2.5rem] bg-white/70 border border-white/40 shadow-2xl backdrop-blur-md flex flex-col items-center">
           <div className="w-16 h-16 rounded-2xl bg-amber-50 flex items-center justify-center text-amber-500 mb-5 border border-amber-100">
             <span className="text-3xl">⚠️</span>

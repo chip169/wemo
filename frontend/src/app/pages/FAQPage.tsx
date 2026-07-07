@@ -122,7 +122,7 @@ export function FAQPage() {
   const [activeCategory, setActiveCategory] = useState(0);
 
   return (
-    <div className="pt-20" style={{ background: "#FAF8F5" }}>
+    <div className="pt-20" style={{ background: "#FCEBE7" }}>
       {/* Hero */}
       <section className="py-20 text-center px-4">
         <motion.div

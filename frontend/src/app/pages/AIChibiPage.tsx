@@ -364,7 +364,7 @@ export function AIChibiPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pt-28 pb-16 font-sans relative overflow-hidden">
+    <div className="min-h-screen bg-[#FCEBE7] pt-28 pb-16 font-sans relative overflow-hidden">
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#E8B4A8]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-[#D4AF78]/10 rounded-full blur-[150px] pointer-events-none" />
 

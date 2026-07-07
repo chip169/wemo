@@ -9,7 +9,7 @@ export function HeroSection() {
   const optimizedImg = `${baseImg}?w=1200&auto=format,compress&q=90`;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FAF8F6] py-12">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FCEBE7] py-12">
       {/* Background chuyển động mượt mà */}
       <div className="absolute inset-0 webo-animated-gradient opacity-40" />
 
@@ -107,7 +107,7 @@ export function HeroSection() {
                 ease: "easeInOut",
                 delay: 0.4,
               }}
-              className="absolute right-20 top-[260px] w-16 h-16 rounded-full overflow-hidden shadow-lg bg-[#FAF8F6]"
+              className="absolute right-20 top-[260px] w-16 h-16 rounded-full overflow-hidden shadow-lg bg-[#FCEBE7]"
             >
               <img
                 src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/banh.png?w=1073&h=992"

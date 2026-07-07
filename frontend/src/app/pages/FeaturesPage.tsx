@@ -62,7 +62,7 @@ const features = [
 
 export function FeaturesPage() {
   return (
-    <div className="pt-20" style={{ background: "#FAF8F5" }}>
+    <div className="pt-20" style={{ background: "#FCEBE7" }}>
       {/* Hero */}
       <section className="py-20 text-center px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -78,7 +78,7 @@ export function FeaturesPage() {
           >
             Mọi Công Cụ Bạn Cần
           </h1>
-          <p className="max-w-2xl mx-auto" style={{ fontSize: "1.125rem", color: "#6B6B6B", lineHeight: 1.6 }}>
+          <p className="max-w-2xl mx-auto" style={{ fontSize: "1.125rem", color: "#6B6B6B", lineHeight: 1.6 }} whitespace-nowrap>
             Tạo những món quà kỹ thuật số ấn tượng với bộ tính năng mạnh mẽ — từ ảnh, video đến hộp thời gian bí ẩn.
           </p>
         </motion.div>

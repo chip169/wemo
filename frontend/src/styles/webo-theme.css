@@ -1,7 +1,7 @@
 /* WEBO Premium Theme */
 :root {
   /* WEBO Brand Colors */
-  --webo-cream: #FAF8F5;
+  --webo-cream: #FCEBE7;
   --webo-beige: #F5EDE4;
   --webo-warm-black: #1A1818;
   --webo-rose-gold: #E8B4A8;
@@ -10,9 +10,9 @@
   --webo-gold-shimmer: #D4AF78;
   
   /* Gradient backgrounds */
-  --webo-gradient-1: linear-gradient(135deg, #FAF8F5 0%, #F5EDE4 100%);
+  --webo-gradient-1: linear-gradient(135deg, #FCEBE7 0%, #F5EDE4 100%);
   --webo-gradient-2: linear-gradient(135deg, #FFD4D4 0%, #E8B4A8 100%);
-  --webo-gradient-3: linear-gradient(135deg, #FFF0F0 0%, #FAF8F5 50%, #F5EDE4 100%);
+  --webo-gradient-3: linear-gradient(135deg, #FFF0F0 0%, #FCEBE7 50%, #F5EDE4 100%);
   --webo-gradient-rose: linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%);
   
   /* Glassmorphism */
@@ -34,11 +34,11 @@
 .webo-animated-gradient {
   background: linear-gradient(
     135deg,
-    #FAF8F5 0%,
+    #FCEBE7 0%,
     #FFD4D4 25%,
     #F5EDE4 50%,
     #E8B4A8 75%,
-    #FAF8F5 100%
+    #FCEBE7 100%
   );
   background-size: 200% 200%;
   animation: gradient-shift 15s ease infinite;
