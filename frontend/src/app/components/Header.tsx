@@ -18,7 +18,7 @@ export function Header() {
   const location = useLocation();
   const navItems = [
     { name: "Tính Năng", href: "/features" },
-    { name: "Mẫu", href: "/templates" },
+    { name: "Mẫu Thiệp", href: "/templates" },
     { name: "Vẽ Chibi AI", href: "/ai-chibi" },
     { name: "Bảng Giá", href: "/pricing" },
     { name: "FAQ", href: "/faq" },
