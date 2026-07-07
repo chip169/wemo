@@ -101,6 +101,56 @@ const getLocalPath = (fileUrl) => {
 };
 
 /**
+ * Robust helper to obtain a file buffer and filename from local path, base64, or remote URL (including localhost)
+ */
+const getFileBuffer = async (fileUrl) => {
+  if (!fileUrl) return null;
+
+  // 1. Check local file system
+  const localPath = getLocalPath(fileUrl);
+  if (localPath) {
+    try {
+      const buffer = fs.readFileSync(localPath);
+      return { buffer, filename: path.basename(localPath) };
+    } catch (err) {
+      console.error(`❌ Failed to read local file:`, err.message);
+    }
+  }
+
+  // 2. Check if Base64
+  if (fileUrl.startsWith("data:image/")) {
+    try {
+      const matches = fileUrl.match(/^data:image\/([A-Za-z-+\/]+);base64,(.+)$/);
+      if (matches && matches.length === 3) {
+        const ext = matches[1] === "png" ? "png" : "jpg";
+        const buffer = Buffer.from(matches[2], "base64");
+        return { buffer, filename: `upload-${Date.now()}.${ext}` };
+      }
+    } catch (err) {
+      console.error(`❌ Failed to parse base64 image:`, err.message);
+    }
+  }
+
+  // 3. Try to fetch remote URL (including localhost)
+  if (fileUrl.startsWith("http://") || fileUrl.startsWith("https://")) {
+    try {
+      const response = await fetch(fileUrl);
+      if (response.ok) {
+        const arrayBuffer = await response.arrayBuffer();
+        const buffer = Buffer.from(arrayBuffer);
+        const urlPath = new URL(fileUrl).pathname;
+        const filename = path.basename(urlPath) || `download-${Date.now()}.jpg`;
+        return { buffer, filename };
+      }
+    } catch (err) {
+      console.error(`❌ Failed to fetch remote URL ${fileUrl}:`, err.message);
+    }
+  }
+
+  return null;
+};
+
+/**
  * Gửi Album ảnh kèm message đến Telegram chat
  */
 const sendTelegramMediaGroup = async (caption, files) => {
@@ -126,33 +176,22 @@ const sendTelegramMediaGroup = async (caption, files) => {
 
   for (let i = 0; i < validFiles.length; i++) {
     const fUrl = validFiles[i].url;
-    const localPath = getLocalPath(fUrl);
+    const fileInfo = await getFileBuffer(fUrl);
 
-    if (localPath) {
+    if (fileInfo) {
       attachedCount++;
       const fileKey = `photo_${attachedCount}`;
-      try {
-        const fileBuffer = fs.readFileSync(localPath);
-        const blob = new Blob([fileBuffer], { type: "image/jpeg" });
-        formData.append(fileKey, blob, path.basename(localPath));
+      const blob = new Blob([fileInfo.buffer], { type: "image/jpeg" });
+      formData.append(fileKey, blob, fileInfo.filename);
 
-        media.push({
-          type: "photo",
-          media: `attach://${fileKey}`,
-          caption: i === 0 ? caption : undefined,
-          parse_mode: i === 0 ? "HTML" : undefined,
-        });
-      } catch (err) {
-        console.error(`❌ Failed to read local file ${localPath}:`, err.message);
-        // Fallback to sending remote URL directly if file read fails
-        media.push({
-          type: "photo",
-          media: fUrl,
-          caption: i === 0 ? caption : undefined,
-          parse_mode: i === 0 ? "HTML" : undefined,
-        });
-      }
+      media.push({
+        type: "photo",
+        media: `attach://${fileKey}`,
+        caption: i === 0 ? caption : undefined,
+        parse_mode: i === 0 ? "HTML" : undefined,
+      });
     } else {
+      // Fallback directly to URL if couldn't get a buffer
       media.push({
         type: "photo",
         media: fUrl,
