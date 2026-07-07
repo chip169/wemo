@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const ProductConfigSchema = new mongoose.Schema({
-  size: { type: String, enum: ["10cm", "15cm", "20cm"], default: "10cm" },
+  size: { type: String, enum: ["9cm", "12cm"], default: "9cm" },
   quantity: { type: Number, default: 1, min: 1 },
   base: { type: String, enum: ["none", "mica", "wood"], default: "none" },
   led: { type: Boolean, default: false },
