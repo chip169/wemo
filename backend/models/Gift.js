@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const GiftSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   templateId: { type: String, required: true },
+  theme: { type: String, default: "tinh-yeu" },
   photos: [{ type: String }],
   hasVideo: { type: Boolean, default: false },
   videoUrl: { type: String, default: "" },
