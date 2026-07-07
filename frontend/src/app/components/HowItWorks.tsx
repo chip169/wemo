@@ -6,109 +6,128 @@ const steps = [
     icon: Nfc,
     title: "Chạm Thẻ NFC",
     description: "Người nhận chạm điện thoại vào hộp quà NFC - không cần cài ứng dụng",
-    color: "#E8B4A8",
+    color: "#FFD4D4",
   },
   {
     icon: Layout,
     title: "Chọn Mẫu",
-    description: "Chọn từ các mẫu đẹp: Sinh Nhật, Lãng Mạn, Giáng Sinh, Tốt Nghiệp...",
-    color: "#D4AF78",
+    description: "Chọn từ các mẫu đẹp: Sinh Nhật, Lãng Mạn, Giáng Sinh, Tốt Nghiệp & nhiều hơn",
+    color: "#E8B4A8",
   },
   {
     icon: Upload,
     title: "Tải Ký Ức Lên",
     description: "Thêm ảnh, video, tin nhắn âm thanh và nội dung cá nhân hóa trong vài phút",
-    color: "#E8B4A8",
+    color: "#D4AF78",
   },
   {
     icon: Heart,
     title: "Trải Nghiệm Cảm Xúc",
-    description: "Người nhận mở ra một trải nghiệm web tuyệt đẹp, cá nhân hóa đầy ký ức",
-    color: "#D4AF78",
+    description: "Người nhận mở ra một trải nghiệm web tuyệt đẹp, cá nhân hóa đầy ký ức của bạn",
+    color: "#FFD4D4",
   },
 ];
 
 export function HowItWorks() {
   return (
-    <section className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section className="relative py-24 overflow-hidden" style={{ background: '#FAF8F5' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="text-center mb-20"
+          className="text-center mb-16"
         >
           <h2 
-            className="mb-4 font-black text-stone-900 tracking-tight"
+            className="mb-4"
             style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(2.25rem, 4vw, 3.5rem)',
+              fontSize: 'clamp(2rem, 4vw, 3.5rem)',
+              fontWeight: 700,
+              color: '#1A1818',
             }}
           >
             Cách Thức Hoạt Động
           </h2>
           <p
-            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed"
+            className="max-w-2xl mx-auto"
+            style={{
+              fontSize: '1.125rem',
+              color: '#6B6B6B',
+              lineHeight: 1.6,
+            }}
           >
-            Tạo trải nghiệm cảm xúc khó quên chỉ trong 4 bước đơn giản, trực quan và đầy cảm xúc
+            Tạo trải nghiệm cảm xúc khó quên chỉ trong 4 bước đơn giản
           </p>
         </motion.div>
 
-        {/* Steps Timeline */}
+        {/* Steps */}
         <div className="relative">
-          {/* Animated Connecting Timeline Line */}
-          <div className="hidden lg:block absolute top-1/2 left-[12%] right-[12%] h-[2px] -translate-y-1/2 bg-stone-100 z-0">
-            <motion.div 
-              initial={{ width: 0 }}
-              whileInView={{ width: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-              className="h-full bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78]"
-            />
+          {/* Connection line */}
+          <div className="hidden lg:block absolute top-1/2 left-0 right-0 h-1 -translate-y-1/2">
+            <svg className="w-full h-full" preserveAspectRatio="none">
+              <motion.path
+                d="M 0 0 Q 25 50, 50 0 T 100 0"
+                stroke="#E8B4A8"
+                strokeWidth="2"
+                fill="none"
+                vectorEffect="non-scaling-stroke"
+                initial={{ pathLength: 0 }}
+                whileInView={{ pathLength: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 2, ease: "easeInOut" }}
+              />
+            </svg>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 relative z-10">
             {steps.map((step, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 40, rotateY: 30 }}
-                whileInView={{ opacity: 1, y: 0, rotateY: 0 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: index * 0.15 }}
+                transition={{ delay: index * 0.2 }}
                 className="relative"
-                style={{ perspective: "1000px" }}
               >
                 <div 
-                  className="webo-glass-card rounded-[2rem] p-8 h-full flex flex-col items-center text-center relative hover:scale-[1.03] hover:shadow-xl transition-all duration-300 transform-style: preserve-3d"
-                  style={{
-                    borderTop: `4px solid ${step.color}`
-                  }}
+                  className="webo-glass-card rounded-3xl p-8 h-full hover:shadow-2xl transition-shadow duration-300"
                 >
-                  {/* Step Large Decorative Number */}
-                  <div className="absolute -top-6 left-8 text-7xl font-black font-display text-stone-100/50 pointer-events-none select-none">
+                  {/* Step number */}
+                  <div 
+                    className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center font-bold shadow-lg"
+                    style={{
+                      background: 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)',
+                      color: 'white',
+                    }}
+                  >
                     {index + 1}
                   </div>
 
-                  {/* Icon Container with subtle 3D lift */}
+                  {/* Icon */}
                   <motion.div
-                    whileHover={{ scale: 1.1, rotateZ: 5 }}
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6 shadow-sm border border-stone-100 bg-white transform translateZ(20px)"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    className="w-16 h-16 rounded-2xl flex items-center justify-center mb-6"
+                    style={{
+                      background: step.color,
+                      boxShadow: `0 8px 20px ${step.color}40`,
+                    }}
                   >
-                    <step.icon className="w-7 h-7" style={{ color: step.color }} />
+                    <step.icon className="w-8 h-8 text-white" />
                   </motion.div>
 
-                  {/* Title */}
+                  {/* Content */}
                   <h3 
-                    className="mb-3 text-lg font-bold text-stone-900"
-                    style={{ fontFamily: 'var(--font-body)' }}
+                    className="mb-3"
+                    style={{
+                      fontSize: '1.25rem',
+                      fontWeight: 600,
+                      color: '#1A1818',
+                    }}
                   >
                     {step.title}
                   </h3>
-                  
-                  {/* Description */}
-                  <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
+                  <p style={{ color: '#6B6B6B', lineHeight: 1.6 }}>
                     {step.description}
                   </p>
                 </div>

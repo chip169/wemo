@@ -54,12 +54,18 @@ function InteractiveCard({ template }: { template: typeof templates[0] }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="webo-3d-scene w-full h-full cursor-pointer group"
+      className="w-full h-full cursor-pointer group"
+      style={{
+        perspective: "1200px",
+        transformStyle: "preserve-3d"
+      }}
     >
       <Card
-        className="webo-3d-card overflow-hidden border border-stone-100 rounded-3xl bg-white shadow-sm flex flex-col h-full"
+        className="overflow-hidden border border-stone-100 rounded-3xl bg-white shadow-sm flex flex-col h-full"
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
+          transformStyle: "preserve-3d",
+          transition: "transform 0.1s ease-out, box-shadow 0.3s ease",
           boxShadow: rotateX !== 0 ? "0 25px 50px -12px rgba(0,0,0,0.08)" : "0 4px 20px rgba(0,0,0,0.02)"
         }}
       >

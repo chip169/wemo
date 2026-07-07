@@ -80,12 +80,18 @@ function FeatureCard({ feature }: { feature: typeof features[0] }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="webo-3d-scene w-full"
+      className="w-full"
+      style={{
+        perspective: "1000px",
+        transformStyle: "preserve-3d"
+      }}
     >
       <div 
-        className="webo-3d-card webo-glass-card rounded-[2rem] p-6 text-center border border-stone-100 flex flex-col items-center justify-between h-full min-h-[220px]"
+        className="webo-glass-card rounded-[2rem] p-6 text-center border border-stone-100 flex flex-col items-center justify-between h-full min-h-[220px]"
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`,
+          transformStyle: "preserve-3d",
+          transition: "transform 0.1s ease-out, box-shadow 0.3s ease",
           background: "#FFFFFF",
           boxShadow: rotateX !== 0 ? "0 20px 40px rgba(0,0,0,0.05)" : "none"
         }}
