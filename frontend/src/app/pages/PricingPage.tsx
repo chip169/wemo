@@ -201,7 +201,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
 
         {/* CTA */}
         <Link
-          to={plan.price === "Liên Hệ" ? "/faq" : "/order"}
+          to="/order"
           className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${
             plan.popular
               ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
