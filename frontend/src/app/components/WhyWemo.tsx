@@ -65,19 +65,19 @@ function ReasonCard({ reason }: { reason: typeof reasons[0] }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="webo-glass-card rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden bg-white/40 backdrop-blur-md border border-white/50"
+      className="rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden bg-white/45 backdrop-blur-md border border-white/50"
     >
-      {/* Spotlight Effect */}
+      {/* Spotlight overlay effect on top */}
       {isHovered && (
         <div
-          className="absolute pointer-events-none rounded-full blur-[40px] opacity-60 transition-opacity duration-300"
+          className="absolute pointer-events-none rounded-full transition-opacity duration-300 z-20"
           style={{
-            width: '160px',
-            height: '160px',
-            left: spotlightPos.x - 80,
-            top: spotlightPos.y - 80,
-            background: 'radial-gradient(circle, rgba(232,180,168,0.3) 0%, rgba(212,175,120,0) 70%)',
-            zIndex: 0,
+            width: '240px',
+            height: '240px',
+            left: spotlightPos.x - 120,
+            top: spotlightPos.y - 120,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(232,180,168,0.2) 50%, rgba(255,255,255,0) 70%)',
+            mixBlendMode: 'screen',
           }}
         />
       )}
