@@ -68,7 +68,7 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
         transformStyle: "preserve-3d"
       }}
     >
-      <Card
+      <div
         className="overflow-hidden border border-white/40 rounded-3xl bg-white/45 backdrop-blur-md shadow-sm flex flex-col h-full relative"
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
@@ -77,17 +77,17 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
           boxShadow: rotateX !== 0 ? "0 25px 50px -12px rgba(0,0,0,0.08)" : "0 4px 20px rgba(0,0,0,0.02)"
         }}
       >
-        {/* Spotlight effect */}
+        {/* Spotlight overlay effect on top */}
         {isHovered && (
           <div
-            className="absolute pointer-events-none rounded-full blur-[40px] opacity-60 transition-opacity duration-300"
+            className="absolute pointer-events-none rounded-full transition-opacity duration-300 z-20"
             style={{
-              width: '180px',
-              height: '180px',
-              left: spotlightPos.x - 90,
-              top: spotlightPos.y - 90,
-              background: 'radial-gradient(circle, rgba(232,180,168,0.35) 0%, rgba(212,175,120,0) 70%)',
-              zIndex: 0,
+              width: '260px',
+              height: '260px',
+              left: spotlightPos.x - 130,
+              top: spotlightPos.y - 130,
+              background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(232,180,168,0.2) 50%, rgba(255,255,255,0) 70%)',
+              mixBlendMode: 'screen',
             }}
           />
         )}
@@ -130,7 +130,7 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
             </p>
           </div>
         </div>
-      </Card>
+      </div>
     </Link>
   );
 }
