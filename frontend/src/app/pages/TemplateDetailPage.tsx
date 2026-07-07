@@ -189,6 +189,7 @@ export function TemplateDetailPage() {
   const tpl = {
     ...staticTpl,
     title: (dbTpl?.name === "Mãi Yêu Thương (Mạng Lưới 3D)" ? "Ký Ức Lãng Mạn" : dbTpl?.name) || staticTpl.title,
+    heroImg: dbTpl?.preview || staticTpl.heroImg,
     sampleMessage: dbTpl?.sampleMessage || staticTpl.sampleMessage,
     photos: (dbTpl?.photos && dbTpl.photos.length > 0) ? dbTpl.photos : staticTpl.photos,
     features: (dbTpl?.features && dbTpl.features.length > 0) ? dbTpl.features : staticTpl.features,
