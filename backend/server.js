@@ -407,6 +407,7 @@ app.post("/api/gifts", async (req, res) => {
     const newGift = {
       id: giftId,
       templateId: giftData.templateId || "sinh-nhat-party",
+      theme: giftData.theme || "tinh-yeu",
       photos: giftData.photos || [],
       hasVideo: giftData.hasVideo || false,
       hasVoice: giftData.hasVoice || false,
@@ -919,6 +920,7 @@ app.get("/api/debug/test-email", async (req, res) => {
       amount: 450000,
       paidAt: new Date().toISOString(),
       giftLink: `https://${req.get("host")}/create?orderId=TEST_CUSTOMER_CONFIRM_1234`,
+      trackLink: `https://${req.get("host")}/track/TEST_CUSTOMER_CONFIRM_1234`,
       address: "123 Đường Thử Nghiệm, Quận 1, TP. HCM",
     });
     results.customerConfirmEmail = customerResult;
@@ -1061,6 +1063,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       const protocol = req.headers["x-forwarded-proto"] || req.protocol;
       const host = req.get("host");
       const giftLink = `${protocol}://${host}/create?orderId=${id}`;
+      const trackLink = `${protocol}://${host}/track/${id}`;
 
       // 1) Zalo ZNS (khi có OA)
       if (savedOrder.phone) {
