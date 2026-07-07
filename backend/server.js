@@ -631,8 +631,8 @@ app.post("/api/orders/create-draft", async (req, res) => {
       note: note || "",
       chibiUrl: finalChibiUrl,
       originalUrl: finalOriginalUrl,
-      productConfig: productConfig || { size: "10cm", quantity: 1, base: "none", led: false },
-      product: `Figure Chibi 3D ${productConfig?.size || "10cm"} x${productConfig?.quantity || 1}`,
+      productConfig: productConfig || { size: "9cm", quantity: 1, base: "none", led: false },
+      product: `Figure Chibi 3D ${productConfig?.size || "9cm"} x${productConfig?.quantity || 1}`,
       amount: Number(amount),
       depositAmount: Number(depositAmount) || 200000,
       status: "pending_payment",
@@ -732,7 +732,7 @@ app.get("/api/orders/track/:orderId", async (req, res) => {
         createdDate: order.createdDate,
         chibiUrl: order.chibiUrl || "",
         originalUrl: order.originalUrl || "",
-        productConfig: order.productConfig || { size: "10cm", quantity: 1, base: "none", led: false },
+        productConfig: order.productConfig || { size: "9cm", quantity: 1, base: "none", led: false },
         paidAt: order.paidAt || "",
       }
     });
