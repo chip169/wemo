@@ -5,8 +5,6 @@ import { PersonalizationFeatures } from "../components/PersonalizationFeatures";
 import { LiveDemo } from "../components/LiveDemo";
 import { WhyWemo } from "../components/WhyWemo";
 import { Testimonials } from "../components/Testimonials";
-import { Pricing } from "../components/Pricing";
-import { FAQ } from "../components/FAQ";
 import { FinalCTA } from "../components/FinalCTA";
 
 export function Home() {
@@ -19,8 +17,6 @@ export function Home() {
       <LiveDemo />
       <WhyWemo />
       <Testimonials />
-      <Pricing />
-      <FAQ />
       <FinalCTA />
     </>
   );

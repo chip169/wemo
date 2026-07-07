@@ -170,7 +170,29 @@ export function TemplateDetailPage() {
   const [showFull, setShowFull] = useState(false);
 
   // Dynamic template details from API database
-  const [dbTpl, setDbTpl] = useState<any>(null);
+  const [dbTpl, setDbTpl] = useState<any>(() => {
+    try {
+      const targetId = slug === "tinh-cau-3d" ? "solid-heart" : "love-romantic";
+      const cachedShowcase = localStorage.getItem("wemo_templates_cache");
+      const cachedPage = localStorage.getItem("wemo_templates_cache_page");
+      const cachedData = cachedPage || cachedShowcase;
+      if (cachedData) {
+        const parsed = JSON.parse(cachedData);
+        const found = parsed.find((t: any) => t.id === targetId);
+        if (found) {
+          return {
+            name: found.title,
+            sampleMessage: found.description,
+            preview: found.image,
+            features: found.features || []
+          };
+        }
+      }
+    } catch (e) {
+      console.error("Error loading cache in TemplateDetailPage:", e);
+    }
+    return null;
+  });
 
   useEffect(() => {
     fetch("/api/templates")

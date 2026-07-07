@@ -25,7 +25,9 @@ const INITIAL_TEMPLATES = [
   }
 ];
 
-function InteractiveCard({ template }: { template: typeof INITIAL_TEMPLATES[0] }) {
+const LOCAL_STORAGE_KEY = "wemo_templates_cache";
+
+function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEMPLATES[0]; isLoading: boolean }) {
   const cardRef = useRef<HTMLAnchorElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
@@ -46,6 +48,8 @@ function InteractiveCard({ template }: { template: typeof INITIAL_TEMPLATES[0] }
     setRotateX(0);
     setRotateY(0);
   };
+
+  const showShimmer = isLoading && template.image.includes("unsplash.com");
 
   return (
     <Link
@@ -70,11 +74,15 @@ function InteractiveCard({ template }: { template: typeof INITIAL_TEMPLATES[0] }
       >
         {/* Image view */}
         <div className="relative aspect-[4/3] overflow-hidden bg-stone-50">
-          <img
-            src={template.image}
-            alt={template.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-          />
+          {showShimmer ? (
+            <div className="w-full h-full shimmer-bg" />
+          ) : (
+            <img
+              src={template.image}
+              alt={template.title}
+              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
             <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1">
               Xem chi tiết mẫu <ArrowUpRight className="w-3.5 h-3.5" />
@@ -108,7 +116,18 @@ function InteractiveCard({ template }: { template: typeof INITIAL_TEMPLATES[0] }
 }
 
 export function TemplateShowcase() {
-  const [templateList, setTemplateList] = useState(INITIAL_TEMPLATES);
+  const [templateList, setTemplateList] = useState(() => {
+    try {
+      const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+    } catch (e) {
+      console.error("Error reading templates cache:", e);
+    }
+    return INITIAL_TEMPLATES;
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/templates")
@@ -125,12 +144,29 @@ export function TemplateShowcase() {
           };
         });
         setTemplateList(merged);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
+        setIsLoading(false);
       })
-      .catch((err) => console.error("Error loading templates in showcase:", err));
+      .catch((err) => {
+        console.error("Error loading templates in showcase:", err);
+        setIsLoading(false);
+      });
   }, []);
 
   return (
     <section className="relative py-24 md:py-32 bg-[#FAFAFA] overflow-hidden">
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .shimmer-bg {
+          background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite linear;
+        }
+      `}} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section header */}
@@ -170,7 +206,7 @@ export function TemplateShowcase() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="h-full"
             >
-              <InteractiveCard template={template} />
+              <InteractiveCard template={template} isLoading={isLoading} />
             </motion.div>
           ))}
         </div>

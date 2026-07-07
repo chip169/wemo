@@ -124,7 +124,7 @@ function FeatureCard({ feature }: { feature: typeof features[0] }) {
 
 export function PersonalizationFeatures() {
   return (
-    <section className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-[#FAF8F5] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section header */}

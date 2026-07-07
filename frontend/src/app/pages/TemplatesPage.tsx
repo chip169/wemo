@@ -26,8 +26,21 @@ const STATIC_TEMPLATES = [
   },
 ];
 
+const LOCAL_STORAGE_KEY = "wemo_templates_cache_page";
+
 export function TemplatesPage() {
-  const [templates, setTemplates] = useState(STATIC_TEMPLATES);
+  const [templates, setTemplates] = useState(() => {
+    try {
+      const cached = localStorage.getItem(LOCAL_STORAGE_KEY);
+      if (cached) {
+        return JSON.parse(cached);
+      }
+    } catch (e) {
+      console.error("Error reading templates cache:", e);
+    }
+    return STATIC_TEMPLATES;
+  });
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/templates")
@@ -46,11 +59,29 @@ export function TemplatesPage() {
           };
         });
         setTemplates(merged);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(merged));
+        setIsLoading(false);
       })
-      .catch((err) => console.error("Error loading templates:", err));
+      .catch((err) => {
+        console.error("Error loading templates:", err);
+        setIsLoading(false);
+      });
   }, []);
+
   return (
     <div className="pt-20" style={{ background: "#FAF8F5" }}>
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .shimmer-bg {
+          background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite linear;
+        }
+      `}} />
+
       {/* Hero */}
       <section className="py-20 text-center px-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
@@ -75,33 +106,39 @@ export function TemplatesPage() {
       {/* Templates grid */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {templates.map((template, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              whileHover={{ y: -8 }}
-            >
-            <Link
-              to={`/templates/${template.slug}`}
-              className="block group overflow-hidden rounded-3xl cursor-pointer"
-              style={{
-                background: "white",
-                boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                border: "1px solid rgba(0,0,0,0.06)",
-              }}
-            >
-              {/* Image */}
-              <div className="relative h-52 overflow-hidden">
-                <motion.img
-                  src={template.image}
-                  alt={template.title}
-                  className="w-full h-full object-cover"
-                  whileHover={{ scale: 1.08 }}
-                  transition={{ duration: 0.5 }}
-                />
+          {templates.map((template, index) => {
+            const showShimmer = isLoading && template.image.includes("unsplash.com");
+            return (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.08 }}
+                whileHover={{ y: -8 }}
+              >
+              <Link
+                to={`/templates/${template.slug}`}
+                className="block group overflow-hidden rounded-3xl cursor-pointer"
+                style={{
+                  background: "white",
+                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
+                  border: "1px solid rgba(0,0,0,0.06)",
+                }}
+              >
+                {/* Image */}
+                <div className="relative h-52 overflow-hidden bg-stone-50">
+                  {showShimmer ? (
+                    <div className="w-full h-full shimmer-bg" />
+                  ) : (
+                    <motion.img
+                      src={template.image}
+                      alt={template.title}
+                      className="w-full h-full object-cover"
+                      whileHover={{ scale: 1.08 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  )}
                 <div
                   className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                   style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }}
@@ -146,7 +183,8 @@ export function TemplatesPage() {
               </div>
             </Link>
             </motion.div>
-          ))}
+          );
+          })}
         </div>
 
         {/* Custom template CTA */}
