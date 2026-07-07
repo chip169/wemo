@@ -108,9 +108,9 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
               Xem chi tiết mẫu <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
-          
+
           {/* Accent Color Tag */}
-          <div 
+          <div
             className="absolute top-4 right-4 w-9 h-9 rounded-full shadow-md border border-white/50"
             style={{ background: template.gradient }}
           />
@@ -119,7 +119,7 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
         {/* Info panel */}
         <div className="p-6 flex-1 flex flex-col justify-between relative z-10">
           <div>
-            <h3 
+            <h3
               className="mb-2 text-lg font-bold text-stone-900 group-hover:text-[#E8B4A8] transition-colors"
               style={{ fontFamily: 'var(--font-body)' }}
             >
@@ -217,7 +217,7 @@ export function TemplateShowcase() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
+
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -235,7 +235,7 @@ export function TemplateShowcase() {
             Mẫu Thiết Kế Độc Đáo
           </h2>
           <p
-            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed"
+            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed whitespace-nowrap"
           >
             Chọn từ các mẫu thiết kế chuyên nghiệp hoặc tùy chỉnh trải nghiệm độc đáo của riêng bạn
           </p>
