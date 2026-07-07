@@ -200,8 +200,10 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
         </div>
 
         {/* CTA */}
-        <Link
-          to="/order"
+        <a
+          href={plan.name.includes("Sự Kiện") ? "https://zalo.me/0398768699" : "/order"}
+          target={plan.name.includes("Sự Kiện") ? "_blank" : undefined}
+          rel={plan.name.includes("Sự Kiện") ? "noopener noreferrer" : undefined}
           className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${
             plan.popular
               ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
@@ -209,7 +211,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
           }`}
         >
           {plan.cta}
-        </Link>
+        </a>
       </div>
     </div>
   );
