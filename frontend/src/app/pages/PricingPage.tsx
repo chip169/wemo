@@ -137,7 +137,12 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
             </div>
 
             {plan.popular && (
-              <span className="text-[9px] font-bold px-3 py-1 rounded-full bg-[#E8B4A8]/10 text-[#E8B4A8] border border-[#E8B4A8]/20 uppercase tracking-widest">
+              <span 
+                className="text-[10px] font-extrabold px-3.5 py-1.5 rounded-full text-white uppercase tracking-widest shadow-sm"
+                style={{
+                  background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+                }}
+              >
                 Được khuyên dùng
               </span>
             )}
