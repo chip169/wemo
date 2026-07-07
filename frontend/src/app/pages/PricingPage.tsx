@@ -204,7 +204,8 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
             href="https://zalo.me/0398768699"
             target="_blank"
             rel="noopener noreferrer"
-            className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${
+            style={{ transform: "translateZ(20px)" }}
+            className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] relative z-20 pointer-events-auto cursor-pointer ${
               plan.popular
                 ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
                 : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
@@ -215,7 +216,8 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
         ) : (
           <Link
             to="/order"
-            className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] ${
+            style={{ transform: "translateZ(20px)" }}
+            className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] relative z-20 pointer-events-auto cursor-pointer ${
               plan.popular
                 ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
                 : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
