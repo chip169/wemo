@@ -38,6 +38,20 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 }
 app.use("/uploads", express.static(UPLOADS_DIR));
 
+const getFrontendUrl = (req) => {
+  if (process.env.FRONTEND_URL) {
+    return process.env.FRONTEND_URL;
+  }
+  const host = req.get("host") || "";
+  if (host.includes("localhost") || host.includes("127.0.0.1")) {
+    return "http://localhost:5173";
+  }
+  if (host.includes("onrender.com")) {
+    return `https://${host.replace("-backend", "")}`;
+  }
+  return "https://wemo.vn";
+};
+
 // ─── Helpers to read/write based on active DB Mode ────────────────────────────
 
 const getGifts = async () => {
@@ -451,9 +465,7 @@ app.post("/api/gifts", async (req, res) => {
     }
 
     // Send Telegram alert (fire-and-forget)
-    const protocol = req.headers["x-forwarded-proto"] || req.protocol;
-    const host = req.get("host");
-    const giftLink = `${protocol}://${host}/gift/${giftId}`;
+    const giftLink = `${getFrontendUrl(req)}/gift/${giftId}`;
     notifyGiftCreated({
       orderId: giftData.orderId,
       customerName,
@@ -798,10 +810,9 @@ app.post("/api/webhook/payment", async (req, res) => {
 
     // ─── Gửi thông báo (fire-and-forget) ─────────────────────────────────────
     if (savedOrder && !alreadyDeposited) {
-      const protocol = req.headers["x-forwarded-proto"] || req.protocol;
-      const host = req.get("host");
-      const giftLink = `${protocol}://${host}/create?orderId=${orderId}`;
-      const trackLink = `${protocol}://${host}/track/${orderId}`;
+      const frontendUrl = getFrontendUrl(req);
+      const giftLink = `${frontendUrl}/create?orderId=${orderId}`;
+      const trackLink = `${frontendUrl}/track/${orderId}`;
 
       // 1) Zalo ZNS (khi có OA)
       if (savedOrder.phone) {
@@ -1062,10 +1073,9 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
     // Trigger emails and notifications when transitioning to deposited
     if (status === "deposited" && oldStatus !== "deposited" && savedOrder) {
       const paidAt = savedOrder.paidAt || new Date().toISOString();
-      const protocol = req.headers["x-forwarded-proto"] || req.protocol;
-      const host = req.get("host");
-      const giftLink = `${protocol}://${host}/create?orderId=${id}`;
-      const trackLink = `${protocol}://${host}/track/${id}`;
+      const frontendUrl = getFrontendUrl(req);
+      const giftLink = `${frontendUrl}/create?orderId=${id}`;
+      const trackLink = `${frontendUrl}/track/${id}`;
 
       // 1) Zalo ZNS (khi có OA)
       if (savedOrder.phone) {
