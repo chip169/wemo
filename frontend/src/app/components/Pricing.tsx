@@ -64,157 +64,119 @@ const plans = [
 ];
 
 function PricingCard({ plan }: { plan: typeof plans[0] }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const card = cardRef.current;
-    if (!card) return;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    const xc = rect.width / 2;
-    const yc = rect.height / 2;
-    setRotateX((yc - y) / 12);
-    setRotateY((x - xc) / 12);
-  };
-
-  const handleMouseLeave = () => {
-    setRotateX(0);
-    setRotateY(0);
-  };
-
   return (
     <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className="w-full h-full"
-      style={{
-        perspective: "1200px",
-        transformStyle: "preserve-3d"
-      }}
+      className={`rounded-3xl p-8 h-full flex flex-col justify-between border transition-all duration-300 hover:shadow-lg ${
+        plan.popular 
+          ? 'bg-[#0A0A0A] text-white border-[#D4AF78] shadow-[0_25px_60px_-15px_rgba(232,180,168,0.2)] md:-translate-y-4' 
+          : 'bg-white text-stone-850 border-stone-100 shadow-sm hover:-translate-y-1'
+      }`}
     >
-      <div
-        className={`rounded-3xl p-8 h-full flex flex-col justify-between border transition-all duration-300 ${
-          plan.popular 
-            ? 'bg-[#0A0A0A] text-white border-[#D4AF78] shadow-[0_25px_60px_-15px_rgba(232,180,168,0.2)] md:-translate-y-4' 
-            : 'bg-white text-stone-850 border-stone-100 shadow-sm hover:shadow-md'
-        }`}
-        style={{
-          transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
-          transformStyle: "preserve-3d",
-          transition: "transform 0.1s ease-out, box-shadow 0.3s ease"
-        }}
-      >
-        <div>
-          {/* Header */}
-          <div className="flex items-center justify-between mb-6">
-            <div
-              className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"
-              style={{ 
-                background: plan.popular ? 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)' : '#FAFAFA',
-                border: plan.popular ? 'none' : '1px solid #ECECF0'
-              }}
-            >
-              <plan.icon className={`w-5.5 h-5.5 ${plan.popular ? 'text-white' : 'text-stone-700'}`} />
-            </div>
-
-            {plan.popular && (
-              <span 
-                className="text-[10px] font-extrabold px-3.5 py-1.5 rounded-full text-white uppercase tracking-widest shadow-sm"
-                style={{
-                  background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
-                }}
-              >
-                Được khuyên dùng
-              </span>
-            )}
+      <div>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div
+            className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"
+            style={{ 
+              background: plan.popular ? 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)' : '#FAFAFA',
+              border: plan.popular ? 'none' : '1px solid #ECECF0'
+            }}
+          >
+            <plan.icon className={`w-5.5 h-5.5 ${plan.popular ? 'text-white' : 'text-stone-700'}`} />
           </div>
 
-          {/* Name */}
-          <h3 className="mb-2 text-xl font-bold font-sans">
-            {plan.name}
-          </h3>
-
-          {/* Description */}
-          <p
-            className="mb-6 text-xs sm:text-sm leading-relaxed min-h-[40px]"
-            style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}
-          >
-            {plan.description}
-          </p>
-
-          {/* Price */}
-          <div 
-            className="mb-8 py-4 px-5 rounded-2xl flex items-baseline gap-1"
-            style={{ background: plan.popular ? 'rgba(255,255,255,0.03)' : '#FAFAFA' }}
-          >
-            <span
-              className="font-extrabold tracking-tight"
+          {plan.popular && (
+            <span 
+              className="text-[10px] font-extrabold px-3.5 py-1.5 rounded-full text-white uppercase tracking-widest shadow-sm"
               style={{
-                fontFamily: "var(--font-display)",
-                fontSize: "2.25rem",
-                color: plan.popular ? '#FFFFFF' : '#0A0A0A',
+                background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
               }}
             >
-              {plan.price}
+              Được khuyên dùng
             </span>
-            {plan.period && (
-              <span className="text-xs ml-1 opacity-60" style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}>
-                {plan.period}
-              </span>
-            )}
-          </div>
-
-          {/* Features */}
-          <ul className="space-y-3.5 mb-8">
-            {plan.features.map((feature, i) => (
-              <li key={i} className="flex items-start gap-3">
-                <Check
-                  className="w-4 h-4 mt-0.5 flex-shrink-0"
-                  style={{ color: '#D4AF78' }}
-                />
-                <span className="text-xs sm:text-sm leading-tight opacity-90 font-medium">
-                  {feature}
-                </span>
-              </li>
-            ))}
-          </ul>
+          )}
         </div>
 
-        {plan.name.includes("Sự Kiện") ? (
-          <a
-            href="https://zalo.me/0398768699"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ transform: "translateZ(20px)" }}
-            className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] relative z-20 pointer-events-auto cursor-pointer ${
-              plan.popular
-                ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
-                : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
-            }`}
+        {/* Name */}
+        <h3 className="mb-2 text-xl font-bold font-sans">
+          {plan.name}
+        </h3>
+
+        {/* Description */}
+        <p
+          className="mb-6 text-xs sm:text-sm leading-relaxed min-h-[40px]"
+          style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}
+        >
+          {plan.description}
+        </p>
+
+        {/* Price */}
+        <div 
+          className="mb-8 py-4 px-5 rounded-2xl flex items-baseline gap-1"
+          style={{ background: plan.popular ? 'rgba(255,255,255,0.03)' : '#FAFAFA' }}
+        >
+          <span
+            className="font-extrabold tracking-tight"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontSize: "2.25rem",
+              color: plan.popular ? '#FFFFFF' : '#0A0A0A',
+            }}
           >
-            {plan.cta}
-          </a>
-        ) : (
-          <Link
-            to="/order"
-            style={{ transform: "translateZ(20px)" }}
-            className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] relative z-20 pointer-events-auto cursor-pointer ${
-              plan.popular
-                ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
-                : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
-            }`}
-          >
-            {plan.cta}
-          </Link>
-        )}
+            {plan.price}
+          </span>
+          {plan.period && (
+            <span className="text-xs ml-1 opacity-60" style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}>
+              {plan.period}
+            </span>
+          )}
+        </div>
+
+        {/* Features */}
+        <ul className="space-y-3.5 mb-8">
+          {plan.features.map((feature, i) => (
+            <li key={i} className="flex items-start gap-3">
+              <Check
+                className="w-4 h-4 mt-0.5 flex-shrink-0"
+                style={{ color: '#D4AF78' }}
+              />
+              <span className="text-xs sm:text-sm leading-tight opacity-90 font-medium">
+                {feature}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {plan.name.includes("Sự Kiện") ? (
+        <a
+          href="https://zalo.me/0398768699"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+            plan.popular
+              ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
+              : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
+          }`}
+        >
+          {plan.cta}
+        </a>
+      ) : (
+        <Link
+          to="/order"
+          className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+            plan.popular
+              ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
+              : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
+          }`}
+        >
+          {plan.cta}
+        </Link>
+      )}
     </div>
   );
 }
+
 
 export function Pricing() {
   return (
