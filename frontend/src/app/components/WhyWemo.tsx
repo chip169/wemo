@@ -42,7 +42,7 @@ const reasons = [
 
 export function WhyWemo() {
   return (
-    <section className="relative py-24" style={{ background: "#FAF8F5" }}>
+    <section className="relative py-24" style={{ background: "#FCEBE7" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div

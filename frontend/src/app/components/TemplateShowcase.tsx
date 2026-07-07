@@ -154,7 +154,7 @@ export function TemplateShowcase() {
   }, []);
 
   return (
-    <section className="relative py-24 md:py-32 bg-[#FAFAFA] overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-[#FCEBE7] overflow-hidden">
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }
