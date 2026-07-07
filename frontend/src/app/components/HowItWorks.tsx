@@ -53,19 +53,19 @@ function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="webo-glass-card rounded-3xl p-8 h-full hover:shadow-2xl transition-all duration-300 relative overflow-hidden bg-white/40 backdrop-blur-md border border-white/50"
+      className="rounded-3xl p-8 h-full hover:shadow-2xl transition-all duration-300 relative overflow-hidden bg-white/45 backdrop-blur-md border border-white/50"
     >
-      {/* Spotlight effect */}
+      {/* Spotlight overlay effect on top */}
       {isHovered && (
         <div
-          className="absolute pointer-events-none rounded-full blur-[40px] opacity-60 transition-opacity duration-300"
+          className="absolute pointer-events-none rounded-full transition-opacity duration-300 z-20"
           style={{
-            width: '150px',
-            height: '150px',
-            left: spotlightPos.x - 75,
-            top: spotlightPos.y - 75,
-            background: 'radial-gradient(circle, rgba(232,180,168,0.3) 0%, rgba(212,175,120,0) 70%)',
-            zIndex: 0,
+            width: '220px',
+            height: '220px',
+            left: spotlightPos.x - 110,
+            top: spotlightPos.y - 110,
+            background: 'radial-gradient(circle, rgba(255,255,255,0.4) 0%, rgba(232,180,168,0.2) 50%, rgba(255,255,255,0) 70%)',
+            mixBlendMode: 'screen',
           }}
         />
       )}
