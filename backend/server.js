@@ -58,11 +58,13 @@ const saveGiftsList = async (list) => {
 };
 
 const getTemplates = async () => {
+  let list = [];
   if (getDbMode() === "mongodb") {
-    return await Template.find({});
+    list = await Template.find({});
   } else {
-    return await readJsonFile("templates.json");
+    list = await readJsonFile("templates.json");
   }
+  return list.filter((t) => ["love-romantic", "solid-heart"].includes(t.id));
 };
 
 const saveTemplatesList = async (list) => {
@@ -1761,7 +1763,7 @@ app.post("/api/ai/generate-chibi", chibiRateLimiter, async (req, res) => {
     if (!buffer) {
       console.log("🤖 Step 2 (FREE FALLBACK): Querying Pollinations.ai for chibi image generation...");
       providerName = "Pollinations.ai (Free)";
-      const targetUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(chibiPromptEn)}?width=512&height=512&nologo=true&private=true`;
+      const targetUrl = `https://image.pollinations.ai/prompt/${encodeURIComponent(chibiPromptEn)}?width=512&height=512&nologo=true&private=true&model=flux`;
       buffer = await fetchImageWithHttps(targetUrl);
     }
 

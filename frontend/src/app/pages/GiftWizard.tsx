@@ -27,9 +27,6 @@ import { Link } from "react-router";
 import confetti from "canvas-confetti";
 
 // ─── Import Template Components ──────────────────────────────────────────────
-import { BirthdayCanvas3D } from "../components/gift3d/BirthdayCanvas3D";
-import { LoveCanvas3D } from "../components/gift3d/LoveCanvas3D";
-import { GalaxyCanvas3D } from "../components/gift3d/GalaxyCanvas3D";
 import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
 
@@ -136,21 +133,9 @@ export function RenderLiveTemplate({
   isEditing?: boolean;
   onUpdate?: (fields: Partial<GiftData>) => void;
 }) {
-  const theme = gift.theme;
-
-  if (theme === "sinh-nhat" || gift.templateId === "sinh-nhat-premium") {
-    return <BirthdayCanvas3D gift={gift} />;
-  }
   if (gift.templateId === "solid-heart") {
     return <SolidHeartCanvas3D gift={gift} />;
   }
-  if (theme === "tinh-yeu" || gift.templateId === "love-romantic" || gift.templateId === "christmas-cozy") {
-    return <HeartCanvas3D gift={gift} />;
-  }
-  if (theme === "ky-niem" || gift.templateId === "anniversary-timeline") {
-    return <GalaxyCanvas3D gift={gift} />;
-  }
-
   return <HeartCanvas3D gift={gift} />;
 }
 
@@ -2033,27 +2018,70 @@ export function GiftWizard() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#FCEBE7]">
-      {/* Top Navbar */}
-      <div className="flex items-center justify-between px-6 py-3.5 border-b border-stone-200/60 bg-white">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78]">
-            <Heart className="w-3.5 h-3.5 text-white fill-white" />
+      {/* Top Sticky Header */}
+      <div className="sticky top-0 z-50 bg-white border-b border-stone-200/60 shadow-sm flex flex-col">
+        <div className="flex items-center justify-between px-6 py-3.5">
+          {/* Left Area: Logo & Back Button */}
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78]">
+                <Heart className="w-3.5 h-3.5 text-white fill-white" />
+              </div>
+              <span className="font-black text-base text-stone-900 tracking-tight">
+                WEMO
+              </span>
+            </Link>
+
+            {/* Back Button next to logo */}
+            {step > 0 && (
+              <button
+                onClick={back}
+                className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
+              >
+                <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
+              </button>
+            )}
           </div>
-          <span className="font-black text-base text-stone-900 tracking-tight">
-            WEMO
-          </span>
-        </Link>
-        <div className="flex-1 mx-8 hidden sm:block">
+
+          {/* Middle Area: Progress timeline (Desktop only) */}
+          <div className="flex-1 mx-8 hidden sm:block">
+            <ProgressBar step={step} />
+          </div>
+
+          {/* Right Area: Action Buttons & Close */}
+          <div className="flex items-center gap-3">
+            {step < STEPS.length - 1 ? (
+              <button
+                onClick={next}
+                disabled={!canContinue()}
+                className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold text-white shadow-sm transition-all ${
+                  canContinue()
+                    ? "bg-gradient-to-r from-stone-800 to-stone-950 hover:from-stone-900 hover:to-black active:scale-98 cursor-pointer"
+                    : "bg-stone-200 text-stone-400 cursor-not-allowed"
+                }`}
+              >
+                Kế Tiếp <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] hover:opacity-95 text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
+              >
+                {saving ? "Đang lưu..." : "Đóng Gói Thiệp"} <Check className="w-3.5 h-3.5" />
+              </button>
+            )}
+
+            <Link to="/" className="text-stone-400 hover:text-stone-600 border-l border-stone-100 pl-3">
+              <X className="w-5 h-5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Mobile Top Progress Timeline */}
+        <div className="sm:hidden px-4 pb-2 border-t border-stone-100">
           <ProgressBar step={step} />
         </div>
-        <Link to="/" className="text-stone-400 hover:text-stone-600">
-          <X className="w-5 h-5" />
-        </Link>
-      </div>
-
-      {/* Mobile Top Progress */}
-      <div className="sm:hidden px-4 pt-3.5 bg-white pb-2 border-b border-stone-100">
-        <ProgressBar step={step} />
       </div>
 
       {/* Main Layout Workspace */}
@@ -2072,37 +2100,6 @@ export function GiftWizard() {
                 {stepComponents[step]}
               </motion.div>
             </AnimatePresence>
-
-            {/* Bottom Nav Action Control */}
-            {step < STEPS.length - 1 ? (
-              <div className="flex items-center justify-between mt-12 pt-5 border-t border-stone-200/60">
-                <button
-                  onClick={back}
-                  disabled={step === 0}
-                  className={`flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${step === 0 ? "opacity-0 pointer-events-none" : "bg-white border border-stone-200 text-stone-700 hover:bg-stone-50"}`}
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
-                </button>
-
-                <button
-                  onClick={next}
-                  disabled={!canContinue()}
-                  className={`flex items-center gap-1.5 px-6 py-2.5 rounded-xl text-xs font-bold text-white shadow-sm transition-all ${canContinue() ? "bg-gradient-to-r from-stone-800 to-stone-950 active:scale-98" : "bg-stone-200 text-stone-400 cursor-not-allowed"}`}
-                >
-                  Kế Tiếp
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            ) : (
-              <div className="flex items-center justify-start mt-12 pt-5 border-t border-stone-200/60">
-                <button
-                  onClick={back}
-                  className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-white border border-stone-200 text-stone-700 hover:bg-stone-50"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5" /> Quay lại thiết kế
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>

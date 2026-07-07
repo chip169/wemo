@@ -2,9 +2,6 @@ import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { Heart, Music, Play, Pause, Sparkles, Volume2 } from "lucide-react";
-import { BirthdayCanvas3D } from "../components/gift3d/BirthdayCanvas3D";
-import { LoveCanvas3D } from "../components/gift3d/LoveCanvas3D";
-import { GalaxyCanvas3D } from "../components/gift3d/GalaxyCanvas3D";
 import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
 
@@ -161,16 +158,14 @@ export function GiftViewPage() {
     );
   }
 
-    const resolvedTheme = gift.theme || "tinh-yeu";
-
     return (
       <div className="fixed inset-0 w-screen h-screen overflow-hidden select-none">
         {/* 3D Canvas Template selection */}
-        {resolvedTheme === "sinh-nhat" && <BirthdayCanvas3D gift={gift} />}
-        {resolvedTheme === "tinh-yeu" && gift.templateId === "solid-heart" && <SolidHeartCanvas3D gift={gift} />}
-        {resolvedTheme === "tinh-yeu" && gift.templateId !== "solid-heart" && <HeartCanvas3D gift={gift} />}
-        {resolvedTheme === "ky-niem" && <GalaxyCanvas3D gift={gift} />}
-        {!["sinh-nhat", "tinh-yeu", "ky-niem"].includes(resolvedTheme) && <HeartCanvas3D gift={gift} />}
+        {gift.templateId === "solid-heart" ? (
+          <SolidHeartCanvas3D gift={gift} />
+        ) : (
+          <HeartCanvas3D gift={gift} />
+        )}
 
       {/* Interactive Music Widget */}
       {gift.music !== "none" && (
