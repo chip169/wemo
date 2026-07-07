@@ -7,8 +7,8 @@ const INTERVALS = [3500, 3000, 5000, 5000]; // Duration for each step in ms
 const demoSteps = [
   { icon: Nfc, label: "Bước 1: Chạm điện thoại nhận tín hiệu NFC", color: "#FFD4D4" },
   { icon: Heart, label: "Bước 2: Mở khóa trang trải nghiệm 3D độc bản", color: "#E8B4A8" },
-  { icon: Image, label: "Bước 3: Tải ảnh kỷ niệm & thông điệp yêu thương", color: "#D4AF78" },
-  { icon: Music, label: "Bước 4: Phát nhạc nền & tin nhắn âm thanh xúc động", color: "#FFD4D4" },
+  { icon: Image, label: "Bước 3: Tải ảnh kỷ niệm cùng thông điệp yêu thương", color: "#D4AF78" },
+  { icon: Music, label: "Bước 4: Phát nhạc nền và tin nhắn âm thanh xúc động", color: "#FFD4D4" },
 ];
 
 export function LiveDemo() {
@@ -58,7 +58,7 @@ export function LiveDemo() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            <h2 
+            <h2
               className="mb-4 font-bold text-[#1A1818]"
               style={{
                 fontSize: 'clamp(2rem, 4vw, 3.5rem)',
@@ -93,7 +93,7 @@ export function LiveDemo() {
                   }}
                 >
                   {/* Icon container */}
-                  <div 
+                  <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                     style={{
                       background: demoStep.color,
@@ -105,7 +105,7 @@ export function LiveDemo() {
 
                   {/* Step Info & Progress bar */}
                   <div className="flex-1 flex flex-col">
-                    <span 
+                    <span
                       className="font-bold text-sm sm:text-base"
                       style={{
                         color: step === index ? '#1A1818' : '#6B6B6B',
@@ -151,7 +151,7 @@ export function LiveDemo() {
                 }}
               >
                 {/* Phone screen */}
-                <div 
+                <div
                   className="w-full h-full rounded-[2.5rem] overflow-hidden relative bg-[#FFF0EC]"
                 >
                   {/* Animated content based on step */}
