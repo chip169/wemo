@@ -3,7 +3,23 @@ import { Sparkles } from "lucide-react";
 
 export function FinalCTA() {
   return (
-    <section className="relative py-32 overflow-hidden" style={{ background: '#FFF0EC' }}>
+    <section className="relative py-32 overflow-hidden bg-gradient-to-b from-[#FFF0EC] to-[#FAF3F0]">
+      {/* Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            x: [0, 40, -30, 0],
+            y: [0, -50, 30, 0],
+          }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#E8B4A8]/15 to-[#D4AF78]/15 blur-[100px]"
+        />
+      </div>
+
       {/* Floating particles background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(30)].map((_, i) => (

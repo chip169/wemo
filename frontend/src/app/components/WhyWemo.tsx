@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { motion } from "motion/react";
 import { Heart, Sparkles, Infinity, Zap } from "lucide-react";
 
@@ -40,10 +41,129 @@ const reasons = [
   },
 ];
 
+function ReasonCard({ reason }: { reason: typeof reasons[0] }) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setSpotlightPos({ x, y });
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+  };
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="webo-glass-card rounded-3xl p-8 hover:shadow-2xl transition-all duration-300 relative overflow-hidden bg-white/40 backdrop-blur-md border border-white/50"
+    >
+      {/* Spotlight Effect */}
+      {isHovered && (
+        <div
+          className="absolute pointer-events-none rounded-full blur-[40px] opacity-60 transition-opacity duration-300"
+          style={{
+            width: '160px',
+            height: '160px',
+            left: spotlightPos.x - 80,
+            top: spotlightPos.y - 80,
+            background: 'radial-gradient(circle, rgba(232,180,168,0.3) 0%, rgba(212,175,120,0) 70%)',
+            zIndex: 0,
+          }}
+        />
+      )}
+
+      <div className="flex items-start gap-6 relative z-10">
+        {/* Icon */}
+        <motion.div
+          whileHover={{ rotate: 360, scale: 1.1 }}
+          transition={{ duration: 0.6 }}
+          className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
+          style={{
+            background: reason.color,
+            boxShadow: `0 8px 20px ${reason.color}40`,
+          }}
+        >
+          <reason.icon className="w-8 h-8 text-white" />
+        </motion.div>
+
+        {/* Content */}
+        <div className="flex-1">
+          <h3
+            className="mb-3 font-bold text-[#1A1818]"
+            style={{
+              fontSize: "1.5rem",
+            }}
+          >
+            {reason.title}
+          </h3>
+          <p
+            className="mb-4 text-stone-500 text-sm leading-relaxed"
+          >
+            {reason.description}
+          </p>
+
+          {/* Stat */}
+          <div className="flex items-baseline gap-2">
+            <span
+              className="font-bold text-3xl"
+              style={{
+                color: reason.color,
+              }}
+            >
+              {reason.stat}
+            </span>
+            <span className="text-stone-400 text-xs font-bold uppercase tracking-wider">
+              {reason.statLabel}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function WhyWemo() {
   return (
-    <section className="relative py-24" style={{ background: "#FFF0EC" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-[#FAF3F0] to-[#FCE1DA]">
+      {/* Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            x: [0, 40, -40, 0],
+            y: [0, -60, 50, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#E8B4A8]/15 to-[#D4AF78]/15 blur-[100px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -50, 30, 0],
+            y: [0, 40, -40, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#D4AF78]/15 to-[#E8B4A8]/15 blur-[100px]"
+        />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -52,25 +172,18 @@ export function WhyWemo() {
           className="text-center mb-16"
         >
           <h2
-            className="mb-4"
+            className="mb-4 font-bold text-[#1A1818]"
             style={{
               fontSize: "clamp(2rem, 4vw, 3.5rem)",
-              fontWeight: 700,
-              color: "#1A1818",
+              lineHeight: 1.2,
             }}
           >
             Tại Sao Chọn WEMO?
           </h2>
           <p
-            className="max-w-2xl mx-auto"
-            style={{
-              fontSize: "1.125rem",
-              color: "#6B6B6B",
-              lineHeight: 1.6,
-            }}
+            className="max-w-2xl mx-auto text-stone-500 text-base leading-relaxed"
           >
-            Chúng tôi đang định nghĩa lại ý nghĩa của việc tặng quà có ý nghĩa
-            trong thời đại số
+            Chúng tôi đang định nghĩa lại ý nghĩa của việc tặng quà có ý nghĩa trong thời đại số
           </p>
         </motion.div>
 
@@ -83,61 +196,9 @@ export function WhyWemo() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="webo-glass-card rounded-3xl p-8 hover:shadow-2xl transition-all duration-300"
+              className="h-full"
             >
-              <div className="flex items-start gap-6">
-                {/* Icon */}
-                <motion.div
-                  whileHover={{ rotate: 360, scale: 1.1 }}
-                  transition={{ duration: 0.6 }}
-                  className="flex-shrink-0 w-16 h-16 rounded-2xl flex items-center justify-center"
-                  style={{
-                    background: reason.color,
-                    boxShadow: `0 8px 20px ${reason.color}40`,
-                  }}
-                >
-                  <reason.icon className="w-8 h-8 text-white" />
-                </motion.div>
-
-                {/* Content */}
-                <div className="flex-1">
-                  <h3
-                    className="mb-3"
-                    style={{
-                      fontSize: "1.5rem",
-                      fontWeight: 600,
-                      color: "#1A1818",
-                    }}
-                  >
-                    {reason.title}
-                  </h3>
-                  <p
-                    className="mb-4"
-                    style={{
-                      color: "#6B6B6B",
-                      lineHeight: 1.6,
-                    }}
-                  >
-                    {reason.description}
-                  </p>
-
-                  {/* Stat */}
-                  <div className="flex items-baseline gap-2">
-                    <span
-                      className="font-bold"
-                      style={{
-                        fontSize: "2rem",
-                        color: reason.color,
-                      }}
-                    >
-                      {reason.stat}
-                    </span>
-                    <span style={{ color: "#6B6B6B", fontSize: "0.875rem" }}>
-                      {reason.statLabel}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <ReasonCard reason={reason} />
             </motion.div>
           ))}
         </div>
@@ -189,15 +250,9 @@ export function WhyWemo() {
           className="text-center mt-16"
         >
           <p
-            className="italic max-w-3xl mx-auto"
-            style={{
-              fontSize: "1.25rem",
-              color: "#6B6B6B",
-              lineHeight: 1.8,
-            }}
+            className="italic max-w-3xl mx-auto text-stone-500 text-lg leading-relaxed"
           >
-            "Những món quà tốt nhất không được gói bằng giấy — chúng được gói
-            bằng ký ức, cảm xúc và những khoảnh khắc tồn tại mãi mãi."
+            "Những món quà tốt nhất không được gói bằng giấy — chúng được gói bằng ký ức, cảm xúc và những khoảnh khắc tồn tại mãi mãi."
           </p>
         </motion.div>
       </div>

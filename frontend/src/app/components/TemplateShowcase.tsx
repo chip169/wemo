@@ -1,7 +1,7 @@
+import { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import { useState, useRef, useEffect } from "react";
-import { Card } from "./ui/card";
 import { Sparkles, ArrowUpRight } from "lucide-react";
+import { Card } from "./ui/card";
 import { Link } from "react-router";
 
 const INITIAL_TEMPLATES = [
@@ -9,7 +9,7 @@ const INITIAL_TEMPLATES = [
     id: "love-romantic",
     slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
-    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn ngọt ngào.",
+    description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
     image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=600",
     color: "#E8B4A8",
     gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
@@ -31,6 +31,8 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
   const cardRef = useRef<HTMLAnchorElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
+  const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
+  const [isHovered, setIsHovered] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const card = cardRef.current;
@@ -42,11 +44,14 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
     const yc = rect.height / 2;
     setRotateX((yc - y) / 10); // tilt range
     setRotateY((x - xc) / 10);
+    setSpotlightPos({ x, y });
+    setIsHovered(true);
   };
 
   const handleMouseLeave = () => {
     setRotateX(0);
     setRotateY(0);
+    setIsHovered(false);
   };
 
   const showShimmer = isLoading && template.image.includes("unsplash.com");
@@ -64,7 +69,7 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
       }}
     >
       <Card
-        className="overflow-hidden border border-stone-100 rounded-3xl bg-white shadow-sm flex flex-col h-full"
+        className="overflow-hidden border border-white/40 rounded-3xl bg-white/45 backdrop-blur-md shadow-sm flex flex-col h-full relative"
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transformStyle: "preserve-3d",
@@ -72,8 +77,23 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
           boxShadow: rotateX !== 0 ? "0 25px 50px -12px rgba(0,0,0,0.08)" : "0 4px 20px rgba(0,0,0,0.02)"
         }}
       >
+        {/* Spotlight effect */}
+        {isHovered && (
+          <div
+            className="absolute pointer-events-none rounded-full blur-[40px] opacity-60 transition-opacity duration-300"
+            style={{
+              width: '180px',
+              height: '180px',
+              left: spotlightPos.x - 90,
+              top: spotlightPos.y - 90,
+              background: 'radial-gradient(circle, rgba(232,180,168,0.35) 0%, rgba(212,175,120,0) 70%)',
+              zIndex: 0,
+            }}
+          />
+        )}
+
         {/* Image view */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-stone-50">
+        <div className="relative aspect-[4/3] overflow-hidden bg-stone-50 z-10">
           {showShimmer ? (
             <div className="w-full h-full shimmer-bg" />
           ) : (
@@ -88,18 +108,18 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
               Xem chi tiết mẫu <ArrowUpRight className="w-3.5 h-3.5" />
             </span>
           </div>
-
+          
           {/* Accent Color Tag */}
-          <div
+          <div 
             className="absolute top-4 right-4 w-9 h-9 rounded-full shadow-md border border-white/50"
             style={{ background: template.gradient }}
           />
         </div>
 
         {/* Info panel */}
-        <div className="p-6 flex-1 flex flex-col justify-between">
+        <div className="p-6 flex-1 flex flex-col justify-between relative z-10">
           <div>
-            <h3
+            <h3 
               className="mb-2 text-lg font-bold text-stone-900 group-hover:text-[#E8B4A8] transition-colors"
               style={{ fontFamily: 'var(--font-body)' }}
             >
@@ -154,7 +174,7 @@ export function TemplateShowcase() {
   }, []);
 
   return (
-    <section className="relative py-24 md:py-32 bg-[#FCE1DA] overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] overflow-hidden">
       <style dangerouslySetInnerHTML={{
         __html: `
         @keyframes shimmer {
@@ -168,8 +188,36 @@ export function TemplateShowcase() {
         }
       `}} />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            x: [0, 45, -25, 0],
+            y: [0, -70, 40, 0],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#E8B4A8]/15 to-[#D4AF78]/15 blur-[100px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -50, 30, 0],
+            y: [0, 50, -60, 0],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#D4AF78]/15 to-[#E8B4A8]/15 blur-[100px]"
+        />
+      </div>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -177,7 +225,6 @@ export function TemplateShowcase() {
           viewport={{ once: true }}
           className="text-center mb-20"
         >
-
           <h2
             className="mb-4 font-black text-stone-900 tracking-tight"
             style={{
@@ -188,7 +235,7 @@ export function TemplateShowcase() {
             Mẫu Thiết Kế Độc Đáo
           </h2>
           <p
-            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed whitespace-nowrap"
+            className="max-w-xl mx-auto text-stone-500 text-sm sm:text-base leading-relaxed"
           >
             Chọn từ các mẫu thiết kế chuyên nghiệp hoặc tùy chỉnh trải nghiệm độc đáo của riêng bạn
           </p>

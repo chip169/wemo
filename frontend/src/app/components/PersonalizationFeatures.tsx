@@ -3,17 +3,33 @@ import { Sparkles } from "lucide-react";
 
 export function PersonalizationFeatures() {
   return (
-    <section className="relative py-16 md:py-24 bg-[#FFF0EC] overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="relative py-16 md:py-24 bg-gradient-to-b from-[#FFF0EC] to-[#FAF3F0] overflow-hidden">
+      {/* Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            x: [0, 30, -30, 0],
+            y: [0, -50, 40, 0],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute top-10 left-10 w-80 h-80 rounded-full bg-gradient-to-r from-[#E8B4A8]/10 to-[#D4AF78]/10 blur-[80px]"
+        />
+      </div>
+
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* Feature highlight banner - Khả Năng Vô Hạn */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="border border-stone-100 rounded-[2.5rem] p-10 md:p-16 text-center bg-white shadow-sm"
+          className="border border-white/50 rounded-[2.5rem] p-10 md:p-16 text-center bg-white/40 backdrop-blur-md shadow-xl"
           style={{
-            background: 'linear-gradient(135deg, rgba(232, 180, 168, 0.03) 0%, rgba(212, 175, 120, 0.03) 100%)',
+            background: 'linear-gradient(135deg, rgba(232, 180, 168, 0.05) 0%, rgba(212, 175, 120, 0.05) 100%)',
           }}
         >
           <Sparkles 

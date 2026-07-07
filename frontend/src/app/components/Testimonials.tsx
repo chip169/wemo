@@ -3,40 +3,54 @@ import { Star, Quote } from "lucide-react";
 
 const testimonialsRow1 = [
   {
-    name: "Kim Xuân Hiếu",
-    role: "Quà Kỷ Niệm",
-    content: "WEMO đã biến kỷ niệm 5 năm của chúng tôi thành điều gì đó thực sự kỳ diệu. Mẫu dòng thời gian với ảnh và tin nhắn thoại làm vợ tôi bật khóc. Đây là kho báu vô giá.",
-    avatar: "https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/z7291398006584_7f6e5ed7608e2d8e2ca06646c3dff042.jpg",
+    name: "Nguyễn Thuỳ Lâm",
+    role: "Kỷ Niệm Yêu",
+    content: "Món quà bất ngờ nhất mà tôi từng nhận được từ bạn trai. Khi chạm điện thoại vào hộp gỗ, cả một trang web mở ra ngập tràn ảnh và video kỷ niệm 3 năm yêu nhau của chúng tôi. Tôi đã bật khóc vì xúc động! 😭❤️",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Linh",
     rating: 5,
   },
   {
-    name: "Emily Rodriguez",
-    role: "Quà Sinh Nhật",
-    content: "Tôi tạo quà sinh nhật cho bạn thân bằng WEMO. Cô ấy hoàn toàn bị choáng ngợp! Sự kết hợp video, nhạc làm chúng tôi cảm giác thật gần nhau dù cách hàng ngàn km.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
+    name: "Trần Minh Hoàng",
+    role: "Quà Sinh Nhật Vợ",
+    content: "Vợ tôi rất thích mẫu thiết kế Ký Ức Lãng Mạn. Nó không chỉ là thiệp online thông thường mà có hiệu ứng lướt chuột 3D cực sang trọng. Công nghệ chạm NFC nhạy, hoạt động rất tốt trên cả iPhone lẫn Android.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Hoang",
     rating: 5,
   },
   {
-    name: "David Chen",
-    role: "Chào Đón Em Bé",
-    content: "Mẫu chào đón em bé của WEMO cho phép tôi tổng hợp lời nhắn từ gia đình khắp thế giới. Đây là kỷ vật số ý nghĩa nhất của gia đình tôi.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
+    name: "Lê Khánh Vy",
+    role: "Kỷ Niệm Ngày Cưới",
+    content: "WEMO giúp tôi lưu giữ những lời chúc từ gia đình ở xa một cách trọn vẹn nhất. Đây là món quà công nghệ kết hợp thủ công tinh tế nhất tôi từng mua. Rất khuyên dùng cho ai muốn tặng quà độc lạ!",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vy",
+    rating: 5,
+  },
+  {
+    name: "Phạm Quốc Bảo",
+    role: "Quà Tặng Bạn Gái",
+    content: "Tính năng vẽ Chibi AI hoạt động siêu đỉnh. Ảnh của chúng tôi vẽ ra rất dễ thương, giao diện trang quà tặng mượt mà không bị giật lag khi tải video. Dịch vụ chăm sóc khách hàng của WEMO cực kỳ nhiệt tình.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bao",
     rating: 5,
   },
 ];
 
 const testimonialsRow2 = [
   {
-    name: "Jessica & Tom",
-    role: "Quà Giáng Sinh",
-    content: "Tặng quà WEMO cho cả nhà dịp Noel. Ai cũng trầm trồ vì sự tinh tế và cá nhân hóa. Chạm NFC mang lại cảm giác cực kỳ công nghệ và sang trọng!",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Jessica",
+    name: "Hoàng Mỹ Dung",
+    role: "Quà Tốt Nghiệp",
+    content: "Nhóm tôi đã làm một hộp quà WEMO gửi tặng cô giáo chủ nhiệm. Cả lớp tự thu âm tin nhắn thoại và tải ảnh kỷ niệm lên. Cô giáo đã rất bất ngờ và xúc động khi chạm điện thoại vào hộp. Ý tưởng thật sự rất nhân văn!",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Dung",
     rating: 5,
   },
   {
-    name: "Marcus Johnson",
-    role: "Quà Tốt Nghiệp",
-    content: "Con gái tôi tốt nghiệp đại học, tôi muốn tặng cô bé thứ gì đó đặc biệt. WEMO giúp tôi lưu trữ hành trình qua 4 năm đại học thật sống động.",
+    name: "Đỗ Đăng Khoa",
+    role: "Quà Tặng Mẹ",
+    content: "Mua tặng mẹ dịp 8/3, mẹ không rành công nghệ nhưng chỉ cần chạm nhẹ điện thoại vào là xem được ngay album ảnh gia đình kèm lời chúc của tôi. Tiện lợi và ý nghĩa vô cùng.",
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Khoa",
+    rating: 5,
+  },
+  {
+    name: "Marcus Aurelius",
+    role: "Quà Valentine",
+    content: "A beautiful fusion of physical craft and digital experience. The 3D planet template is breathtaking. She watches it every night! Recommended 10/10.",
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
     rating: 5,
   },
@@ -52,10 +66,10 @@ const testimonialsRow2 = [
 function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }) {
   return (
     <div className="w-[340px] inline-block whitespace-normal mx-3 align-top">
-      <div className="rounded-3xl p-6 border border-stone-100 bg-white shadow-sm hover:shadow-md transition-all duration-300 relative h-full flex flex-col justify-between">
+      <div className="rounded-3xl p-6 border border-white/40 bg-white/40 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 relative h-full flex flex-col justify-between">
         
         {/* Large Decorative Quote Icon */}
-        <Quote className="absolute right-6 top-6 w-10 h-10 text-stone-100/60 pointer-events-none" />
+        <Quote className="absolute right-6 top-6 w-10 h-10 text-stone-300/40 pointer-events-none" />
 
         <div>
           {/* Star Rating */}
@@ -72,11 +86,11 @@ function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }
         </div>
 
         {/* User Info */}
-        <div className="flex items-center gap-3 pt-4 border-t border-stone-50">
+        <div className="flex items-center gap-3 pt-4 border-t border-stone-200/50">
           <img
             src={testimonial.avatar}
             alt={testimonial.name}
-            className="w-10 h-10 rounded-full object-cover bg-stone-100 border border-stone-100"
+            className="w-10 h-10 rounded-full object-cover bg-stone-100/50 border border-white/40"
           />
           <div>
             <div className="text-xs font-bold text-stone-900">{testimonial.name}</div>
@@ -91,7 +105,7 @@ function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }
 
 export function Testimonials() {
   return (
-    <section className="relative py-24 md:py-32 bg-[#FCE1DA] overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] overflow-hidden">
       
       {/* Inline styles for infinite scrolling marquee */}
       <style dangerouslySetInnerHTML={{__html: `
@@ -118,7 +132,35 @@ export function Testimonials() {
         }
       `}} />
 
-      <div className="w-full relative">
+      {/* Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            x: [0, 50, -30, 0],
+            y: [0, -60, 40, 0],
+          }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-40 -left-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#E8B4A8]/15 to-[#D4AF78]/15 blur-[100px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -40, 40, 0],
+            y: [0, 50, -50, 0],
+          }}
+          transition={{
+            duration: 22,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-40 -right-40 w-96 h-96 rounded-full bg-gradient-to-r from-[#D4AF78]/15 to-[#E8B4A8]/15 blur-[100px]"
+        />
+      </div>
+
+      <div className="w-full relative z-10">
         
         {/* Section header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
@@ -159,8 +201,8 @@ export function Testimonials() {
           </div>
 
           {/* Overlay fade edges to enhance premium look */}
-          <div className="absolute top-0 bottom-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#FCE1DA] to-transparent pointer-events-none z-10" />
-          <div className="absolute top-0 bottom-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#FCE1DA] to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 bottom-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#FDE8E3] to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 bottom-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#FDE8E3] to-transparent pointer-events-none z-10" />
 
         </div>
       </div>

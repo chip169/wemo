@@ -15,9 +15,37 @@ export function HeroSection() {
   const optimizedImg = `${baseImg}?w=1200&auto=format,compress&q=90`;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FCE1DA] py-12">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] py-12">
       {/* Background chuyển động mượt mà */}
       <div className="absolute inset-0 webo-animated-gradient opacity-40" />
+
+      {/* Ambient Glow Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div
+          animate={{
+            x: [0, 50, -30, 0],
+            y: [0, -80, 50, 0],
+          }}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -top-48 -left-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#E8B4A8]/20 to-[#D4AF78]/25 blur-[120px]"
+        />
+        <motion.div
+          animate={{
+            x: [0, -60, 40, 0],
+            y: [0, 60, -40, 0],
+          }}
+          transition={{
+            duration: 25,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="absolute -bottom-48 -right-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#D4AF78]/20 to-[#E8B4A8]/25 blur-[120px]"
+        />
+      </div>
 
       {/* Hạt tròn/Trái tim nhỏ mờ trôi nền phía sau */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
