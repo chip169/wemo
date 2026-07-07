@@ -1112,6 +1112,8 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
           amount: savedOrder.amount,
           depositAmount: savedOrder.depositAmount || 200000,
           paidAt,
+          chibiUrl: savedOrder.chibiUrl || "",
+          originalUrl: savedOrder.originalUrl || "",
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `🤖 Telegram alert gửi OK` : `❌ Telegram lỗi: ${r.error}`);
         }).catch(() => {});
