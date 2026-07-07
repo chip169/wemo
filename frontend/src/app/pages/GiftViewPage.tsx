@@ -161,14 +161,16 @@ export function GiftViewPage() {
     );
   }
 
-  return (
-    <div className="fixed inset-0 w-screen h-screen overflow-hidden select-none">
-      {/* 3D Canvas Template selection */}
-      {gift.theme === "sinh-nhat" && <BirthdayCanvas3D gift={gift} />}
-      {gift.theme === "tinh-yeu" && gift.templateId === "solid-heart" && <SolidHeartCanvas3D gift={gift} />}
-      {gift.theme === "tinh-yeu" && gift.templateId !== "solid-heart" && <HeartCanvas3D gift={gift} />}
-      {gift.theme === "ky-niem" && <GalaxyCanvas3D gift={gift} />}
-      {!["sinh-nhat", "tinh-yeu", "ky-niem"].includes(gift.theme) && <HeartCanvas3D gift={gift} />}
+    const resolvedTheme = gift.theme || "tinh-yeu";
+
+    return (
+      <div className="fixed inset-0 w-screen h-screen overflow-hidden select-none">
+        {/* 3D Canvas Template selection */}
+        {resolvedTheme === "sinh-nhat" && <BirthdayCanvas3D gift={gift} />}
+        {resolvedTheme === "tinh-yeu" && gift.templateId === "solid-heart" && <SolidHeartCanvas3D gift={gift} />}
+        {resolvedTheme === "tinh-yeu" && gift.templateId !== "solid-heart" && <HeartCanvas3D gift={gift} />}
+        {resolvedTheme === "ky-niem" && <GalaxyCanvas3D gift={gift} />}
+        {!["sinh-nhat", "tinh-yeu", "ky-niem"].includes(resolvedTheme) && <HeartCanvas3D gift={gift} />}
 
       {/* Interactive Music Widget */}
       {gift.music !== "none" && (
