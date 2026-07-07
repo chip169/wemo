@@ -1,10 +1,13 @@
 import { motion } from "motion/react";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Card } from "./ui/card";
 import { Sparkles, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router";
 
-const templates = [
+const INITIAL_TEMPLATES = [
   {
+    id: "love-romantic",
+    slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
     description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn ngọt ngào.",
     image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=600",
@@ -12,27 +15,22 @@ const templates = [
     gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
   },
   {
+    id: "solid-heart",
+    slug: "tinh-cau-3d",
     title: "Mẫu Tinh Cầu 3D Vũ Trụ",
     description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
     image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     color: "#E11D48",
     gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
-  },
-  {
-    title: "Kỷ Niệm Tối Giản",
-    description: "Phong cách tạp chí thời trang cao cấp với tone màu thanh lịch, tập trung vào những thông điệp và hình ảnh nghệ thuật.",
-    image: "https://images.unsplash.com/photo-1516979187457-637abb4f9353?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
-    color: "#0A0A0A",
-    gradient: "linear-gradient(135deg, #1C1917 0%, #78716C 100%)",
   }
 ];
 
-function InteractiveCard({ template }: { template: typeof templates[0] }) {
-  const cardRef = useRef<HTMLDivElement>(null);
+function InteractiveCard({ template }: { template: typeof INITIAL_TEMPLATES[0] }) {
+  const cardRef = useRef<HTMLAnchorElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -50,11 +48,12 @@ function InteractiveCard({ template }: { template: typeof templates[0] }) {
   };
 
   return (
-    <div
+    <Link
+      to={`/templates/${template.slug}`}
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full h-full cursor-pointer group"
+      className="w-full h-full block cursor-pointer group text-inherit no-underline"
       style={{
         perspective: "1200px",
         transformStyle: "preserve-3d"
@@ -104,11 +103,32 @@ function InteractiveCard({ template }: { template: typeof templates[0] }) {
           </div>
         </div>
       </Card>
-    </div>
+    </Link>
   );
 }
 
 export function TemplateShowcase() {
+  const [templateList, setTemplateList] = useState(INITIAL_TEMPLATES);
+
+  useEffect(() => {
+    fetch("/api/templates")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: any[]) => {
+        const merged = INITIAL_TEMPLATES.map((tpl) => {
+          const dbTpl = data.find((t) => t.id === tpl.id);
+          if (!dbTpl) return tpl;
+          return {
+            ...tpl,
+            title: dbTpl.name || tpl.title,
+            description: dbTpl.sampleMessage || tpl.description,
+            image: dbTpl.preview || tpl.image,
+          };
+        });
+        setTemplateList(merged);
+      })
+      .catch((err) => console.error("Error loading templates in showcase:", err));
+  }, []);
+
   return (
     <section className="relative py-24 md:py-32 bg-[#FAFAFA] overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,9 +159,9 @@ export function TemplateShowcase() {
           </p>
         </motion.div>
 
-        {/* Template grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {templates.map((template, index) => (
+        {/* Template grid - centered and balanced for 2 items */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {templateList.map((template, index) => (
             <motion.div
               key={index}
               initial={{ opacity: 0, y: 30 }}
