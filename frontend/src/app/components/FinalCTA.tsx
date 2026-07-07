@@ -3,7 +3,7 @@ import { Sparkles } from "lucide-react";
 
 export function FinalCTA() {
   return (
-    <section className="relative py-32 overflow-hidden" style={{ background: '#FCEBE7' }}>
+    <section className="relative py-32 overflow-hidden" style={{ background: '#FFF0EC' }}>
       {/* Floating particles background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(30)].map((_, i) => (

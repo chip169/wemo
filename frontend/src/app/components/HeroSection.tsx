@@ -1,15 +1,21 @@
-import { motion } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Sparkles, ArrowRight, Wand2 } from "lucide-react";
 import { Link } from "react-router";
 
 export function HeroSection() {
+  const { scrollY } = useScroll();
+  const yPhone = useTransform(scrollY, [0, 1000], [0, 80]);
+  const yBadge = useTransform(scrollY, [0, 1000], [0, -60]);
+  const yFloatingLeftImg = useTransform(scrollY, [0, 1000], [0, -40]);
+  const yFloatingLeftHeart = useTransform(scrollY, [0, 1000], [0, 40]);
+
   // Đường dẫn ảnh sản phẩm gốc để bóc tách chi tiết 3D
   const baseImg =
     "https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/t%E1%BA%A1o_h%C3%ACnh_%E1%BA%A3nh_1_s%E1%BA%A3n_202606011509.jpeg";
   const optimizedImg = `${baseImg}?w=1200&auto=format,compress&q=90`;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FCEBE7] py-12">
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#FCE1DA] py-12">
       {/* Background chuyển động mượt mà */}
       <div className="absolute inset-0 webo-animated-gradient opacity-40" />
 
@@ -118,33 +124,43 @@ export function HeroSection() {
 
             {/* 7. Máy ảnh Retro bên phải bánh kem */}
             <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{
-                duration: 3.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.1,
-              }}
+              style={{ y: yFloatingLeftImg }}
               className="absolute right-4 top-[290px] w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md"
             >
-              <img
-                src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/mayAnh.png"
-                alt="3D Couple"
-                className="w-full h-full object-cover rounded-full"
-              />
+              <motion.div
+                animate={{ y: [0, -4, 0] }}
+                transition={{
+                  duration: 3.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                  delay: 0.1,
+                }}
+                className="w-full h-full"
+              >
+                <img
+                  src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/mayAnh.png"
+                  alt="3D Couple"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </motion.div>
             </motion.div>
 
             {/* 8. Trái tim nhỏ ngoài cùng bên trái */}
             <motion.div
-              animate={{ scale: [1, 1.15, 1] }}
-              transition={{ duration: 2.8, repeat: Infinity }}
+              style={{ y: yFloatingLeftHeart }}
               className="absolute -left-8 top-[245px] w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md "
             >
-              <img
-                src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/traiTim.png"
-                alt="3D Couple"
-                className="w-full h-full object-cover rounded-full"
-              />
+              <motion.div
+                animate={{ scale: [1, 1.15, 1] }}
+                transition={{ duration: 2.8, repeat: Infinity }}
+                className="w-full h-full"
+              >
+                <img
+                  src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/traiTim.png"
+                  alt="3D Couple"
+                  className="w-full h-full object-cover rounded-full"
+                />
+              </motion.div>
             </motion.div>
 
             {/* --- NỘI DUNG TEXT CHÍNH --- */}
@@ -250,43 +266,51 @@ export function HeroSection() {
 
               {/* THẺ ẢNH PHỤ TRÊN - GIỮ NGUYÊN NỀN VÀ VIỀN TRẮNG */}
               <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-                className="group absolute -top-10 -right-4 hidden xl:flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white max-w-[210px] overflow-hidden"
+                style={{ y: yBadge }}
+                className="absolute -top-10 -right-4 hidden xl:flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white max-w-[210px] overflow-hidden"
               >
-                <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
-                  <img
-                    src={optimizedImg}
-                    alt="Detail"
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-115"
-                  />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[10px] text-gray-400 font-medium">
-                    Chi tiết sản phẩm
-                  </span>
-                  <span className="text-xs font-bold text-gray-800 truncate">
-                    Luxury Box Edition
-                  </span>
-                </div>
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="flex items-center gap-3 w-full"
+                >
+                  <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
+                    <img
+                      src={optimizedImg}
+                      alt="Detail"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[10px] text-gray-400 font-medium">
+                      Chi tiết sản phẩm
+                    </span>
+                    <span className="text-xs font-bold text-gray-800 truncate">
+                      Luxury Box Edition
+                    </span>
+                  </div>
+                </motion.div>
               </motion.div>
 
               {/* SMARTPHONE DƯỚI GÓC PHẢI - GIỮ NGUYÊN BORDER VIỀN TRẮNG DÀY */}
               <motion.div
-                animate={{ y: [0, 8, 0] }}
-                transition={{
-                  duration: 5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.5,
-                }}
-                className="group absolute -bottom-8 -right-6 hidden xl:block w-36 aspect-[9/16] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-[5px] border-white bg-white z-30"
+                style={{ y: yPhone }}
+                className="absolute -bottom-8 -right-6 hidden xl:block w-36 aspect-[9/16] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-[5px] border-white bg-white z-30"
               >
-                <div className="w-full h-full overflow-hidden relative">
+                <motion.div
+                  animate={{ y: [0, 8, 0] }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                    delay: 0.5,
+                  }}
+                  className="w-full h-full overflow-hidden relative"
+                >
                   <img
                     src={optimizedImg}
                     alt="NFC View"
@@ -297,7 +321,7 @@ export function HeroSection() {
                       <div className="w-2 h-2 rounded-full bg-white" />
                     </div>
                   </div>
-                </div>
+                </motion.div>
               </motion.div>
             </div>
           </motion.div>

@@ -91,7 +91,7 @@ function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }
 
 export function Testimonials() {
   return (
-    <section className="relative py-24 md:py-32 bg-[#FCEBE7] overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-[#FCE1DA] overflow-hidden">
       
       {/* Inline styles for infinite scrolling marquee */}
       <style dangerouslySetInnerHTML={{__html: `
@@ -159,8 +159,8 @@ export function Testimonials() {
           </div>
 
           {/* Overlay fade edges to enhance premium look */}
-          <div className="absolute top-0 bottom-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#FCEBE7] to-transparent pointer-events-none z-10" />
-          <div className="absolute top-0 bottom-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#FCEBE7] to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 bottom-0 left-0 w-16 md:w-32 bg-gradient-to-r from-[#FCE1DA] to-transparent pointer-events-none z-10" />
+          <div className="absolute top-0 bottom-0 right-0 w-16 md:w-32 bg-gradient-to-l from-[#FCE1DA] to-transparent pointer-events-none z-10" />
 
         </div>
       </div>

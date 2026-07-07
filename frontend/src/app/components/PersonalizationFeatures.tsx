@@ -3,7 +3,7 @@ import { Sparkles } from "lucide-react";
 
 export function PersonalizationFeatures() {
   return (
-    <section className="relative py-16 md:py-24 bg-[#FCEBE7] overflow-hidden">
+    <section className="relative py-16 md:py-24 bg-[#FFF0EC] overflow-hidden">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Feature highlight banner - Khả Năng Vô Hạn */}
