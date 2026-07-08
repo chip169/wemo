@@ -6,28 +6,28 @@ const testimonialsRow1 = [
     name: "Nguyễn Thuỳ Lâm",
     role: "Kỷ Niệm Yêu",
     content: "Món quà bất ngờ nhất mà tôi từng nhận được từ bạn trai. Khi chạm điện thoại vào hộp gỗ, cả một trang web mở ra ngập tràn ảnh và video kỷ niệm 3 năm yêu nhau của chúng tôi. Tôi đã bật khóc vì xúc động! 😭❤️",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Linh",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZKPdeE632LHKq_A0f1RLVaHX50EJS9no9hcUGOOtgIw&s=10&auto=format,compress&q=90",
     rating: 5,
   },
   {
     name: "Trần Minh Hoàng",
     role: "Quà Sinh Nhật Vợ",
     content: "Vợ tôi rất thích mẫu thiết kế Ký Ức Lãng Mạn. Nó không chỉ là thiệp online thông thường mà có hiệu ứng lướt chuột 3D cực sang trọng. Công nghệ chạm NFC nhạy, hoạt động rất tốt trên cả iPhone lẫn Android.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Hoang",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvm-PLXe8srzWb4twn93eFS6ovM4yVJ-VNED_j2BycAg&s=10&auto=format,compress&q=90",
     rating: 5,
   },
   {
     name: "Lê Khánh Vy",
     role: "Kỷ Niệm Ngày Cưới",
     content: "WEMO giúp tôi lưu giữ những lời chúc từ gia đình ở xa một cách trọn vẹn nhất. Đây là món quà công nghệ kết hợp thủ công tinh tế nhất tôi từng mua. Rất khuyên dùng cho ai muốn tặng quà độc lạ!",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Vy",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQb02O0LaquTQeVta3VaYa8XeGgYalxAXhbd2pEKiLQEg&s=10&auto=format,compress&q=90",
     rating: 5,
   },
   {
     name: "Phạm Quốc Bảo",
     role: "Quà Tặng Bạn Gái",
     content: "Tính năng vẽ Chibi AI hoạt động siêu đỉnh. Ảnh của chúng tôi vẽ ra rất dễ thương, giao diện trang quà tặng mượt mà không bị giật lag khi tải video. Dịch vụ chăm sóc khách hàng của WEMO cực kỳ nhiệt tình.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Bao",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNiz5TU8iIx8JBUvOLR97UzG2TTCuO4KuDkDJpO-I-bQ&s=10?w=200&auto=format,compress&q=90",
     rating: 5,
   },
 ];
@@ -37,28 +37,28 @@ const testimonialsRow2 = [
     name: "Hoàng Mỹ Dung",
     role: "Quà Tốt Nghiệp",
     content: "Nhóm tôi đã làm một hộp quà WEMO gửi tặng cô giáo chủ nhiệm. Cả lớp tự thu âm tin nhắn thoại và tải ảnh kỷ niệm lên. Cô giáo đã rất bất ngờ và xúc động khi chạm điện thoại vào hộp. Ý tưởng thật sự rất nhân văn!",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Dung",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgtttJUiv8aj4re2JrhGHsny_H-a9dfw4hqkQ3Jw8vVw&s=10&auto=format,compress&q=90",
     rating: 5,
   },
   {
     name: "Đỗ Đăng Khoa",
     role: "Quà Tặng Mẹ",
     content: "Mua tặng mẹ dịp 8/3, mẹ không rành công nghệ nhưng chỉ cần chạm nhẹ điện thoại vào là xem được ngay album ảnh gia đình kèm lời chúc của tôi. Tiện lợi và ý nghĩa vô cùng.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Khoa",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5vNROGPWfDEWiEUJ7tdmhes7o-l9Hef86MDvCBjcnPA&s=10&auto=format,compress&q=90",
     rating: 5,
   },
   {
-    name: "Marcus Aurelius",
+    name: "Trần Khánh Duy",
     role: "Quà Valentine",
     content: "A beautiful fusion of physical craft and digital experience. The 3D planet template is breathtaking. She watches it every night! Recommended 10/10.",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1PdWeUKsUuh3pGjQrBmeHofPRGW7gCd9taZwWy54xVQ&s&auto=format,compress&q=90",
     rating: 5,
   },
   {
-    name: "Priya Sharma",
+    name: "Hoàng Sáo",
     role: "Cầu Hôn Bất Ngờ",
     content: "Tôi đã cầu hôn bằng WEMO! Tôi giấu thẻ NFC khắp thành phố để cô ấy tìm kiếm kỷ niệm cũ. Đến thẻ cuối cùng thì tôi đợi sẵn ở đó. Cô ấy đã đồng ý! ❤️",
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=Priya",
+    avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZs7HeCnFeLw744DtiAjAyHWFhPgQ9h_i2GpmrGqFGfA&s=10&auto=format,compress&q=90",
     rating: 5,
   },
 ];
@@ -67,7 +67,7 @@ function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }
   return (
     <div className="w-[340px] inline-block whitespace-normal mx-3 align-top">
       <div className="rounded-3xl p-6 border border-white/40 bg-white/40 backdrop-blur-md shadow-sm hover:shadow-md transition-all duration-300 relative h-full flex flex-col justify-between">
-        
+
         {/* Large Decorative Quote Icon */}
         <Quote className="absolute right-6 top-6 w-10 h-10 text-stone-300/40 pointer-events-none" />
 
@@ -106,9 +106,10 @@ function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }
 export function Testimonials() {
   return (
     <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] overflow-hidden">
-      
+
       {/* Inline styles for infinite scrolling marquee */}
-      <style dangerouslySetInnerHTML={{__html: `
+      <style dangerouslySetInnerHTML={{
+        __html: `
         @keyframes marquee-left {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
@@ -161,7 +162,7 @@ export function Testimonials() {
       </div>
 
       <div className="w-full relative z-10">
-        
+
         {/* Section header */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center mb-16">
           <h2
@@ -181,7 +182,7 @@ export function Testimonials() {
 
         {/* Scrolling Carousel Grid */}
         <div className="flex flex-col gap-6 py-4 relative">
-          
+
           {/* Row 1 - Left direction */}
           <div className="overflow-hidden w-full mask-gradient">
             <div className="animate-marquee-left">
