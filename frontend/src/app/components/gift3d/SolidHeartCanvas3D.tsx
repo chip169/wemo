@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -219,6 +219,8 @@ function OrbitingPhoto({
   yOffset,
   roundedCardGeometry,
   roundedBorderGeometry,
+  isPaused,
+  onPause,
 }: {
   url: string;
   index: number;
@@ -228,6 +230,8 @@ function OrbitingPhoto({
   yOffset: number;
   roundedCardGeometry: THREE.BufferGeometry;
   roundedBorderGeometry: THREE.BufferGeometry;
+  isPaused: boolean;
+  onPause: (paused: boolean) => void;
 }) {
   const ref = useRef<THREE.Group>(null);
 
@@ -241,15 +245,25 @@ function OrbitingPhoto({
   }, [url]);
 
   const angleOffset = (index / total) * Math.PI * 2;
+  const angleRef = useRef(angleOffset);
   const currentY = useRef(-15); // Start below screen to fly up
 
   // Random tilts to match user screenshot layout
   const zRot = useMemo(() => (Math.random() - 0.5) * 0.3, []);
   const tiltX = useMemo(() => (Math.random() - 0.5) * 0.15, []);
 
-  useFrame((state) => {
+  useEffect(() => {
+    return () => {
+      document.body.style.cursor = "auto";
+    };
+  }, []);
+
+  useFrame((state, delta) => {
     if (!ref.current) return;
-    const angle = state.clock.elapsedTime * speed + angleOffset;
+    if (!isPaused) {
+      angleRef.current += delta * speed;
+    }
+    const angle = angleRef.current;
     ref.current.position.x = Math.cos(angle) * radius;
     ref.current.position.z = Math.sin(angle) * radius;
 
@@ -269,7 +283,36 @@ function OrbitingPhoto({
   return (
     <group ref={ref}>
       {/* Polaroid Photo Canvas (White border removed) */}
-      <mesh geometry={roundedCardGeometry} position={[0, 0, 0]}>
+      <mesh
+        geometry={roundedCardGeometry}
+        position={[0, 0, 0]}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          onPause(true);
+        }}
+        onPointerUp={(e) => {
+          e.stopPropagation();
+          onPause(false);
+        }}
+        onPointerLeave={(e) => {
+          e.stopPropagation();
+          onPause(false);
+          document.body.style.cursor = "auto";
+        }}
+        onPointerCancel={(e) => {
+          e.stopPropagation();
+          onPause(false);
+          document.body.style.cursor = "auto";
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = "auto";
+        }}
+      >
         <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
       </mesh>
     </group>
@@ -456,6 +499,8 @@ function ShootingStars() {
 
 // ─── Main Scene ───────────────────────────────────────────────────────────────
 function GalaxyScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onOpen: () => void }) {
+  const [isPaused, setIsPaused] = useState(false);
+
   // 1. Extruded Small Heart Shape for decorations
   const heartGeo = useMemo(() => {
     const s = new THREE.Shape();
@@ -605,6 +650,8 @@ function GalaxyScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onO
             yOffset={(i % 4 - 1.5) * 1.4}
             roundedCardGeometry={roundedCardGeometry}
             roundedBorderGeometry={roundedBorderGeometry}
+            isPaused={isPaused}
+            onPause={setIsPaused}
           />
         ))}
 
@@ -734,7 +781,7 @@ function MessageOverlay({ gift, onClose }: { gift: any; onClose: () => void }) {
 
         {(gift.photos || []).length > 0 && (
           <p className="text-center text-pink-300/60 text-xs mt-3">
-            ✨ Kéo xoay để ngắm ảnh kỷ niệm bay quanh thiên hà
+            ✨ Ấn giữ ảnh để tạm dừng xoay • Kéo để xoay camera
           </p>
         )}
       </div>
