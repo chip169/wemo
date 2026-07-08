@@ -261,7 +261,7 @@ function OrbitingPhoto({
         }}
       >
         <planeGeometry args={[1.5, 1.5]} />
-        <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
+        <meshBasicMaterial map={texture} side={THREE.DoubleSide} toneMapped={false} />
       </mesh>
     </group>
   );
