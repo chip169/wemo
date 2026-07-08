@@ -1,124 +1,54 @@
 # WEMO - Premium Digital NFC Gift Platform
 
-**WEMO** là nền tảng tạo thiệp quà tặng kỹ thuật số cao cấp tích hợp chip NFC thông minh. Hệ thống cho phép người dùng cá nhân hóa trải nghiệm quà tặng bằng cách liên kết thiệp kỹ thuật số sinh động (chứa hình ảnh, lời chúc, nhạc nền và các tính năng tương tác độc đáo) vào một chiếc thẻ/quà tặng vật lý gắn chip NFC.
-
-Khi người nhận chạm nhẹ điện thoại vào thẻ, thiệp quà tặng sẽ được tự động mở ra trên màn hình với hiệu ứng âm thanh và hình ảnh vô cùng ấn tượng.
-![alt text](image.png)
+**WEMO** là nền tảng tạo thiệp quà tặng kỹ thuật số cao cấp tích hợp chip NFC thông minh. Nền tảng cho phép người dùng cá nhân hóa trải nghiệm quà tặng bằng cách kết nối thiệp kỹ thuật số sinh động (chứa hình ảnh, video, ghi âm lời chúc, nhạc nền và các hiệu ứng tương tác 3D độc đáo) vào một món quà/thẻ vật lý có gắn chip NFC. Khi người nhận chạm nhẹ điện thoại vào thẻ hoặc quét mã QR WEMO, thiệp tương tác 3D sẽ tự động mở ra trực quan trên màn hình di động.
 
 ---
 
-## 🧭 Luồng Hoạt Động (User Journey)
+## ✨ Chức Năng Của Hệ Thống
 
-1. **Nhận Thẻ vật lý**: Người mua nhận được quà tặng/thẻ WEMO có gắn chip NFC kèm theo một **Mã Đơn Hàng (Order ID)** duy nhất.
-2. **Kích hoạt & Thiết kế (Gift Wizard)**:
-   - Truy cập vào trang tạo thiệp, nhập **Order ID** hợp lệ để bắt đầu.
-   - Mỗi Order ID chỉ cho phép thiết kế **1 lần duy nhất** (các lần sau quét sẽ chỉ hiển thị xem lại link thiệp đã tạo).
-   - Chọn chủ đề và mẫu thiết kế ưa thích.
-   - Tải lên ảnh thực tế, viết lời chúc, chọn nhạc nền (piano, lãng mạn, sinh nhật...).
-3. **Ghi liên kết vào thẻ NFC**: Hệ thống lưu dữ liệu thiệp xuống Server, sinh ra mã link thiệp động và mã QR. Người dùng sử dụng điện thoại để ghi liên kết này vào thẻ chip NFC.
-4. **Nhận Quà**: Người nhận chạm điện thoại vào thẻ vật lý để mở ra giao diện thiệp chuyển động tuyệt đẹp.
+### 1. Mẫu Thiệp Tương Tác 3D Siêu Thực (WebGL / Three.js)
+Hệ thống tích hợp các không gian 3D tương tác sử dụng **React Three Fiber (R3F)** và **Drei**:
+- **Mẫu Tinh Cầu Vũ Trụ (Universe 3D)**: Quả cầu hạt tinh vân phát sáng rực rỡ kèm vành đai Saturn, các thẻ Polaroid ảnh kỷ niệm xoay quanh quỹ đạo không gian và sao băng rơi đa góc luân phiên.
+- **Mẫu Trái Tim Pulsing (Neural Heart)**: Trái tim cấu tạo từ mạng lưới xung thần kinh ánh neon tự động co bóp theo nhịp đập và các khung ảnh bay lơ lửng xung quanh.
+- **Bộ Lọc Cắt Bo Góc Góc Bằng GPU (Custom Shader)**: Áp dụng thuật toán SDF (Signed Distance Field) và Smoothstep trực tiếp trên Fragment Shader của `PlaneGeometry` để bo tròn góc ảnh mà hoàn toàn không bị lỗi méo hay kéo dãn vân bề mặt (texture warping).
+- **Chống Vỡ Ảnh & Giữ Màu Nguyên Bản**: Kích hoạt cơ chế tạo **Mipmapping** kết hợp bộ lọc trilinear (`LinearMipmapLinearFilter`) để chống răng cưa/vỡ ảnh khi ở xa, đồng thời vô hiệu hóa tone mapping (`toneMapped={false}`) giúp giữ màu ảnh hiển thị sáng đẹp, chuẩn xác như ảnh gốc.
 
----
+### 2. Các Mẫu Thiệp 2D Độc Quyền Khác
+- **BirthdayLuxury (Sinh Nhật Hoàng Gia)**: Tông màu đen - vàng gold quý phái, hiệu ứng Champagne sủi bọt khí bay lên và **Sổ Vàng Lời Chúc VIP** để lưu bút kỉ niệm.
+- **ChristmasCozy (Giáng Sinh Ấm Áp)**: Tông màu đỏ nhung và xanh lục bảo, hiệu ứng tuyết rơi nhẹ và trang trí thông Giáng Sinh sinh động.
+- **BirthdayRetro (Game Boy 8-Bit Cổ Điển)**: Mô phỏng chiếc máy chơi game cầm tay cổ điển với các nút bấm A/B tương tác đổi điểm và nhạc nền chiptune hoài niệm.
 
-## ✨ Các Tính Năng Nổi Bật
+### 3. Tự Động Hóa Thanh Toán & Gửi Thông Báo (Webhook, Telegram, Email, Zalo)
+- **Webhook Payment**: Endpoint `/api/webhook/payment` tiếp nhận callback tự động từ cổng thanh toán để cập nhật trạng thái đơn hàng sang "đã cọc" (deposited).
+- **Resend Email Service**: Gửi email tự động xác nhận đặt cọc thành công cho khách hàng qua Resend HTTP API với giao diện HTML thiết kế sang trọng và cơ chế fallback URL thông minh.
+- **Telegram Bot Alert**: Gửi thông báo real-time kèm Album ảnh (Ảnh Gốc + Ảnh Chibi) về nhóm quản trị khi có đơn hàng mới hoặc khi khách thiết lập xong thiệp.
+- **Zalo ZNS Integration**: Gửi tin nhắn chăm sóc khách hàng qua Zalo OA ngay sau khi thanh toán cọc thành công.
 
-### 1. 6 Mẫu Thiệp (Templates) Thiết Kế Độc Quyền & Đẹp Mắt
+### 4. Quản Lý Đơn Hàng & Xóa Liên Đới (Cascading Delete)
+Hệ thống quản lý chặt chẽ vòng đời của đơn hàng để tránh dữ liệu mồ côi:
+- Khi một đơn hàng bị xóa (`DELETE /api/orders/:id`), toàn bộ các món quà (`Gift`) liên kết sẽ tự động chuyển trạng thái `status = "deleted"` (trả về lỗi 404 khi truy cập công khai).
+- Các thẻ chip NFC liên kết với món quà đó sẽ tự động được giải phóng về trạng thái chưa gán (`unassigned`, `giftId = ""`) để tái sử dụng ngay lập tức.
 
-- **BirthdayLuxury (Sinh Nhật Hoàng Gia)**: Tông màu đen - vàng gold quý phái, vương miện xoay 3D, nút 🥂 _Khai tiệc Champagne_ sủi bọt khí bay lên và **Sổ Vàng Lời Chúc VIP** để ghi nhận lời chúc của khách mời.
-- **LoveRomantic (Tình Yêu Lãng Mạn)**: Thiết kế kính mờ (Glassmorphic) hiện đại trên nền hồng phấn lãng mạn, hiệu ứng trái tim bay rụng động và nút đếm lượt yêu thương.
-- **AnniversaryTimeline (Hành Trình Kỷ Niệm)**: Thiết kế dạng timeline dòng thời gian cổ điển trên nền giấy thô, trình chiếu các bức ảnh polaroid kỉ niệm cuộn dọc tinh tế.
-- **ChristmasCozy (Giáng Sinh Ấm Áp)**: Tông màu đỏ nhung và xanh lục bảo, hiệu ứng tuyết rơi bay nhẹ và trang trí cây thông sinh động.
-- **BirthdayMinimal (Tối Giản Bắc Âu)**: Cành lá vẽ nét thanh mảnh, cắm hoa nghệ thuật, thiết kế nhẹ nhàng, thư thái.
-- **BirthdayRetro (Game Boy 8-Bit Cổ Điển)**: Mô phỏng chiếc máy chơi game cầm tay cổ điển với các nút bấm A/B tương tác đổi điểm, cần điều khiển và nhạc nền chiptune hoài niệm.
-
-### 2. Trình Phát Nhạc Nền & Tải Ảnh Thực Tế
-
-- Tải lên hình ảnh trực tiếp từ máy tính lưu trữ cục bộ tại máy chủ.
-- Tự động phát nhạc nền phù hợp chủ đề (Piano, Romantic, Birthday) kèm theo nút tắt/mở âm lượng tiện lợi có cơ chế chống chặn tự động phát (Autoplay Safeguard) trên trình duyệt di động.
-
-### 3. Hệ Thống Real-time Support Chat (Trò Chuyện Trực Tuyến)
-
-- Tích hợp bong bóng chat trợ giúp khách hàng ngay trên giao diện tạo thiệp.
-- Sử dụng công nghệ **Server-Sent Events (SSE)** giúp truyền nhận tin nhắn hai chiều giữa khách hàng và Admin theo thời gian thực với độ trễ <50ms (không cần Polling liên tục gây tải CPU).
-
-### 4. Trang Quản Trị Admin Dashboard Toàn Diện
-
-- Quản lý & Tạo mã Đơn Hàng mới (Order ID) cấp quyền cho khách hàng.
-- Theo dõi các chỉ số KPI doanh thu, số thiệp đã tạo, chip NFC đã kích hoạt và lượt xem thiệp thông qua biểu đồ trực quan.
-- Quản trị viên trao đổi và phản hồi chat trực tuyến trực tiếp với người dùng.
-- Cấu hình cài đặt dung lượng tệp tải lên, gói dịch vụ, thông báo email và mạng xã hội.
-
-### 5. Cơ Chế Bảo Mật & Lưu Trữ Đáng Tin Cậy
-
-- Xác thực Admin bằng **JWT Token** có chữ ký mã hóa, mật khẩu được băm bảo mật bằng thuật toán **PBKDF2** của Node `crypto`.
-- Cơ chế đọc/ghi tệp JSON bất đồng bộ kết hợp **Hàng đợi ghi (Write Queue)** giúp giải quyết triệt để vấn đề xung đột ghi đè tệp rỗng khi có nhiều thao tác ghi đồng thời.
-- Hỗ trợ lưu trữ kép: Tự động kết nối **MongoDB** làm database chính, nếu không có sẽ tự động chuyển đổi sang các tệp **JSON fallback** dự phòng cục bộ để hệ thống luôn hoạt động ổn định.
+### 5. Kênh Trò Chuyện Trực Tuyến Trợ Giúp Real-time (Server-Sent Events)
+- Tích hợp khung chat trợ giúp trực tuyến giữa khách hàng và Admin.
+- Sử dụng giải pháp kết nối **Server-Sent Events (SSE)** giúp truyền nhận tin nhắn hai chiều ổn định, tức thì (<50ms) mà không tốn tài nguyên CPU như giải pháp Polling.
 
 ---
 
-## 📂 Cấu Trúc Thư Mục Dự Án
+## 🔒 Bảo Mật Admin Dashboard & API
 
-- `/backend`: Mã nguồn server viết bằng Node.js + ExpressJS.
-  - `/models`: Định nghĩa các Mongoose schemas (Order, Gift, NFC, Message).
-  - `/utils`: Thư viện băm mật khẩu, tạo token bảo mật, và bộ điều phối hàng đợi ghi tệp (storage).
-  - `/data`: Lưu trữ các file JSON fallback dự phòng.
-  - `/uploads`: Thư mục lưu trữ hình ảnh tải lên từ người dùng.
-- `/frontend`: Giao diện người dùng viết bằng React + Vite + Tailwind CSS.
-  - `/src/app/components/templates`: Chứa mã nguồn 6 mẫu thiệp kỹ thuật số.
-  - `/src/app/components/admin`: Chứa mã nguồn các trang quản trị Admin.
-  - `/src/app/pages/GiftWizard.tsx`: Trình tạo thiệp 5 bước dành cho người dùng.
+Hệ thống thiết lập cơ chế bảo mật nghiêm ngặt để bảo vệ trang quản trị Admin Dashboard và các đầu cuối API nhạy cảm:
 
----
+### 1. Xác Thực Bằng JSON Web Token (JWT)
+- Toàn bộ các API nghiệp vụ quản trị (quản lý đơn hàng, danh sách thiệp, cấu hình chip NFC, xem tin nhắn trợ giúp) đều được bảo vệ nghiêm ngặt bằng phần mềm trung gian `authMiddleware`.
+- Quản trị viên sau khi đăng nhập thành công sẽ nhận được một JWT Token được ký mã hóa bằng thuật toán an toàn, lưu trữ phía Client và gửi kèm trong tiêu đề `Authorization: Bearer <token>` ở mỗi yêu cầu API tiếp theo.
 
-## 🛠️ Hướng Dẫn Cài Đặt & Chạy Dự Án
+### 2. Mã Hóa Mật Khẩu Bằng Thuật Toán PBKDF2
+- Mật khẩu tài khoản quản trị được băm bảo mật bằng thuật toán **PBKDF2** kết hợp chuỗi muối ngẫu nhiên (salt) thông qua thư viện gốc `crypto` của Node.js, ngăn chặn hoàn toàn nguy cơ bị dò quét hoặc tấn công vét cạn bảng băm (rainbow table).
 
-### 1. Cấu hình Backend
+### 3. Xác Thực Webhook An Toàn
+- Endpoint Webhook thanh toán được bảo vệ bằng cơ chế khóa bí mật dùng chung (`WEBHOOK_SECRET`). Yêu cầu gửi đến bắt buộc phải đính kèm chữ ký mã khóa hợp lệ, ngăn chặn việc giả mạo thông tin thanh toán từ các nguồn bên ngoài.
 
-Di chuyển vào thư mục backend và cài đặt thư viện:
-
-```bash
-cd backend
-npm install
-```
-
-Tạo file `.env` tại thư mục `/backend` với nội dung cấu hình:
-
-```env
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-```
-
-_(Nếu không điền MONGO_URI hoặc kết nối lỗi, hệ thống sẽ tự động dùng JSON Database dự phòng)_
-
-Tiến hành seed dữ liệu mẫu để khởi tạo database:
-
-```bash
-node seed.js
-```
-
-Khởi chạy server backend:
-
-```bash
-npm run dev
-```
-
-_(Backend sẽ chạy ở cổng `http://localhost:5000`)_
-
-### 2. Cấu hình Frontend
-
-Mở một terminal mới, di chuyển vào thư mục frontend và cài đặt thư viện:
-
-```bash
-cd frontend
-npm install
-```
-
-Khởi chạy server development:
-
-```bash
-npm run dev
-```
-
-_(Frontend sẽ chạy ở cổng `http://localhost:5173` và tự động kết nối proxy API tới backend ở cổng `5000`)_
-
-
+### 4. Ký Số Xác Thực Đơn Hàng (Order Verification Signatures)
+- Khi khách hàng truy cập thiết kế thiệp từ đường dẫn đặt cọc thành công, hệ thống sử dụng thuật toán HMAC để sinh ra một chữ ký số (`orderSignature`) liên kết trực tiếp với `orderId`.
+- Chỉ khi chữ ký số này hợp lệ hoặc đơn hàng được xác nhận trạng thái thanh toán là đã đặt cọc (`deposited` / `paid`) trực tiếp trong cơ sở dữ liệu thì hệ thống mới cho phép tiến hành lưu trữ phôi thiệp, tránh việc giả lập đơn hàng để tạo thiệp trái phép.
