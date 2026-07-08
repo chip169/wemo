@@ -1602,11 +1602,33 @@ function SuccessScreen({
         transition={{ duration: 0.5 }}
         className="w-full max-w-lg bg-[#FCEBE7] rounded-[2.5rem] p-8 text-center shadow-2xl border border-white/50 relative overflow-hidden my-8"
       >
+        {/* Back Button */}
+        <button
+          onClick={onReset}
+          className="absolute top-6 left-6 p-2.5 rounded-full bg-white/40 hover:bg-white/60 text-stone-600 transition-colors cursor-pointer border border-white/20 shadow-sm flex items-center justify-center z-20 active:scale-95"
+          title="Quay lại"
+        >
+          <ArrowLeft className="w-4 h-4 text-stone-700" />
+        </button>
+
         {/* Glow Effects */}
         <div className="absolute -top-20 -left-20 w-48 h-48 bg-[#E8B4A8]/20 rounded-full blur-[80px]" />
         <div className="absolute -bottom-20 -right-20 w-48 h-48 bg-[#D4AF78]/20 rounded-full blur-[80px]" />
 
-        <div className="text-6xl mb-4 animate-bounce">🎉</div>
+        {/* Professional Glowing Gift & Sparkles Icon */}
+        <div className="mx-auto w-20 h-20 rounded-full bg-gradient-to-tr from-[#E8B4A8] to-[#D4AF78] flex items-center justify-center shadow-[0_8px_30px_rgba(232,180,168,0.35)] mb-6 relative mt-4">
+          <div className="absolute inset-1 rounded-full bg-[#FCEBE7] flex items-center justify-center border border-white/10">
+            <Gift className="w-9 h-9 text-[#D4AF78]" />
+          </div>
+          <motion.div
+            animate={{ scale: [1, 1.25, 1], rotate: [0, 15, -15, 0] }}
+            transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
+            className="absolute -top-1 -right-1 bg-white rounded-full p-1 shadow-md border border-stone-100 flex items-center justify-center"
+          >
+            <Sparkles className="w-4 h-4 text-[#E8B4A8] fill-[#E8B4A8]" />
+          </motion.div>
+        </div>
+
         <h2 className="text-2xl font-black text-stone-900 tracking-tight mb-1">
           Thiết Kế Hoàn Tất!
         </h2>
