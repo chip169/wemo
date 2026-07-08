@@ -29,7 +29,7 @@ interface TrackedOrder {
   chibiUrl: string;
   originalUrl: string;
   productConfig: {
-    size: "10cm" | "15cm" | "20cm";
+    size: "9cm" | "12cm" | "10cm" | "15cm" | "20cm";
     quantity: number;
     base: "none" | "mica" | "wood";
     led: boolean;
