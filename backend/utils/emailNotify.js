@@ -57,8 +57,8 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
   });
 
   // Hỗ trợ fallback nếu thiếu link tạo thiệp hoặc link theo dõi đơn hàng
-  const finalGiftLink = giftLink || `https://wemo.vn/create?orderId=${orderId}`;
-  const finalTrackLink = trackLink || `https://wemo.vn/track/${orderId}`;
+  const finalGiftLink = giftLink || `https://wemo.io.vn/create?orderId=${orderId}`;
+  const finalTrackLink = trackLink || `https://wemo.io.vn/track/${orderId}`;
 
   return `<!DOCTYPE html>
 <html lang="vi">
@@ -170,11 +170,11 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
           <p style="margin:0 0 20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#A89E95;">Quy trình tiếp theo</p>
           
           ${[
-            ["1", "Đã nhận đặt cọc", "Thanh toán hoàn tất", true],
-            ["2", "Tạo thiệp 3D & NFC", "Bạn thực hiện thiết kế", false],
-            ["3", "Sản xuất mô hình 3D", "Từ 3 – 7 ngày làm việc", false],
-            ["4", "Giao nhận sản phẩm", "Giao hàng theo địa chỉ cung cấp", false]
-          ].map(([stepNum, title, desc, done]) => `
+      ["1", "Đã nhận đặt cọc", "Thanh toán hoàn tất", true],
+      ["2", "Tạo thiệp 3D & NFC", "Bạn thực hiện thiết kế", false],
+      ["3", "Sản xuất mô hình 3D", "Từ 3 – 7 ngày làm việc", false],
+      ["4", "Giao nhận sản phẩm", "Giao hàng theo địa chỉ cung cấp", false]
+    ].map(([stepNum, title, desc, done]) => `
           <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;">
             <tr>
               <td width="36" style="vertical-align:top;">
@@ -237,16 +237,16 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
         <td style="padding:32px;">
           <table width="100%" cellpadding="0" cellspacing="0">
             ${[
-              ["Mã đơn hàng", orderId],
-              ["Ngày đặt cọc", formattedDate],
-              ["Khách hàng", customerName],
-              ["Số điện thoại", phone],
-              ["Địa chỉ giao hàng", address || "Chưa cung cấp"],
-              ["Sản phẩm", product],
-              ["Tổng giá trị đơn", formattedTotal],
-              ["Đã đặt cọc", formattedDeposit],
-              ["Cần thanh toán thêm", `${(Number(amount) - Number(depositAmount)).toLocaleString("vi-VN")}đ`],
-            ].map(([k, v]) => `
+      ["Mã đơn hàng", orderId],
+      ["Ngày đặt cọc", formattedDate],
+      ["Khách hàng", customerName],
+      ["Số điện thoại", phone],
+      ["Địa chỉ giao hàng", address || "Chưa cung cấp"],
+      ["Sản phẩm", product],
+      ["Tổng giá trị đơn", formattedTotal],
+      ["Đã đặt cọc", formattedDeposit],
+      ["Cần thanh toán thêm", `${(Number(amount) - Number(depositAmount)).toLocaleString("vi-VN")}đ`],
+    ].map(([k, v]) => `
             <tr style="border-bottom:1px solid #FAF8F5;">
               <td style="padding:10px 0;color:#8E847B;font-size:13px;width:150px;border-bottom:1px solid #FAF8F5;">${k}</td>
               <td style="padding:10px 0;color:#2D2722;font-size:13px;font-weight:700;border-bottom:1px solid #FAF8F5;">${v}</td>
