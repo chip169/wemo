@@ -68,7 +68,7 @@ export function FeaturesPage() {
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
           <span
             className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-6"
-            style={{ background: "rgba(232,180,168,0.2)", color: "#E8B4A8" }}
+            style={{ background: "rgba(232,180,168,0.2)", color: "#A85B4C" }}
           >
             Tính Năng
           </span>

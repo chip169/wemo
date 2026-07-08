@@ -45,7 +45,7 @@ export function PrivacyPolicyPage() {
         >
           <span
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-wider uppercase"
-            style={{ background: "rgba(232,180,168,0.2)", color: "#E8B4A8" }}
+            style={{ background: "rgba(232,180,168,0.2)", color: "#A85B4C" }}
           >
             <Shield className="w-3.5 h-3.5" /> Pháp Lý WEMO
           </span>

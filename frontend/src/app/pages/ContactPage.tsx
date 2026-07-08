@@ -18,23 +18,42 @@ export function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    // Simulate API request
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
+    setIsSuccess(false);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
-      // Hide success message after 5 seconds
-      setTimeout(() => setIsSuccess(false), 5000);
-    }, 1200);
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setIsSuccess(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "",
+          message: "",
+        });
+        // Hide success message after 5 seconds
+        setTimeout(() => setIsSuccess(false), 5000);
+      } else {
+        alert(data.error || "Gửi yêu cầu thất bại. Vui lòng thử lại.");
+      }
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+      alert("Đã xảy ra lỗi hệ thống. Vui lòng liên hệ hotline.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -46,19 +65,19 @@ export function ContactPage() {
     {
       icon: Phone,
       title: "Hotline Hỗ Trợ",
-      value: "0968.123.456",
+      value: "0398.768.699",
       desc: "Hỗ trợ kỹ thuật & đặt mua (8:00 - 22:00 hàng ngày)",
     },
     {
       icon: Mail,
       title: "Email Liên Hệ",
-      value: "support@wemo.vn",
+      value: "hieukimxuan@gmail.com",
       desc: "Phản hồi thông tin & đề xuất hợp tác doanh nghiệp",
     },
     {
       icon: MapPin,
       title: "Văn Phòng Đại Diện",
-      value: "Tòa nhà WEMO, Cầu Giấy, Hà Nội",
+      value: "Tòa nhà WEMO, Khu Công Nghệ Cao Hòa Lạc, Thạch Thất, Hà Nội",
       desc: "Trụ sở nghiên cứu & phát triển sản phẩm",
     },
   ];
@@ -74,7 +93,7 @@ export function ContactPage() {
         >
           <span
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-wider uppercase"
-            style={{ background: "rgba(232,180,168,0.2)", color: "#E8B4A8" }}
+            style={{ background: "rgba(232,180,168,0.2)", color: "#A85B4C" }}
           >
             <MessageSquare className="w-3.5 h-3.5" /> Liên Hệ
           </span>
@@ -95,7 +114,7 @@ export function ContactPage() {
       {/* Main Grid: 2 Columns */}
       <section className="max-w-6xl mx-auto px-4 pb-28">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-          
+
           {/* Left Column: Info Card */}
           <div className="lg:col-span-5 space-y-6">
             {contactInfos.map((info, idx) => (

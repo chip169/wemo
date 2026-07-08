@@ -132,7 +132,7 @@ export function FAQPage() {
         >
           <span
             className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-6"
-            style={{ background: "rgba(232,180,168,0.2)", color: "#E8B4A8" }}
+            style={{ background: "rgba(232,180,168,0.2)", color: "#A85B4C" }}
           >
             Câu Hỏi Thường Gặp
           </span>

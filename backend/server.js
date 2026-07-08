@@ -593,6 +593,23 @@ app.put("/api/gifts/:id", authMiddleware, async (req, res) => {
   }
 });
 
+// 2b. Contact Form Endpoint
+app.post("/api/contact", async (req, res) => {
+  const { name, email, phone, subject, message } = req.body;
+  if (!name || !email || !subject || !message) {
+    return res.status(400).json({ error: "Vui lòng nhập đầy đủ các trường bắt buộc." });
+  }
+
+  try {
+    const { notifyContactRequest } = require("./utils/telegramNotify");
+    await notifyContactRequest({ name, email, phone, subject, message });
+    res.json({ success: true, message: "Đã gửi yêu cầu hỗ trợ qua Telegram thành công." });
+  } catch (err) {
+    console.error("Error sending contact notification:", err);
+    res.status(500).json({ error: "Lỗi hệ thống khi gửi yêu cầu hỗ trợ." });
+  }
+});
+
 // 3. Orders Endpoints
 
 // 3a. Create Draft Order (Public — no auth) — Called from OrderFormPage

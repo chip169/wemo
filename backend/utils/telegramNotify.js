@@ -319,10 +319,29 @@ const notifyPendingPayment = async (order) => {
  */
 const notifyCustom = (text) => sendTelegramMessage(text);
 
+/**
+ * Thông báo khi có yêu cầu hỗ trợ/liên hệ mới
+ */
+const notifyContactRequest = async (contact) => {
+  const { name, email, phone, subject, message: textContent } = contact;
+  const message = `📧 <b>YÊU CẦU HỖ TRỢ / LIÊN HỆ MỚI</b>
+
+👤 <b>Khách hàng:</b> ${name}
+📞 <b>Số điện thoại:</b> <code>${phone || "Chưa cung cấp"}</code>
+✉️ <b>Email:</b> <code>${email}</code>
+🏷️ <b>Chủ đề:</b> <b>${subject}</b>
+
+💬 <b>Lời nhắn:</b>
+<i>${textContent}</i>`;
+
+  return sendTelegramMessage(message);
+};
+
 module.exports = {
   notifyNewOrder,
   notifyGiftCreated,
   notifyPendingPayment,
   notifyCustom,
+  notifyContactRequest,
 };
 

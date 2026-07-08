@@ -39,7 +39,7 @@ export function RefundPolicyPage() {
         >
           <span
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold mb-6 tracking-wider uppercase"
-            style={{ background: "rgba(232,180,168,0.2)", color: "#E8B4A8" }}
+            style={{ background: "rgba(232,180,168,0.2)", color: "#A85B4C" }}
           >
             <Receipt className="w-3.5 h-3.5" /> Pháp Lý WEMO
           </span>
@@ -87,7 +87,7 @@ export function RefundPolicyPage() {
           <div className="mt-12 pt-8 border-t border-[#E8B4A8]/20 flex items-center gap-3 bg-[#E8B4A8]/5 rounded-2xl p-4">
             <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />
             <span className="text-xs text-zinc-600 font-medium">
-              Mọi thắc mắc về đơn hàng, vui lòng gửi phản hồi về địa chỉ email support@wemo.vn để được hỗ trợ tốt nhất.
+              Mọi thắc mắc về đơn hàng, vui lòng gửi phản hồi về địa chỉ email hieukimxuan để được hỗ trợ tốt nhất.
             </span>
           </div>
         </motion.div>
