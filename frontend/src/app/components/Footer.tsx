@@ -12,18 +12,18 @@ export function Footer() {
       { name: "Tạo thiệp", href: "/create" },
     ],
     "Pháp Lý": [
-      { name: "Chính Sách Bảo Mật", href: "#" },
-      { name: "Điều Khoản Dịch Vụ", href: "#" },
-      { name: "Chính Sách Hoàn Tiền", href: "#" },
+      { name: "Chính Sách Bảo Mật", href: "/privacy-policy" },
+      { name: "Điều Khoản Dịch Vụ", href: "/terms-of-service" },
+      { name: "Chính Sách Hoàn Tiền", href: "/refund-policy" },
     ],
     "Hỗ Trợ": [
-      { name: "Trung Tâm Hỗ Trợ", href: "#" },
-      { name: "Video Hướng Dẫn", href: "#" },
+      { name: "Trung Tâm Hỗ Trợ", href: "/support-center" },
+      { name: "Video Hướng Dẫn", href: "/tutorials" },
       { name: "Câu Hỏi Thường Gặp", href: "/faq" },
     ],
     "Công Ty": [
-      { name: "Về Chúng Tôi", href: "/" },
-      { name: "Liên Hệ", href: "/" },
+      { name: "Về Chúng Tôi", href: "/about-us" },
+      { name: "Liên Hệ", href: "/contact" },
     ],
   };
 
@@ -141,16 +141,27 @@ export function Footer() {
           </p>
 
           <div className="flex gap-6">
-            {["Bảo Mật", "Điều Khoản", "Cookie"].map((item, i) => (
-              <a
-                key={i}
-                href="#"
-                className="text-[#5C4839]/80 text-sm hover:text-white transition-colors duration-200 relative group font-medium"
-              >
-                {item}
-                <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-white group-hover:w-full transition-all duration-300" />
-              </a>
-            ))}
+            <a
+              href="/privacy-policy"
+              className="text-[#5C4839]/80 text-sm hover:text-white transition-colors duration-200 relative group font-medium"
+            >
+              Bảo Mật
+              <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-white group-hover:w-full transition-all duration-300" />
+            </a>
+            <a
+              href="/terms-of-service"
+              className="text-[#5C4839]/80 text-sm hover:text-white transition-colors duration-200 relative group font-medium"
+            >
+              Điều Khoản
+              <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-white group-hover:w-full transition-all duration-300" />
+            </a>
+            <a
+              href="#"
+              className="text-[#5C4839]/80 text-sm hover:text-white transition-colors duration-200 relative group font-medium"
+            >
+              Cookie
+              <span className="absolute left-0 bottom-0 w-0 h-[1px] bg-white group-hover:w-full transition-all duration-300" />
+            </a>
           </div>
         </div>
       </div>
