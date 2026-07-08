@@ -201,8 +201,8 @@ function OrbitingPhoto({
   const texture = useMemo(() => {
     const t = new THREE.TextureLoader().load(url);
     t.colorSpace = THREE.SRGBColorSpace;
-    t.minFilter = THREE.LinearFilter;
-    t.generateMipmaps = false;
+    t.minFilter = THREE.LinearMipmapLinearFilter;
+    t.generateMipmaps = true;
     t.anisotropy = 16;
     return t;
   }, [url]);
