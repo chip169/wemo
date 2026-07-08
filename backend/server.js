@@ -46,10 +46,8 @@ const getFrontendUrl = (req) => {
   if (host.includes("localhost") || host.includes("127.0.0.1")) {
     return "http://localhost:5173";
   }
-  if (host.includes("onrender.com")) {
-    return `https://${host.replace("-backend", "")}`;
-  }
-  return "https://wemo.vn";
+  // Frontend chạy trên Vercel/Custom Domain là https://wemo.vn, không phải Render.
+  return "https://wemo.io.vn";
 };
 
 // ─── Helpers to read/write based on active DB Mode ────────────────────────────
@@ -471,7 +469,7 @@ app.post("/api/gifts", async (req, res) => {
       customerName,
       giftId,
       giftLink,
-    }).catch(() => {});
+    }).catch(() => { });
 
     res.status(201).json(newGift);
   } catch (err) {
@@ -694,7 +692,7 @@ app.post("/api/orders/create-draft", async (req, res) => {
       depositAmount: newOrder.depositAmount,
       chibiUrl: newOrder.chibiUrl,
       originalUrl: newOrder.originalUrl,
-    }).catch(() => {});
+    }).catch(() => { });
 
     res.status(201).json({ success: true, orderId, depositAmount: newOrder.depositAmount });
   } catch (err) {
@@ -793,11 +791,11 @@ app.post("/api/webhook/payment", async (req, res) => {
     if (getDbMode() === "mongodb") {
       const order = await Order.findOne({ id: orderId });
       if (!order) return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
-      
+
       if (order.status === "deposited" || order.paymentStatus === "paid") {
         alreadyDeposited = true;
       }
-      
+
       order.status = "deposited";
       order.paymentStatus = "paid";
       if (!order.paidAt) {
@@ -809,11 +807,11 @@ app.post("/api/webhook/payment", async (req, res) => {
       const orders = await readJsonFile("orders.json");
       const idx = orders.findIndex((o) => o.id === orderId);
       if (idx === -1) return res.status(404).json({ error: "Không tìm thấy đơn hàng." });
-      
+
       if (orders[idx].status === "deposited" || orders[idx].paymentStatus === "paid") {
         alreadyDeposited = true;
       }
-      
+
       orders[idx].status = "deposited";
       orders[idx].paymentStatus = "paid";
       if (!orders[idx].paidAt) {
@@ -842,7 +840,7 @@ app.post("/api/webhook/payment", async (req, res) => {
           giftLink,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📱 ZNS gửi OK cho ${savedOrder.phone}` : `❌ ZNS lỗi: ${r.error}`);
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
       // 2) Email xác nhận cho khách
@@ -860,7 +858,7 @@ app.post("/api/webhook/payment", async (req, res) => {
           address: savedOrder.address,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
       // 3) Telegram alert cho admin
@@ -877,7 +875,7 @@ app.post("/api/webhook/payment", async (req, res) => {
         originalUrl: savedOrder.originalUrl || "",
       }).then((r) => {
         if (!r.skipped) console.log(r.success ? `🤖 Telegram alert gửi OK` : `❌ Telegram lỗi: ${r.error}`);
-      }).catch(() => {});
+      }).catch(() => { });
 
       // 4) Admin email alert
       sendAdminAlertEmail({
@@ -889,7 +887,7 @@ app.post("/api/webhook/payment", async (req, res) => {
         amount: savedOrder.amount,
         depositAmount: savedOrder.depositAmount || 200000,
         paidAt,
-      }).catch(() => {});
+      }).catch(() => { });
     }
 
     res.json({ success: true, orderId, paidAt });
@@ -941,6 +939,7 @@ app.get("/api/debug/test-email", async (req, res) => {
   // 2. Test Customer Email Confirmation
   try {
     console.log("⚡ Running sendOrderConfirmEmail diagnostic...");
+    const frontendUrl = getFrontendUrl(req);
     const customerResult = await sendOrderConfirmEmail({
       email: adminEmail || "hieukimxuan@gmail.com", // Gửi đến adminEmail để test
       customerName: "Khách Hàng Thử Nghiệm",
@@ -949,8 +948,8 @@ app.get("/api/debug/test-email", async (req, res) => {
       depositAmount: 200000,
       amount: 450000,
       paidAt: new Date().toISOString(),
-      giftLink: `https://${req.get("host")}/create?orderId=TEST_CUSTOMER_CONFIRM_1234`,
-      trackLink: `https://${req.get("host")}/track/TEST_CUSTOMER_CONFIRM_1234`,
+      giftLink: `${frontendUrl}/create?orderId=TEST_CUSTOMER_CONFIRM_1234`,
+      trackLink: `${frontendUrl}/track/TEST_CUSTOMER_CONFIRM_1234`,
       address: "123 Đường Thử Nghiệm, Quận 1, TP. HCM",
     });
     results.customerConfirmEmail = customerResult;
@@ -1105,7 +1104,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
           giftLink,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📱 ZNS gửi OK cho ${savedOrder.phone}` : `❌ ZNS lỗi: ${r.error}`);
-        }).catch(() => {});
+        }).catch(() => { });
       }
 
       // 2) Email xác nhận cho khách
@@ -1119,10 +1118,11 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
           amount: savedOrder.amount,
           paidAt,
           giftLink,
+          trackLink,
           address: savedOrder.address,
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `📧 Email gửi OK đến ${savedOrder.email}` : `❌ Email lỗi: ${r.error}`);
-        }).catch(() => {});
+        }).catch(() => { });
       } else {
         console.log(`ℹ️ Đơn ${id}: Không có email khách hàng — bỏ qua email xác nhận.`);
       }
@@ -1143,7 +1143,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
           originalUrl: savedOrder.originalUrl || "",
         }).then((r) => {
           if (!r.skipped) console.log(r.success ? `🤖 Telegram alert gửi OK` : `❌ Telegram lỗi: ${r.error}`);
-        }).catch(() => {});
+        }).catch(() => { });
       } catch (e) {
         console.error("Telegram module load error:", e);
       }
@@ -1161,7 +1161,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
         giftLink,
       }).then((r) => {
         if (!r.skipped) console.log(r.success ? `📧 Admin email alert gửi OK` : `❌ Admin email lỗi: ${r.error}`);
-      }).catch(() => {});
+      }).catch(() => { });
     }
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -1277,7 +1277,7 @@ app.get("/api/templates", async (req, res) => {
   try {
     const list = await getTemplates();
     const gifts = await getGifts();
-    
+
     // Calculate real-time active gift usage count
     const countMap = {};
     gifts.forEach((g) => {
@@ -1674,7 +1674,7 @@ app.post("/api/ai/generate-chibi", chibiRateLimiter, async (req, res) => {
       if (geminiRes.ok) {
         const geminiJson = await geminiRes.json();
         const rawText = geminiJson.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
-        
+
         let parsed = null;
         try {
           const jsonText = rawText.replace(/```json/gi, "").replace(/```/gi, "").trim();
@@ -1714,7 +1714,7 @@ app.post("/api/ai/generate-chibi", chibiRateLimiter, async (req, res) => {
     // Fallback prompt if Gemini is completely down/overloaded
     if (!geminiSuccess) {
       chibiPromptEn = `A cute chibi version of the person, ${styleNameMap[chosenStyle]} style, detailed clothing, vibrant colors, isolated solid pastel background, high quality.`;
-      
+
       const styleNameMapVi = {
         "cute-3d": "mô hình chibi đất sét 3D dễ thương phong cách hoạt hình Pixar",
         "anime": "hình chibi vẽ phong cách anime Nhật Bản dễ thương sắc sảo",
