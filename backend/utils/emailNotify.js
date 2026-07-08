@@ -56,6 +56,10 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
     hour: "2-digit", minute: "2-digit",
   });
 
+  // Hỗ trợ fallback nếu thiếu link tạo thiệp hoặc link theo dõi đơn hàng
+  const finalGiftLink = giftLink || `https://wemo.vn/create?orderId=${orderId}`;
+  const finalTrackLink = trackLink || `https://wemo.vn/track/${orderId}`;
+
   return `<!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -143,16 +147,16 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
           <p style="margin:0 0 20px;font-size:14px;color:#5C4839;line-height:1.6;font-weight:600;">
             Bước tiếp theo: Thiết kế thiệp 3D & Chip NFC của riêng bạn
           </p>
-          <a href="${giftLink}"
+          <a href="${finalGiftLink}"
              style="display:inline-block;padding:16px 36px;background:linear-gradient(135deg,#E8B4A8 0%,#D4AF78 100%);color:#ffffff;text-decoration:none;border-radius:14px;font-weight:800;font-size:13px;text-transform:uppercase;letter-spacing:2px;box-shadow:0 6px 20px rgba(232,180,168,0.25);margin-bottom:12px;">
             Tạo Thiệp 3D Ngay
           </a>
-          ${trackLink ? `
+          ${finalTrackLink ? `
           <div style="margin-top:16px;">
             <p style="margin:0 0 8px;font-size:13px;color:#8E847B;line-height:1.5;">
               Bạn cũng có thể theo dõi tiến độ sản xuất mô hình Chibi tại đây:
             </p>
-            <a href="${trackLink}"
+            <a href="${finalTrackLink}"
                style="display:inline-block;padding:10px 24px;border:1px solid #C4A482;color:#C4A482;text-decoration:none;border-radius:10px;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:1px;background-color:#ffffff;">
               Theo Dõi Trạng Thế Đơn Hàng
             </a>
