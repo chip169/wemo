@@ -6,30 +6,25 @@
 
 ## ✨ Chức Năng Của Hệ Thống
 
-### 1. Mẫu Thiệp Tương Tác 3D Siêu Thực (WebGL / Three.js)
+### 1. Mẫu Thiệp Tương Tác 3D (WebGL / Three.js)
 Hệ thống tích hợp các không gian 3D tương tác sử dụng **React Three Fiber (R3F)** và **Drei**:
-- **Mẫu Tinh Cầu Vũ Trụ (Universe 3D)**: Quả cầu hạt tinh vân phát sáng rực rỡ kèm vành đai Saturn, các thẻ Polaroid ảnh kỷ niệm xoay quanh quỹ đạo không gian và sao băng rơi đa góc luân phiên.
-- **Mẫu Trái Tim Pulsing (Neural Heart)**: Trái tim cấu tạo từ mạng lưới xung thần kinh ánh neon tự động co bóp theo nhịp đập và các khung ảnh bay lơ lửng xung quanh.
-- **Bộ Lọc Cắt Bo Góc Góc Bằng GPU (Custom Shader)**: Áp dụng thuật toán SDF (Signed Distance Field) và Smoothstep trực tiếp trên Fragment Shader của `PlaneGeometry` để bo tròn góc ảnh mà hoàn toàn không bị lỗi méo hay kéo dãn vân bề mặt (texture warping).
+- **Mẫu Tinh Cầu Vũ Trụ (Universe 3D - solid-heart)**: Quả cầu hạt tinh vân phát sáng rực rỡ kèm vành đai Saturn, các thẻ Polaroid ảnh kỷ niệm xoay quanh quỹ đạo không gian và sao băng rơi đa góc luân phiên.
+- **Mẫu Ký Ức Lãng Mạn (Neural Heart - love-romantic)**: Mạng lưới trái tim rơi 3D kết hợp dòng thời gian kỷ niệm và hộp thư bí mật để xem các tin nhắn và tệp đa phương tiện của người tặng.
+- **Bộ Lọc Cắt Bo Góc Bằng GPU (Custom Shader)**: Áp dụng thuật toán SDF (Signed Distance Field) và Smoothstep trực tiếp trên Fragment Shader của `PlaneGeometry` để bo tròn góc ảnh mà hoàn toàn không bị lỗi méo hay kéo dãn vân bề mặt (texture warping).
 - **Chống Vỡ Ảnh & Giữ Màu Nguyên Bản**: Kích hoạt cơ chế tạo **Mipmapping** kết hợp bộ lọc trilinear (`LinearMipmapLinearFilter`) để chống răng cưa/vỡ ảnh khi ở xa, đồng thời vô hiệu hóa tone mapping (`toneMapped={false}`) giúp giữ màu ảnh hiển thị sáng đẹp, chuẩn xác như ảnh gốc.
 
-### 2. Các Mẫu Thiệp 2D Độc Quyền Khác
-- **BirthdayLuxury (Sinh Nhật Hoàng Gia)**: Tông màu đen - vàng gold quý phái, hiệu ứng Champagne sủi bọt khí bay lên và **Sổ Vàng Lời Chúc VIP** để lưu bút kỉ niệm.
-- **ChristmasCozy (Giáng Sinh Ấm Áp)**: Tông màu đỏ nhung và xanh lục bảo, hiệu ứng tuyết rơi nhẹ và trang trí thông Giáng Sinh sinh động.
-- **BirthdayRetro (Game Boy 8-Bit Cổ Điển)**: Mô phỏng chiếc máy chơi game cầm tay cổ điển với các nút bấm A/B tương tác đổi điểm và nhạc nền chiptune hoài niệm.
-
-### 3. Tự Động Hóa Thanh Toán & Gửi Thông Báo (Webhook, Telegram, Email, Zalo)
+### 2. Tự Động Hóa Thanh Toán & Gửi Thông Báo (Webhook, Telegram, Email, Zalo)
 - **Webhook Payment**: Endpoint `/api/webhook/payment` tiếp nhận callback tự động từ cổng thanh toán để cập nhật trạng thái đơn hàng sang "đã cọc" (deposited).
 - **Resend Email Service**: Gửi email tự động xác nhận đặt cọc thành công cho khách hàng qua Resend HTTP API với giao diện HTML thiết kế sang trọng và cơ chế fallback URL thông minh.
 - **Telegram Bot Alert**: Gửi thông báo real-time kèm Album ảnh (Ảnh Gốc + Ảnh Chibi) về nhóm quản trị khi có đơn hàng mới hoặc khi khách thiết lập xong thiệp.
 - **Zalo ZNS Integration**: Gửi tin nhắn chăm sóc khách hàng qua Zalo OA ngay sau khi thanh toán cọc thành công.
 
-### 4. Quản Lý Đơn Hàng & Xóa Liên Đới (Cascading Delete)
+### 3. Quản Lý Đơn Hàng & Xóa Liên Đới (Cascading Delete)
 Hệ thống quản lý chặt chẽ vòng đời của đơn hàng để tránh dữ liệu mồ côi:
 - Khi một đơn hàng bị xóa (`DELETE /api/orders/:id`), toàn bộ các món quà (`Gift`) liên kết sẽ tự động chuyển trạng thái `status = "deleted"` (trả về lỗi 404 khi truy cập công khai).
 - Các thẻ chip NFC liên kết với món quà đó sẽ tự động được giải phóng về trạng thái chưa gán (`unassigned`, `giftId = ""`) để tái sử dụng ngay lập tức.
 
-### 5. Kênh Trò Chuyện Trực Tuyến Trợ Giúp Real-time (Server-Sent Events)
+### 4. Kênh Trò Chuyện Trực Tuyến Trợ Giúp Real-time (Server-Sent Events)
 - Tích hợp khung chat trợ giúp trực tuyến giữa khách hàng và Admin.
 - Sử dụng giải pháp kết nối **Server-Sent Events (SSE)** giúp truyền nhận tin nhắn hai chiều ổn định, tức thì (<50ms) mà không tốn tài nguyên CPU như giải pháp Polling.
 
