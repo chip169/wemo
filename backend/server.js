@@ -416,6 +416,32 @@ app.post("/api/gifts", async (req, res) => {
   }
 
   try {
+    // 1. Kiểm tra xem đơn hàng này đã từng tạo quà tặng chưa (tránh tạo trùng lặp khi click nhiều lần)
+    let existingGift = null;
+    if (getDbMode() === "mongodb") {
+      existingGift = await Gift.findOne({ orderId: giftData.orderId, status: { $ne: "deleted" } });
+    } else {
+      const gifts = await getGifts();
+      existingGift = gifts.find((g) => g.orderId === giftData.orderId && g.status !== "deleted");
+    }
+
+    if (existingGift) {
+      return res.json({ success: true, id: existingGift.id, message: "Thiệp quà tặng đã được tạo trước đó." });
+    }
+
+    // 2. Kiểm tra trực tiếp trên đơn hàng xem đã được liên kết với phôi quà tặng chưa
+    let orderDocToCheck = null;
+    if (getDbMode() === "mongodb") {
+      orderDocToCheck = await Order.findOne({ id: giftData.orderId });
+    } else {
+      const orders = await readJsonFile("orders.json");
+      orderDocToCheck = orders.find((o) => o.id === giftData.orderId);
+    }
+
+    if (orderDocToCheck && orderDocToCheck.giftId) {
+      return res.json({ success: true, id: orderDocToCheck.giftId, message: "Đơn hàng này đã có thiệp liên kết." });
+    }
+
     // Generate a 10-character random alphanumeric code ID (more secure against brute-forcing)
     const giftId = Math.random().toString(36).substring(2, 12);
     const newGift = {
