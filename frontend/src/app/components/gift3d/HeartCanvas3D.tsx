@@ -1,4 +1,4 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Stars, Float } from "@react-three/drei";
 import * as THREE from "three";
@@ -185,6 +185,8 @@ function OrbitingPhoto({
   radius,
   speed,
   yOffset,
+  isPaused,
+  onPause,
 }: {
   url: string;
   index: number;
@@ -192,6 +194,8 @@ function OrbitingPhoto({
   radius: number;
   speed: number;
   yOffset: number;
+  isPaused: boolean;
+  onPause: (paused: boolean) => void;
 }) {
   const ref = useRef<THREE.Group>(null);
   const texture = useMemo(() => {
@@ -204,10 +208,20 @@ function OrbitingPhoto({
   }, [url]);
 
   const angleOffset = (index / total) * Math.PI * 2;
+  const angleRef = useRef(angleOffset);
 
-  useFrame((state) => {
+  useEffect(() => {
+    return () => {
+      document.body.style.cursor = "auto";
+    };
+  }, []);
+
+  useFrame((state, delta) => {
     if (!ref.current) return;
-    const angle = state.clock.elapsedTime * speed + angleOffset;
+    if (!isPaused) {
+      angleRef.current += delta * speed;
+    }
+    const angle = angleRef.current;
     ref.current.position.x = Math.cos(angle) * radius;
     ref.current.position.z = Math.sin(angle) * radius;
     ref.current.position.y = yOffset + Math.sin(state.clock.elapsedTime * 0.5 + index) * 0.3;
@@ -217,7 +231,35 @@ function OrbitingPhoto({
   return (
     <group ref={ref}>
       {/* Photo (Borderless & Double Sided) */}
-      <mesh position={[0, 0, 0]}>
+      <mesh
+        position={[0, 0, 0]}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+          onPause(true);
+        }}
+        onPointerUp={(e) => {
+          e.stopPropagation();
+          onPause(false);
+        }}
+        onPointerLeave={(e) => {
+          e.stopPropagation();
+          onPause(false);
+          document.body.style.cursor = "auto";
+        }}
+        onPointerCancel={(e) => {
+          e.stopPropagation();
+          onPause(false);
+          document.body.style.cursor = "auto";
+        }}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = "pointer";
+        }}
+        onPointerOut={(e) => {
+          e.stopPropagation();
+          document.body.style.cursor = "auto";
+        }}
+      >
         <planeGeometry args={[1.5, 1.5]} />
         <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
       </mesh>
@@ -256,6 +298,8 @@ function StarParticles({ count = 600 }) {
 
 // ─── Main 3D Scene ────────────────────────────────────────────────────────────
 function HeartScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onOpen: () => void }) {
+  const [isPaused, setIsPaused] = useState(false);
+
   return (
     <>
       <color attach="background" args={["#0A0010"]} />
@@ -282,6 +326,8 @@ function HeartScene({ gift, opened, onOpen }: { gift: any; opened: boolean; onOp
             radius={5 + (i % 2) * 1.5}
             speed={0.25 + (i % 3) * 0.07}
             yOffset={1.6 + (i % 3 - 1) * 1.2}
+            isPaused={isPaused}
+            onPause={setIsPaused}
           />
         ))}
 
@@ -411,7 +457,7 @@ function MessageOverlay({ gift, onClose }: { gift: any; onClose: () => void }) {
 
         {(gift.photos || []).length > 0 && (
           <p className="text-center text-[#FF758F]/60 text-xs mt-3">
-            ✨ {(gift.photos || []).length} bức ảnh đang xoay xung quanh trái tim
+            ✨ Ấn giữ ảnh để tạm dừng xoay • Kéo để xoay camera
           </p>
         )}
       </div>
