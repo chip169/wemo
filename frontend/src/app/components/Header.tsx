@@ -94,7 +94,7 @@ export function Header() {
             }}
           >
             <Gift className="w-4 h-4" />
-            Tạo Quà
+            Tạo Thiệp
           </Link>
 
           {/* Mobile Menu Button */}

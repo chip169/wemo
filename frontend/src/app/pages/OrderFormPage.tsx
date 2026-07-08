@@ -387,8 +387,8 @@ export function OrderFormPage() {
                         type="button"
                         onClick={() => setConfig({ ...config, size: s.id as OrderConfig["size"] })}
                         className={`relative p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${config.size === s.id
-                            ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-md"
-                            : "border-stone-150 bg-white hover:border-stone-300"
+                          ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-md"
+                          : "border-stone-150 bg-white hover:border-stone-300"
                           }`}
                       >
                         {s.recommended && (
@@ -415,7 +415,7 @@ export function OrderFormPage() {
                 {/* Quantity */}
                 <div className="space-y-3">
                   <label className="flex items-center gap-2 text-xs font-black text-stone-700 uppercase tracking-widest">
-                    <Layers className="w-3.5 h-3.5 text-[#E8B4A8]" /> Số lượng nhân vật
+                    <Layers className="w-3.5 h-3.5 text-[#E8B4A8]" /> Số lượng đặt
                   </label>
                   <div className="flex items-center gap-4">
                     <button
@@ -449,8 +449,8 @@ export function OrderFormPage() {
                         type="button"
                         onClick={() => setConfig({ ...config, base: b.id as OrderConfig["base"] })}
                         className={`p-3 rounded-2xl border-2 text-center transition-all cursor-pointer ${config.base === b.id
-                            ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-sm"
-                            : "border-stone-150 bg-white hover:border-stone-300"
+                          ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-sm"
+                          : "border-stone-150 bg-white hover:border-stone-300"
                           }`}
                       >
                         <div className="text-xl mb-1">{b.emoji}</div>
@@ -472,8 +472,8 @@ export function OrderFormPage() {
                     type="button"
                     onClick={() => setConfig({ ...config, led: !config.led })}
                     className={`w-full p-4 rounded-2xl border-2 text-left flex items-center justify-between transition-all cursor-pointer ${config.led
-                        ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-sm"
-                        : "border-stone-150 bg-white hover:border-stone-300"
+                      ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-sm"
+                      : "border-stone-150 bg-white hover:border-stone-300"
                       }`}
                   >
                     <div className="flex items-center gap-3">
@@ -570,8 +570,8 @@ export function OrderFormPage() {
                         onChange={(e) => setContact({ ...contact, email: e.target.value })}
                         placeholder="email@example.com"
                         className={`w-full px-4 py-3 rounded-xl border outline-none text-stone-800 text-sm font-medium bg-white transition-colors ${contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim())
-                            ? "border-rose-400 focus:border-rose-500"
-                            : "border-stone-200 focus:border-[#E8B4A8]"
+                          ? "border-rose-400 focus:border-rose-500"
+                          : "border-stone-200 focus:border-[#E8B4A8]"
                           }`}
                       />
                       {contact.email.trim() !== "" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact.email.trim()) && (
