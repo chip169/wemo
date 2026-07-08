@@ -16,6 +16,13 @@ import { OrderFormPage } from "./pages/OrderFormPage";
 import { PaymentPage } from "./pages/PaymentPage";
 import { OrderSuccessPage } from "./pages/OrderSuccessPage";
 import { TrackOrderPage } from "./pages/TrackOrderPage";
+import { PrivacyPolicyPage } from "./pages/PrivacyPolicyPage";
+import { TermsOfServicePage } from "./pages/TermsOfServicePage";
+import { RefundPolicyPage } from "./pages/RefundPolicyPage";
+import { SupportCenterPage } from "./pages/SupportCenterPage";
+import { TutorialsPage } from "./pages/TutorialsPage";
+import { AboutUsPage } from "./pages/AboutUsPage";
+import { ContactPage } from "./pages/ContactPage";
 
 export const router = createBrowserRouter([
   {
@@ -59,6 +66,13 @@ export const router = createBrowserRouter([
       { path: "ai-chibi", Component: AIChibiPage },
       { path: "track", Component: TrackOrderPage },
       { path: "track/:orderId", Component: TrackOrderPage },
+      { path: "privacy-policy", Component: PrivacyPolicyPage },
+      { path: "terms-of-service", Component: TermsOfServicePage },
+      { path: "refund-policy", Component: RefundPolicyPage },
+      { path: "support-center", Component: SupportCenterPage },
+      { path: "tutorials", Component: TutorialsPage },
+      { path: "about-us", Component: AboutUsPage },
+      { path: "contact", Component: ContactPage },
     ],
   },
   {
