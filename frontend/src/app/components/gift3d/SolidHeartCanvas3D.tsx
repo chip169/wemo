@@ -282,9 +282,8 @@ function OrbitingPhoto({
 
   return (
     <group ref={ref}>
-      {/* Polaroid Photo Canvas (White border removed) */}
+      {/* Polaroid Photo Canvas (White border removed, rendered with custom shader to prevent texture warping) */}
       <mesh
-        geometry={roundedCardGeometry}
         position={[0, 0, 0]}
         onPointerDown={(e) => {
           e.stopPropagation();
@@ -313,7 +312,50 @@ function OrbitingPhoto({
           document.body.style.cursor = "auto";
         }}
       >
-        <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
+        <planeGeometry args={[1.5, 1.5]} />
+        <shaderMaterial
+          attach="material"
+          transparent
+          side={THREE.DoubleSide}
+          uniforms={{
+            uTexture: { value: texture },
+            uRadius: { value: 0.12 },
+            uSize: { value: new THREE.Vector2(1.5, 1.5) }
+          }}
+          vertexShader={`
+            varying vec2 vUv;
+            void main() {
+              vUv = uv;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+          `}
+          fragmentShader={`
+            uniform sampler2D uTexture;
+            uniform float uRadius;
+            uniform vec2 uSize;
+            varying vec2 vUv;
+
+            float sdRoundedBox(vec2 p, vec2 b, float r) {
+              vec2 q = abs(p) - b + r;
+              return min(max(q.x, q.y), 0.0) + length(max(q, 0.0)) - r;
+            }
+
+            void main() {
+              vec2 pos = (vUv - 0.5) * uSize;
+              vec2 halfSize = uSize * 0.5;
+              float dist = sdRoundedBox(pos, halfSize, uRadius);
+              
+              // Smooth antialiased edges
+              float edge = 0.01;
+              float alpha = smoothstep(edge, -edge, dist);
+              
+              if (alpha <= 0.0) discard;
+              
+              vec4 texColor = texture2D(uTexture, vUv);
+              gl_FragColor = vec4(texColor.rgb, texColor.a * alpha);
+            }
+          `}
+        />
       </mesh>
     </group>
   );
