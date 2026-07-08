@@ -21,8 +21,8 @@ Hệ thống tích hợp các không gian 3D tương tác sử dụng **React Th
 
 ### 3. Quản Lý Đơn Hàng & Xóa Liên Đới (Cascading Delete)
 Hệ thống quản lý chặt chẽ vòng đời của đơn hàng để tránh dữ liệu mồ côi:
-- Khi một đơn hàng bị xóa (`DELETE /api/orders/:id`), toàn bộ các món quà (`Gift`) liên kết sẽ tự động chuyển trạng thái `status = "deleted"` (trả về lỗi 404 khi truy cập công khai).
-- Các thẻ chip NFC liên kết với món quà đó sẽ tự động được giải phóng về trạng thái chưa gán (`unassigned`, `giftId = ""`) để tái sử dụng ngay lập tức.
+- Khi một đơn hàng bị xóa (`DELETE /api/orders/:id`), toàn bộ các món quà (`Gift`) liên kết với đơn hàng đó sẽ tự động bị xóa vĩnh viễn khỏi cơ sở dữ liệu.
+- Các thẻ chip NFC liên kết với các món quà bị xóa đó sẽ tự động được giải phóng về trạng thái chưa gán (`unassigned`, `giftId = ""`) để tái sử dụng ngay lập tức.
 
 ### 4. Kênh Trò Chuyện Trực Tuyến Trợ Giúp Real-time (Server-Sent Events)
 - Tích hợp khung chat trợ giúp trực tuyến giữa khách hàng và Admin.
