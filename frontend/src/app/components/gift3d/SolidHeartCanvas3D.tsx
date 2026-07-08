@@ -317,6 +317,7 @@ function OrbitingPhoto({
           attach="material"
           transparent
           side={THREE.DoubleSide}
+          toneMapped={false}
           uniforms={{
             uTexture: { value: texture },
             uRadius: { value: 0.12 },
