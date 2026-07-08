@@ -1205,8 +1205,8 @@ app.delete("/api/orders/:id", authMiddleware, async (req, res) => {
       // Xóa đơn hàng
       await Order.deleteOne({ id });
 
-      // Xóa mềm tất cả các quà tặng (gift cards) liên kết với đơn hàng này
-      await Gift.updateMany({ orderId: id }, { $set: { status: "deleted" } });
+      // Xóa vĩnh viễn tất cả các quà tặng (gift cards) liên kết với đơn hàng này
+      await Gift.deleteMany({ orderId: id });
 
       // Reset các thẻ NFC có liên quan
       if (giftIds.length > 0) {
@@ -1221,17 +1221,11 @@ app.delete("/api/orders/:id", authMiddleware, async (req, res) => {
       const filtered = orders.filter((o) => o.id !== id);
       await writeJsonFile("orders.json", filtered);
 
-      // Xóa mềm quà tặng trong JSON storage và lưu danh sách giftId bị xóa
+      // Xóa vĩnh viễn quà tặng trong JSON storage và lưu danh sách giftId bị xóa
       const gifts = await readJsonFile("gifts.json");
-      const deletedGiftIds = [];
-      const updatedGifts = gifts.map((g) => {
-        if (g.orderId === id) {
-          deletedGiftIds.push(g.id);
-          return { ...g, status: "deleted" };
-        }
-        return g;
-      });
-      await writeJsonFile("gifts.json", updatedGifts);
+      const deletedGiftIds = gifts.filter((g) => g.orderId === id).map((g) => g.id);
+      const filteredGifts = gifts.filter((g) => g.orderId !== id);
+      await writeJsonFile("gifts.json", filteredGifts);
 
       // Reset các thẻ NFC có liên quan trong JSON storage
       if (deletedGiftIds.length > 0) {
@@ -1245,7 +1239,7 @@ app.delete("/api/orders/:id", authMiddleware, async (req, res) => {
         await writeJsonFile("nfc.json", updatedNfcTags);
       }
     }
-    res.json({ success: true, message: "Đã xóa đơn hàng và cập nhật các quà tặng/thẻ NFC liên quan thành công." });
+    res.json({ success: true, message: "Đã xóa đơn hàng và các quà tặng liên quan vĩnh viễn thành công." });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
