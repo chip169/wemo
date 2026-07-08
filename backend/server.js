@@ -1172,13 +1172,54 @@ app.delete("/api/orders/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
   try {
     if (getDbMode() === "mongodb") {
+      // Tìm các giftId chuẩn bị bị xóa để reset thẻ NFC liên kết
+      const associatedGifts = await Gift.find({ orderId: id });
+      const giftIds = associatedGifts.map((g) => g.id);
+
+      // Xóa đơn hàng
       await Order.deleteOne({ id });
+
+      // Xóa mềm tất cả các quà tặng (gift cards) liên kết với đơn hàng này
+      await Gift.updateMany({ orderId: id }, { $set: { status: "deleted" } });
+
+      // Reset các thẻ NFC có liên quan
+      if (giftIds.length > 0) {
+        await NFC.updateMany(
+          { giftId: { $in: giftIds } },
+          { $set: { status: "unassigned", giftId: "" } }
+        );
+      }
     } else {
+      // Xóa đơn hàng khỏi JSON storage
       const orders = await readJsonFile("orders.json");
       const filtered = orders.filter((o) => o.id !== id);
       await writeJsonFile("orders.json", filtered);
+
+      // Xóa mềm quà tặng trong JSON storage và lưu danh sách giftId bị xóa
+      const gifts = await readJsonFile("gifts.json");
+      const deletedGiftIds = [];
+      const updatedGifts = gifts.map((g) => {
+        if (g.orderId === id) {
+          deletedGiftIds.push(g.id);
+          return { ...g, status: "deleted" };
+        }
+        return g;
+      });
+      await writeJsonFile("gifts.json", updatedGifts);
+
+      // Reset các thẻ NFC có liên quan trong JSON storage
+      if (deletedGiftIds.length > 0) {
+        const nfcTags = await readJsonFile("nfc.json");
+        const updatedNfcTags = nfcTags.map((t) => {
+          if (deletedGiftIds.includes(t.giftId)) {
+            return { ...t, status: "unassigned", giftId: "" };
+          }
+          return t;
+        });
+        await writeJsonFile("nfc.json", updatedNfcTags);
+      }
     }
-    res.json({ success: true, message: "Đã xóa đơn hàng thành công." });
+    res.json({ success: true, message: "Đã xóa đơn hàng và cập nhật các quà tặng/thẻ NFC liên quan thành công." });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
