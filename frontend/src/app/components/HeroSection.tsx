@@ -10,9 +10,8 @@ export function HeroSection() {
   const yFloatingLeftHeart = useTransform(scrollY, [0, 1000], [0, 40]);
 
   // Đường dẫn ảnh sản phẩm gốc để bóc tách chi tiết 3D
-  const baseImg =
-    "https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/t%E1%BA%A1o_h%C3%ACnh_%E1%BA%A3nh_1_s%E1%BA%A3n_202606011509.jpeg";
-  const optimizedImg = `${baseImg}?w=1200&auto=format,compress&q=90`;
+  const baseImg = "/assets/hero-product.jpeg";
+  const optimizedImg = baseImg;
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] py-12">
@@ -82,7 +81,7 @@ export function HeroSection() {
               className="absolute left-[45%] top-0 text-[#E8B4A8] text-xs opacity-80 w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md"
             >
               <img
-                src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/traiTim.png"
+                src="/assets/traiTim.png"
                 alt="3D Couple"
                 className="w-full h-full object-cover rounded-full"
               />
@@ -95,7 +94,7 @@ export function HeroSection() {
               className="absolute right-24 top-2 w-7 h-7 flex items-center justify-center text-[10px] rounded-lg shadow-sm"
             >
               <img
-                src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/mayAnh.png"
+                src="/assets/mayAnh.png"
                 alt="3D Couple"
                 className="w-full h-full object-cover rounded-full"
               />
@@ -126,7 +125,7 @@ export function HeroSection() {
               className="absolute right-16 top-[220px] text-[10px] opacity-60 w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md"
             >
               <img
-                src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/traiTim.png"
+                src="/assets/traiTim.png"
                 alt="3D Couple"
                 className="w-full h-full object-cover rounded-full"
               />
@@ -144,7 +143,7 @@ export function HeroSection() {
               className="absolute right-20 top-[260px] w-16 h-16 rounded-full overflow-hidden shadow-lg bg-[#FCEBE7]"
             >
               <img
-                src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/banh.png?w=1073&h=992"
+                src="/assets/banh.png"
                 alt="3D Cake"
                 className="w-full h-full object-cover scale-110"
               />
@@ -166,7 +165,7 @@ export function HeroSection() {
                 className="w-full h-full"
               >
                 <img
-                  src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/mayAnh.png"
+                  src="/assets/mayAnh.png"
                   alt="3D Couple"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -184,7 +183,7 @@ export function HeroSection() {
                 className="w-full h-full"
               >
                 <img
-                  src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/traiTim.png"
+                  src="/assets/traiTim.png"
                   alt="3D Couple"
                   className="w-full h-full object-cover rounded-full"
                 />
@@ -270,7 +269,7 @@ export function HeroSection() {
               {/* Thẻ Video chính */}
               <div className="w-full h-full rounded-[36px] overflow-hidden bg-gray-900 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] relative">
                 <video
-                  src="https://6a1d3eb50bc623d413b1bf46.imgix.net/wemo/t%E1%BA%A1o_s%E1%BB%B1_chuy%E1%BB%83n_%C4%91%E1%BB%99ng_ko_202606011546.mp4"
+                  src="/assets/hero-video.mp4"
                   className="w-full h-full object-cover"
                   autoPlay
                   loop
