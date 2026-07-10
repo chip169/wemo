@@ -16,6 +16,7 @@ export function Header() {
   }, []);
 
   const location = useLocation();
+  const isHomePage = location.pathname === "/";
   const navItems = [
     { name: "Tính Năng", href: "/features" },
     { name: "Mẫu Thiệp", href: "/templates" },
@@ -30,7 +31,11 @@ export function Header() {
       animate={{ y: 0 }}
       className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
-        background: isScrolled ? "var(--webo-glass-white)" : "transparent",
+        background: isScrolled
+          ? "var(--webo-glass-white)"
+          : isHomePage
+          ? "transparent"
+          : "transparent",
         backdropFilter: isScrolled ? "blur(20px)" : "none",
         borderBottom: isScrolled ? "1px solid rgba(255,255,255,0.3)" : "none",
       }}
@@ -69,7 +74,11 @@ export function Header() {
                   <Link
                     to={item.href}
                     className="font-medium transition-colors relative"
-                    style={{ color: isActive ? "#E8B4A8" : "#1A1818" }}
+                    style={
+                      isActive
+                        ? { color: "#E8B4A8" }
+                        : { color: "#1A1818" }
+                    }
                   >
                     {item.name}
                     {isActive && (

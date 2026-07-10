@@ -1,4 +1,4 @@
-import { HeroSection } from "../components/HeroSection";
+import { ToonhubPage } from "./ToonhubPage";
 import { HowItWorks } from "../components/HowItWorks";
 import { TemplateShowcase } from "../components/TemplateShowcase";
 import { PersonalizationFeatures } from "../components/PersonalizationFeatures";
@@ -10,7 +10,10 @@ import { FinalCTA } from "../components/FinalCTA";
 export function Home() {
   return (
     <>
-      <HeroSection />
+      {/* Carousel TOONHUB làm Hero Section trang chủ */}
+      <ToonhubPage />
+
+      {/* Các phần nội dung cũ của WEMO */}
       <HowItWorks />
       <TemplateShowcase />
       <PersonalizationFeatures />

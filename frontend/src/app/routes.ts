@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router";
 import { Root } from "./Root";
 import { Home } from "./pages/Home";
+import { OrbisPage } from "./pages/OrbisPage";
+import { ToonhubPage } from "./pages/ToonhubPage";
 import { FeaturesPage } from "./pages/FeaturesPage";
 import { TemplatesPage } from "./pages/TemplatesPage";
 import { TemplateDetailPage } from "./pages/TemplateDetailPage";
@@ -25,6 +27,14 @@ import { AboutUsPage } from "./pages/AboutUsPage";
 import { ContactPage } from "./pages/ContactPage";
 
 export const router = createBrowserRouter([
+  {
+    path: "orbis",
+    Component: OrbisPage,
+  },
+  {
+    path: "toonhub",
+    Component: ToonhubPage,
+  },
   {
     path: "create",
     Component: GiftWizard,

@@ -41,14 +41,24 @@ export function Root() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [navigate]);
 
+  // Ẩn Header chỉ trên các trang standalone full-page
+  const hideHeader =
+    location.pathname === "/toonhub" ||
+    location.pathname === "/orbis";
+
+  // Các trang standalone (/toonhub, /orbis) ẩn Footer vì chúng là full-page độc lập
+  const hideFooter =
+    location.pathname === "/toonhub" ||
+    location.pathname === "/orbis";
+
   return (
     <div className="min-h-screen relative">
-      <Header />
+      {!hideHeader && <Header />}
       <main>
         <Outlet />
       </main>
-      <Footer />
-      <SupportChatWidget />
+      {!hideFooter && <Footer />}
+      {!hideFooter && <SupportChatWidget />}
     </div>
   );
 }
