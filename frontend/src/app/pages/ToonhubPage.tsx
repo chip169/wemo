@@ -57,7 +57,7 @@ export function ToonhubPage() {
         <div className="absolute inset-0 pointer-events-none z-[50]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E\")", opacity: 0.4, backgroundSize: "200px 200px" }} />
 
         {/* Ghost text WEMO 3D */}
-        <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none z-[2]" style={{ top: "15%", fontFamily: "'Anton', sans-serif", fontSize: "clamp(90px, 28vw, 380px)", fontWeight: 900, color: "#C13880", opacity: 0.35, lineHeight: 1, textTransform: "uppercase", letterSpacing: "-0.02em", whiteSpace: "nowrap" }}>
+        <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none z-[2]" style={{ top: "15%", fontFamily: "'Anton', sans-serif", fontSize: "clamp(60px, 18vw, 260px)", fontWeight: 900, color: "#C13880", opacity: 0.35, lineHeight: 1, textTransform: "uppercase", letterSpacing: "-0.04em", whiteSpace: "nowrap" }}>
           WEMO 3D
         </div>
 
