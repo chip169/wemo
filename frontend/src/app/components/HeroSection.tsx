@@ -4,17 +4,51 @@ import { Link } from "react-router";
 
 export function HeroSection() {
   const { scrollY } = useScroll();
-  const yPhone = useTransform(scrollY, [0, 1000], [0, 80]);
-  const yBadge = useTransform(scrollY, [0, 1000], [0, -60]);
-  const yFloatingLeftImg = useTransform(scrollY, [0, 1000], [0, -40]);
-  const yFloatingLeftHeart = useTransform(scrollY, [0, 1000], [0, 40]);
 
-  // Đường dẫn ảnh sản phẩm gốc để bóc tách chi tiết 3D
-  const baseImg = "/assets/hero-product.jpeg";
-  const optimizedImg = baseImg;
+  // 3D Scroll Transforms for the main Pink 3D Figure
+  const rotateX = useTransform(scrollY, [0, 800], [0, 12]);     // Smooth tilt
+  const rotateY = useTransform(scrollY, [0, 800], [0, -12]);    // Smooth side twist
+  const translateY = useTransform(scrollY, [0, 800], [0, 50]);  // Subtle parallax down
+  const scale = useTransform(scrollY, [0, 800], [1, 1.05]);     // Subtle zoom in
+  const opacity = useTransform(scrollY, [600, 800], [1, 0.95]); // Maintain visibility
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] py-12">
+      {/* CSS Styles for laser scanline, rotating circles, and neon grid */}
+      <style dangerouslySetInnerHTML={{
+        __html: `
+        @keyframes laser-sweep {
+          0% { transform: translateY(-100%); opacity: 0; }
+          10% { opacity: 0.8; }
+          90% { opacity: 0.8; }
+          100% { transform: translateY(200%); opacity: 0; }
+        }
+        @keyframes rotate-hud-clockwise {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+        @keyframes rotate-hud-counter {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(-360deg); }
+        }
+        .laser-line {
+          animation: laser-sweep 4s linear infinite;
+        }
+        .hud-clockwise {
+          animation: rotate-hud-clockwise 25s linear infinite;
+        }
+        .hud-counter {
+          animation: rotate-hud-counter 15s linear infinite;
+        }
+        .tech-grid {
+          background-size: 30px 30px;
+          background-image: 
+            linear-gradient(to right, rgba(232, 180, 168, 0.08) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(232, 180, 168, 0.08) 1px, transparent 1px);
+        }
+        `
+      }} />
+
       {/* Background chuyển động mượt mà */}
       <div className="absolute inset-0 webo-animated-gradient opacity-40" />
 
@@ -30,7 +64,7 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -top-48 -left-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#E8B4A8]/20 to-[#D4AF78]/25 blur-[120px]"
+          className="absolute -top-48 -left-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#E8B4A8]/25 to-[#D4AF78]/30 blur-[120px]"
         />
         <motion.div
           animate={{
@@ -42,7 +76,7 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute -bottom-48 -right-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#D4AF78]/20 to-[#E8B4A8]/25 blur-[120px]"
+          className="absolute -bottom-48 -right-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#D4AF78]/25 to-[#E8B4A8]/30 blur-[120px]"
         />
       </div>
 
@@ -70,128 +104,8 @@ export function HeroSection() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* ================= BÊN TRÁI: KHỐI CHỮ VÀ HÌNH 3D Y NHƯ HÌNH ================= */}
+          {/* ================= BÊN TRÁI: KHỐI CHỮ ================= */}
           <div className="lg:col-span-5 text-center lg:text-left z-30 flex flex-col justify-center relative py-12 select-none">
-            {/* --- CÁC PHẦN TỬ 3D ĐỘNG BAO QUANH CHỮ --- */}
-
-            {/* 1. Trái tim nhỏ trên cùng (Gần Badge) */}
-            <motion.div
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute left-[45%] top-0 text-[#E8B4A8] text-xs opacity-80 w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md"
-            >
-              <img
-                src="/assets/traiTim.png"
-                alt="3D Couple"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </motion.div>
-
-            {/* 2. Máy ảnh Claymation (Phía trên chữ Biến Mối Món) */}
-            <motion.div
-              animate={{ y: [0, -5, 0], rotate: [0, 5, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute right-24 top-2 w-7 h-7 flex items-center justify-center text-[10px] rounded-lg shadow-sm"
-            >
-              <img
-                src="/assets/mayAnh.png"
-                alt="3D Couple"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </motion.div>
-
-            {/* 4. Hình Cặp đôi 3D (Bên phải chữ Quà Thành) */}
-            <motion.div
-              animate={{ y: [0, -6, 0], rotate: [0, 4, 0] }}
-              transition={{
-                duration: 4.2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.2,
-              }}
-              className="absolute right-4 top-36 w-11 h-11 rounded-full overflow-hidden shadow-md"
-            >
-              <img
-                src={`${baseImg}?w=80&h=80&fit=crop`}
-                alt="3D Couple"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </motion.div>
-
-            {/* 5. Trái tim hồng nhỏ dưới chân cặp đôi */}
-            <motion.div
-              animate={{ x: [0, 3, 0] }}
-              transition={{ duration: 3, repeat: Infinity }}
-              className="absolute right-16 top-[220px] text-[10px] opacity-60 w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md"
-            >
-              <img
-                src="/assets/traiTim.png"
-                alt="3D Couple"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </motion.div>
-
-            {/* 6. Bánh kem tầng 3D lớn trung tâm (Ngay cạnh chữ Ký Ức Số) */}
-            <motion.div
-              animate={{ y: [0, 7, 0], scale: [1, 1.03, 1] }}
-              transition={{
-                duration: 3.8,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.4,
-              }}
-              className="absolute right-20 top-[260px] w-16 h-16 rounded-full overflow-hidden shadow-lg bg-[#FCEBE7]"
-            >
-              <img
-                src="/assets/banh.png"
-                alt="3D Cake"
-                className="w-full h-full object-cover scale-110"
-              />
-            </motion.div>
-
-            {/* 7. Máy ảnh Retro bên phải bánh kem */}
-            <motion.div
-              style={{ y: yFloatingLeftImg }}
-              className="absolute right-4 top-[290px] w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md"
-            >
-              <motion.div
-                animate={{ y: [0, -4, 0] }}
-                transition={{
-                  duration: 3.5,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                  delay: 0.1,
-                }}
-                className="w-full h-full"
-              >
-                <img
-                  src="/assets/mayAnh.png"
-                  alt="3D Couple"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* 8. Trái tim nhỏ ngoài cùng bên trái */}
-            <motion.div
-              style={{ y: yFloatingLeftHeart }}
-              className="absolute -left-8 top-[245px] w-8 h-8 flex items-center justify-center text-xs  rounded-xl shadow-md "
-            >
-              <motion.div
-                animate={{ scale: [1, 1.15, 1] }}
-                transition={{ duration: 2.8, repeat: Infinity }}
-                className="w-full h-full"
-              >
-                <img
-                  src="/assets/traiTim.png"
-                  alt="3D Couple"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </motion.div>
-            </motion.div>
-
-            {/* --- NỘI DUNG TEXT CHÍNH --- */}
-
             {/* Badge */}
             <div className="inline-flex self-center lg:self-start items-center gap-2 px-4 py-2 rounded-full mb-8 bg-white/90 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-white">
               <Sparkles className="w-3.5 h-3.5 text-[#E8B4A8]" />
@@ -257,101 +171,53 @@ export function HeroSection() {
             </div>
           </div>
 
-          {/* ================= BÊN PHẢI: VIDEO TO NGANG KHÔNG VIỀN + ẢNH PHỤ TRẮNG ================= */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="lg:col-span-7 relative flex flex-col items-center justify-center w-full"
+          {/* ================= BÊN PHẢI: MÔ HÌNH 3D CHUYỂN ĐỘNG CUỘN (SCROLL-DRIVEN 3D MOTION) ================= */}
+          <div 
+            className="lg:col-span-7 relative flex flex-col items-center justify-center w-full min-h-[500px] lg:min-h-[600px] z-20"
+            style={{ perspective: 1200 }}
           >
-            {/* Khung video góc bo lớn siêu mượt */}
-            <div className="relative w-full max-w-[840px] aspect-[16/10] rounded-[36px] overflow-visible z-20">
-              {/* Thẻ Video chính */}
-              <div className="w-full h-full rounded-[36px] overflow-hidden bg-gray-900 shadow-[0_32px_64px_-12px_rgba(0,0,0,0.14)] relative">
-                <video
-                  src="/assets/hero-video.mp4"
-                  className="w-full h-full object-cover"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
+            <motion.div
+              style={{
+                rotateX,
+                rotateY,
+                y: translateY,
+                scale,
+                opacity,
+                transformStyle: "preserve-3d"
+              }}
+              className="relative w-full max-w-[480px] aspect-[4/5] flex items-center justify-center pointer-events-none"
+            >
+              {/* Ảnh Chibi 3D Figure chính */}
+              <img
+                src="/assets/chibi-figure.png"
+                alt="WEMO 3D Chibi Figure"
+                className="w-full h-full object-contain drop-shadow-[0_25px_60px_rgba(232,180,168,0.45)] pointer-events-auto mix-blend-multiply"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  const fallback = document.getElementById('figure-fallback');
+                  if (fallback) fallback.style.display = 'flex';
+                }}
+              />
 
-                {/* Ngôi sao lấp lánh ở góc dưới video như ảnh thiết kế */}
-                <motion.div
-                  animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.6, 1, 0.6] }}
-                  transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="absolute bottom-6 left-8 text-white text-xl drop-shadow-md pointer-events-none"
-                >
-                  WEMO
-                </motion.div>
+              {/* Khung hiển thị dự phòng (Fallback) khi chưa có ảnh */}
+              <div
+                id="figure-fallback"
+                className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0"
+                style={{ display: 'none' }}
+              >
+                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#E8B4A8] to-[#D4AF78] flex items-center justify-center text-white mb-5 shadow-lg animate-pulse">
+                  <Sparkles className="w-9 h-9" />
+                </div>
+                <h3 className="text-lg font-black text-[#1A1818] mb-2">Mô hình 3D Chibi</h3>
+                <p className="text-xs text-stone-500 max-w-[280px] leading-relaxed">
+                  Đang đợi bạn tải ảnh mô hình lên thư mục <br />
+                  <code className="bg-white/80 px-1.5 py-0.5 rounded border font-mono mt-1 inline-block text-[10px] text-[#E8B4A8]">
+                    assets/chibi-figure.png
+                  </code>
+                </p>
               </div>
-
-              {/* THẺ ẢNH PHỤ TRÊN - GIỮ NGUYÊN NỀN VÀ VIỀN TRẮNG */}
-              <motion.div
-                style={{ y: yBadge }}
-                className="absolute -top-10 -right-4 hidden xl:flex items-center gap-3 bg-white/95 backdrop-blur-md p-3 rounded-2xl shadow-xl border border-white max-w-[210px] overflow-hidden"
-              >
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  className="flex items-center gap-3 w-full"
-                >
-                  <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0">
-                    <img
-                      src={optimizedImg}
-                      alt="Detail"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-col min-w-0">
-                    <span className="text-[10px] text-gray-400 font-medium">
-                      Chi tiết sản phẩm
-                    </span>
-                    <span className="text-xs font-bold text-gray-800 truncate">
-                      Luxury Box Edition
-                    </span>
-                  </div>
-                </motion.div>
-              </motion.div>
-
-              {/* SMARTPHONE DƯỚI GÓC PHẢI - GIỮ NGUYÊN BORDER VIỀN TRẮNG DÀY */}
-              <motion.div
-                style={{ y: yPhone }}
-                className="absolute -bottom-8 -right-6 hidden xl:block w-36 aspect-[9/16] rounded-[24px] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] border-[5px] border-white bg-white z-30"
-              >
-                <motion.div
-                  animate={{ y: [0, 8, 0] }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                    delay: 0.5,
-                  }}
-                  className="w-full h-full overflow-hidden relative"
-                >
-                  <img
-                    src={optimizedImg}
-                    alt="NFC View"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/5 flex items-center justify-center">
-                    <div className="w-9 h-9 rounded-full border border-white/60 bg-white/20 animate-pulse flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-white" />
-                    </div>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </div>
     </section>
