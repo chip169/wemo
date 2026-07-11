@@ -88,11 +88,11 @@ function getSloganWrapperStyle(pos: string, isMobile: boolean): React.CSSPropert
   }
 
   switch (pos) {
-    case "top-left":    return { ...base, top: "14%", left: "4%" };
-    case "top-right":   return { ...base, top: "14%", right: "4%" };
+    case "top-left": return { ...base, top: "14%", left: "4%" };
+    case "top-right": return { ...base, top: "14%", right: "4%" };
     case "bottom-left": return { ...base, bottom: "180px", left: "4%" };
-    case "bottom-right":return { ...base, bottom: "180px", right: "4%" };
-    default:            return { ...base, top: "14%", left: "4%" };
+    case "bottom-right": return { ...base, bottom: "180px", right: "4%" };
+    default: return { ...base, top: "14%", left: "4%" };
   }
 }
 
@@ -138,9 +138,9 @@ export function ToonhubPage() {
   const getRoleStyles = (role: "center" | "left" | "right" | "back") => {
     switch (role) {
       case "center": return { transform: `translateX(-50%) scale(${isMobile ? 1.25 : 1.68})`, filter: "blur(0px)", opacity: 1, zIndex: 20, left: "50%", height: isMobile ? "60%" : "85%", bottom: isMobile ? "22%" : "80px" };
-      case "left":   return { transform: "translateX(-50%) scale(1)", filter: "blur(2px)", opacity: 0.85, zIndex: 10, left: isMobile ? "20%" : "28%", height: isMobile ? "16%" : "26%", bottom: isMobile ? "32%" : "100px" };
-      case "right":  return { transform: "translateX(-50%) scale(1)", filter: "blur(2px)", opacity: 0.85, zIndex: 10, left: isMobile ? "80%" : "72%", height: isMobile ? "16%" : "26%", bottom: isMobile ? "32%" : "100px" };
-      case "back":   return { transform: "translateX(-50%) scale(1)", filter: "blur(4px)", opacity: 1, zIndex: 5,  left: "50%", height: isMobile ? "13%" : "20%", bottom: isMobile ? "32%" : "100px" };
+      case "left": return { transform: "translateX(-50%) scale(1)", filter: "blur(2px)", opacity: 0.85, zIndex: 10, left: isMobile ? "20%" : "28%", height: isMobile ? "16%" : "26%", bottom: isMobile ? "32%" : "100px" };
+      case "right": return { transform: "translateX(-50%) scale(1)", filter: "blur(2px)", opacity: 0.85, zIndex: 10, left: isMobile ? "80%" : "72%", height: isMobile ? "16%" : "26%", bottom: isMobile ? "32%" : "100px" };
+      case "back": return { transform: "translateX(-50%) scale(1)", filter: "blur(4px)", opacity: 1, zIndex: 5, left: "50%", height: isMobile ? "13%" : "20%", bottom: isMobile ? "32%" : "100px" };
     }
   };
 
@@ -159,7 +159,7 @@ export function ToonhubPage() {
         <div className="absolute inset-0 pointer-events-none z-[50]" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E\")", opacity: 0.4, backgroundSize: "200px 200px" }} />
 
         {/* Ghost text WEMO 3D */}
-        <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none z-[2]" style={{ top: "15%", fontFamily: "'Anton', sans-serif", fontSize: "clamp(90px, 20vw, 330px)", fontWeight: 900, color: "#C13880", opacity: 0.35, lineHeight: 1, textTransform: "uppercase", letterSpacing: "-0.04em", whiteSpace: "nowrap" }}>
+        <div className="absolute inset-x-0 flex items-center justify-center pointer-events-none select-none z-[2]" style={{ top: "15%", fontFamily: "'Anton', sans-serif", fontSize: "clamp(90px, 27vw, 430px)", fontWeight: 900, color: "#f6a2cfff", opacity: 0.35, lineHeight: 1, textTransform: "uppercase", letterSpacing: "-0.01em", whiteSpace: "nowrap" }}>
           WEMO 3D
         </div>
 
