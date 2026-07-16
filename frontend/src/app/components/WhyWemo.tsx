@@ -134,7 +134,7 @@ function ReasonCard({ reason }: { reason: typeof reasons[0] }) {
 
 export function WhyWemo() {
   return (
-    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-[#FAF3F0] to-[#FCE1DA]">
+    <section data-context="why-wemo" className="relative py-24 overflow-hidden bg-gradient-to-b from-[#FAF3F0] to-[#FCE1DA]">
       {/* Ambient Glow Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div

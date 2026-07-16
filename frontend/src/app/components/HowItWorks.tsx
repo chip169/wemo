@@ -114,7 +114,7 @@ function StepCard({ step, index }: { step: typeof steps[0]; index: number }) {
 
 export function HowItWorks() {
   return (
-    <section className="relative py-24 overflow-hidden bg-gradient-to-b from-[#FFF0EC] to-[#FCE1DA]">
+    <section data-context="how-it-works" className="relative py-24 overflow-hidden bg-gradient-to-b from-[#FFF0EC] to-[#FCE1DA]">
       {/* Ambient Glow Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div

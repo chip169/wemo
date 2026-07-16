@@ -181,7 +181,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
 
 export function Pricing() {
   return (
-    <section className="relative py-24" style={{ background: "#FCEBE7" }}>
+    <section data-context="pricing" className="relative py-24" style={{ background: "#FCEBE7" }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div

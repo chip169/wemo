@@ -3,7 +3,7 @@ import { Sparkles } from "lucide-react";
 
 export function FinalCTA() {
   return (
-    <section className="relative py-32 overflow-hidden bg-gradient-to-b from-[#FFF0EC] to-[#FAF3F0]">
+    <section data-context="final-cta" className="relative py-32 overflow-hidden bg-gradient-to-b from-[#FFF0EC] to-[#FAF3F0]">
       {/* Ambient Glow Orbs */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div

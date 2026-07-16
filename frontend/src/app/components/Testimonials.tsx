@@ -105,7 +105,7 @@ function ReviewCard({ testimonial }: { testimonial: typeof testimonialsRow1[0] }
 
 export function Testimonials() {
   return (
-    <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] overflow-hidden">
+    <section data-context="testimonials" className="relative py-24 md:py-32 bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] overflow-hidden">
 
       {/* Inline styles for infinite scrolling marquee */}
       <style dangerouslySetInnerHTML={{

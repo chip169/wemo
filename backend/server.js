@@ -1891,6 +1891,94 @@ app.post("/api/ai/generate-chibi", chibiRateLimiter, async (req, res) => {
   }
 });
 
+// ─── AI Chat Question Generator (Gemini) ──────────────────────────────────────
+app.post("/api/ai/chat-question", async (req, res) => {
+  try {
+    const { context, chatHistory = [], pageUrl = "" } = req.body;
+
+    const GEMINI_KEY = process.env.GEMINI_API_KEY || "AQ.Ab8RN6JeAljcNH9LB7OBUtW_WBFK6RRlvNF1jeGF742GBWoHIQ";
+
+    // Build context description
+    const contextDescriptions = {
+      homepage: "Trang chủ WEMO - giới thiệu thiệp NFC cá nhân hóa, chibi 3D AI",
+      features: "Trang tính năng - NFC không cần app, thiệp tương tác, chia sẻ album",
+      templates: "Trang mẫu thiệp - nhiều mẫu thiết kế: sinh nhật, lãng mạn, tốt nghiệp",
+      pricing: "Trang bảng giá - các gói Cơ Bản 199k, Nâng Cao 299k, Cao Cấp 449k",
+      "ai-chibi": "Trang vẽ chibi AI - tạo avatar 3D từ ảnh thật của khách hàng",
+      order: "Trang đặt hàng - điền thông tin giao hàng, chọn gói, thanh toán",
+      faq: "Trang câu hỏi thường gặp - hỏi đáp về sản phẩm và dịch vụ",
+      "how-it-works": "Section cách thức hoạt động - 4 bước: chạm NFC, chọn mẫu, tải ký ức, trải nghiệm",
+      testimonials: "Section đánh giá khách hàng - phản hồi tích cực từ người dùng thực",
+      "why-wemo": "Section lý do chọn WEMO - độc bản, NFC, chibi 3D, update mãi mãi",
+      "final-cta": "Section kêu gọi hành động - khuyến khích đặt hàng ngay",
+      "template-detail": "Trang chi tiết mẫu thiệp - xem preview và tùy chỉnh mẫu cụ thể",
+      "about-us": "Trang giới thiệu về WEMO studio và đội ngũ",
+      contact: "Trang liên hệ - form gửi yêu cầu hỗ trợ",
+      "support-center": "Trang trung tâm hỗ trợ - hướng dẫn sử dụng sản phẩm",
+      tutorials: "Trang hướng dẫn - video và bài viết hướng dẫn sử dụng thiệp NFC",
+      "track-order": "Trang theo dõi đơn hàng - khách kiểm tra trạng thái đơn",
+      payment: "Trang thanh toán - hoàn tất giao dịch mua hàng",
+      "order-success": "Trang đặt hàng thành công - xác nhận và thông tin giao hàng",
+    };
+
+    const contextDesc = contextDescriptions[context] || `Trang WEMO (${context || pageUrl})`;
+    const historyText = chatHistory.slice(-4).map(m => `${m.sender === "user" ? "Khách" : "Bot"}: ${m.text}`).join("\n");
+
+    const systemPrompt = `Bạn là trợ lý AI của WEMO - thương hiệu thiệp NFC tương tác cá nhân hóa tại Việt Nam.
+Nhiệm vụ: Sinh ĐÚNG 1 câu hỏi ngắn (tối đa 20 từ), tự nhiên, thân thiện bằng tiếng Việt, phù hợp với ngữ cảnh khách đang xem.
+Mục tiêu: Dẫn dắt khách chia sẻ nhu cầu, dịp tặng, hoặc vấn đề cần giải quyết.
+Ngữ cảnh hiện tại: ${contextDesc}
+${historyText ? `Lịch sử chat:\n${historyText}` : ""}
+Quy tắc:
+- Chỉ trả về 1 câu hỏi duy nhất, không giải thích thêm
+- Dùng emoji nhẹ nhàng (1-2 cái)
+- Không hỏi lặp lại câu đã có trong lịch sử
+- Tông điệu: vui vẻ, quan tâm, không gây áp lực`;
+
+    const geminiRes = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: systemPrompt }] }],
+          generationConfig: { maxOutputTokens: 80, temperature: 0.85 },
+        }),
+      }
+    );
+
+    if (!geminiRes.ok) {
+      throw new Error(`Gemini API error: ${geminiRes.status}`);
+    }
+
+    const geminiData = await geminiRes.json();
+    const question = geminiData?.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+
+    if (!question) throw new Error("Empty response from Gemini");
+
+    return res.json({ question });
+  } catch (err) {
+    console.error("❌ AI chat-question error:", err.message);
+    // Fallback questions by context
+    const fallbacks = {
+      homepage: "Bạn đang tìm quà tặng cho dịp gì vậy? 🎁",
+      pricing: "Bạn muốn tặng cho bao nhiêu người để mình gợi ý gói phù hợp? 💝",
+      templates: "Bạn thích phong cách thiệp tối giản hay rực rỡ hơn? ✨",
+      "ai-chibi": "Ảnh bạn dùng là ảnh đơn hay ảnh đôi ạ? 🎨",
+      order: "Bạn cần giao hàng vào ngày nào để mình kiểm tra lịch? 📦",
+      faq: "Bạn đang thắc mắc về điều gì ạ? Mình sẽ giải đáp ngay! 🙋",
+      "how-it-works": "Bạn đã biết cách thiệp NFC hoạt động chưa? 📱",
+      testimonials: "Bạn muốn tạo kỷ niệm tương tự không? 💕",
+      features: "Tính năng nào của WEMO bạn thấy thú vị nhất? 🌟",
+      "why-wemo": "Điều gì khiến bạn quan tâm đến thiệp WEMO? 💫",
+      contact: "Mình có thể hỗ trợ gì cho bạn hôm nay? 😊",
+      "about-us": "Bạn muốn biết thêm gì về WEMO không? 🌸",
+    };
+    const fallback = fallbacks[req.body?.context] || "Mình có thể giúp gì cho bạn hôm nay? 😊";
+    return res.json({ question: fallback, fallback: true });
+  }
+});
+
 // Start server
 app.listen(PORT, () => {
   console.log(`📡 Express Server running on port ${PORT}`);
