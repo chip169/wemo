@@ -1896,7 +1896,7 @@ app.post("/api/ai/chat-question", async (req, res) => {
   try {
     const { context, chatHistory = [], pageUrl = "" } = req.body;
 
-    const GEMINI_KEY = process.env.GEMINI_API_KEY || "AQ.Ab8RN6JeAljcNH9LB7OBUtW_WBFK6RRlvNF1jeGF742GBWoHIQ";
+    const GEMINI_KEY = process.env.GEMINI_API_KEY;
 
     // Build context description
     const contextDescriptions = {
