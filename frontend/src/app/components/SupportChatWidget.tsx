@@ -745,6 +745,20 @@ export function SupportChatWidget() {
     return style;
   };
 
+  // ─── Pacing animation when idle ─────────────────────────────────────────────
+  const isIdle = (pose === "stand" || pose === "wave") && !isOpen && !isDragging && !isAnimatingRef.current;
+  const idleAnimate = isIdle ? {
+    x: side === "left" ? [0, 0, 45, 45, 0, 0] : [0, 0, -45, -45, 0, 0],
+    y: [0, -6, 0, -3, 0, -3, 0, -6, 0, -3, 0, -3, 0],
+    rotate: [0, 0, 0, -3, 3, -3, 0, 0, 0, 3, -3, 3, 0],
+    scaleX: side === "left" ? 1 : -1
+  } : { x: 0, y: 0, rotate: 0, scaleX: side === "left" ? 1 : -1 };
+  const idleTransition = isIdle ? {
+    duration: 10,
+    repeat: Infinity,
+    ease: "easeInOut"
+  } : { type: "spring", stiffness: 320, damping: 28 };
+
   return (
     <>
       <style>{`
@@ -905,7 +919,9 @@ export function SupportChatWidget() {
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        className={pose === "stand" && !isOpen && !isDragging ? "pg-float" : pose === "landed" ? "pg-land" : ""}
+        className={pose === "landed" ? "pg-land" : ""}
+        animate={idleAnimate}
+        transition={isDragging ? { type: "spring", stiffness: 320, damping: 28 } : idleTransition}
         style={{
           position: "fixed",
           left: botPos.x,
