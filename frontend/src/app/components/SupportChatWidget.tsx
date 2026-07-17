@@ -750,7 +750,6 @@ export function SupportChatWidget() {
   const idleAnimate = isIdle ? {
     x: side === "left" ? [0, 0, 45, 45, 0, 0] : [0, 0, -45, -45, 0, 0],
     y: [0, -6, 0, -3, 0, -3, 0, -6, 0, -3, 0, -3, 0],
-    rotate: [0, 0, 0, -3, 3, -3, 0, 0, 0, 3, -3, 3, 0],
     scaleX: side === "left" ? 1 : -1
   } : { x: 0, y: 0, rotate: 0, scaleX: side === "left" ? 1 : -1 };
   const idleTransition = isIdle ? {
