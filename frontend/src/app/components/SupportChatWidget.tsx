@@ -80,8 +80,8 @@ function PangolinBot({ pose, size = 72 }: { pose: BotPose; size?: number }) {
         </defs>
         <ellipse cx="60" cy="116" rx="30" ry="5" fill="rgba(0,0,0,0.13)"/>
         <motion.g
-          animate={pose === "rolling" ? { rotate: [0, 360] } : {}}
-          transition={pose === "rolling" ? { duration:0.38, repeat:Infinity, ease:"linear" } : {}}
+          animate={{}}
+          transition={{}}
           style={{ originX:"60px", originY:"60px" }}
         >
           {/* Curl base body */}
@@ -454,30 +454,25 @@ export function SupportChatWidget() {
       setShowBubble(false);
     }
 
-    // 1. Curl up
-    setPose("curled");
+    // 1. Walk to target (stay in stand pose)
+    setPose("stand");
+    setBotPos({ x: targetX, y: targetY });
+    botPosRef.current = { x: targetX, y: targetY };
 
     setTimeout(() => {
-      // 2. Roll
-      setPose("rolling");
-      setBotPos({ x: targetX, y: targetY });
-      botPosRef.current = { x: targetX, y: targetY };
-
-      setTimeout(() => {
-        // 3. Land
-        setPose("landed");
-        isAnimatingRef.current = false;
-        if (guideKey && BOT_GUIDES[guideKey]) {
-          setShowBubble(true);
-          if (bubbleTimeoutRef.current) clearTimeout(bubbleTimeoutRef.current);
-          bubbleTimeoutRef.current = setTimeout(() => {
-            setShowBubble(false);
-          }, 5000);
-        }
-        // 4. Return to stand
-        setTimeout(() => setPose("stand"), 500);
-      }, duration);
-    }, 180);
+      // 2. Arrive
+      setPose("landed");
+      isAnimatingRef.current = false;
+      if (guideKey && BOT_GUIDES[guideKey]) {
+        setShowBubble(true);
+        if (bubbleTimeoutRef.current) clearTimeout(bubbleTimeoutRef.current);
+        bubbleTimeoutRef.current = setTimeout(() => {
+          setShowBubble(false);
+        }, 5000);
+      }
+      // 3. Return to stand
+      setTimeout(() => setPose("stand"), 400);
+    }, duration);
   }, [isOpen]);
 
   // ─── Init ──────────────────────────────────────────────────────────────────
