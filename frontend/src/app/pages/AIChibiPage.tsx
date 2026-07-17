@@ -364,7 +364,7 @@ export function AIChibiPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FCEBE7] pt-28 pb-16 font-sans relative overflow-hidden">
+    <div data-context="ai-chibi" className="min-h-screen bg-[#FCEBE7] pt-28 pb-16 font-sans relative overflow-hidden">
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#E8B4A8]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute top-1/2 -right-40 w-[500px] h-[500px] bg-[#D4AF78]/10 rounded-full blur-[150px] pointer-events-none" />
 
@@ -518,6 +518,7 @@ export function AIChibiPage() {
                     ) : (
                       <div className="space-y-4">
                         <div
+                          data-bot-guide="chibi-step"
                           onDragOver={handleDragOver}
                           onDragLeave={handleDragLeave}
                           onDrop={handleDrop}
@@ -808,7 +809,7 @@ export function AIChibiPage() {
                 <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider">
                   1. Chọn phong cách vẽ
                 </label>
-                <div className="grid grid-cols-1 gap-2.5">
+                <div data-bot-guide="chibi-style" className="grid grid-cols-1 gap-2.5">
                   {CHIBI_STYLES.map((style) => {
                     const isSelected = selectedStyle === style.id;
                     return (
@@ -874,6 +875,7 @@ export function AIChibiPage() {
                 {isLimitReached ? (
                   <button
                     onClick={() => navigate("/order")}
+                    data-bot-guide="chibi-generate"
                     className="w-full py-3.5 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white rounded-2xl text-xs font-black tracking-widest uppercase shadow-md transition-all hover:scale-102 flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <ShoppingBag className="w-4 h-4" />
@@ -883,6 +885,7 @@ export function AIChibiPage() {
                   <button
                     onClick={handleGenerate}
                     disabled={generating}
+                    data-bot-guide="chibi-generate"
                     className="w-full py-3.5 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] hover:opacity-95 text-white rounded-2xl text-xs font-black tracking-widest uppercase shadow-md transition-all hover:scale-102 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
                   >
                     <Sparkles className="w-4.5 h-4.5 fill-white animate-pulse" />
@@ -891,6 +894,7 @@ export function AIChibiPage() {
                 ) : (
                   <button
                     onClick={handleFileSelect}
+                    data-bot-guide="chibi-generate"
                     className="w-full py-3.5 bg-stone-900 text-white rounded-2xl text-xs font-black tracking-widest uppercase hover:bg-stone-800 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Upload className="w-4.5 h-4.5" />

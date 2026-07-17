@@ -69,7 +69,7 @@ export function TemplatesPage() {
   }, []);
 
   return (
-    <div className="pt-20" style={{ background: "#FCEBE7" }}>
+    <div data-context="templates" className="pt-20" style={{ background: "#FCEBE7" }}>
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }
@@ -119,6 +119,7 @@ export function TemplatesPage() {
               >
               <Link
                 to={`/templates/${template.slug}`}
+                data-bot-guide="template-card"
                 className="block group overflow-hidden rounded-3xl cursor-pointer"
                 style={{
                   background: "white",
