@@ -740,18 +740,13 @@ export function SupportChatWidget() {
     return style;
   };
 
-  // ─── Pacing animation when idle ─────────────────────────────────────────────
+  // ─── 3D Spin animation when idle ─────────────────────────────────────────────
   const isIdle = (pose === "stand" || pose === "wave") && !isOpen && !isDragging && !isAnimatingRef.current;
-  const idleAnimate = isIdle ? {
-    x: side === "left" ? [0, 0, 45, 45, 0, 0] : [0, 0, -45, -45, 0, 0],
-    y: [0, -6, 0, -3, 0, -3, 0, -6, 0, -3, 0, -3, 0],
-    scaleX: side === "left" ? 1 : -1
-  } : { x: 0, y: 0, rotate: 0, scaleX: side === "left" ? 1 : -1 };
-  const idleTransition = isIdle ? {
-    duration: 10,
-    repeat: Infinity,
-    ease: "easeInOut"
-  } : { type: "spring", stiffness: 320, damping: 28 };
+  // When idle we delegate to CSS keyframe pg3dSpin; framer-motion just keeps position stable
+  const idleAnimate = isIdle
+    ? { x: 0, y: 0 }
+    : { x: 0, y: 0, scaleX: side === "left" ? 1 : -1 };
+  const idleTransition = { type: "spring" as const, stiffness: 320, damping: 28 };
 
   return (
     <>
@@ -760,9 +755,31 @@ export function SupportChatWidget() {
         @keyframes pgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         @keyframes pgLand{0%{transform:scaleY(0.78) scaleX(1.15)}55%{transform:scaleY(1.06) scaleX(0.96)}100%{transform:scaleY(1) scaleX(1)}}
         @keyframes pgIn{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+        @keyframes pg3dSpin{
+          0%   { transform: perspective(200px) rotateY(0deg)   translateY(0px);   filter: brightness(1) drop-shadow(0 8px 16px rgba(180,120,50,0.35)); }
+          10%  { transform: perspective(200px) rotateY(36deg)  translateY(-3px);  filter: brightness(0.92) drop-shadow(4px 8px 18px rgba(100,60,10,0.4)); }
+          20%  { transform: perspective(200px) rotateY(72deg)  translateY(-5px);  filter: brightness(0.78) drop-shadow(6px 6px 20px rgba(80,40,5,0.45)); }
+          30%  { transform: perspective(200px) rotateY(108deg) translateY(-4px);  filter: brightness(0.65) drop-shadow(4px 5px 18px rgba(60,30,5,0.45)); }
+          40%  { transform: perspective(200px) rotateY(144deg) translateY(-2px);  filter: brightness(0.55) drop-shadow(2px 8px 16px rgba(50,25,5,0.4)); }
+          50%  { transform: perspective(200px) rotateY(180deg) translateY(0px);   filter: brightness(0.5)  drop-shadow(0 8px 14px rgba(40,20,5,0.38)); }
+          60%  { transform: perspective(200px) rotateY(216deg) translateY(-2px);  filter: brightness(0.6)  drop-shadow(-2px 8px 16px rgba(50,25,5,0.4)); }
+          70%  { transform: perspective(200px) rotateY(252deg) translateY(-4px);  filter: brightness(0.72) drop-shadow(-5px 6px 18px rgba(70,35,5,0.42)); }
+          80%  { transform: perspective(200px) rotateY(288deg) translateY(-5px);  filter: brightness(0.85) drop-shadow(-6px 6px 18px rgba(100,55,10,0.42)); }
+          90%  { transform: perspective(200px) rotateY(324deg) translateY(-3px);  filter: brightness(0.96) drop-shadow(-3px 7px 16px rgba(140,80,20,0.38)); }
+          100% { transform: perspective(200px) rotateY(360deg) translateY(0px);   filter: brightness(1)    drop-shadow(0 8px 16px rgba(180,120,50,0.35)); }
+        }
+        @keyframes pg3dShinePulse{
+          0%,100%{ opacity:0; }
+          45%,55%{ opacity:0; }
+          48%    { opacity:0.35; }
+          50%    { opacity:0.55; }
+          52%    { opacity:0.35; }
+        }
         .pg-msg{animation:pgIn .22s cubic-bezier(.16,1,.3,1) both}
         .pg-float{animation:pgFloat 2.6s ease-in-out infinite}
         .pg-land{animation:pgLand 0.4s ease-out}
+        .pg-3d-spin{animation:pg3dSpin 3.6s cubic-bezier(0.4,0,0.6,1) infinite; transform-style:preserve-3d;}
+        .pg-3d-shine{animation:pg3dShinePulse 3.6s ease-in-out infinite; pointer-events:none; position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 40% 35%, rgba(255,255,255,0.7) 0%, transparent 60%);}
       `}</style>
 
       {/* ── Chat Panel ── */}
@@ -913,7 +930,6 @@ export function SupportChatWidget() {
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
-        className={pose === "landed" ? "pg-land" : ""}
         animate={idleAnimate}
         transition={isDragging ? { type: "spring", stiffness: 320, damping: 28 } : idleTransition}
         style={{
@@ -933,50 +949,59 @@ export function SupportChatWidget() {
         whileHover={{ scale: isDragging ? 1 : 1.1 }}
         whileTap={{ scale: 0.92 }}
       >
-        {/* Rolling trail glow */}
-        {pose === "rolling" && (
-          <motion.div
-            style={{
-              position: "absolute",
-              inset: -6,
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(232,180,168,0.35) 0%, transparent 70%)",
-              pointerEvents: "none",
-            }}
-            animate={{ scale: [1, 1.4, 1], opacity: [0.7, 0.3, 0.7] }}
-            transition={{ duration: 0.4, repeat: Infinity }}
-          />
-        )}
+        {/* 3D spin wrapper — only active when idle, not dragging/open */}
+        <div
+          className={isIdle && !isDragging ? "pg-3d-spin" : (pose === "landed" ? "pg-land" : "")}
+          style={{ width: "100%", height: "100%", position: "relative" }}
+        >
+          {/* Specular shine flash that pulses on front-facing moment */}
+          {isIdle && !isDragging && <div className="pg-3d-shine" />}
 
-        <PangolinBot pose={pose} size={W} />
-
-        {/* Online dot */}
-        {!isOpen && (
-          <span style={{ position:"absolute", top:6, right:4, width:11, height:11, background:"#4ade80", borderRadius:"50%", border:"2.5px solid white", boxShadow:"0 0 0 2px rgba(74,222,128,0.35)" }} />
-        )}
-
-        {/* Notification badge */}
-        {showBubble && !isOpen && (
-          <motion.span
-            initial={{ scale:0 }}
-            animate={{ scale:1 }}
-            style={{ position:"absolute", top:2, right:-2, background:"#ef4444", color:"white", fontSize:9, fontWeight:800, width:17, height:17, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", border:"2px solid white", boxShadow:"0 2px 6px rgba(239,68,68,0.3)" }}
-          >1</motion.span>
-        )}
-
-        {/* Drag hint */}
-        <AnimatePresence>
-          {isDragging && (
+          {/* Rolling trail glow */}
+          {pose === "rolling" && (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              style={{ position:"absolute", top:-28, left:"50%", transform:"translateX(-50%)", background:"rgba(0,0,0,0.68)", color:"white", fontSize:9, fontWeight:700, padding:"3px 9px", borderRadius:8, whiteSpace:"nowrap" as const, pointerEvents:"none" }}
-            >
-              Thả để gắn vào lề
-            </motion.div>
+              style={{
+                position: "absolute",
+                inset: -6,
+                borderRadius: "50%",
+                background: "radial-gradient(circle, rgba(232,180,168,0.35) 0%, transparent 70%)",
+                pointerEvents: "none",
+              }}
+              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 0.3, 0.7] }}
+              transition={{ duration: 0.4, repeat: Infinity }}
+            />
           )}
-        </AnimatePresence>
+
+          <PangolinBot pose={pose} size={W} />
+
+          {/* Online dot */}
+          {!isOpen && (
+            <span style={{ position:"absolute", top:6, right:4, width:11, height:11, background:"#4ade80", borderRadius:"50%", border:"2.5px solid white", boxShadow:"0 0 0 2px rgba(74,222,128,0.35)" }} />
+          )}
+
+          {/* Notification badge */}
+          {showBubble && !isOpen && (
+            <motion.span
+              initial={{ scale:0 }}
+              animate={{ scale:1 }}
+              style={{ position:"absolute", top:2, right:-2, background:"#ef4444", color:"white", fontSize:9, fontWeight:800, width:17, height:17, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", border:"2px solid white", boxShadow:"0 2px 6px rgba(239,68,68,0.3)" }}
+            >1</motion.span>
+          )}
+
+          {/* Drag hint */}
+          <AnimatePresence>
+            {isDragging && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                style={{ position:"absolute", top:-28, left:"50%", transform:"translateX(-50%)", background:"rgba(0,0,0,0.68)", color:"white", fontSize:9, fontWeight:700, padding:"3px 9px", borderRadius:8, whiteSpace:"nowrap" as const, pointerEvents:"none" }}
+              >
+                Thả để gắn vào lề
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
       </motion.div>
     </>
   );
