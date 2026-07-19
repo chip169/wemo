@@ -381,6 +381,7 @@ export function SupportChatWidget() {
   const [bubble, setBubble]         = useState("Cần tớ giúp gì không? ✨");
   const [showBubble, setShowBubble] = useState(false);
   const [rollDuration, setRollDuration] = useState(600);
+  const [rollDir, setRollDir]           = useState<'cw'|'ccw'>('cw'); // clockwise/counter-clockwise
   const [side, setSide]             = useState<"left"|"right">("right");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -393,6 +394,7 @@ export function SupportChatWidget() {
   const hasMoved              = useRef(false);
   const contextRef            = useRef("homepage");
   const messagesEnd           = useRef<HTMLDivElement>(null);
+  const messagesContainerRef  = useRef<HTMLDivElement>(null);
   const bubbleTimeoutRef      = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // ── Static Bubbles ───────────────────────────────────────────────────────
@@ -438,11 +440,13 @@ export function SupportChatWidget() {
     const dist = Math.sqrt(dx * dx + dy * dy);
     if (dist < 60) return; // already close enough
 
-    const speed = 0.6; // px/ms
-    const duration = Math.min(Math.max(dist / speed, 280), 1600);
+    const speed = 0.55; // px/ms
+    const duration = Math.min(Math.max(dist / speed, 300), 1800);
 
     isAnimatingRef.current = true;
     setRollDuration(duration);
+    // Direction: rolling right = clockwise, left = counter-clockwise
+    setRollDir(dx >= 0 ? 'cw' : 'ccw');
 
     // Show guide bubble
     if (bubbleTimeoutRef.current) {
@@ -454,13 +458,13 @@ export function SupportChatWidget() {
       setShowBubble(false);
     }
 
-    // 1. Walk to target (stay in stand pose)
-    setPose("stand");
+    // 1. ROLL to target — set rolling pose (curled ball) and move
+    setPose("rolling");
     setBotPos({ x: targetX, y: targetY });
     botPosRef.current = { x: targetX, y: targetY };
 
     setTimeout(() => {
-      // 2. Arrive
+      // 2. Arrive — bounce landing
       setPose("landed");
       isAnimatingRef.current = false;
       if (guideKey && BOT_GUIDES[guideKey]) {
@@ -470,8 +474,8 @@ export function SupportChatWidget() {
           setShowBubble(false);
         }, 5000);
       }
-      // 3. Return to stand
-      setTimeout(() => setPose("stand"), 400);
+      // 3. Unfurl back to standing pose
+      setTimeout(() => setPose("stand"), 420);
     }, duration);
   }, [isOpen]);
 
@@ -659,7 +663,15 @@ export function SupportChatWidget() {
     return () => es.close();
   }, [sessionId, isOpen, isRegistered]);
 
-  useEffect(() => { messagesEnd.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, isTyping]);
+  // Scroll only the messages container, not the whole page
+  useEffect(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+    // Use requestAnimationFrame to ensure DOM has updated before scrolling
+    requestAnimationFrame(() => {
+      container.scrollTop = container.scrollHeight;
+    });
+  }, [messages, isTyping]);
 
   // ─── Register ──────────────────────────────────────────────────────────────
   const handleRegister = (e: React.FormEvent) => {
@@ -695,31 +707,32 @@ export function SupportChatWidget() {
     }, 900 + Math.random()*600);
   };
 
-  // ─── Chat popup position ───────────────────────────────────────────────────
+  // ─── Chat popup position — always above the bot icon, centered on it ────────
   const getPopupStyle = (): React.CSSProperties => {
-    const PW = 320;
+    const PW = 340;
     const px = botPos.x;
     const py = botPos.y;
-    const base: React.CSSProperties = { position: "fixed", zIndex: 9998, width: PW };
 
-    // Vertical: above or below bot
-    if (py > window.innerHeight / 2) {
-      base.bottom = window.innerHeight - py + 8;
-    } else {
-      base.top = py + W + 8;
-    }
-    // Horizontal
-    if (px + W/2 + PW/2 > window.innerWidth - 8) {
-      base.right = window.innerWidth - px - W;
-    } else {
-      base.left = Math.max(8, px - PW/2 + W/2);
-    }
-    return base;
+    // Sit 10px above the top of the bot icon
+    const bottomOffset = window.innerHeight - py + 10;
+
+    // Center horizontally on the bot icon, clamp to screen bounds
+    let leftOffset = px + W / 2 - PW / 2;
+    if (leftOffset + PW > window.innerWidth - 8) leftOffset = window.innerWidth - PW - 8;
+    if (leftOffset < 8) leftOffset = 8;
+
+    return {
+      position: "fixed",
+      zIndex: 9998,
+      width: PW,
+      bottom: bottomOffset,
+      left: leftOffset,
+    };
   };
 
-  // ─── Bubble position ───────────────────────────────────────────────────────
+  // ─── Bubble position — anchored above the bot icon ────────────────────────
   const getBubbleStyle = (): React.CSSProperties => {
-    const BW = 260;
+    const BW = 280;
     const px = botPos.x;
     const py = botPos.y;
     const style: React.CSSProperties = {
@@ -727,11 +740,9 @@ export function SupportChatWidget() {
       zIndex: 9997,
       width: BW,
     };
-    if (py > window.innerHeight / 2) {
-      style.bottom = window.innerHeight - py + 8;
-    } else {
-      style.top = py + W + 8;
-    }
+    // Always show above the bot icon
+    style.bottom = window.innerHeight - py + 8;
+    // Horizontal: align with bot, clamp to screen
     if (px + W/2 + BW/2 > window.innerWidth - 8) {
       style.right = window.innerWidth - px - W;
     } else {
@@ -752,9 +763,13 @@ export function SupportChatWidget() {
     <>
       <style>{`
         @keyframes pgBounce{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-5px);opacity:1}}
-        @keyframes pgFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        @keyframes pgLand{0%{transform:scaleY(0.78) scaleX(1.15)}55%{transform:scaleY(1.06) scaleX(0.96)}100%{transform:scaleY(1) scaleX(1)}}
+        @keyframes pgFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.03)}}
+        @keyframes pgLand{0%{transform:scaleY(0.72) scaleX(1.22)}40%{transform:scaleY(1.08) scaleX(0.94)}100%{transform:scaleY(1) scaleX(1)}}
         @keyframes pgIn{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
+        /* Rolling keyframes — clockwise & counter-clockwise */
+        @keyframes pgRollCW  { from { transform: rotate(0deg);    } to { transform: rotate(1440deg);  } }
+        @keyframes pgRollCCW { from { transform: rotate(0deg);    } to { transform: rotate(-1440deg); } }
+        /* Idle float — gentle bob, no rotation conflict */
         @keyframes pg3dSpin{
           0%   { transform: perspective(200px) rotateY(0deg)   translateY(0px);   filter: brightness(1) drop-shadow(0 8px 16px rgba(180,120,50,0.35)); }
           10%  { transform: perspective(200px) rotateY(36deg)  translateY(-3px);  filter: brightness(0.92) drop-shadow(4px 8px 18px rgba(100,60,10,0.4)); }
@@ -776,21 +791,23 @@ export function SupportChatWidget() {
           52%    { opacity:0.35; }
         }
         .pg-msg{animation:pgIn .22s cubic-bezier(.16,1,.3,1) both}
-        .pg-float{animation:pgFloat 2.6s ease-in-out infinite}
-        .pg-land{animation:pgLand 0.4s ease-out}
+        .pg-float{animation:pgFloat 2.8s ease-in-out infinite}
+        .pg-land{animation:pgLand 0.45s cubic-bezier(.2,1.4,.4,1)}
         .pg-3d-spin{animation:pg3dSpin 3.6s cubic-bezier(0.4,0,0.6,1) infinite; transform-style:preserve-3d;}
         .pg-3d-shine{animation:pg3dShinePulse 3.6s ease-in-out infinite; pointer-events:none; position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 40% 35%, rgba(255,255,255,0.7) 0%, transparent 60%);}
+        .pg-roll-cw  { animation: pgRollCW  var(--roll-dur, 1s) linear both; }
+        .pg-roll-ccw { animation: pgRollCCW var(--roll-dur, 1s) linear both; }
       `}</style>
 
       {/* ── Chat Panel ── */}
       <AnimatePresence>
         {isOpen && (
           <motion.div key="pg-chat"
-            initial={{ opacity:0, scale:0.88, y:20 }}
+            initial={{ opacity:0, scale:0.92, y:16 }}
             animate={{ opacity:1, scale:1, y:0 }}
-            exit={{ opacity:0, scale:0.88, y:20 }}
-            transition={{ type:"spring", stiffness:320, damping:28 }}
-            style={{ ...getPopupStyle(), height:460, borderRadius:24, background:"rgba(255,255,255,0.97)", backdropFilter:"blur(20px)", border:"1.5px solid rgba(232,180,168,0.3)", boxShadow:"0 24px 56px rgba(0,0,0,0.15), 0 6px 20px rgba(232,180,168,0.3)", display:"flex", flexDirection:"column", overflow:"hidden", fontFamily:"'Inter',sans-serif" } as any}
+            exit={{ opacity:0, scale:0.92, y:16 }}
+            transition={{ type:"spring", stiffness:340, damping:30 }}
+            style={{ ...getPopupStyle(), height:500, borderRadius:24, background:"rgba(255,255,255,0.98)", backdropFilter:"blur(24px)", border:"1.5px solid rgba(232,180,168,0.35)", boxShadow:"0 28px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(232,180,168,0.25)", display:"flex", flexDirection:"column", overflow:"hidden", fontFamily:"'Inter',sans-serif" } as any}
           >
             {/* Header */}
             <div style={{ background:"linear-gradient(135deg, #FFF0EC 0%, #FCE1DA 100%)", padding:"13px 16px", display:"flex", alignItems:"center", gap:10, flexShrink:0, borderBottom:"1.5px solid rgba(232,180,168,0.25)" }}>
@@ -839,12 +856,15 @@ export function SupportChatWidget() {
               </div>
             ) : (
               <>
-                <div style={{ flex:1, overflowY:"auto", padding:"12px 14px", display:"flex", flexDirection:"column", gap:10, background:"#FFF6F4" }}>
+                <div
+                  ref={messagesContainerRef}
+                  style={{ flex:1, overflowY:"auto", padding:"14px 14px", display:"flex", flexDirection:"column", gap:10, background:"#FFF6F4", scrollBehavior:"smooth" }}
+                >
                   {messages.filter(m=>!m.text.startsWith("[Hệ thống]")).length===0 ? (
-                    <div style={{ textAlign:"center", padding:"24px 12px" }}>
-                      <Sparkles style={{ width:26, height:26, color:"#E8B4A8", margin:"0 auto 8px", display:"block" }} />
-                      <div style={{ fontSize:12, fontWeight:700, color:"#8C5D53" }}>Xin chào {name}! 💕</div>
-                      <div style={{ fontSize:11, marginTop:4, lineHeight:1.7, color:"#A47870" }}>Hỏi tớ về thiệp NFC, chibi 3D,<br/>giá cả hay đặt hàng nhé!</div>
+                    <div style={{ textAlign:"center", padding:"28px 12px" }}>
+                      <Sparkles style={{ width:28, height:28, color:"#E8B4A8", margin:"0 auto 10px", display:"block" }} />
+                      <div style={{ fontSize:13, fontWeight:800, color:"#8C5D53" }}>Xin chào {name}! 💕</div>
+                      <div style={{ fontSize:11.5, marginTop:5, lineHeight:1.75, color:"#A47870" }}>Hỏi tớ về thiệp NFC, chibi 3D,<br/>giá cả hay đặt hàng nhé!</div>
                     </div>
                   ) : (
                     messages.map((msg, i) => {
@@ -852,8 +872,12 @@ export function SupportChatWidget() {
                       const me = msg.sender==="user";
                       return (
                         <div key={i} className="pg-msg" style={{ display:"flex", justifyContent:me?"flex-end":"flex-start", gap:7, alignItems:"flex-end" }}>
-                          {!me && <div style={{ width:24, height:24, borderRadius:"50%", background:"linear-gradient(135deg, #E8B4A8, #D49D90)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}><Bot style={{width:12,height:12,color:"white"}}/></div>}
-                          <div style={{ maxWidth:"72%", padding:"9px 13px", borderRadius:18, fontSize:12, lineHeight:1.65, whiteSpace:"pre-wrap" as const, wordBreak:"break-word" as const, ...(me?{background:"linear-gradient(135deg, #E8B4A8, #D49D90)",color:"white",borderBottomRightRadius:4,boxShadow:"0 2px 10px rgba(232,180,168,0.3)"}:{background:"white",color:"#5C352E",borderBottomLeftRadius:4,border:"1px solid #F3D9D2"}) }}>
+                          {!me && (
+                            <div style={{ width:26, height:26, borderRadius:"50%", background:"linear-gradient(135deg, #E8B4A8, #D49D90)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 2px 6px rgba(232,180,168,0.4)" }}>
+                              <Bot style={{width:13,height:13,color:"white"}}/>
+                            </div>
+                          )}
+                          <div style={{ maxWidth:"74%", padding:"10px 14px", borderRadius:18, fontSize:12.5, lineHeight:1.68, whiteSpace:"pre-wrap" as const, wordBreak:"break-word" as const, ...(me?{background:"linear-gradient(135deg, #E8B4A8, #D49D90)",color:"white",borderBottomRightRadius:4,boxShadow:"0 3px 12px rgba(232,180,168,0.35)"}:{background:"white",color:"#5C352E",borderBottomLeftRadius:4,border:"1px solid #F3D9D2",boxShadow:"0 1px 4px rgba(0,0,0,0.05)"}) }}>
                             {msg.text}
                           </div>
                         </div>
@@ -861,7 +885,7 @@ export function SupportChatWidget() {
                     })
                   )}
                   {isTyping && <TypingDots />}
-                  <div ref={messagesEnd} />
+                  <div ref={messagesEnd} style={{ height: 4 }} />
                 </div>
 
                 {messages.filter(m=>!m.text.startsWith("[Hệ thống]")).length===0 && (
@@ -949,13 +973,21 @@ export function SupportChatWidget() {
         whileHover={{ scale: isDragging ? 1 : 1.1 }}
         whileTap={{ scale: 0.92 }}
       >
-        {/* 3D spin wrapper — only active when idle, not dragging/open */}
+        {/* Animation wrapper — rolling / landed / idle float */}
         <div
-          className={isIdle && !isDragging ? "pg-3d-spin" : (pose === "landed" ? "pg-land" : "")}
-          style={{ width: "100%", height: "100%", position: "relative" }}
+          className={
+            pose === "rolling"
+              ? (rollDir === 'cw' ? "pg-roll-cw" : "pg-roll-ccw")
+              : pose === "landed"
+                ? "pg-land"
+                : (isIdle && !isDragging ? "pg-float" : "")
+          }
+          style={{
+            width: "100%", height: "100%", position: "relative",
+            // CSS variable drives roll duration
+            ...(pose === "rolling" ? { ['--roll-dur' as string]: `${rollDuration}ms` } : {}),
+          }}
         >
-          {/* Specular shine flash that pulses on front-facing moment */}
-          {isIdle && !isDragging && <div className="pg-3d-shine" />}
 
           {/* Rolling trail glow */}
           {pose === "rolling" && (
