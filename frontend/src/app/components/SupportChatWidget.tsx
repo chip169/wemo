@@ -12,7 +12,7 @@ interface Message {
   text: string;
   timestamp: string;
 }
-type BotPose = "stand" | "curled" | "rolling" | "landed" | "wave";
+type BotPose = "stand" | "curled" | "rolling" | "landed" | "wave" | "bow" | "think" | "excited";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 const W = 72;
@@ -44,27 +44,40 @@ function getCtx(p: string) {
   return "homepage";
 }
 
-// ─── AI replies ────────────────────────────────────────────────────────────────
+// ─── AI replies — Butler personality ─────────────────────────────────────────────────────
 const KB = [
-  { kw: ["xin chào","hello","hi","chào"], r: "Xin chào! Tớ là Pangolin WEMO 🦔 Bạn cần tớ giúp gì?" },
-  { kw: ["giá","bao nhiêu","tiền"], r: "WEMO có 3 gói:\n• Figure 9cm: 650k\n• Figure 12cm: 800k\n• Doanh nghiệp: Liên hệ\nGói nào phù hợp với bạn? 💝" },
-  { kw: ["nfc","chip","hoạt động"], r: "Chỉ đặt điện thoại vào thiệp — trang web tự mở, không cần app! 📱" },
-  { kw: ["chibi","3d","ảnh","vẽ"], r: "Chibi 3D từ ảnh thật của bạn! 1-2 ảnh rõ mặt → 24-48h có nhân vật! 🎨" },
-  { kw: ["giao hàng","ship","bao lâu"], r: "Nội thành 2-3 ngày, tỉnh thành 3-5 ngày. Có giao nhanh! 📦" },
-  { kw: ["đặt","order","mua"], r: "Gọi 0398 768 699 hoặc nhấn Đặt ngay. Bạn cần thiệp cho dịp gì? 🎁" },
-  { kw: ["cảm ơn","thanks","tuyệt","ok"], r: "Không có gì! Hỏi thêm bất cứ lúc nào nhé! 💕" },
-  { kw: ["mẫu","template","thiết kế"], r: "Nhiều mẫu đẹp: sinh nhật, lãng mạn, tốt nghiệp... Phong cách nào bạn thích? ✨" },
+  { kw: ["xin chào","hello","hi","chào"], r: "Chào mừng quý khách! 🎊 Tôi là Pango, quản gia của WEMO. Tôi có thể phục vụ quý khách điều gì ạ?" },
+  { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO đang có 3 gói ưu đãi: 🎊\n• Thiệp Figure 9cm: 650k\n• Thiệp Figure 12cm: 800k\n• Gói Doanh nghiệp: Liên hệ để nhận báo giá\nGói nào phù hợp với nhu cầu của quý khách ạ? 💌" },
+  { kw: ["nfc","chip","hoạt động","công nghệ"], r: "Công nghệ NFC thông minh của WEMO rất đơn giản thưa quý khách! 📱 Chỉ cần chạm nhẹ điện thoại vào thiệp, trang web kỷ niệm lập tức hiện ra — không cần cài ứng dụng!" },
+  { kw: ["chibi","3d","ảnh","vẽ","avatar"], r: "Dịch vụ Chibi 3D độc đáo của chúng tôi 🎨 Chỉ cần 1-2 ảnh chân dung rõ nét, nghệ nhân WEMO sẽ tạo ra nhân vật chibi 3D độc bản trong 24-48 giờ!" },
+  { kw: ["giao hàng","ship","bao lâu","nhận"], r: "Chúng tôi đảm bảo giao hàng nhanh chóng thưa quý khách 📦 Nội thành: 2-3 ngày • Tỉnh thành: 3-5 ngày • Có dịch vụ giao hỏa tốc!" },
+  { kw: ["đặt","order","mua","đặt hàng"], r: "Tôi sấn lòng hỗ trợ quý khách đặt hàng! 🎊 Quý khách có thể gọi 0398 768 699 hoặc nhấn Zalo bên trên. Thiệp dành cho dịp gì ạ?" },
+  { kw: ["cảm ơn","thanks","tuyệt","ok","được"], r: "Thưa quý khách, đó là vinh dự của tôi! 🎊 Hế tôi làm gì khác được cho quý khách không?" },
+  { kw: ["mẫu","template","thiết kế","kiểu"], r: "WEMO có rất nhiều mẫu thiệp tinh tế ✨ Sinh nhật, lãng mạn, tốt nghiệp, cưới... Phong cách nào quý khách yêu thích ạ?" },
+  { kw: ["liên hệ","hotline","số điện thoại","zalo"], r: "Thưa quý khách, quý khách có thể liên hệ WEMO qua: 📞 0398 768 699 hoặc 💬 Zalo cùng số đó. Tôi sẽ chuyển tiếp ngay!" },
 ];
-const FALL = ["Để tớ kết nối bạn với tư vấn viên nhé! 💬", "Mình đã ghi nhận! Trung bình chờ dưới 2 phút ⏰", "Bạn nói rõ hơn được không? Hoặc gọi 0398 768 699! 😊"];
+const FALL = [
+  "Thưa quý khách, để tôi chuyển quý khách đến chuyên viên tư vấn ngay nhé! 🎊",
+  "Tôi đã ghi nhận yêu cầu! Trung bình chờ dưới 2 phút ⏰",
+  "Thưa quý khách, quý khách có thể mô tả thêm không ạ? Hoặc gọi ngay 0398 768 699! 😊",
+];
 function aiReply(t: string) {
   const l = t.toLowerCase();
   for (const { kw, r } of KB) if (kw.some(k => l.includes(k))) return r;
   return FALL[Math.floor(Math.random() * FALL.length)];
 }
 
-// ─── PANGOLIN CHIBI — beautiful SVG illustration matching reference art ──────────
-function PangolinBot({ pose, size = 72 }: { pose: BotPose; size?: number }) {
+// ─── PANGOLIN BUTLER — Premium SVG with tuxedo, bow-tie & interactive poses ───
+function PangolinBot({ pose, size = 72, eyeOff = {x:0,y:0} }: {
+  pose: BotPose;
+  size?: number;
+  eyeOff?: { x: number; y: number };
+}) {
   const isRolling = pose === "rolling" || pose === "curled";
+  const isThink   = pose === "think";
+  const isExcited = pose === "excited";
+  const isBow     = pose === "bow" || pose === "landed";
+  const isWave    = pose === "wave";
 
   // ── ROLLING / CURLED BALL ─────────────────────────────────────────────────
   if (isRolling) {
@@ -79,277 +92,331 @@ function PangolinBot({ pose, size = 72 }: { pose: BotPose; size?: number }) {
           </radialGradient>
         </defs>
         <ellipse cx="60" cy="116" rx="30" ry="5" fill="rgba(0,0,0,0.13)"/>
-        <motion.g
-          animate={{}}
-          transition={{}}
-          style={{ originX:"60px", originY:"60px" }}
-        >
-          {/* Curl base body */}
+        <motion.g animate={{}} transition={{}} style={{ originX:"60px", originY:"60px" }}>
           <circle cx="60" cy="60" r="48" fill="url(#rbG)"/>
-
-          {/* Overlapping scales on the outer back shell */}
           <circle cx="94" cy="40" r="16" fill="#A87230" stroke="#8A5818" strokeWidth="1.5" />
           <circle cx="98" cy="60" r="17" fill="#A87230" stroke="#8A5818" strokeWidth="1.5" />
           <circle cx="90" cy="80" r="16" fill="#A87230" stroke="#8A5818" strokeWidth="1.5" />
-          
           <circle cx="82" cy="30" r="15" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
           <circle cx="86" cy="50" r="16" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
           <circle cx="84" cy="70" r="16" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
           <circle cx="76" cy="88" r="15" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
-
-          {/* Tucked head/face inside the curled posture */}
           <circle cx="50" cy="60" r="28" fill="#FFFAE8" />
           <circle cx="50" cy="60" r="26" fill="#EDBC68" />
-          {/* Rosy cheeks */}
           <circle cx="36" cy="66" r="6" fill="#F4906A" opacity="0.7" />
           <circle cx="60" cy="66" r="6" fill="#F4906A" opacity="0.7" />
-          {/* Happy closed eyes ^ ^ */}
           <path d="M34 56 Q39 51 44 56" stroke="#5A3010" strokeWidth="2.5" fill="none" strokeLinecap="round" />
           <path d="M52 56 Q57 51 62 56" stroke="#5A3010" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          {/* Cute mouth */}
           <path d="M44 68 Q47 72 50 68" stroke="#7A3810" strokeWidth="2" fill="none" strokeLinecap="round" />
-
-          {/* Tail wrapping around the bottom */}
           <path d="M30 85 C45 105 75 105 92 88" stroke="#C08A30" strokeWidth="11" fill="none" strokeLinecap="round" />
-          {/* Tail scales */}
           <circle cx="50" cy="98" r="7" fill="#8A6018" />
           <circle cx="66" cy="99" r="7" fill="#8A6018" />
           <circle cx="80" cy="95" r="7" fill="#8A6018" />
-
-          {/* Shine overlay */}
           <ellipse cx="44" cy="40" rx="14" ry="8" fill="white" opacity="0.18" transform="rotate(-15 44 40)" />
         </motion.g>
       </svg>
     );
   }
 
-  // ── STANDING / IDLE — detailed chibi SVG ─────────────────────────────────
-  // Scale factor: all coords designed for 200×230 viewBox
+  // ── STANDING BUTLER — tuxedo, bow-tie, eye-tracking, conditional poses ──────
   return (
     <svg
       viewBox="0 0 200 230"
       width={size}
       height={size}
-      style={{ display:"block", overflow:"visible" }}
+      style={{
+        display: "block",
+        overflow: "visible",
+        transform: isBow ? "perspective(400px) rotateX(22deg)" : undefined,
+        transformOrigin: "center bottom",
+        transition: "transform 0.4s ease",
+      }}
     >
       <defs>
-        {/* Body gradient — warm golden-brown */}
         <radialGradient id="bdG" cx="38%" cy="30%" r="65%">
           <stop offset="0%"   stopColor="#EDBC68"/>
           <stop offset="55%"  stopColor="#D09A45"/>
           <stop offset="100%" stopColor="#A87028"/>
         </radialGradient>
-        {/* Scale gradient — darker golden */}
         <radialGradient id="scG" cx="50%" cy="35%" r="60%">
           <stop offset="0%"   stopColor="#C08A30"/>
           <stop offset="100%" stopColor="#8A6018"/>
         </radialGradient>
-        {/* Belly gradient — cream */}
         <radialGradient id="blG" cx="50%" cy="35%" r="65%">
           <stop offset="0%"   stopColor="#FFFAE8"/>
           <stop offset="100%" stopColor="#EED4A0"/>
         </radialGradient>
-        {/* Ear gradient */}
         <radialGradient id="erG" cx="50%" cy="30%" r="60%">
           <stop offset="0%"   stopColor="#E0A848"/>
           <stop offset="100%" stopColor="#B88030"/>
         </radialGradient>
-        {/* Drop shadow */}
+        {/* 3D specular highlight gradient — top-left bright spot on head */}
+        <radialGradient id="specG" cx="32%" cy="22%" r="55%">
+          <stop offset="0%"   stopColor="rgba(255,255,230,0.55)"/>
+          <stop offset="40%"  stopColor="rgba(255,240,200,0.18)"/>
+          <stop offset="100%" stopColor="rgba(255,220,150,0)"/>
+        </radialGradient>
+        {/* Soft blur filter for glow effects */}
+        <filter id="softBlur" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="4"/>
+        </filter>
+        {/* Stronger blur for rim light */}
+        <filter id="rimBlur" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="6"/>
+        </filter>
         <filter id="pgDrp" x="-25%" y="-15%" width="150%" height="150%">
           <feDropShadow dx="0" dy="5" stdDeviation="6" floodColor="rgba(100,55,10,0.22)"/>
         </filter>
-        {/* Soft glow on eyes */}
-        <filter id="eyeGlow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="1.5" result="b"/>
-          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-        </filter>
       </defs>
 
-      {/* ── Ground shadow ── */}
       <ellipse cx="100" cy="227" rx="46" ry="7" fill="rgba(0,0,0,0.13)"/>
 
-      {/* ════════════ TAIL ════════════ */}
-      {/* Base segments (back to front) */}
       <ellipse cx="148" cy="172" rx="20" ry="11" fill="url(#bdG)" transform="rotate(-18 148 172)"/>
       <ellipse cx="160" cy="158" rx="17" ry="10" fill="url(#bdG)" transform="rotate(-35 160 158)"/>
-      <ellipse cx="165" cy="143" rx="14" ry="9" fill="url(#bdG)" transform="rotate(-50 165 143)"/>
-      <ellipse cx="161" cy="130" rx="11" ry="7" fill="url(#bdG)" transform="rotate(-58 161 130)"/>
-      {/* Scale overlay on tail */}
-      <ellipse cx="148" cy="172" rx="16" ry="8" fill="url(#scG)" transform="rotate(-18 148 172)"/>
-      <ellipse cx="160" cy="158" rx="13" ry="7" fill="url(#scG)" transform="rotate(-35 160 158)"/>
-      <ellipse cx="165" cy="143" rx="10" ry="6" fill="url(#scG)" transform="rotate(-50 165 143)"/>
-      <ellipse cx="161" cy="130" rx="8"  ry="5" fill="url(#scG)" transform="rotate(-58 161 130)"/>
+      <ellipse cx="165" cy="143" rx="14" ry="9"  fill="url(#bdG)" transform="rotate(-50 165 143)"/>
+      <ellipse cx="161" cy="130" rx="11" ry="7"  fill="url(#bdG)" transform="rotate(-58 161 130)"/>
+      <ellipse cx="148" cy="172" rx="16" ry="8"  fill="url(#scG)" transform="rotate(-18 148 172)"/>
+      <ellipse cx="160" cy="158" rx="13" ry="7"  fill="url(#scG)" transform="rotate(-35 160 158)"/>
+      <ellipse cx="165" cy="143" rx="10" ry="6"  fill="url(#scG)" transform="rotate(-50 165 143)"/>
+      <ellipse cx="161" cy="130" rx="8"  ry="5"  fill="url(#scG)" transform="rotate(-58 161 130)"/>
 
-      {/* ════════════ BODY ════════════ */}
       <ellipse cx="100" cy="170" rx="58" ry="52" fill="url(#bdG)" filter="url(#pgDrp)"/>
+      {[78,100,122].map((x,i)  => <ellipse key={`b4${i}`} cx={x} cy={205} rx={23} ry={14} fill="url(#scG)"/>)}
+      {[70,92,114,134].map((x,i)=> <ellipse key={`b3${i}`} cx={x} cy={192} rx={22} ry={14} fill="url(#scG)"/>)}
+      {[70,92,114,134].map((x,i)=> <ellipse key={`b2${i}`} cx={x} cy={180} rx={22} ry={14} fill="url(#scG)"/>)}
+      {[74,96,118,138].map((x,i)=> <ellipse key={`b1${i}`} cx={x} cy={167} rx={21} ry={13} fill="url(#scG)"/>)}
+      {/* Belly — breathing animation when standing */}
+      <motion.ellipse cx="98" cy="181" rx="36" ry="32" fill="url(#blG)"
+        animate={pose==="stand" ? {ry:[32,35,32], cy:[181,179,181]} : {ry:32, cy:181}}
+        transition={{duration:3.2, repeat:Infinity, ease:"easeInOut"}}/>
+      {/* Body AO shadow — dark crescent at top where head meets body */}
+      <ellipse cx="100" cy="148" rx="40" ry="10" fill="rgba(70,35,0,0.18)" filter="url(#softBlur)"/>
 
-      {/* Body scale rows (back → front = low → high in SVG) */}
-      {/* Row 4 lowest */}
-      {[78,100,122].map((x,i)=>(
-        <ellipse key={`b4${i}`} cx={x} cy={205} rx={23} ry={14} fill="url(#scG)"/>
-      ))}
-      {/* Row 3 */}
-      {[70,92,114,134].map((x,i)=>(
-        <ellipse key={`b3${i}`} cx={x} cy={192} rx={22} ry={14} fill="url(#scG)"/>
-      ))}
-      {/* Row 2 */}
-      {[70,92,114,134].map((x,i)=>(
-        <ellipse key={`b2${i}`} cx={x} cy={180} rx={22} ry={14} fill="url(#scG)"/>
-      ))}
-      {/* Row 1 */}
-      {[74,96,118,138].map((x,i)=>(
-        <ellipse key={`b1${i}`} cx={x} cy={167} rx={21} ry={13} fill="url(#scG)"/>
-      ))}
 
-      {/* ── Belly (smooth cream front) ── */}
-      <ellipse cx="98" cy="180" rx="36" ry="32" fill="url(#blG)"/>
-
-      {/* ── Legs / feet ── */}
       <ellipse cx="78"  cy="210" rx="17" ry="12" fill="url(#bdG)"/>
       <ellipse cx="122" cy="210" rx="17" ry="12" fill="url(#bdG)"/>
-      {/* Toes left */}
-      {[70,77,84].map((x,i)=>(
-        <ellipse key={`tL${i}`} cx={x} cy={216} rx={4.5} ry={4} fill="#8A5818"/>
-      ))}
-      {/* Toes right */}
-      {[116,123,130].map((x,i)=>(
-        <ellipse key={`tR${i}`} cx={x} cy={216} rx={4.5} ry={4} fill="#8A5818"/>
-      ))}
+      {[70,77,84].map((x,i)   => <ellipse key={`tL${i}`} cx={x} cy={216} rx={4.5} ry={4} fill="#8A5818"/>)}
+      {[116,123,130].map((x,i) => <ellipse key={`tR${i}`} cx={x} cy={216} rx={4.5} ry={4} fill="#8A5818"/>)}
 
-      {/* ── Arms & Hands (Pose conditional) ── */}
-      {pose === "wave" ? (
+      {isWave ? (
         <>
-          {/* Left arm resting on belly */}
+          {/* Left arm resting */}
           <ellipse cx="66" cy="180" rx="14" ry="24" fill="url(#bdG)" transform="rotate(-10 66 180)"/>
           <ellipse cx="78" cy="188" rx="8" ry="8" fill="url(#blG)"/>
-          
-          {/* Waving Right arm */}
-          <motion.g
-            animate={{ rotate: [0, -6, 4, -6, 4, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{ originX: "132px", originY: "165px" }}
-          >
-            {/* Arm stem */}
+          {/* Right waving arm */}
+          <motion.g animate={{rotate:[0,-6,4,-6,4,0]}} transition={{duration:1.5,repeat:Infinity,ease:"easeInOut"}} style={{originX:"132px",originY:"165px"}}>
             <path d="M132 165 C142 144 150 128 152 116" stroke="url(#bdG)" strokeWidth="24" strokeLinecap="round" fill="none"/>
-            
-            {/* Waving hand/paw (wrist pivot at 152, 116) */}
-            <motion.g
-              animate={{ rotate: [-24, 24, -24, 24, -24] }}
-              transition={{ duration: 0.8, repeat: Infinity, ease: "easeInOut" }}
-              style={{ originX: "152px", originY: "116px" }}
-            >
-              {/* Hand pad */}
-              <ellipse cx="152" cy="102" rx="12" ry="14" fill="url(#blG)" transform="rotate(10 152 102)"/>
-              {/* Claws/fingers */}
-              {[144, 152, 160].map((cx, i) => (
-                <circle key={i} cx={cx} cy={93} r="2.8" fill="#8A5818" />
-              ))}
+            <motion.g animate={{rotate:[-24,24,-24,24,-24]}} transition={{duration:0.8,repeat:Infinity,ease:"easeInOut"}} style={{originX:"152px",originY:"116px"}}>
+              <ellipse cx="152" cy="102" rx="12" ry="14" fill="#F0EBE0" transform="rotate(10 152 102)"/>
+              {[144,152,160].map((cx,i) => <circle key={i} cx={cx} cy={93} r="2.8" fill="#8A5818"/>)}
             </motion.g>
           </motion.g>
+          {/* Ear follow-through on wave — left ear wiggles slightly */}
+          <motion.ellipse cx="46" cy="46" rx="20" ry="25" fill="url(#erG)"
+            animate={{rotate:[-4,2,-4]}} transition={{duration:1.6,repeat:Infinity,ease:"easeInOut"}}
+            style={{originX:"46px",originY:"72px"}}/>
+        </>
+      ) : isThink ? (
+        <>
+          <ellipse cx="64" cy="180" rx="14" ry="25" fill="url(#bdG)" transform="rotate(-5 64 180)"/>
+          <ellipse cx="70" cy="200" rx="11" ry="9" fill="url(#blG)"/>
+          <path d="M136 170 C150 156 158 142 152 128" stroke="url(#bdG)" strokeWidth="22" strokeLinecap="round" fill="none"/>
+          <ellipse cx="152" cy="125" rx="14" ry="11" fill="url(#blG)" transform="rotate(-18 152 125)"/>
+          <path d="M143 120 Q148 115 154 118" stroke="#C0A880" strokeWidth="2" fill="none" strokeLinecap="round"/>
+        </>
+      ) : isExcited ? (
+        <>
+          <path d="M70 168 C52 148 44 128 56 114" stroke="url(#bdG)" strokeWidth="22" strokeLinecap="round" fill="none"/>
+          <ellipse cx="56" cy="110" rx="13" ry="12" fill="url(#blG)" transform="rotate(18 56 110)"/>
+          <path d="M130 168 C148 148 156 128 144 114" stroke="url(#bdG)" strokeWidth="22" strokeLinecap="round" fill="none"/>
+          <ellipse cx="144" cy="110" rx="13" ry="12" fill="url(#blG)" transform="rotate(-18 144 110)"/>
         </>
       ) : (
         <>
           <ellipse cx="64"  cy="178" rx="15" ry="26" fill="url(#bdG)"/>
           <ellipse cx="136" cy="178" rx="15" ry="26" fill="url(#bdG)"/>
-          {/* Clasped hands */}
           <ellipse cx="100" cy="198" rx="30" ry="14" fill="url(#bdG)"/>
           <ellipse cx="100" cy="196" rx="24" ry="11" fill="url(#blG)"/>
-          {/* Paw knuckle hints */}
-          {[86,93,100,107,114].map((x,i)=>(
-            <circle key={`k${i}`} cx={x} cy={194} r={2.2} fill="#B07830" opacity="0.55"/>
-          ))}
+          {[86,93,100,107,114].map((x,i) => <circle key={`k${i}`} cx={x} cy={194} r={2.2} fill="#B07830" opacity="0.55"/>)}
         </>
       )}
 
-      {/* ════════════ HEAD (large chibi) ════════════ */}
       <ellipse cx="100" cy="86" rx="68" ry="66" fill="url(#bdG)" filter="url(#pgDrp)"/>
+      {[88,112].map((x,i)         => <ellipse key={`h0${i}`} cx={x} cy={30} rx={19} ry={13} fill="url(#scG)"/>)}
+      {[72,96,120,144].map((x,i)  => <ellipse key={`h1${i}`} cx={x} cy={44} rx={20} ry={14} fill="url(#scG)"/>)}
+      {[66,90,114,138,156].map((x,i)=> <ellipse key={`h2${i}`} cx={x} cy={59} rx={21} ry={14} fill="url(#scG)"/>)}
+      {[62,86,110,134,152].map((x,i)=> <ellipse key={`h3${i}`} cx={x} cy={74} rx={21} ry={13} fill="url(#scG)"/>)}
 
-      {/* Head scale rows (top dome only) */}
-      {/* Row 0 very tip */}
-      {[88,112].map((x,i)=>(
-        <ellipse key={`h0${i}`} cx={x} cy={30} rx={19} ry={13} fill="url(#scG)"/>
-      ))}
-      {/* Row 1 */}
-      {[72,96,120,144].map((x,i)=>(
-        <ellipse key={`h1${i}`} cx={x} cy={44} rx={20} ry={14} fill="url(#scG)"/>
-      ))}
-      {/* Row 2 */}
-      {[66,90,114,138,156].map((x,i)=>(
-        <ellipse key={`h2${i}`} cx={x} cy={59} rx={21} ry={14} fill="url(#scG)"/>
-      ))}
-      {/* Row 3 (shoulder line) */}
-      {[62,86,110,134,152].map((x,i)=>(
-        <ellipse key={`h3${i}`} cx={x} cy={74} rx={21} ry={13} fill="url(#scG)"/>
-      ))}
-
-      {/* ── Ears ── */}
       <ellipse cx="46"  cy="46" rx="20" ry="25" fill="url(#erG)"/>
       <ellipse cx="154" cy="46" rx="20" ry="25" fill="url(#erG)"/>
-      {/* Inner ear highlight */}
+      {/* Ear AO shadow — depth at base of ears */}
+      <ellipse cx="46"  cy="68" rx="10" ry="5" fill="rgba(60,28,0,0.22)" filter="url(#softBlur)"/>
+      <ellipse cx="154" cy="68" rx="10" ry="5" fill="rgba(60,28,0,0.22)" filter="url(#softBlur)"/>
       <ellipse cx="46"  cy="47" rx="11" ry="15" fill="url(#bdG)"/>
       <ellipse cx="154" cy="47" rx="11" ry="15" fill="url(#bdG)"/>
+      {/* Ear inner highlight */}
+      <ellipse cx="43"  cy="40" rx="5" ry="7" fill="rgba(255,220,150,0.25)"/>
+      <ellipse cx="157" cy="40" rx="5" ry="7" fill="rgba(255,220,150,0.25)"/>
 
-      {/* ── Cheeks (animated pulse) ── */}
-      <motion.ellipse cx="55" cy="100" rx="22" ry="14" fill="#F4906A"
-        animate={{ opacity: [0.38, 0.62, 0.38] }}
-        transition={{ duration: 2.6, repeat: Infinity, ease:"easeInOut" }}
-      />
-      <motion.ellipse cx="145" cy="100" rx="22" ry="14" fill="#F4906A"
-        animate={{ opacity: [0.38, 0.62, 0.38] }}
-        transition={{ duration: 2.6, repeat: Infinity, ease:"easeInOut", delay:0.4 }}
-      />
+      {/* ═ RIM LIGHT — warm backlight fringe around head = key 3D cue */}
+      <circle cx="100" cy="82" r="74" fill="none"
+        stroke="rgba(255,210,120,0.28)" strokeWidth="12"
+        filter="url(#rimBlur)"/>
 
-      {/* ── Snout ── */}
-      <ellipse cx="100" cy="110" rx="24" ry="17" fill="#C0884C"/>
-      {/* Bridge (lighter area above nostrils) */}
-      <ellipse cx="100" cy="103" rx="18" ry="11" fill="url(#bdG)"/>
-      {/* Nostrils */}
-      <ellipse cx="93"  cy="110" rx="4" ry="3.5" fill="#5A3010"/>
-      <ellipse cx="107" cy="110" rx="4" ry="3.5" fill="#5A3010"/>
+      {/* ═ SPECULAR HIGHLIGHT — glossy bright spot top-left of head */}
+      <ellipse cx="72" cy="52" rx="32" ry="22"
+        fill="url(#specG)" transform="rotate(-20 72 52)"/>
+      {/* Tighter bright core */}
+      <ellipse cx="66" cy="46" rx="14" ry="9"
+        fill="rgba(255,252,220,0.38)" transform="rotate(-25 66 46)"/>
 
-      {/* ── Eyes (large chibi with sparkle highlights) ── */}
-      {/* ─ Left eye ─ */}
+      {/* ═ AMBIENT OCCLUSION — subtle shadow under head base */}
+      <ellipse cx="100" cy="148" rx="46" ry="8" fill="rgba(70,35,0,0.16)" filter="url(#softBlur)"/>
+
+      {/* Face glow highlight — makes head look rounder and cuter */}
+      <ellipse cx="88" cy="72" rx="30" ry="22" fill="white" opacity="0.09" transform="rotate(-12 88 72)"/>
+
+      {/* Cheeks — softer, larger, more blush */}
+      <motion.ellipse cx="52" cy="102" rx={isExcited?30:25} ry={isExcited?18:15} fill="#F4906A"
+        animate={{opacity:[0.32,0.58,0.32]}} transition={{duration:2.8,repeat:Infinity,ease:"easeInOut"}}/>
+      <motion.ellipse cx="148" cy="102" rx={isExcited?30:25} ry={isExcited?18:15} fill="#F4906A"
+        animate={{opacity:[0.32,0.58,0.32]}} transition={{duration:2.8,repeat:Infinity,ease:"easeInOut",delay:0.4}}/>
+
+      {/* Think: monocle stays; also add thought bubbles */}
+      {isThink && (
+        <g opacity="0.92">
+          <circle cx="80" cy="90" r="20" fill="none" stroke="#C8A84B" strokeWidth="2.4"/>
+          <path d="M96 102 Q101 114 98 126" stroke="#C8A84B" strokeWidth="1.6" fill="none"/>
+          <circle cx="98" cy="128" r="2.2" fill="#C8A84B"/>
+        </g>
+      )}
+      {/* Thought bubbles — float up from head-right when thinking */}
+      {isThink && (
+        <>
+          <motion.circle cx="168" cy="88" r="5" fill="white"
+            animate={{cy:[88,70,50], opacity:[0,0.85,0], scale:[0.5,1,0]}}
+            transition={{duration:2.2, repeat:Infinity, ease:"easeOut"}}/>
+          <motion.circle cx="178" cy="68" r="8" fill="white"
+            animate={{cy:[68,48,28], opacity:[0,0.7,0], scale:[0.4,1,0]}}
+            transition={{duration:2.2, repeat:Infinity, ease:"easeOut", delay:0.5}}/>
+          <motion.circle cx="170" cy="44" r="12" fill="white"
+            animate={{cy:[44,22,2], opacity:[0,0.6,0], scale:[0.3,1,0]}}
+            transition={{duration:2.2, repeat:Infinity, ease:"easeOut", delay:1.0}}/>
+        </>
+      )}
+
+      {/* Snout — rounder, cuter */}
+      <ellipse cx="100" cy="112" rx="26" ry="18" fill="#C8904E"/>
+      <ellipse cx="100" cy="104" rx="20" ry="12" fill="url(#bdG)"/>
+      {/* Rounder cute nostrils */}
+      <ellipse cx="92"  cy="113" rx="4.5" ry="4" fill="#5A3010"/>
+      <ellipse cx="108" cy="113" rx="4.5" ry="4" fill="#5A3010"/>
+      {/* Snout highlight */}
+      <ellipse cx="100" cy="108" rx="10" ry="5" fill="white" opacity="0.12"/>
+
+      {/* Eyelashes — left eye */}
+      <path d="M68 78 Q72 73 76 76" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <path d="M77 75 Q80 69 84 72" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
+      <path d="M85 74 Q89 70 92 74" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
+
+      {/* Left eye */}
       <motion.g
-        animate={{ scaleY:[1,0.05,1] }}
-        transition={{ duration:0.18, repeat:Infinity, repeatDelay:3.8, ease:"easeInOut" }}
+        animate={{ scaleY: isBow ? [0.08,0.08] : [1,0.05,1] }}
+        transition={isBow ? {duration:0.1} : {duration:0.18,repeat:Infinity,repeatDelay:3.8,ease:"easeInOut"}}
         style={{ transformOrigin:"80px 91px" }}
       >
-        {/* Sclera (tiny visible white rim for cute look) */}
-        <ellipse cx="80" cy="90" rx="15" ry="16" fill="#FFF9F0"/>
-        {/* Iris + pupil */}
-        <ellipse cx="80" cy="91" rx="13" ry="14" fill="#1A0A02"/>
-        {/* Main shine (top-left) */}
-        <circle cx="74" cy="84" r="5.5" fill="white"/>
-        {/* Secondary shine */}
-        <circle cx="85" cy="87" r="3" fill="white" opacity="0.75"/>
-        {/* Tiny bottom shine */}
-        <circle cx="75" cy="97" r="1.8" fill="white" opacity="0.45"/>
+        <ellipse cx="80" cy="90" rx="15" ry={isExcited?19:16} fill="#FFF9F0"/>
+        {/* Iris color ring — warm amber for depth */}
+        <ellipse cx={80+eyeOff.x} cy={91+eyeOff.y} rx="13" ry={isExcited?17:14} fill="#2C1A06"/>
+        <ellipse cx={80+eyeOff.x} cy={91+eyeOff.y} rx="10" ry={isExcited?13:11} fill="#4A2010"/>
+        <ellipse cx={80+eyeOff.x} cy={92+eyeOff.y} rx="7"  ry={isExcited?9:8}   fill="#0E0604"/>
+        {/* Main sparkle */}
+        <circle cx={74+eyeOff.x*0.6} cy={84+eyeOff.y*0.6} r="5.5" fill="white"/>
+        <circle cx={85+eyeOff.x*0.6} cy={87+eyeOff.y*0.6} r="3"   fill="white" opacity="0.75"/>
+        <circle cx={75+eyeOff.x*0.6} cy={97+eyeOff.y*0.6} r="1.8" fill="white" opacity="0.45"/>
       </motion.g>
 
-      {/* ─ Right eye ─ */}
-      <motion.g
-        animate={{ scaleY:[1,0.05,1] }}
-        transition={{ duration:0.18, repeat:Infinity, repeatDelay:3.8, ease:"easeInOut" }}
-        style={{ transformOrigin:"120px 91px" }}
-      >
-        <ellipse cx="120" cy="90" rx="15" ry="16" fill="#FFF9F0"/>
-        <ellipse cx="120" cy="91" rx="13" ry="14" fill="#1A0A02"/>
-        <circle cx="114" cy="84" r="5.5" fill="white"/>
-        <circle cx="125" cy="87" r="3" fill="white" opacity="0.75"/>
-        <circle cx="115" cy="97" r="1.8" fill="white" opacity="0.45"/>
-      </motion.g>
+      {/* Eyelashes — right eye (hidden when squinting for think) */}
+      {!isThink && (
+        <>
+          <path d="M108 74 Q112 70 115 74" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
+          <path d="M116 72 Q120 67 123 71" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
+          <path d="M124 74 Q128 70 132 75" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
+        </>
+      )}
 
-      {/* ── Eyebrow marks ── */}
-      <path d="M68 72 Q80 66 92 72" stroke="#7A4818" strokeWidth="2.8" fill="none" strokeLinecap="round" opacity="0.65"/>
-      <path d="M108 72 Q120 66 132 72" stroke="#7A4818" strokeWidth="2.8" fill="none" strokeLinecap="round" opacity="0.65"/>
+      {isThink ? (
+        <path d="M108 91 Q120 84 132 91" stroke="#5A3010" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
+      ) : (
+        <motion.g
+          animate={{ scaleY: isBow ? [0.08,0.08] : [1,0.05,1] }}
+          transition={isBow ? {duration:0.1} : {duration:0.18,repeat:Infinity,repeatDelay:3.8,ease:"easeInOut"}}
+          style={{ transformOrigin:"120px 91px" }}
+        >
+          <ellipse cx="120" cy="90" rx="15" ry={isExcited?19:16} fill="#FFF9F0"/>
+          {/* Iris color ring */}
+          <ellipse cx={120+eyeOff.x} cy={91+eyeOff.y} rx="13" ry={isExcited?17:14} fill="#2C1A06"/>
+          <ellipse cx={120+eyeOff.x} cy={91+eyeOff.y} rx="10" ry={isExcited?13:11} fill="#4A2010"/>
+          <ellipse cx={120+eyeOff.x} cy={92+eyeOff.y} rx="7"  ry={isExcited?9:8}   fill="#0E0604"/>
+          <circle cx={114+eyeOff.x*0.6} cy={84+eyeOff.y*0.6} r="5.5" fill="white"/>
+          <circle cx={125+eyeOff.x*0.6} cy={87+eyeOff.y*0.6} r="3"   fill="white" opacity="0.75"/>
+          <circle cx={115+eyeOff.x*0.6} cy={97+eyeOff.y*0.6} r="1.8" fill="white" opacity="0.45"/>
+        </motion.g>
+      )}
 
-      {/* ── Smile + teeth ── */}
-      {/* Teeth */}
-      <ellipse cx="100" cy="121" rx="13" ry="8" fill="white"/>
-      {/* Mouth curve (smile over teeth) */}
-      <path d="M82 114 Q100 128 118 114" stroke="#7A3810" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
-      {/* Tooth divider */}
-      <line x1="100" y1="115" x2="100" y2="126" stroke="#DDCCAA" strokeWidth="1.5" opacity="0.6"/>
+      {/* Eyebrows — softer, more expressive */}
+      <path d="M67 70 Q80 63 93 70" stroke="#7A4818" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.6"/>
+      <path
+        d={isThink ? "M107 63 Q120 56 133 63" : "M107 70 Q120 63 133 70"}
+        stroke="#7A4818" strokeWidth="3" fill="none" strokeLinecap="round"
+        opacity={isThink ? 0.8 : 0.6}
+      />
+
+      {isExcited ? (
+        <>
+          <ellipse cx="100" cy="122" rx="17" ry="11" fill="white"/>
+          <path d="M77 112 Q100 136 123 112" stroke="#7A3810" strokeWidth="3.6" fill="none" strokeLinecap="round"/>
+          <line x1="100" y1="113" x2="100" y2="130" stroke="#DDCCAA" strokeWidth="1.5" opacity="0.6"/>
+        </>
+      ) : isBow ? (
+        <path d="M84 116 Q100 132 116 116" stroke="#7A3810" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
+      ) : isThink ? (
+        <path d="M90 119 Q100 125 110 119" stroke="#7A3810" strokeWidth="2.6" fill="none" strokeLinecap="round"/>
+      ) : (
+        <>
+          <ellipse cx="100" cy="121" rx="13" ry="8" fill="white"/>
+          <path d="M82 114 Q100 128 118 114" stroke="#7A3810" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
+          <line x1="100" y1="115" x2="100" y2="126" stroke="#DDCCAA" strokeWidth="1.5" opacity="0.6"/>
+        </>
+      )}
+
+      {isExcited && (
+        <>
+          {/* Multi-color burst particles */}
+          <motion.circle cx="28" cy="68" r="5" fill="#FF6B6B"
+            animate={{x:[-8,8,-5,0],y:[0,-28,-48,-60],opacity:[1,1,0.5,0],scale:[1,1.4,0.8,0]}}
+            transition={{duration:0.9,repeat:Infinity,ease:"easeOut"}}/>
+          <motion.circle cx="45" cy="55" r="3.5" fill="#FFD700"
+            animate={{x:[0,-12,-18],y:[0,-20,-38],opacity:[1,1,0],scale:[1,1.2,0]}}
+            transition={{duration:0.75,repeat:Infinity,ease:"easeOut",delay:0.15}}/>
+          <motion.circle cx="172" cy="60" r="4" fill="#4ECDC4"
+            animate={{x:[8,-5,12],y:[0,-25,-45],opacity:[1,1,0],scale:[1,1.3,0]}}
+            transition={{duration:0.85,repeat:Infinity,ease:"easeOut",delay:0.3}}/>
+          <motion.circle cx="158" cy="52" r="3" fill="#FF9F43"
+            animate={{x:[-5,10,5],y:[0,-18,-35],opacity:[1,0.9,0],scale:[1,1,0]}}
+            transition={{duration:0.7,repeat:Infinity,ease:"easeOut",delay:0.1}}/>
+          {/* Stars */}
+          <motion.g animate={{scale:[1,1.35,1],rotate:[0,20,0]}} transition={{duration:0.55,repeat:Infinity}}>
+            <path d="M18 68 L21 76 L29 79 L21 82 L18 90 L15 82 L7 79 L15 76 Z" fill="#FFD700" opacity="0.92"/>
+          </motion.g>
+          <motion.g animate={{scale:[1,1.2,1],rotate:[0,-15,0]}} transition={{duration:0.7,repeat:Infinity,delay:0.25}}>
+            <path d="M163 42 L165 50 L173 52 L165 54 L163 62 L161 54 L153 52 L161 50 Z" fill="#FF6B6B" opacity="0.9"/>
+          </motion.g>
+          <motion.g animate={{scale:[1,1.1,1]}} transition={{duration:0.9,repeat:Infinity,delay:0.5}}>
+            <path d="M175 80 L177 86 L183 88 L177 90 L175 96 L173 90 L167 88 L173 86 Z" fill="#4ECDC4" opacity="0.8"/>
+          </motion.g>
+        </>
+      )}
     </svg>
   );
 }
@@ -378,10 +445,11 @@ export function SupportChatWidget() {
   const [phone, setPhone]           = useState("");
   const [isRegistered, setIsReg]    = useState(false);
   const [pose, setPose]             = useState<BotPose>("stand");
-  const [bubble, setBubble]         = useState("Cần tớ giúp gì không? ✨");
+  const [bubble, setBubble]         = useState("Chào mừng quý khách! Tôi có thể phục vụ gì ạ? 🎩");
   const [showBubble, setShowBubble] = useState(false);
   const [rollDuration, setRollDuration] = useState(600);
   const [rollDir, setRollDir]           = useState<'cw'|'ccw'>('cw'); // clockwise/counter-clockwise
+  const [eyeOff, setEyeOff]            = useState({ x: 0, y: 0 }); // eye tracking offset
   const [side, setSide]             = useState<"left"|"right">("right");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -399,17 +467,17 @@ export function SupportChatWidget() {
 
   // ── Static Bubbles ───────────────────────────────────────────────────────
   const STATIC_BUBBLES: Record<string, string> = {
-    homepage:     "Cần tớ giúp gì không? ✨",
-    features:     "Khám phá tính năng đặc biệt của WEMO nhé! 📱",
-    templates:    "Chọn mẫu thiệp cho ngày đặc biệt nào! 🎨",
-    pricing:      "WEMO đang có ưu đãi lớn đó! 💰",
-    "ai-chibi":   "Chỉ 1 ảnh chân dung để có chibi 3D độc bản! 🎨",
-    order:        "Hỗ trợ điền thông tin đặt hàng không? 📦",
-    faq:          "Hỏi thêm hoặc xem câu hỏi thường gặp nhé! 💬",
-    "about-us":   "Câu chuyện sáng lập đầy cảm hứng của WEMO! 🌸",
-    contact:      "Gọi ngay hotline hoặc chat zalo nhé! 📞",
-    "track-order":"Nhập mã đơn để tớ kiểm tra vận chuyển! 🚚",
-    payment:      "Hỗ trợ thanh toán hoặc quét mã QR không? 💳",
+    homepage:     "Chào mừng quý khách đến WEMO! Tôi có thể phục vụ gì ạ? 🎩",
+    features:     "Kính mời quý khách khám phá tính năng cao cấp của WEMO! 📱",
+    templates:    "Để tôi giới thiệu các mẫu thiệp tinh tế nhất! 🎨",
+    pricing:      "Thưa quý khách, WEMO đang có ưu đãi đặc biệt! 💰",
+    "ai-chibi":   "Chỉ 1 ảnh, tôi sẽ tạo chibi 3D độc quyền cho quý khách! 🎨",
+    order:        "Tôi sẵn lòng hỗ trợ quý khách đặt hàng ngay! 📦",
+    faq:          "Mọi thắc mắc tôi đều sẵn sàng giải đáp! 💬",
+    "about-us":   "Câu chuyện cảm hứng đằng sau sứ mệnh của WEMO! 🌸",
+    contact:      "Quý khách cần liên hệ? Tôi kết nối ngay! 📞",
+    "track-order":"Nhập mã đơn để tôi tra cứu tình trạng vận chuyển! 🚚",
+    payment:      "Để tôi hỗ trợ quý khách hoàn tất thanh toán! 💳",
   };
 
   // ── Bot Guide Messages — cho từng điểm nhấn trang ───────────────────────
@@ -554,11 +622,62 @@ export function SupportChatWidget() {
     }
   }, [isDragging]);
 
+  // ─── Eye tracking: pupils follow the mouse ────────────────────────────────
+  useEffect(() => {
+    if (isOpen) { setEyeOff({ x: 0, y: 0 }); return; }
+    const onMove = (e: MouseEvent) => {
+      // Eye center is roughly at top-left area of bot icon
+      const eyeCX = botPos.x + W * 0.40;
+      const eyeCY = botPos.y + W * 0.38;
+      const dx = e.clientX - eyeCX;
+      const dy = e.clientY - eyeCY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxD = 3.5;
+      const scale = Math.min(1, 70 / Math.max(dist, 1)) * maxD;
+      setEyeOff({
+        x: dist > 0 ? (dx / dist) * scale : 0,
+        y: dist > 0 ? (dy / dist) * scale : 0,
+      });
+    };
+    window.addEventListener('mousemove', onMove, { passive: true });
+    return () => window.removeEventListener('mousemove', onMove);
+  }, [botPos, isOpen]);
+
+  // ─── Bow when chat opens ───────────────────────────────────────────────────
+  useEffect(() => {
+    if (isOpen) {
+      setPose("bow");
+      const t = setTimeout(() => setPose("stand"), 1100);
+      return () => clearTimeout(t);
+    }
+  }, [isOpen]);
+
+  // ─── Think while bot is typing ────────────────────────────────────────────
+  useEffect(() => {
+    if (isTyping && !isAnimatingRef.current) {
+      setPose("think");
+    } else if (!isTyping && pose === "think") {
+      setPose("stand");
+    }
+  }, [isTyping]);
+
+  // ─── Get excited when admin sends a new message ───────────────────────────
+  const prevMsgCountRef = useRef(0);
+  useEffect(() => {
+    const adminMsgs = messages.filter(m => m.sender === "admin" && !m.text.startsWith("[Hệ thống]"));
+    if (adminMsgs.length > prevMsgCountRef.current && prevMsgCountRef.current > 0 && isOpen) {
+      setPose("excited");
+      const t = setTimeout(() => setPose("stand"), 1200);
+      return () => clearTimeout(t);
+    }
+    prevMsgCountRef.current = adminMsgs.length;
+  }, [messages, isOpen]);
+
   // ─── Context change (route) ────────────────────────────────────────────────
   useEffect(() => {
     const ctx = getCtx(location.pathname);
     contextRef.current = ctx;
-    const msg = STATIC_BUBBLES[ctx] || "Cần tớ giúp gì không? ✨";
+    const msg = STATIC_BUBBLES[ctx] || "Chào mừng quý khách! Tôi có thể phục vụ gì ạ? 🎩";
     setBubble(msg);
     if (!isOpen) {
       setShowBubble(false);
@@ -764,12 +883,25 @@ export function SupportChatWidget() {
       <style>{`
         @keyframes pgBounce{0%,80%,100%{transform:translateY(0);opacity:.45}40%{transform:translateY(-5px);opacity:1}}
         @keyframes pgFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-9px) scale(1.03)}}
-        @keyframes pgLand{0%{transform:scaleY(0.72) scaleX(1.22)}40%{transform:scaleY(1.08) scaleX(0.94)}100%{transform:scaleY(1) scaleX(1)}}
+        /* Squash & Stretch landing — Disney style physics */
+        @keyframes pgLand{
+          0%   { transform: scaleY(0.55) scaleX(1.38); }  /* squash on impact */
+          30%  { transform: scaleY(1.22) scaleX(0.84); }  /* stretch overshoot up */
+          55%  { transform: scaleY(0.92) scaleX(1.07); }  /* settle bounce */
+          75%  { transform: scaleY(1.04) scaleX(0.97); }  /* tiny second bounce */
+          100% { transform: scaleY(1)    scaleX(1); }      /* rest */
+        }
+        /* Bow anticipation — lean back first, then bow forward */
+        @keyframes pgBowIn{
+          0%   { transform: perspective(400px) rotateX(0deg); }
+          20%  { transform: perspective(400px) rotateX(-7deg); } /* lean back */
+          100% { transform: perspective(400px) rotateX(22deg); } /* bow */
+        }
         @keyframes pgIn{from{opacity:0;transform:translateY(8px) scale(.94)}to{opacity:1;transform:none}}
         /* Rolling keyframes — clockwise & counter-clockwise */
         @keyframes pgRollCW  { from { transform: rotate(0deg);    } to { transform: rotate(1440deg);  } }
         @keyframes pgRollCCW { from { transform: rotate(0deg);    } to { transform: rotate(-1440deg); } }
-        /* Idle float — gentle bob, no rotation conflict */
+        /* Idle float */
         @keyframes pg3dSpin{
           0%   { transform: perspective(200px) rotateY(0deg)   translateY(0px);   filter: brightness(1) drop-shadow(0 8px 16px rgba(180,120,50,0.35)); }
           10%  { transform: perspective(200px) rotateY(36deg)  translateY(-3px);  filter: brightness(0.92) drop-shadow(4px 8px 18px rgba(100,60,10,0.4)); }
@@ -792,7 +924,8 @@ export function SupportChatWidget() {
         }
         .pg-msg{animation:pgIn .22s cubic-bezier(.16,1,.3,1) both}
         .pg-float{animation:pgFloat 2.8s ease-in-out infinite}
-        .pg-land{animation:pgLand 0.45s cubic-bezier(.2,1.4,.4,1)}
+        .pg-land{animation:pgLand 0.6s cubic-bezier(.2,1.4,.4,1)}
+        .pg-bow-in{animation:pgBowIn 0.7s cubic-bezier(.25,.46,.45,.94) forwards}
         .pg-3d-spin{animation:pg3dSpin 3.6s cubic-bezier(0.4,0,0.6,1) infinite; transform-style:preserve-3d;}
         .pg-3d-shine{animation:pg3dShinePulse 3.6s ease-in-out infinite; pointer-events:none; position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 40% 35%, rgba(255,255,255,0.7) 0%, transparent 60%);}
         .pg-roll-cw  { animation: pgRollCW  var(--roll-dur, 1s) linear both; }
@@ -1004,7 +1137,7 @@ export function SupportChatWidget() {
             />
           )}
 
-          <PangolinBot pose={pose} size={W} />
+          <PangolinBot pose={pose} size={W} eyeOff={eyeOff} />
 
           {/* Online dot */}
           {!isOpen && (
