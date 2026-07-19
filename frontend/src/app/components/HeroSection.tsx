@@ -138,6 +138,7 @@ export function HeroSection() {
               <Link
                 to="/ai-chibi"
                 id="hero-cta-chibi"
+                data-bot-guide="hero-cta"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white text-sm font-black shadow-lg hover:opacity-90 transition-all hover:scale-105"
               >
                 <Wand2 className="w-4 h-4" />
@@ -146,6 +147,7 @@ export function HeroSection() {
               </Link>
               <Link
                 to="/pricing"
+                data-bot-guide="hero-pricing"
                 className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white border border-stone-200 text-stone-700 text-sm font-bold hover:bg-stone-50 transition-all shadow-sm"
               >
                 Xem Bảng Giá
