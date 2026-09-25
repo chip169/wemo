@@ -19,7 +19,7 @@ const IMAGES = [
     bg: "#EDF7F0",
     label: "Tạc · Riêng · Độc Bản",
     slogan: "Độc Bản Riêng Bạn —\nĐậm Dấu Cá Nhân.",
-    subtitle: "Chế tác từ ảnh thật của bạn, mỗi chibi 3D là một tác phẩm duy nhất trên đời.",
+    subtitle: "Chế tác từ ảnh thật của bạn, mỗi mô hình LEGO là một tác phẩm duy nhất trên đời.",
     accent: "#16A34A",
     textColor: "#14532D",
     sloganPos: "top-right",
@@ -247,7 +247,7 @@ export function ToonhubPage() {
             const style = getRoleStyles(getRole(i));
             return (
               <div key={i} className="absolute" style={{ aspectRatio: "0.6 / 1", willChange: "transform, filter, opacity", transition: "transform 650ms cubic-bezier(0.4,0,0.2,1), filter 650ms cubic-bezier(0.4,0,0.2,1), opacity 650ms cubic-bezier(0.4,0,0.2,1), left 650ms cubic-bezier(0.4,0,0.2,1), bottom 650ms cubic-bezier(0.4,0,0.2,1), height 650ms cubic-bezier(0.4,0,0.2,1)", ...style }}>
-                <img src={image.src} alt={`WEMO Chibi 3D ${i + 1}`} className="w-full h-full object-contain object-bottom select-none" draggable={false} />
+                <img src={image.src} alt={`WEMO LEGO ${i + 1}`} className="w-full h-full object-contain object-bottom select-none" draggable={false} />
               </div>
             );
           })}

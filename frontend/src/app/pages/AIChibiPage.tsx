@@ -391,11 +391,11 @@ export function AIChibiPage() {
             <h1 className="text-3xl sm:text-5xl font-black text-stone-900 tracking-tight leading-tight mb-4">
               Biến Ảnh Chân Dung Thành <br />
               <span className="bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] bg-clip-text text-transparent">
-                Mô Hình Chibi 3D
+                Mô Hình LEGO Cá Nhân Hóa
               </span>
             </h1>
             <p className="text-sm sm:text-base text-stone-500 font-medium leading-relaxed">
-              Tải ảnh của bạn, nửa kia, hay bạn thân lên. Trí tuệ nhân tạo của WEMO sẽ phân tích khuôn mặt và thiết kế thành hình chibi 3D hoạt hình đáng yêu chỉ trong vài giây.
+              Tải ảnh của bạn, nửa kia, hay bạn thân lên. Trí tuệ nhân tạo của WEMO sẽ phân tích khuôn mặt và phác thảo thiết kế nhân vật LEGO độc bản chỉ trong vài giây.
             </p>
           </motion.div>
         </div>
@@ -753,13 +753,13 @@ export function AIChibiPage() {
                       </div>
                       <h3 className="text-lg sm:text-xl font-black text-white leading-tight mb-2">
                         Hiện Thực Hóa Nhân Vật Này<br />
-                        <span className="text-[#E8B4A8]">Thành Mô Hình 3D Độc Quyền</span>
+                        <span className="text-[#E8B4A8]">Thành Mô Hình LEGO Độc Quyền</span>
                       </h3>
                       <p className="text-xs text-stone-400 leading-relaxed mb-3">
                         Tặng kèm <span className="text-[#D4AF78] font-bold">thiệp 3D tích hợp chip NFC trị giá 150,000đ</span> — quét NFC để mở thiệp kỹ thuật số, chia sẻ kỷ niệm ngay trên điện thoại.
                       </p>
                       <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                        {["🎨 In 3D thực tế", "✨ Chip NFC độc bản", "📦 Giao tận nhà", "🛡️ Bảo hành 6 tháng"].map((f) => (
+                        {["🧱 Lắp ráp LEGO thực tế", "✨ Chip NFC độc bản", "📦 Giao tận nhà", "🛡️ Bảo hành 6 tháng"].map((f) => (
                           <span key={f} className="text-[10px] px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-stone-300 font-medium">
                             {f}
                           </span>

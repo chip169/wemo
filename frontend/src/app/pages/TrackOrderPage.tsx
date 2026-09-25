@@ -40,7 +40,7 @@ interface TrackedOrder {
 const statusSteps = [
   { key: "pending_payment", label: "Chờ đặt cọc", emoji: "⏳", desc: "Đơn hàng đang chờ đặt cọc" },
   { key: "deposited", label: "Đã nhận cọc", emoji: "✅", desc: "WEMO đã nhận cọc 200,000đ" },
-  { key: "processing", label: "Đang sản xuất", emoji: "🛠️", desc: "Figure 3D đang được thiết kế & in" },
+  { key: "processing", label: "Đang sản xuất", emoji: "🛠️", desc: "Mô hình LEGO đang được thiết kế & chế tác" },
   { key: "shipping", label: "Đang giao hàng", emoji: "🚚", desc: "Mô hình đang được giao tới bạn" },
   { key: "completed", label: "Nhận hàng & Feedback", emoji: "⭐", desc: "Đã giao thành công, đánh giá trải nghiệm" }
 ];
@@ -132,10 +132,10 @@ export function TrackOrderPage() {
               WEMO TRACKING SYSTEM
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-4">
-              Tra Cứu Đơn Hàng Figure
+              Tra Cứu Đơn Hàng LEGO
             </h1>
             <p className="text-sm text-stone-500 mb-8 leading-relaxed">
-              Nhập mã đơn hàng (ví dụ: <span className="font-bold text-stone-700 font-mono">ORD-123456</span>) đã nhận qua Zalo hoặc Email để kiểm tra tiến trình sản xuất mô hình Chibi 3D của bạn.
+              Nhập mã đơn hàng (ví dụ: <span className="font-bold text-stone-700 font-mono">ORD-123456</span>) đã nhận qua Zalo hoặc Email để kiểm tra tiến trình sản xuất mô hình LEGO cá nhân hóa của bạn.
             </p>
 
             <form onSubmit={handleSearchSubmit} className="bg-white p-6 rounded-3xl border border-stone-200/60 shadow-xl space-y-4">
@@ -235,7 +235,7 @@ export function TrackOrderPage() {
                       
                       <div>
                         <h2 className="text-sm font-black text-stone-800 uppercase tracking-widest">
-                          Tiến trình sản xuất Figure
+                          Tiến trình sản xuất LEGO
                         </h2>
                         <p className="text-[10px] text-stone-400 mt-1">Cập nhật thời gian thực từ xưởng WEMO</p>
                       </div>
@@ -293,7 +293,7 @@ export function TrackOrderPage() {
                             <Sparkles className="w-4 h-4 text-[#D4AF78] fill-current" /> Bản vẽ & Chân dung thiết kế
                           </h2>
                           <p className="text-[10px] text-stone-400 mt-1">
-                            Hình ảnh đối chiếu dùng để dựng hình mô hình 3D thực tế
+                            Hình ảnh đối chiếu dùng để dựng hình mô hình LEGO thực tế
                           </p>
                         </div>
 
@@ -340,9 +340,9 @@ export function TrackOrderPage() {
 
                       <div>
                         <h3 className="text-xs font-black text-stone-800 uppercase tracking-widest flex items-center gap-1.5">
-                          <Package className="w-4 h-4 text-[#D4AF78]" /> Chi Tiết Mô Hình
+                          <Package className="w-4 h-4 text-[#D4AF78]" /> Chi Tiết Mô Hình LEGO
                         </h3>
-                        <p className="text-[10px] text-stone-400 mt-1">Thông số kỹ thuật sản xuất của Figure</p>
+                        <p className="text-[10px] text-stone-400 mt-1">Thông số kỹ thuật sản xuất của mô hình LEGO</p>
                       </div>
 
                       <div className="space-y-3.5 pt-2">
@@ -352,7 +352,7 @@ export function TrackOrderPage() {
                             <Ruler className="w-4 h-4 text-stone-500" />
                           </div>
                           <div>
-                            <span className="text-[10px] text-stone-400 font-bold block uppercase">Kích Thước Figure</span>
+                            <span className="text-[10px] text-stone-400 font-bold block uppercase">Kích Thước LEGO</span>
                             <span className="text-xs font-black text-stone-800">{order.productConfig.size}</span>
                           </div>
                         </div>
@@ -421,7 +421,7 @@ export function TrackOrderPage() {
                           💡 Hỗ trợ từ WEMO
                         </h4>
                         <p className="text-[11px] text-amber-700 leading-relaxed font-medium mt-1">
-                          Nếu bạn cần thay đổi thông tin vận chuyển, đổi địa chỉ hoặc điều chỉnh thiết kế, hãy nhanh chóng liên hệ WEMO qua Zalo hoặc Hotline để bộ phận thiết kế xử lý kịp thời trước khi in 3D.
+                          Nếu bạn cần thay đổi thông tin vận chuyển, đổi địa chỉ hoặc điều chỉnh thiết kế, hãy nhanh chóng liên hệ WEMO qua Zalo hoặc Hotline để bộ phận thiết kế xử lý kịp thời trước khi tiến hành chế tác mô hình LEGO.
                         </p>
                       </div>
                       <div className="pt-2 border-t border-amber-200/40">
@@ -429,7 +429,7 @@ export function TrackOrderPage() {
                           ⚠️ CHÍNH SÁCH ĐẶT CỌC & NHẬN HÀNG
                         </h4>
                         <p className="text-[11px] text-amber-700 leading-relaxed font-medium mt-1">
-                          Mô hình Figure được thiết kế độc bản. Trong trường hợp quý khách không nhận hàng, số tiền đặt cọc ({formatPrice(order.depositAmount)}) sẽ không được hoàn trả.
+                          Mô hình LEGO được thiết kế độc bản. Trong trường hợp quý khách không nhận hàng, số tiền đặt cọc ({formatPrice(order.depositAmount)}) sẽ không được hoàn trả.
                         </p>
                       </div>
                     </div>

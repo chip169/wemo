@@ -47,9 +47,9 @@ function getCtx(p: string) {
 // ─── AI replies — Butler personality ─────────────────────────────────────────────────────
 const KB = [
   { kw: ["xin chào","hello","hi","chào"], r: "Chào mừng quý khách! 🎊 Tôi là Pango, quản gia của WEMO. Tôi có thể phục vụ quý khách điều gì ạ?" },
-  { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO đang có 3 gói ưu đãi: 🎊\n• Thiệp Figure 9cm: 650k\n• Thiệp Figure 12cm: 800k\n• Gói Doanh nghiệp: Liên hệ để nhận báo giá\nGói nào phù hợp với nhu cầu của quý khách ạ? 💌" },
-  { kw: ["nfc","chip","hoạt động","công nghệ"], r: "Công nghệ NFC thông minh của WEMO rất đơn giản thưa quý khách! 📱 Chỉ cần chạm nhẹ điện thoại vào thiệp, trang web kỷ niệm lập tức hiện ra — không cần cài ứng dụng!" },
-  { kw: ["chibi","3d","ảnh","vẽ","avatar"], r: "Dịch vụ Chibi 3D độc đáo của chúng tôi 🎨 Chỉ cần 1-2 ảnh chân dung rõ nét, nghệ nhân WEMO sẽ tạo ra nhân vật chibi 3D độc bản trong 24-48 giờ!" },
+  { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO đang có 3 gói ưu đãi: 🎊\n• Mô hình LEGO 9cm: 650k\n• Mô hình LEGO 12cm: 800k\n• Gói Doanh nghiệp: Liên hệ để nhận báo giá\nGói nào phù hợp với nhu cầu của quý khách ạ? 💌" },
+  { kw: ["nfc","chip","hoạt động","công nghệ"], r: "Công nghệ NFC thông minh của WEMO rất đơn giản thưa quý khách! 📱 Chỉ cần chạm nhẹ điện thoại vào đế mô hình LEGO, trang web kỷ niệm lập tức hiện ra — không cần cài ứng dụng!" },
+  { kw: ["chibi","3d","ảnh","vẽ","avatar","lego"], r: "Dịch vụ LEGO cá nhân hóa độc đáo của WEMO 🧱 Chỉ cần 1-2 ảnh chân dung rõ nét, nghệ nhân sẽ thiết kế nhân vật LEGO độc bản dành riêng cho bạn trong 24-48 giờ!" },
   { kw: ["giao hàng","ship","bao lâu","nhận"], r: "Chúng tôi đảm bảo giao hàng nhanh chóng thưa quý khách 📦 Nội thành: 2-3 ngày • Tỉnh thành: 3-5 ngày • Có dịch vụ giao hỏa tốc!" },
   { kw: ["đặt","order","mua","đặt hàng"], r: "Tôi sấn lòng hỗ trợ quý khách đặt hàng! 🎊 Quý khách có thể gọi 0398 768 699 hoặc nhấn Zalo bên trên. Thiệp dành cho dịp gì ạ?" },
   { kw: ["cảm ơn","thanks","tuyệt","ok","được"], r: "Thưa quý khách, đó là vinh dự của tôi! 🎊 Hế tôi làm gì khác được cho quý khách không?" },
@@ -471,7 +471,7 @@ export function SupportChatWidget() {
     features:     "Kính mời quý khách khám phá tính năng cao cấp của WEMO! 📱",
     templates:    "Để tôi giới thiệu các mẫu thiệp tinh tế nhất! 🎨",
     pricing:      "Thưa quý khách, WEMO đang có ưu đãi đặc biệt! 💰",
-    "ai-chibi":   "Chỉ 1 ảnh, tôi sẽ tạo chibi 3D độc quyền cho quý khách! 🎨",
+    "ai-chibi":   "Chỉ 1 ảnh, tôi sẽ tạo mô hình LEGO cá nhân hóa độc quyền cho quý khách! 🧱",
     order:        "Tôi sẵn lòng hỗ trợ quý khách đặt hàng ngay! 📦",
     faq:          "Mọi thắc mắc tôi đều sẵn sàng giải đáp! 💬",
     "about-us":   "Câu chuyện cảm hứng đằng sau sứ mệnh của WEMO! 🌸",
@@ -482,11 +482,11 @@ export function SupportChatWidget() {
 
   // ── Bot Guide Messages — cho từng điểm nhấn trang ───────────────────────
   const BOT_GUIDES: Record<string, string> = {
-    "hero-cta":       "🚀 Bấm vào đây để thử Chibi AI miễn phí ngay!",
-    "hero-pricing":   "💰 Xem bảng giá các gói thiệp NFC đẹp nào!",
-    "how-it-works":   "📖 Chỉ 4 bước đơn giản là có thiệp NFC rồi!",
-    "nfc-step":       "📱 Chạm điện thoại — trang web tự mở, không cần app!",
-    "chibi-step":     "🎨 Tải 1-2 ảnh rõ mặt, tớ tạo chibi 3D trong 24h!",
+    "hero-cta":       "🚀 Bấm vào đây để đặt LEGO cá nhân hóa ngay!",
+    "hero-pricing":   "💰 Xem bảng giá các gói mô hình LEGO nào!",
+    "how-it-works":   "📖 Chỉ 4 bước đơn giản là có quà tặng độc đáo!",
+    "nfc-step":       "📱 Chạm điện thoại vào đế LEGO — trang web tự mở!",
+    "chibi-step":     "🧱 Tải 1-2 ảnh rõ mặt, tớ thiết kế mô hình LEGO trong 24h!",
     "upload-step":    "⬆️ Thêm ảnh kỷ niệm, video và lời chúc của bạn nhé!",
     "why-wemo":       "💝 Thiệp WEMO đáng nhớ hơn quà thông thường 10 lần!",
     "pricing-card":   "🛒 Chọn gói phù hợp và đặt ngay để nhận ưu đãi!",
@@ -806,7 +806,7 @@ export function SupportChatWidget() {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        fetch("/api/support/messages", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ sessionId:sid, sender:"admin", text:`Xin chào ${name.trim()}! 🦔 Tớ là Pango. Tớ có thể giúp về thiệp NFC, chibi 3D, giá cả và đặt hàng. Bạn cần gì?` }) }).catch(console.error);
+        fetch("/api/support/messages", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ sessionId:sid, sender:"admin", text:`Xin chào ${name.trim()}! 🦔 Tớ là Pango. Tớ có thể giúp về thiệp NFC, mô hình LEGO cá nhân hóa, giá cả và đặt hàng. Bạn cần gì?` }) }).catch(console.error);
       }, 1800);
     }, 500);
   };
@@ -997,7 +997,7 @@ export function SupportChatWidget() {
                     <div style={{ textAlign:"center", padding:"28px 12px" }}>
                       <Sparkles style={{ width:28, height:28, color:"#E8B4A8", margin:"0 auto 10px", display:"block" }} />
                       <div style={{ fontSize:13, fontWeight:800, color:"#8C5D53" }}>Xin chào {name}! 💕</div>
-                      <div style={{ fontSize:11.5, marginTop:5, lineHeight:1.75, color:"#A47870" }}>Hỏi tớ về thiệp NFC, chibi 3D,<br/>giá cả hay đặt hàng nhé!</div>
+                      <div style={{ fontSize:11.5, marginTop:5, lineHeight:1.75, color:"#A47870" }}>Hỏi tớ về thiệp NFC, mô hình LEGO cá nhân hóa,<br/>giá cả hay đặt hàng nhé!</div>
                     </div>
                   ) : (
                     messages.map((msg, i) => {
@@ -1023,7 +1023,7 @@ export function SupportChatWidget() {
 
                 {messages.filter(m=>!m.text.startsWith("[Hệ thống]")).length===0 && (
                   <div style={{ padding:"0 14px 10px", display:"flex", gap:6, flexWrap:"wrap" as const }}>
-                    {["💰 Giá cả","📦 Đặt hàng","📱 NFC là gì?","🎨 Chibi 3D"].map(q=>(
+                    {["💰 Giá cả","📦 Đặt hàng","📱 NFC là gì?","🧱 LEGO cá nhân hóa"].map(q=>(
                       <button key={q} data-action="q" onClick={()=>setInputText(q.split(" ").slice(1).join(" "))}
                         style={{ padding:"5px 11px", borderRadius:20, border:"1.5px solid #E8B4A8", background:"white", color:"#C58B7E", fontSize:10, fontWeight:700, cursor:"pointer" }}>{q}</button>
                     ))}

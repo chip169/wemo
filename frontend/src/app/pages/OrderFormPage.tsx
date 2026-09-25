@@ -78,7 +78,7 @@ interface ContactInfo {
   note: string;
 }
 
-const STEPS = ["Ảnh Chibi", "Sản Phẩm", "Giao Hàng", "Xác Nhận"];
+const STEPS = ["Tải Ảnh Gốc", "Tùy Chỉnh", "Giao Hàng", "Xác Nhận"];
 
 const convertToBase64 = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -147,12 +147,15 @@ export function OrderFormPage() {
     }
   }, []);
 
-  const handleChibiUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     try {
       const base64 = await convertToBase64(file);
+      setOriginalUrl(base64);
       setChibiUrl(base64);
+      sessionStorage.setItem("wemo_original_url", base64);
+      sessionStorage.setItem("wemo_chibi_url", base64);
     } catch (err: any) {
       alert(err.message);
     }
@@ -215,8 +218,6 @@ export function OrderFormPage() {
             <Home className="w-3.5 h-3.5" /> Trang chủ
           </Link>
           <ChevronRight className="w-3 h-3" />
-          <Link to="/ai-chibi" className="hover:text-stone-700 transition-colors">Vẽ Chibi AI</Link>
-          <ChevronRight className="w-3 h-3" />
           <span className="text-stone-700">Đặt Hàng</span>
         </div>
 
@@ -224,13 +225,13 @@ export function OrderFormPage() {
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E8B4A8]/15 border border-[#E8B4A8]/30 text-[#e88d7b] text-xs font-black tracking-widest uppercase mb-4">
             <ShoppingBag className="w-3.5 h-3.5" />
-            ĐẶT HÀNG FIGURE CHIBI 3D
+            ĐẶT HÀNG MÔ HÌNH LEGO CÁ NHÂN HÓA
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-2">
             Tùy Chỉnh Sản Phẩm Của Bạn
           </h1>
           <p className="text-sm text-stone-500">
-            Chỉ vài bước đơn giản để biến ảnh Chibi thành mô hình 3D thực tế.
+            Chỉ vài bước đơn giản để biến hình ảnh của bạn thành mô hình LEGO cá nhân hóa độc bản.
           </p>
         </div>
 
@@ -290,7 +291,7 @@ export function OrderFormPage() {
           <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78]" />
 
           <AnimatePresence mode="wait">
-            {/* ─── Step 0: Chibi Image ─── */}
+            {/* ─── Step 0: Upload Original Photo ─── */}
             {step === 0 && (
               <motion.div
                 key="step0"
@@ -301,60 +302,85 @@ export function OrderFormPage() {
                 className="p-6 sm:p-8 space-y-6"
               >
                 <div>
-                  <h2 className="text-xl font-black text-stone-900 mb-1">Ảnh Chibi Của Bạn</h2>
-                  <p className="text-sm text-stone-500">Xác nhận hoặc thay thế ảnh Chibi sẽ được in thành mô hình 3D.</p>
+                  <h2 className="text-xl font-black text-stone-900 mb-1">Tải Ảnh Gốc Của Bạn</h2>
+                  <p className="text-sm text-stone-500">
+                    Tải lên ảnh chân dung rõ mặt để đội ngũ nghệ nhân WEMO thiết kế mô hình LEGO cá nhân hóa.
+                  </p>
                 </div>
 
                 <div className="flex flex-col sm:flex-row items-center gap-6">
                   <div className="relative w-48 h-48 rounded-2xl overflow-hidden border-2 border-[#E8B4A8]/40 bg-stone-50 shadow-md shrink-0 flex items-center justify-center">
-                    {chibiUrl ? (
-                      <img src={chibiUrl} alt="Chibi preview" className="w-full h-full object-cover" />
+                    {(originalUrl || chibiUrl) ? (
+                      <img src={originalUrl || chibiUrl} alt="Ảnh gốc preview" className="w-full h-full object-cover" />
                     ) : (
                       <div className="flex flex-col items-center text-stone-300 gap-2 p-4 text-center">
-                        <Sparkles className="w-10 h-10 stroke-1" />
-                        <p className="text-xs font-medium text-stone-400">Chưa có ảnh Chibi</p>
+                        <Upload className="w-10 h-10 stroke-1 text-stone-400" />
+                        <p className="text-xs font-medium text-stone-400">Chưa có ảnh gốc</p>
                       </div>
                     )}
                   </div>
 
                   <div className="flex-1 space-y-3 text-center sm:text-left">
-                    {chibiUrl ? (
+                    {(originalUrl || chibiUrl) ? (
                       <div className="space-y-2">
-                        <div className="flex items-center gap-2 text-sm font-bold text-emerald-600">
-                          <Check className="w-4 h-4" /> Đã có ảnh Chibi sẵn sàng in!
+                        <div className="flex items-center gap-2 text-sm font-bold text-emerald-600 justify-center sm:justify-start">
+                          <Check className="w-4 h-4" /> Đã có ảnh gốc sẵn sàng chế tác LEGO!
                         </div>
-                        <p className="text-xs text-stone-500">Ảnh này sẽ được dùng làm phôi sản xuất mô hình 3D. Bạn có thể thay thế bằng ảnh khác nếu muốn.</p>
+                        <p className="text-xs text-stone-500 leading-relaxed">
+                          Ảnh này sẽ được dùng để mô phỏng và chế tác nhân vật LEGO độc bản của bạn. Bạn có thể thay thế bằng ảnh khác nếu muốn.
+                        </p>
                       </div>
                     ) : (
                       <div className="space-y-2">
-                        <p className="text-sm font-bold text-stone-700">Tải ảnh Chibi lên (tùy chọn)</p>
-                        <p className="text-xs text-stone-400 leading-relaxed">Bạn có thể để trống — đội WEMO sẽ liên hệ để nhận ảnh sau khi đặt hàng thành công.</p>
+                        <p className="text-sm font-bold text-stone-700">Tải ảnh chân dung lên (tùy chọn)</p>
+                        <p className="text-xs text-stone-400 leading-relaxed">
+                          Chọn ảnh rõ nét khuôn mặt, kiểu tóc và trang phục. Bạn có thể để trống — WEMO sẽ liên hệ để nhận ảnh sau khi đặt hàng thành công.
+                        </p>
                       </div>
                     )}
 
-                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start pt-1">
                       <button
+                        type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-4 py-2.5 rounded-xl border border-[#E8B4A8]/40 text-[#e88d7b] text-xs font-black flex items-center gap-1.5 cursor-pointer hover:bg-[#E8B4A8]/5 transition-colors bg-white"
+                        className="px-5 py-2.5 rounded-xl bg-[#2A1A14] text-white hover:bg-[#E8734A] text-xs font-bold flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
                       >
                         <Upload className="w-3.5 h-3.5" />
-                        {chibiUrl ? "Thay Thế Ảnh" : "Tải Ảnh Lên"}
+                        {(originalUrl || chibiUrl) ? "Thay Thế Ảnh" : "Tải Ảnh Gốc Lên"}
                       </button>
-                      <Link
-                        to="/ai-chibi"
-                        className="px-4 py-2.5 rounded-xl border border-stone-200 text-stone-600 text-xs font-bold flex items-center gap-1.5 hover:bg-stone-50 transition-colors"
-                      >
-                        <Sparkles className="w-3.5 h-3.5" />
-                        Tạo Chibi AI
-                      </Link>
+                      {(originalUrl || chibiUrl) && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setOriginalUrl("");
+                            setChibiUrl("");
+                            sessionStorage.removeItem("wemo_original_url");
+                            sessionStorage.removeItem("wemo_chibi_url");
+                            if (fileInputRef.current) fileInputRef.current.value = "";
+                          }}
+                          className="px-4 py-2.5 rounded-xl border border-stone-200 text-stone-600 hover:bg-stone-50 text-xs font-bold transition-colors cursor-pointer"
+                        >
+                          Xóa ảnh
+                        </button>
+                      )}
                     </div>
                     <input
                       type="file"
                       ref={fileInputRef}
-                      onChange={handleChibiUpload}
+                      onChange={handlePhotoUpload}
                       accept="image/*"
                       className="hidden"
                     />
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/50 flex items-start gap-3">
+                  <span className="text-lg">💡</span>
+                  <div className="text-xs text-amber-800 space-y-0.5">
+                    <p className="font-bold">Mẹo chọn ảnh để LEGO đẹp nhất:</p>
+                    <p className="text-amber-700 leading-relaxed text-[11px]">
+                      Nên chọn ảnh chụp góc nhìn chính diện hoặc 3/4, rõ khuôn mặt, mắt và kiểu tóc để mô hình LEGO tái hiện chân thật và đặc trưng nhất.
+                    </p>
                   </div>
                 </div>
               </motion.div>
@@ -686,7 +712,7 @@ export function OrderFormPage() {
                     ⚠️ CHÍNH SÁCH ĐẶT CỌC & NHẬN HÀNG
                   </p>
                   <p className="text-[11px] text-amber-700 leading-relaxed font-medium">
-                    Do sản phẩm Figure được thiết kế cá nhân hóa độc bản theo hình ảnh của bạn, quý khách vui lòng lưu ý: <b>Trường hợp đơn hàng đã đặt cọc nhưng quý khách không nhận hàng (bom hàng), số tiền cọc {formatPrice(DEPOSIT)} sẽ không được hoàn trả.</b>
+                    Do sản phẩm mô hình LEGO được thiết kế cá nhân hóa độc bản theo hình ảnh của bạn, quý khách vui lòng lưu ý: <b>Trường hợp đơn hàng đã đặt cọc nhưng quý khách không nhận hàng (bom hàng), số tiền cọc {formatPrice(DEPOSIT)} sẽ không được hoàn trả.</b>
                   </p>
                 </div>
 

@@ -79,7 +79,7 @@ const sendZNSOrderConfirmation = async ({
   const templateData = {
     customer_name: customerName,
     order_id: orderId,
-    product: product || "Figure Chibi 3D",
+    product: product || "Mô hình LEGO Cá Nhân Hóa",
     deposit_amount: depositAmount.toLocaleString("vi-VN"),
     paid_at: paidAtVN,
   };

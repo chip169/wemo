@@ -255,7 +255,7 @@ const notifyNewOrder = async (order) => {
 🟢 <b>Số điện thoại:</b> <code>${phone}</code>
 🟢 <b>Nơi giao hàng:</b> ${address || "Chưa điền"}
 
-📦 <b>Sản phẩm:</b> ${product || "Figure Chibi 3D"}
+📦 <b>Sản phẩm:</b> ${product || "Mô hình LEGO Cá Nhân Hóa"}
 💰 <b>Tổng tiền:</b> ${formattedTotal}đ
 ✅ <b>Số tiền cọc:</b> <b>${formattedDeposit}đ</b> (ĐÃ THANH TOÁN)
 ⏳ <b>Còn lại:</b> ${remaining}đ
@@ -266,7 +266,7 @@ const notifyNewOrder = async (order) => {
 
   const files = [];
   if (originalUrl) files.push({ url: originalUrl, label: "Ảnh Gốc" });
-  if (chibiUrl) files.push({ url: chibiUrl, label: "Ảnh Chibi" });
+  if (chibiUrl) files.push({ url: chibiUrl, label: "Ảnh Mẫu LEGO" });
 
   const result = await sendTelegramMediaGroup(message, files);
 

@@ -10,7 +10,7 @@ const ProductConfigSchema = new mongoose.Schema({
 const OrderSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   customerName: { type: String, required: true },
-  product: { type: String, default: "Figure Chibi 3D" },
+  product: { type: String, default: "Mô hình LEGO Cá Nhân Hóa" },
   amount: { type: Number, required: true },
 
   // Customer contact info

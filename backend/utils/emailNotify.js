@@ -123,7 +123,7 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
                   </tr>
                   <tr>
                     <td style="padding:8px 0;font-size:13px;color:#8E847B;">Sản phẩm</td>
-                    <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:600;">${product || "Figure Chibi 3D"}</td>
+                    <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:600;">${product || "Mô hình LEGO Cá Nhân Hóa"}</td>
                   </tr>
                   <tr>
                     <td style="padding:8px 0;font-size:13px;color:#8E847B;">Số tiền cọc</td>

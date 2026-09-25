@@ -5,7 +5,7 @@ import { useState, useRef } from "react";
 
 const plans = [
   {
-    name: "Figure Chibi 9cm",
+    name: "Mô hình LEGO 9cm",
     icon: Sparkles,
     price: "650.000đ",
     period: "/sản phẩm",
@@ -13,18 +13,18 @@ const plans = [
     color: "#E8B4A8",
     features: [
       "Kích thước chiều cao: 9cm",
-      "Vẽ chân dung Chibi AI miễn phí",
-      "Dựng hình mô hình 3D độc bản",
-      "Chất liệu nhựa in 3D cao cấp",
+      "Thiết kế nhân vật LEGO độc bản",
+      "Chế tác từ chi tiết LEGO cao cấp",
       "Tùy chọn đế mica / đế gỗ khắc tên",
       "Tích hợp chip NFC ẩn thông minh",
       "Hộp quà & thiệp chúc thiết kế riêng",
+      "Bảo hành & hỗ trợ chu đáo",
     ],
     cta: "Mua Ngay",
     popular: false,
   },
   {
-    name: "Figure Chibi 12cm",
+    name: "Mô hình LEGO 12cm",
     icon: Crown,
     price: "800.000đ",
     period: "/sản phẩm",
@@ -32,9 +32,9 @@ const plans = [
     color: "#D4AF78",
     features: [
       "Kích thước chiều cao: 12cm",
-      "Vẽ chân dung Chibi AI không giới hạn",
+      "Thiết kế nhân vật LEGO chi tiết cao",
+      "Lắp ráp & chế tác thủ công tỉ mỉ",
       "Chi tiết mô hình sắc nét vượt trội",
-      "Dựng hình phôi 3D tỉ mỉ thủ công",
       "Tặng kèm đế mica hoặc đế gỗ",
       "Tích hợp chip NFC ẩn thông minh",
       "Hỗ trợ ưu tiên & Giao hàng nhanh",
@@ -52,7 +52,7 @@ const plans = [
     features: [
       "Áp dụng đơn hàng từ 5 sản phẩm",
       "Chiết khấu đặc biệt lên đến 30%",
-      "Thiết kế chibi đồng loạt theo chủ đề",
+      "Thiết kế mô hình LEGO đồng loạt theo chủ đề",
       "Tùy biến bao bì & thiệp chúc thương hiệu",
       "Khắc tên/Logo thương hiệu lên đế gỗ",
       "Hỗ trợ giao nhận đa địa chỉ",

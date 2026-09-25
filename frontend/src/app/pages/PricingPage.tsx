@@ -6,21 +6,21 @@ import { useState, useRef } from "react";
 const faqs = [
   {
     q: "Kích thước 9cm và 12cm khác nhau như thế nào?",
-    a: "Phiên bản 9cm nhỏ gọn, tinh tế và rất thích hợp để trang trí bàn học/làm việc. Phiên bản 12cm có kích thước lớn hơn, được dựng hình phôi 3D thủ công sắc nét và tỉ mỉ hơn, giúp các chi tiết khuôn mặt và trang phục hiển thị nổi bật, sống động hơn.",
+    a: "Phiên bản 9cm nhỏ gọn, tinh tế và rất thích hợp để trang trí bàn học/làm việc. Phiên bản 12cm có kích thước lớn hơn, được chế tác và ghép các chi tiết LEGO tỉ mỉ hơn, giúp các đường nét nhân vật và trang phục hiển thị nổi bật, sống động hơn.",
   },
   {
     q: "Tôi có được giảm giá khi đặt số lượng lớn cho sự kiện/đám cưới không?",
     a: "Có! Chúng tôi có chính sách chiết khấu vô cùng hấp dẫn (lên đến 30%) cho các đơn hàng từ 5 sản phẩm trở lên. Ngoài ra WEMO hỗ trợ tùy biến riêng bao bì, thiệp chúc và khắc tên/logo lên phần đế gỗ cho các đơn sự kiện.",
   },
   {
-    q: "Chip NFC ẩn trên mô hình Figure hoạt động như thế nào?",
-    a: "Mỗi mô hình Figure của WEMO đều được tích hợp một chip NFC ẩn thông minh bên dưới đế. Khi người nhận dùng điện thoại chạm nhẹ vào đế Figure, màn hình điện thoại sẽ tự động mở ra trang thiệp 3D độc bản chứa lời chúc, âm nhạc và những hình ảnh kỷ niệm của hai bạn.",
+    q: "Chip NFC ẩn trên mô hình LEGO hoạt động như thế nào?",
+    a: "Mỗi mô hình LEGO của WEMO đều được tích hợp một chip NFC ẩn thông minh bên dưới đế. Khi người nhận dùng điện thoại chạm nhẹ vào đế LEGO, màn hình điện thoại sẽ tự động mở ra trang thiệp 3D độc bản chứa lời chúc, âm nhạc và những hình ảnh kỷ niệm của hai bạn.",
   },
 ];
 
 const plans = [
   {
-    name: "Figure Chibi 9cm",
+    name: "Mô hình LEGO 9cm",
     icon: Sparkles,
     price: "650.000đ",
     period: "/sản phẩm",
@@ -28,18 +28,18 @@ const plans = [
     color: "#E8B4A8",
     features: [
       "Kích thước chiều cao: 9cm",
-      "Vẽ chân dung Chibi AI miễn phí",
-      "Dựng hình mô hình 3D độc bản",
-      "Chất liệu nhựa in 3D cao cấp",
+      "Thiết kế nhân vật LEGO độc bản",
+      "Chế tác từ chi tiết LEGO cao cấp",
       "Tùy chọn đế mica / đế gỗ khắc tên",
       "Tích hợp chip NFC ẩn thông minh",
       "Hộp quà & thiệp chúc thiết kế riêng",
+      "Bảo hành & hỗ trợ chu đáo",
     ],
     cta: "Mua Ngay",
     popular: false,
   },
   {
-    name: "Figure Chibi 12cm",
+    name: "Mô hình LEGO 12cm",
     icon: Crown,
     price: "800.000đ",
     period: "/sản phẩm",
@@ -47,9 +47,9 @@ const plans = [
     color: "#D4AF78",
     features: [
       "Kích thước chiều cao: 12cm",
-      "Vẽ chân dung Chibi AI không giới hạn",
+      "Thiết kế nhân vật LEGO chi tiết cao",
+      "Lắp ráp & chế tác thủ công tỉ mỉ",
       "Chi tiết mô hình sắc nét vượt trội",
-      "Dựng hình phôi 3D tỉ mỉ thủ công",
       "Tặng kèm đế mica hoặc đế gỗ",
       "Tích hợp chip NFC ẩn thông minh",
       "Hỗ trợ ưu tiên & Giao hàng nhanh",
@@ -67,7 +67,7 @@ const plans = [
     features: [
       "Áp dụng đơn hàng từ 5 sản phẩm",
       "Chiết khấu đặc biệt lên đến 30%",
-      "Thiết kế chibi đồng loạt theo chủ đề",
+      "Thiết kế mô hình LEGO đồng loạt theo chủ đề",
       "Tùy biến bao bì & thiệp chúc thương hiệu",
       "Khắc tên/Logo thương hiệu lên đế gỗ",
       "Hỗ trợ giao nhận đa địa chỉ",
@@ -226,13 +226,13 @@ export function PricingPage() {
               lineHeight: 1.15,
             }}
           >
-            Sở Hữu Figure Chibi <span style={{ color: "#E8B4A8" }}>Độc Bản</span>
+            Sở Hữu Mô Hình LEGO <span style={{ color: "#E8B4A8" }}>Độc Bản</span>
           </h1>
           <p
             className="max-w-2xl mx-auto"
             style={{ fontSize: "1.25rem", color: "#5A5A5A", lineHeight: 1.6 }}
           >
-            Chọn kích thước phù hợp với sở thích của bạn. Mỗi mô hình Figure Chibi 3D là một tác phẩm nghệ thuật cá nhân hóa được lưu giữ mãi mãi.
+            Chọn kích thước phù hợp với sở thích của bạn. Mỗi mô hình LEGO cá nhân hóa là một tác phẩm nghệ thuật độc bản được lưu giữ mãi mãi.
           </p>
         </motion.div>
       </section>
