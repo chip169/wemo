@@ -29,15 +29,17 @@ export function Header() {
     <motion.header
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
       style={{
         background: isScrolled
-          ? "var(--webo-glass-white)"
-          : isHomePage
-          ? "transparent"
-          : "transparent",
-        backdropFilter: isScrolled ? "blur(20px)" : "none",
-        borderBottom: isScrolled ? "1px solid rgba(255,255,255,0.3)" : "none",
+          ? "rgba(255, 252, 250, 0.95)"
+          : "rgba(255, 252, 250, 0.75)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        borderBottom: "1px solid rgba(232, 115, 74, 0.12)",
+        boxShadow: isScrolled
+          ? "0 4px 24px rgba(192, 96, 74, 0.12), 0 1px 0 rgba(255,255,255,0.8) inset"
+          : "0 2px 12px rgba(192, 96, 74, 0.06)",
       }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -54,10 +56,11 @@ export function Header() {
                 className="w-11 h-11 object-contain"
               />
               <span
-                className="font-bold"
+                className="font-bold tracking-tight"
                 style={{
                   fontSize: "1.75rem",
-                  color: "#C0604A",
+                  color: "#E8734A",
+                  letterSpacing: "-0.02em",
                 }}
               >
                 WEMO
@@ -76,8 +79,8 @@ export function Header() {
                     className="font-semibold transition-colors relative text-[17px] tracking-wide"
                     style={
                       isActive
-                        ? { color: "#E8B4A8" }
-                        : { color: "#1A1818", textShadow: "0 1px 3px rgba(255,255,255,0.6)" }
+                        ? { color: "#E8734A" }
+                        : { color: "#3A2820" }
                     }
                   >
                     {item.name}
@@ -85,7 +88,7 @@ export function Header() {
                       <motion.div
                         layoutId="nav-underline"
                         className="absolute -bottom-1 left-0 right-0 h-0.5 rounded-full"
-                        style={{ background: "#E8B4A8" }}
+                        style={{ background: "#E8734A" }}
                       />
                     )}
                   </Link>
