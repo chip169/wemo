@@ -81,7 +81,7 @@ export function HeroSection() {
   ];
 
   return (
-    <section className="relative w-full min-h-screen overflow-hidden bg-[#FCE1DA]">
+    <section className="relative w-full min-h-screen overflow-hidden bg-[#FFF5F2]">
       <style>{`
         .wemo-splash {
           position:fixed; inset:0; z-index:9999;

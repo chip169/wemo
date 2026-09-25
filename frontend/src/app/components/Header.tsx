@@ -57,7 +57,7 @@ export function Header() {
                 className="font-bold"
                 style={{
                   fontSize: "1.75rem",
-                  color: "#E8B4A8",
+                  color: "#C0604A",
                 }}
               >
                 WEMO
@@ -73,7 +73,7 @@ export function Header() {
                 <motion.div key={index} whileHover={{ y: -2 }}>
                   <Link
                     to={item.href}
-                    className="font-semibold transition-colors relative text-[15px] tracking-wide"
+                    className="font-semibold transition-colors relative text-[17px] tracking-wide"
                     style={
                       isActive
                         ? { color: "#E8B4A8" }
