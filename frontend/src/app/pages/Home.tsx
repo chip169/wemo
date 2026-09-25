@@ -1,4 +1,4 @@
-import { ToonhubPage } from "./ToonhubPage";
+import { HeroSection } from "../components/HeroSection";
 import { HowItWorks } from "../components/HowItWorks";
 import { TemplateShowcase } from "../components/TemplateShowcase";
 import { PersonalizationFeatures } from "../components/PersonalizationFeatures";
@@ -10,10 +10,10 @@ import { FinalCTA } from "../components/FinalCTA";
 export function Home() {
   return (
     <>
-      {/* Carousel TOONHUB làm Hero Section trang chủ */}
-      <ToonhubPage />
+      {/* Hero Section mới với spotlight reveal effect */}
+      <HeroSection />
 
-      {/* Các phần nội dung cũ của WEMO */}
+      {/* Các phần nội dung của WEMO */}
       <HowItWorks />
       <TemplateShowcase />
       <PersonalizationFeatures />
@@ -24,3 +24,4 @@ export function Home() {
     </>
   );
 }
+

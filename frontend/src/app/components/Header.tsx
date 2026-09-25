@@ -73,11 +73,11 @@ export function Header() {
                 <motion.div key={index} whileHover={{ y: -2 }}>
                   <Link
                     to={item.href}
-                    className="font-medium transition-colors relative"
+                    className="font-semibold transition-colors relative text-[15px] tracking-wide"
                     style={
                       isActive
                         ? { color: "#E8B4A8" }
-                        : { color: "#1A1818" }
+                        : { color: "#1A1818", textShadow: "0 1px 3px rgba(255,255,255,0.6)" }
                     }
                   >
                     {item.name}

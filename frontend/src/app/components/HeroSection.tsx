@@ -1,227 +1,227 @@
-import { motion, useScroll, useTransform } from "motion/react";
-import { Sparkles, ArrowRight, Wand2 } from "lucide-react";
+import { useEffect, useRef } from "react";
+import { motion } from "motion/react";
 import { Link } from "react-router";
 
-export function HeroSection() {
-  const { scrollY } = useScroll();
+const BASE_IMG =
+  "https://soft-zoom-63098134.figma.site/_assets/v11/5c9f982199fde1d9b85a20e5396f0fa7bacaf9a3.png?w=2560";
+const REVEAL_IMG =
+  "https://soft-zoom-63098134.figma.site/_assets/v11/6be2165e31648955b4e071f4cf2a50bc572b9bfd.png?w=1536";
 
-  // 3D Scroll Transforms for the main Pink 3D Figure
-  const rotateX = useTransform(scrollY, [0, 800], [0, 12]);     // Smooth tilt
-  const rotateY = useTransform(scrollY, [0, 800], [0, -12]);    // Smooth side twist
-  const translateY = useTransform(scrollY, [0, 800], [0, 50]);  // Subtle parallax down
-  const scale = useTransform(scrollY, [0, 800], [1, 1.05]);     // Subtle zoom in
-  const opacity = useTransform(scrollY, [600, 800], [1, 0.95]); // Maintain visibility
+const SPOTLIGHT_R = 270;
+
+export function HeroSection() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const revealRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const layer  = revealRef.current;
+    if (!canvas || !layer) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const mouse  = { x: -999, y: -999 };
+    const smooth = { x: -999, y: -999 };
+    const onMove = (e: MouseEvent) => { mouse.x = e.clientX; mouse.y = e.clientY; };
+    window.addEventListener("mousemove", onMove);
+
+    let raf: number;
+    const loop = () => {
+      smooth.x += (mouse.x - smooth.x) * 0.1;
+      smooth.y += (mouse.y - smooth.y) * 0.1;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const g = ctx.createRadialGradient(smooth.x, smooth.y, 0, smooth.x, smooth.y, SPOTLIGHT_R);
+      g.addColorStop(0,    "rgba(255,255,255,1)");
+      g.addColorStop(0.4,  "rgba(255,255,255,1)");
+      g.addColorStop(0.6,  "rgba(255,255,255,0.75)");
+      g.addColorStop(0.75, "rgba(255,255,255,0.4)");
+      g.addColorStop(0.88, "rgba(255,255,255,0.12)");
+      g.addColorStop(1,    "rgba(255,255,255,0)");
+      ctx.beginPath();
+      ctx.arc(smooth.x, smooth.y, SPOTLIGHT_R, 0, Math.PI * 2);
+      ctx.fillStyle = g;
+      ctx.fill();
+      const url = canvas.toDataURL();
+      layer.style.webkitMaskImage = `url(${url})`;
+      layer.style.maskImage        = `url(${url})`;
+      layer.style.webkitMaskSize  = "100% 100%";
+      layer.style.maskSize         = "100% 100%";
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  const bricks = [
+    { w:28, h:28, top:"12%", left:"8%",   right:"",    bg:"#E8734A", delay:0,   dur:6  },
+    { w:16, h:16, top:"22%", left:"14%",  right:"",    bg:"#D4AF78", delay:0.5, dur:8  },
+    { w:20, h:20, top:"8%",  left:"23%",  right:"",    bg:"#E8B4A8", delay:1,   dur:7  },
+    { w:12, h:12, top:"38%", left:"6%",   right:"",    bg:"#E8734A", delay:1.5, dur:9  },
+    { w:24, h:24, top:"14%", left:"",     right:"8%",  bg:"#D4AF78", delay:0.3, dur:7  },
+    { w:14, h:14, top:"30%", left:"",     right:"5%",  bg:"#E8B4A8", delay:0.8, dur:6  },
+    { w:18, h:18, top:"58%", left:"",     right:"10%", bg:"#E8734A", delay:1.2, dur:10 },
+    { w:10, h:10, top:"72%", left:"5%",   right:"",    bg:"#D4AF78", delay:0.6, dur:8  },
+  ];
+
+  const dots = [
+    { size:6,  top:"48%", left:"4%",   right:"" },
+    { size:4,  top:"62%", left:"18%",  right:"" },
+    { size:8,  top:"22%", left:"",     right:"4%" },
+    { size:5,  top:"76%", left:"",     right:"15%" },
+    { size:4,  top:"82%", left:"28%",  right:"" },
+  ];
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-b from-[#FCE1DA] to-[#FFF0EC] py-12">
-      {/* CSS Styles for laser scanline, rotating circles, and neon grid */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-        @keyframes laser-sweep {
-          0% { transform: translateY(-100%); opacity: 0; }
-          10% { opacity: 0.8; }
-          90% { opacity: 0.8; }
-          100% { transform: translateY(200%); opacity: 0; }
+    <section className="relative w-full min-h-screen overflow-hidden bg-[#FCE1DA]">
+      <style>{`
+        .wemo-splash {
+          position:fixed; inset:0; z-index:9999;
+          pointer-events:none; overflow:hidden;
+          animation:splashHide 0.3s ease forwards;
+          animation-delay:1.35s;
         }
-        @keyframes rotate-hud-clockwise {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(360deg); }
+        .splash-row { display:flex; width:100%; height:50%; }
+        .splash-box { width:20%; height:100%; background:#D4957F; }
+        .splash-row-top    .splash-box { animation:splashTop    1s cubic-bezier(0.96,-0.02,0.38,1.01) forwards; }
+        .splash-row-bottom .splash-box { animation:splashBottom 1s cubic-bezier(0.96,-0.02,0.38,1.01) forwards; }
+        .splash-box:nth-child(1){animation-delay:0s;}
+        .splash-box:nth-child(2){animation-delay:0.05s;}
+        .splash-box:nth-child(3){animation-delay:0.1s;}
+        .splash-box:nth-child(4){animation-delay:0.15s;}
+        .splash-box:nth-child(5){animation-delay:0.2s;}
+        @keyframes splashTop    { from{transform:translateY(0%)} to{transform:translateY(-100%)} }
+        @keyframes splashBottom { from{transform:translateY(0%)} to{transform:translateY(100%)}  }
+        @keyframes splashHide   { to{opacity:0;visibility:hidden} }
+        @media(prefers-reduced-motion:reduce){
+          .wemo-splash{ animation:splashHide 0.01s linear forwards; }
+          .splash-box{ animation:none !important; }
         }
-        @keyframes rotate-hud-counter {
-          0% { transform: rotate(0deg); }
-          100% { transform: rotate(-360deg); }
-        }
-        .laser-line {
-          animation: laser-sweep 4s linear infinite;
-        }
-        .hud-clockwise {
-          animation: rotate-hud-clockwise 25s linear infinite;
-        }
-        .hud-counter {
-          animation: rotate-hud-counter 15s linear infinite;
-        }
-        .tech-grid {
-          background-size: 30px 30px;
-          background-image: 
-            linear-gradient(to right, rgba(232, 180, 168, 0.08) 1px, transparent 1px),
-            linear-gradient(to bottom, rgba(232, 180, 168, 0.08) 1px, transparent 1px);
-        }
-        `
-      }} />
+      `}</style>
 
-      {/* Background chuyển động mượt mà */}
-      <div className="absolute inset-0 webo-animated-gradient opacity-40" />
+      {/* Splash */}
+      <div className="wemo-splash">
+        <div className="splash-row splash-row-top">
+          {[0,1,2,3,4].map(i => <div key={i} className="splash-box" />)}
+        </div>
+        <div className="splash-row splash-row-bottom">
+          {[0,1,2,3,4].map(i => <div key={i} className="splash-box" />)}
+        </div>
+      </div>
 
-      {/* Ambient Glow Orbs */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Gradient orbs */}
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
         <motion.div
-          animate={{
-            x: [0, 50, -30, 0],
-            y: [0, -80, 50, 0],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -top-48 -left-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#E8B4A8]/25 to-[#D4AF78]/30 blur-[120px]"
+          animate={{ x:[0,30,-20,0], y:[0,-40,20,0] }}
+          transition={{ duration:18, repeat:Infinity, ease:"easeInOut" }}
+          className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full"
+          style={{ background:"radial-gradient(circle, rgba(232,180,168,0.55) 0%, transparent 70%)" }}
         />
         <motion.div
-          animate={{
-            x: [0, -60, 40, 0],
-            y: [0, 60, -40, 0],
-          }}
-          transition={{
-            duration: 25,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -bottom-48 -right-48 w-[500px] h-[500px] rounded-full bg-gradient-to-r from-[#D4AF78]/25 to-[#E8B4A8]/30 blur-[120px]"
+          animate={{ x:[0,-40,25,0], y:[0,30,-50,0] }}
+          transition={{ duration:22, repeat:Infinity, ease:"easeInOut" }}
+          className="absolute -bottom-40 -right-40 w-[600px] h-[600px] rounded-full"
+          style={{ background:"radial-gradient(circle, rgba(212,175,120,0.4) 0%, transparent 70%)" }}
+        />
+        <motion.div
+          animate={{ scale:[1,1.4,1], opacity:[0.25,0.5,0.25] }}
+          transition={{ duration:8, repeat:Infinity, ease:"easeInOut" }}
+          className="absolute top-[40%] left-[20%] w-52 h-52 rounded-full"
+          style={{ background:"radial-gradient(circle, rgba(232,115,74,0.2) 0%, transparent 70%)" }}
         />
       </div>
 
-      {/* Hạt tròn/Trái tim nhỏ mờ trôi nền phía sau */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
+      {/* LEGO bricks */}
+      <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
+        {bricks.map((s, i) => (
           <motion.div
             key={i}
-            className="absolute rounded-full bg-[#E8B4A8]/30"
+            animate={{ y:[0,-18,0], rotate:[0,12,0], opacity:[0.7,1,0.7] }}
+            transition={{ duration:s.dur, repeat:Infinity, ease:"easeInOut", delay:s.delay }}
+            className="absolute rounded-[5px]"
             style={{
-              width: i % 2 === 0 ? "6px" : "4px",
-              height: i % 2 === 0 ? "6px" : "4px",
-              left: `${15 + Math.random() * 30}%`,
-              top: `${20 + Math.random() * 60}%`,
-            }}
-            animate={{ y: [0, -40, 0], opacity: [0.2, 0.6, 0.2] }}
-            transition={{
-              duration: 5 + i,
-              repeat: Infinity,
-              ease: "easeInOut",
+              width:s.w, height:s.h, top:s.top,
+              left: s.left || undefined, right: s.right || undefined,
+              background:s.bg, boxShadow:`0 4px 14px ${s.bg}99`,
             }}
           />
         ))}
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-          {/* ================= BÊN TRÁI: KHỐI CHỮ ================= */}
-          <div className="lg:col-span-5 text-center lg:text-left z-30 flex flex-col justify-center relative py-12 select-none">
-            {/* Badge */}
-            <div className="inline-flex self-center lg:self-start items-center gap-2 px-4 py-2 rounded-full mb-8 bg-white/90 backdrop-blur-md shadow-[0_4px_12px_rgba(0,0,0,0.02)] border border-white">
-              <Sparkles className="w-3.5 h-3.5 text-[#E8B4A8]" />
-              <span className="text-[11px] font-bold tracking-wider text-[#6E6E6E] uppercase">
-                Tương Lai Của Món Quà Cảm Xúc
-              </span>
-            </div>
-
-            {/* Tiêu đề chuẩn hàng, ngắt dòng đúng chuẩn */}
-            <h1
-              className="mb-6 font-extrabold text-[#1A1818] tracking-tight leading-[1.2]"
-              style={{ fontSize: "clamp(2.5rem, 4.8vw, 3.8rem)" }}
-            >
-              Biến Mỗi Món <br />
-              Quà Thành <br />
-              <span className="relative inline-block bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] bg-clip-text text-transparent pb-1">
-                Ký Ức Số
-              </span>
-            </h1>
-
-            {/* Mô tả */}
-            <p className="mb-8 text-sm sm:text-base text-[#666666] leading-relaxed max-w-md mx-auto lg:mx-0">
-              WEMO kết hợp công nghệ chạm NFC độc bản và thiệp cá nhân hóa để
-              lưu giữ trọn vẹn những thước phim, hình ảnh và lời chúc chân thành
-              nhất.
-            </p>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-3 mb-8 justify-center lg:justify-start">
-              <Link
-                to="/ai-chibi"
-                id="hero-cta-chibi"
-                data-bot-guide="hero-cta"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white text-sm font-black shadow-lg hover:opacity-90 transition-all hover:scale-105"
-              >
-                <Wand2 className="w-4 h-4" />
-                Thử Chibi AI Miễn Phí
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                to="/pricing"
-                data-bot-guide="hero-pricing"
-                className="inline-flex items-center gap-2 px-6 py-3.5 rounded-2xl bg-white border border-stone-200 text-stone-700 text-sm font-bold hover:bg-stone-50 transition-all shadow-sm"
-              >
-                Xem Bảng Giá
-              </Link>
-            </div>
-
-            {/* Block số liệu dạng phẳng tối giản bên dưới */}
-            <div className="pt-8 border-t border-gray-200/60 grid grid-cols-3 gap-4 max-w-sm mx-auto lg:mx-0 w-full">
-              {[
-                { value: "50K+", label: "Ký ức số" },
-                { value: "4.9★", label: "Đánh giá" },
-                { value: "95%", label: "Hài lòng" },
-              ].map((stat, i) => (
-                <div key={i} className="text-center lg:text-left">
-                  <div className="font-extrabold text-lg sm:text-xl text-[#1A1818] tracking-tight">
-                    {stat.value}
-                  </div>
-                  <div className="text-[11px] font-medium text-[#8C8C8C] mt-1">
-                    {stat.label}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* ================= BÊN PHẢI: MÔ HÌNH 3D CHUYỂN ĐỘNG CUỘN (SCROLL-DRIVEN 3D MOTION) ================= */}
-          <div 
-            className="lg:col-span-7 relative flex flex-col items-center justify-center w-full min-h-[500px] lg:min-h-[600px] z-20"
-            style={{ perspective: 1200 }}
-          >
-            <motion.div
-              style={{
-                rotateX,
-                rotateY,
-                y: translateY,
-                scale,
-                opacity,
-                transformStyle: "preserve-3d"
-              }}
-              className="relative w-full max-w-[480px] aspect-[4/5] flex items-center justify-center pointer-events-none"
-            >
-              {/* Ảnh Chibi 3D Figure chính */}
-              <img
-                src="/assets/chibi-figure.png"
-                alt="WEMO 3D Chibi Figure"
-                className="w-full h-full object-contain drop-shadow-[0_25px_60px_rgba(232,180,168,0.45)] pointer-events-auto mix-blend-multiply"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  const fallback = document.getElementById('figure-fallback');
-                  if (fallback) fallback.style.display = 'flex';
-                }}
-              />
-
-              {/* Khung hiển thị dự phòng (Fallback) khi chưa có ảnh */}
-              <div
-                id="figure-fallback"
-                className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-0"
-                style={{ display: 'none' }}
-              >
-                <div className="w-20 h-20 rounded-full bg-gradient-to-tr from-[#E8B4A8] to-[#D4AF78] flex items-center justify-center text-white mb-5 shadow-lg animate-pulse">
-                  <Sparkles className="w-9 h-9" />
-                </div>
-                <h3 className="text-lg font-black text-[#1A1818] mb-2">Mô hình 3D Chibi</h3>
-                <p className="text-xs text-stone-500 max-w-[280px] leading-relaxed">
-                  Đang đợi bạn tải ảnh mô hình lên thư mục <br />
-                  <code className="bg-white/80 px-1.5 py-0.5 rounded border font-mono mt-1 inline-block text-[10px] text-[#E8B4A8]">
-                    assets/chibi-figure.png
-                  </code>
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
+      {/* Floating dots */}
+      <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
+        {dots.map((d, i) => (
+          <motion.div
+            key={i}
+            animate={{ y:[0,-12,0], opacity:[0.4,0.9,0.4] }}
+            transition={{ duration:5+i, repeat:Infinity, ease:"easeInOut", delay:i*0.4 }}
+            className="absolute rounded-full bg-[#C2776A]"
+            style={{ width:d.size, height:d.size, top:d.top, left:d.left||undefined, right:d.right||undefined }}
+          />
+        ))}
       </div>
+
+      {/* Base image */}
+      <motion.div
+        initial={{ opacity:0, scale:1.5, rotate:3 }}
+        animate={{ opacity:1, scale:1,   rotate:0 }}
+        transition={{ duration:1.2, ease:[0.25,0.46,0.45,0.94], delay:1 }}
+        className="absolute inset-0 z-[5] bg-no-repeat"
+        style={{ backgroundImage:`url('${BASE_IMG}')`, backgroundSize:"85% auto", backgroundPosition:"center 80px" }}
+      />
+
+      {/* Canvas mask */}
+      <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none" style={{ display:"none" }} />
+
+      {/* Reveal image */}
+      <div
+        ref={revealRef}
+        className="absolute inset-0 z-[7] pointer-events-none bg-no-repeat"
+        style={{ backgroundImage:`url('${REVEAL_IMG}')`, backgroundSize:"85% auto", backgroundPosition:"center 80px" }}
+      />
+
+      {/* Tagline + CTA bottom-left */}
+      <motion.div
+        initial={{ opacity:0, y:30 }}
+        animate={{ opacity:1, y:0 }}
+        transition={{ duration:0.8, delay:1.8 }}
+        className="absolute bottom-10 left-8 z-[9] flex flex-col gap-3"
+      >
+        <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-[#C2776A]">
+          🧱 Personalized LEGO Figure
+        </p>
+        <h2 className="text-2xl md:text-[2rem] font-extrabold text-[#2A1A14] leading-tight">
+          Nhân vật LEGO<br/>
+          <span className="text-[#E8734A]">của riêng bạn.</span>
+        </h2>
+        <Link
+          to="/order"
+          className="mt-1 w-fit inline-flex items-center gap-2 px-5 py-3 rounded-full
+                     bg-[#2A1A14] text-white text-sm font-bold tracking-wide
+                     hover:bg-[#E8734A] transition-all duration-300 hover:scale-105
+                     shadow-lg shadow-black/20 hover:shadow-[#E8734A]/30"
+        >
+          Đặt ngay
+          <svg width="14" height="14" viewBox="0 0 18 18" fill="none">
+            <path d="M5 13L13 5M13 5H6M13 5V12" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </Link>
+      </motion.div>
+
+
+
+
+      {/* Bottom fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-28 z-[8] pointer-events-none"
+           style={{ background:"linear-gradient(to bottom, transparent, rgba(252,225,218,0.7))" }} />
     </section>
   );
 }
