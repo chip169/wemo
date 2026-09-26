@@ -326,8 +326,8 @@ export function HeroSection() {
           transition={{ duration: 1.2, ease: [0.25, 0.46, 0.45, 0.94], delay: 1 }}
           style={{
             backgroundImage: `url('${BASE_IMG}')`,
-            backgroundSize: "85% auto",
-            backgroundPosition: "center 80px",
+            backgroundSize: "contain",
+            backgroundPosition: "center bottom",
           }}
         />
 
@@ -340,8 +340,8 @@ export function HeroSection() {
           className="absolute inset-0 z-[7] pointer-events-none bg-no-repeat"
           style={{
             backgroundImage: `url('${REVEAL_IMG}')`,
-            backgroundSize: "85% auto",
-            backgroundPosition: "center 80px",
+            backgroundSize: "contain",
+            backgroundPosition: "center bottom",
           }}
         />
 
@@ -371,12 +371,6 @@ export function HeroSection() {
             </svg>
           </Link>
         </motion.div>
-
-        {/* Bottom fade */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-28 z-[8] pointer-events-none"
-          style={{ background: "linear-gradient(to bottom, transparent, rgba(255,245,242,0.7))" }}
-        />
       </section>
     </>
   );

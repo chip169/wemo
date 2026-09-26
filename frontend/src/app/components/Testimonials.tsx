@@ -12,7 +12,7 @@ const testimonialsRow1 = [
   {
     name: "Trần Minh Hoàng",
     role: "Quà Sinh Nhật Vợ",
-    content: "Vợ tôi rất thích mẫu thiết kế Ký Ức Lãng Mạn. Nó không chỉ là thiệp online thông thường mà có hiệu ứng lướt chuột 3D cực sang trọng. Công nghệ chạm NFC nhạy, hoạt động rất tốt trên cả iPhone lẫn Android.",
+    content: "Vợ tôi rất thích mẫu thiết kế Ký Ức Lãng Mạn. Từng chuyển động, âm nhạc và hình ảnh được trau chuốt cực kỳ tinh tế và sang trọng. Công nghệ chạm NFC nhạy, hoạt động rất tốt trên cả iPhone lẫn Android.",
     avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvm-PLXe8srzWb4twn93eFS6ovM4yVJ-VNED_j2BycAg&s=10&auto=format,compress&q=90",
     rating: 5,
   },
@@ -26,7 +26,7 @@ const testimonialsRow1 = [
   {
     name: "Phạm Quốc Bảo",
     role: "Quà Tặng Bạn Gái",
-    content: "Tính năng vẽ Chibi AI hoạt động siêu đỉnh. Ảnh của chúng tôi vẽ ra rất dễ thương, giao diện trang quà tặng mượt mà không bị giật lag khi tải video. Dịch vụ chăm sóc khách hàng của WEMO cực kỳ nhiệt tình.",
+    content: "Khả năng cá nhân hóa thiệp của WEMO thật sự vượt ngoài mong đợi. Ảnh kỷ niệm, lời chúc và âm nhạc được sắp xếp rất đẹp mắt, giao diện mượt mà không bị giật lag khi mở. Dịch vụ chăm sóc khách hàng cực kỳ nhiệt tình.",
     avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQNiz5TU8iIx8JBUvOLR97UzG2TTCuO4KuDkDJpO-I-bQ&s=10?w=200&auto=format,compress&q=90",
     rating: 5,
   },
@@ -50,7 +50,7 @@ const testimonialsRow2 = [
   {
     name: "Trần Khánh Duy",
     role: "Quà Valentine",
-    content: "A beautiful fusion of physical craft and digital experience. The 3D planet template is breathtaking. She watches it every night! Recommended 10/10.",
+    content: "Sự kết hợp hoàn hảo giữa quà tặng thủ công và trải nghiệm số. Giao diện trang kỷ niệm lung linh và sống động hơn cả mong đợi, bạn gái mình mở ra ngắm mỗi ngày! Đánh giá 10/10.",
     avatar: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1PdWeUKsUuh3pGjQrBmeHofPRGW7gCd9taZwWy54xVQ&s&auto=format,compress&q=90",
     rating: 5,
   },
