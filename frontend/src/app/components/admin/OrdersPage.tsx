@@ -24,8 +24,8 @@ interface Order {
 }
 
 const statusColors = {
-  pending_payment: { bg: "#FFEDD5", text: "#EA580C", label: "Chờ đặt cọc" },
-  deposited: { bg: "#E0F2FE", text: "#0369A1", label: "Đã đặt cọc" },
+  pending_payment: { bg: "#FFEDD5", text: "#EA580C", label: "Chờ thanh toán" },
+  deposited: { bg: "#E0F2FE", text: "#0369A1", label: "Đã thanh toán 100%" },
   pending: { bg: "#FEF3C7", text: "#D97706", label: "Chờ xử lý" },
   processing: { bg: "#DBEAFE", text: "#2563EB", label: "Đang sản xuất" },
   shipping: { bg: "#F3E8FF", text: "#7C3AED", label: "Đang giao hàng" },
@@ -126,7 +126,7 @@ export function OrdersPage() {
   }, []);
 
   const handleQuickConfirm = (id: string) => {
-    if (window.confirm(`Xác nhận đơn hàng ${id} đã thanh toán đặt cọc?`)) {
+    if (window.confirm(`Xác nhận đơn hàng ${id} đã thanh toán 100%?`)) {
       adminFetch(`/api/orders/${id}`, {
         method: "PUT",
         body: JSON.stringify({ status: "deposited" }),
@@ -139,7 +139,7 @@ export function OrdersPage() {
           fetchOrders();
         })
         .catch((err) => {
-          alert("Lỗi xác nhận cọc nhanh: " + err.message);
+          alert("Lỗi xác nhận thanh toán: " + err.message);
         });
     }
   };
@@ -420,7 +420,7 @@ export function OrdersPage() {
                             <button
                               onClick={() => handleQuickConfirm(order.id)}
                               className="p-1.5 hover:bg-emerald-50 dark:hover:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 rounded transition-colors"
-                              title="Xác nhận đã cọc nhanh"
+                              title="Xác nhận thanh toán 100%"
                             >
                               <Check className="w-4 h-4" />
                             </button>
@@ -580,8 +580,8 @@ export function OrdersPage() {
                       }}
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
-                      <option value="pending_payment">Chờ đặt cọc</option>
-                      <option value="deposited">Đã đặt cọc</option>
+                      <option value="pending_payment">Chờ thanh toán</option>
+                      <option value="deposited">Đã thanh toán (100%)</option>
                       <option value="processing">Đang sản xuất</option>
                       <option value="shipping">Đang giao hàng</option>
                       <option value="completed">Đã hoàn thành</option>
@@ -700,8 +700,8 @@ export function OrdersPage() {
                       }}
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
-                      <option value="pending_payment">Chờ đặt cọc</option>
-                      <option value="deposited">Đã đặt cọc</option>
+                      <option value="pending_payment">Chờ thanh toán</option>
+                      <option value="deposited">Đã thanh toán (100%)</option>
                       <option value="processing">Đang sản xuất</option>
                       <option value="shipping">Đang giao hàng</option>
                       <option value="completed">Đã hoàn thành</option>

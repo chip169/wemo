@@ -22,6 +22,24 @@ const INITIAL_TEMPLATES = [
     image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     color: "#E11D48",
     gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
+  },
+  {
+    id: "starlight-galaxy",
+    slug: "da-khuc-anh-sao",
+    title: "Dạ Khúc Ánh Sao 3D",
+    description: "Vầng trăng khuyết pha lê 3D phát sáng giữa dải ngân hà lấp lánh, ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm bay bổng thần tiên.",
+    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    color: "#F59E0B",
+    gradient: "linear-gradient(135deg, #0B1021 0%, #3B82F6 50%, #F59E0B 100%)",
+  },
+  {
+    id: "crystal-rose",
+    slug: "bong-hong-3d",
+    title: "Bông Hồng Pha Lê 3D",
+    description: "Bông hoa hồng pha lê đa giác 3D phát sáng rực rỡ, kèm theo những cánh hoa pha lê xoay chuyển bồng bềnh và thông điệp yêu thương ngọt ngào.",
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    color: "#FB7185",
+    gradient: "linear-gradient(135deg, #180018 0%, #BE123C 50%, #FDA4AF 100%)",
   }
 ];
 
@@ -241,8 +259,8 @@ export function TemplateShowcase() {
           </p>
         </motion.div>
 
-        {/* Template grid - centered and balanced for 2 items */}
-        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        {/* Template grid - responsive 4 items */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {templateList.map((template, index) => (
             <motion.div
               key={index}

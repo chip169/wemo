@@ -85,13 +85,13 @@ export function OrderSuccessPage() {
             transition={{ delay: 0.3 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-100 text-emerald-700 text-xs font-black tracking-widest uppercase mb-4">
-              <Check className="w-3.5 h-3.5" /> ĐÃ NHẬN ĐẶT CỌC
+              <Check className="w-3.5 h-3.5" /> ĐÃ THANH TOÁN 100%
             </div>
             <h1 className="text-2xl sm:text-4xl font-black text-stone-900 tracking-tight mb-3">
               Đặt Hàng Thành Công
             </h1>
             <p className="text-stone-600 text-sm leading-relaxed max-w-md mx-auto font-medium">
-              WEMO đã nhận được khoản cọc của bạn. Đội sản xuất sẽ bắt đầu xử lý đơn hàng trong vòng 24 giờ.
+              WEMO đã nhận được khoản thanh toán 100% của bạn. Đội sản xuất sẽ bắt đầu xử lý đơn hàng trong vòng 24 giờ.
             </p>
           </motion.div>
         </div>
@@ -124,7 +124,7 @@ export function OrderSuccessPage() {
             {[
               {
                 icon: Check,
-                title: "Đã nhận đặt cọc",
+                title: "Đã thanh toán 100%",
                 desc: "Thanh toán đã được xác nhận thành công.",
                 done: true,
                 active: false,

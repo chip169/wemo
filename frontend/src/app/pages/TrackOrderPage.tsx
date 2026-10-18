@@ -38,8 +38,8 @@ interface TrackedOrder {
 }
 
 const statusSteps = [
-  { key: "pending_payment", label: "Chờ đặt cọc", emoji: "⏳", desc: "Đơn hàng đang chờ đặt cọc" },
-  { key: "deposited", label: "Đã nhận cọc", emoji: "✅", desc: "WEMO đã nhận cọc 200,000đ" },
+  { key: "pending_payment", label: "Chờ thanh toán", emoji: "⏳", desc: "Đơn hàng đang chờ thanh toán 100%" },
+  { key: "deposited", label: "Đã thanh toán", emoji: "✅", desc: "WEMO đã nhận thanh toán 100%" },
   { key: "processing", label: "Đang sản xuất", emoji: "🛠️", desc: "Mô hình LEGO đang được thiết kế & chế tác" },
   { key: "shipping", label: "Đang giao hàng", emoji: "🚚", desc: "Mô hình đang được giao tới bạn" },
   { key: "completed", label: "Nhận hàng & Feedback", emoji: "⭐", desc: "Đã giao thành công, đánh giá trải nghiệm" }
@@ -285,49 +285,31 @@ export function TrackOrderPage() {
                       )}
                     </div>
 
-                    {/* Figure Preview Designs */}
-                    {(order.chibiUrl || order.originalUrl) && (
+                    {/* Customer Photo Preview */}
+                    {(order.originalUrl || order.chibiUrl) && (
                       <div className="bg-white rounded-3xl p-6 border border-stone-200/60 shadow-md space-y-5">
                         <div>
                           <h2 className="text-sm font-black text-stone-800 uppercase tracking-widest flex items-center gap-1.5">
-                            <Sparkles className="w-4 h-4 text-[#D4AF78] fill-current" /> Bản vẽ & Chân dung thiết kế
+                            <Sparkles className="w-4 h-4 text-[#D4AF78] fill-current" /> Chân dung mẫu thiết kế
                           </h2>
                           <p className="text-[10px] text-stone-400 mt-1">
                             Hình ảnh đối chiếu dùng để dựng hình mô hình LEGO thực tế
                           </p>
                         </div>
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          {order.originalUrl && (
-                            <div className="space-y-2">
-                              <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center">
-                                Ảnh Chân Dung Gốc
-                              </p>
-                              <div className="relative rounded-2xl overflow-hidden aspect-square border bg-stone-50 shadow-sm flex items-center justify-center">
-                                <img
-                                  src={order.originalUrl}
-                                  alt="Ảnh gốc của khách hàng"
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
+                        <div className="max-w-xs mx-auto">
+                          <div className="space-y-2">
+                            <p className="text-[10px] font-bold text-stone-400 uppercase tracking-widest text-center">
+                              Ảnh Chân Dung Gốc
+                            </p>
+                            <div className="relative rounded-2xl overflow-hidden aspect-square border bg-stone-50 shadow-sm flex items-center justify-center">
+                              <img
+                                src={order.originalUrl || order.chibiUrl}
+                                alt="Ảnh gốc của khách hàng"
+                                className="w-full h-full object-cover"
+                              />
                             </div>
-                          )}
-
-                          {order.chibiUrl && (
-                            <div className="space-y-2">
-                              <p className="text-[10px] font-bold text-[#D4AF78] uppercase tracking-widest text-center flex items-center justify-center gap-1">
-                                <Sparkles className="w-3 h-3 fill-[#D4AF78]" />
-                                Ảnh Chibi Vẽ Bằng AI
-                              </p>
-                              <div className="relative rounded-2xl overflow-hidden aspect-square border-2 border-[#D4AF78]/40 bg-stone-50 shadow-md flex items-center justify-center">
-                                <img
-                                  src={order.chibiUrl}
-                                  alt="Ảnh Chibi AI"
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            </div>
-                          )}
+                          </div>
                         </div>
                       </div>
                     )}
@@ -403,13 +385,13 @@ export function TrackOrderPage() {
                           <span className="font-bold text-stone-800">{formatPrice(order.amount)}</span>
                         </div>
                         <div className="flex justify-between items-center text-xs">
-                          <span className="text-stone-400 font-bold uppercase">Số tiền đã cọc</span>
-                          <span className="font-bold text-emerald-600">{formatPrice(order.depositAmount)}</span>
+                          <span className="text-stone-400 font-bold uppercase">Đã thanh toán (100%)</span>
+                          <span className="font-bold text-emerald-600">{formatPrice(order.depositAmount || order.amount)}</span>
                         </div>
                         <div className="flex justify-between items-center text-xs pt-1">
-                          <span className="text-stone-500 font-black uppercase">Còn lại phải trả</span>
+                          <span className="text-stone-500 font-black uppercase">Còn lại khi nhận hàng</span>
                           <span className="font-black text-sm text-[#D4AF78]">
-                            {formatPrice(order.amount - order.depositAmount)}
+                            {formatPrice(Math.max(0, order.amount - (order.depositAmount || order.amount)))}
                           </span>
                         </div>
                       </div>
@@ -426,10 +408,10 @@ export function TrackOrderPage() {
                       </div>
                       <div className="pt-2 border-t border-amber-200/40">
                         <h4 className="text-[10px] font-black text-amber-800 uppercase tracking-widest flex items-center gap-1">
-                          ⚠️ CHÍNH SÁCH ĐẶT CỌC & NHẬN HÀNG
+                          ⚠️ CHÍNH SÁCH THANH TOÁN & ĐƠN HÀNG
                         </h4>
                         <p className="text-[11px] text-amber-700 leading-relaxed font-medium mt-1">
-                          Mô hình LEGO được thiết kế độc bản. Trong trường hợp quý khách không nhận hàng, số tiền đặt cọc ({formatPrice(order.depositAmount)}) sẽ không được hoàn trả.
+                          Mô hình LEGO được thiết kế độc bản theo hình ảnh của bạn. Quý khách vui lòng thanh toán 100% khi đặt hàng để WEMO tiến hành sản xuất và giao tận tay bạn.
                         </p>
                       </div>
                     </div>

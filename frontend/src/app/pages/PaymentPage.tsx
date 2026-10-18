@@ -16,18 +16,16 @@ import {
 import { Link, useParams, useNavigate } from "react-router";
 import confetti from "canvas-confetti";
 
-// ─── VietQR Config (TPBank) ───────────────────────────────────────────────────
 const BANK_ID = "TPB";
 const ACCOUNT_NO = "25569158888";
 const ACCOUNT_NAME = "WEMO STUDIO";
-const DEPOSIT_AMOUNT = 200000;
 const POLL_INTERVAL_MS = 5000;
 const COUNTDOWN_SECONDS = 15 * 60; // 15 minutes
 
-const buildVietQRUrl = (orderId: string) => {
-  const addInfo = encodeURIComponent(`Dat coc WEMO ${orderId}`);
+const buildVietQRUrl = (orderId: string, amount: number) => {
+  const addInfo = encodeURIComponent(`Thanh toan WEMO ${orderId}`);
   const accountName = encodeURIComponent(ACCOUNT_NAME);
-  return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${DEPOSIT_AMOUNT}&addInfo=${addInfo}&accountName=${accountName}`;
+  return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.png?amount=${amount || 0}&addInfo=${addInfo}&accountName=${accountName}`;
 };
 
 const formatCountdown = (seconds: number) => {
@@ -170,6 +168,7 @@ export function PaymentPage() {
   };
 
   const isExpired = countdown === 0 && !paid;
+  const paymentAmount = orderData?.amount || orderData?.depositAmount || 0;
 
   return (
     <div className="min-h-screen bg-[#FCEBE7] pt-28 pb-16 font-sans relative overflow-hidden">
@@ -219,7 +218,7 @@ export function PaymentPage() {
             THANH TOÁN AN TOÀN
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-2">
-            Quét Mã VietQR Để Đặt Cọc
+            Quét Mã VietQR Để Thanh Toán (100%)
           </h1>
           <p className="text-sm text-stone-500">
             Mã đơn hàng: <span className="font-black text-stone-800 font-mono">{orderId}</span>
@@ -291,7 +290,7 @@ export function PaymentPage() {
                     <div className="relative">
                       {!qrError ? (
                         <img
-                          src={buildVietQRUrl(orderId || "")}
+                          src={buildVietQRUrl(orderId || "", paymentAmount)}
                           alt="VietQR Payment Code"
                           className="w-56 h-56 rounded-2xl border-2 border-stone-200 object-contain bg-white p-2"
                           onError={() => setQrError(true)}
@@ -341,14 +340,14 @@ export function PaymentPage() {
                       { label: "Số tài khoản", value: ACCOUNT_NO, copiable: true },
                       { label: "Tên tài khoản", value: ACCOUNT_NAME, copiable: false },
                       {
-                        label: "Số tiền",
-                        value: formatPrice(DEPOSIT_AMOUNT),
+                        label: "Số tiền (100%)",
+                        value: paymentAmount > 0 ? formatPrice(paymentAmount) : "Đang tải...",
                         copiable: false,
                         highlight: true,
                       },
                       {
                         label: "Nội dung CK",
-                        value: `Dat coc WEMO ${orderId}`,
+                        value: `Thanh toan WEMO ${orderId}`,
                         copiable: true,
                         highlight: true,
                       },
@@ -418,7 +417,7 @@ export function PaymentPage() {
               <p className="text-xs font-black text-amber-800 uppercase tracking-wider">⚠️ Lưu ý quan trọng</p>
               <ul className="text-xs text-amber-700 space-y-1.5 list-disc pl-4 leading-relaxed">
                 <li>Nhập <strong>đúng nội dung chuyển khoản</strong> để hệ thống tự động xác nhận.</li>
-                <li>Chuyển khoản <strong>đúng số tiền {formatPrice(DEPOSIT_AMOUNT)}</strong> như hiển thị.</li>
+                <li>Chuyển khoản <strong>đúng số tiền {paymentAmount > 0 ? formatPrice(paymentAmount) : ""} (100%)</strong> như hiển thị.</li>
                 <li>Giữ lại màn hình này cho đến khi nhận được xác nhận.</li>
                 <li>Nếu có vấn đề, liên hệ WEMO qua Zalo hoặc hotline để được hỗ trợ.</li>
               </ul>

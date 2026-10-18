@@ -83,8 +83,8 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
       <!-- Notification Title -->
       <tr>
         <td style="padding:32px 40px 0;text-align:center;">
-          <h1 style="margin:0;color:#2D2722;font-size:20px;font-weight:800;letter-spacing:-0.3px;line-height:1.4;">XÁC NHẬN ĐẶT CỌC THÀNH CÔNG</h1>
-          <p style="margin:8px 0 0;color:#8E847B;font-size:13px;line-height:1.5;">Chúng tôi đã nhận được khoản cọc cho đơn hàng của bạn.</p>
+          <h1 style="margin:0;color:#2D2722;font-size:20px;font-weight:800;letter-spacing:-0.3px;line-height:1.4;">XÁC NHẬN THANH TOÁN THÀNH CÔNG</h1>
+          <p style="margin:8px 0 0;color:#8E847B;font-size:13px;line-height:1.5;">Chúng tôi đã nhận được thanh toán 100% cho đơn hàng của bạn.</p>
         </td>
       </tr>
 
@@ -95,7 +95,7 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
             Xin chào <strong>${customerName}</strong>,
           </p>
           <p style="margin:10px 0 0;font-size:14px;color:#786E65;line-height:1.6;">
-            Cảm ơn bạn đã lựa chọn WEMO. Yêu cầu đặt cọc cho đơn hàng của bạn đã hoàn tất thành công. Đội ngũ sản xuất nghệ thuật của WEMO sẽ tiến hành xử lý mô hình Chibi trong thời gian sớm nhất.
+            Cảm ơn bạn đã lựa chọn WEMO. Đơn hàng của bạn đã được thanh toán 100% thành công. Đội ngũ xưởng sản xuất WEMO sẽ tiến hành chế tác mô hình LEGO trong thời gian sớm nhất.
           </p>
         </td>
       </tr>
@@ -126,8 +126,8 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
                     <td style="padding:8px 0;font-size:13px;color:#2D2722;font-weight:600;">${product || "Mô hình LEGO Cá Nhân Hóa"}</td>
                   </tr>
                   <tr>
-                    <td style="padding:8px 0;font-size:13px;color:#8E847B;">Số tiền cọc</td>
-                    <td style="padding:8px 0;font-size:13px;color:#E8B4A8;font-weight:800;">${formattedDeposit}</td>
+                    <td style="padding:8px 0;font-size:13px;color:#8E847B;">Số tiền thanh toán</td>
+                    <td style="padding:8px 0;font-size:13px;color:#E8B4A8;font-weight:800;">${formattedDeposit} (100%)</td>
                   </tr>
                   <tr>
                     <td style="padding:8px 0;font-size:13px;color:#8E847B;">Ngày thanh toán</td>
@@ -170,7 +170,7 @@ const buildOrderConfirmHTML = ({ customerName, orderId, product, depositAmount, 
           <p style="margin:0 0 20px;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1.5px;color:#A89E95;">Quy trình tiếp theo</p>
           
           ${[
-      ["1", "Đã nhận đặt cọc", "Thanh toán hoàn tất", true],
+      ["1", "Đã thanh toán 100%", "Thanh toán hoàn tất", true],
       ["2", "Tạo thiệp 3D & NFC", "Bạn thực hiện thiết kế", false],
       ["3", "Sản xuất mô hình 3D", "Từ 3 – 7 ngày làm việc", false],
       ["4", "Giao nhận sản phẩm", "Giao hàng theo địa chỉ cung cấp", false]
@@ -228,7 +228,7 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
       <!-- Admin Header -->
       <tr>
         <td style="background-color:#2D2722;padding:24px 32px;text-align:center;">
-          <h2 style="margin:0;color:#ffffff;font-size:14px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">ĐƠN HÀNG MỚI ĐÃ ĐẶT CỌC</h2>
+          <h2 style="margin:0;color:#ffffff;font-size:14px;font-weight:800;letter-spacing:2px;text-transform:uppercase;">ĐƠN HÀNG MỚI ĐÃ THANH TOÁN 100%</h2>
         </td>
       </tr>
 
@@ -238,14 +238,14 @@ const buildAdminAlertHTML = ({ orderId, customerName, phone, address, product, a
           <table width="100%" cellpadding="0" cellspacing="0">
             ${[
       ["Mã đơn hàng", orderId],
-      ["Ngày đặt cọc", formattedDate],
+      ["Ngày thanh toán", formattedDate],
       ["Khách hàng", customerName],
       ["Số điện thoại", phone],
       ["Địa chỉ giao hàng", address || "Chưa cung cấp"],
       ["Sản phẩm", product],
       ["Tổng giá trị đơn", formattedTotal],
-      ["Đã đặt cọc", formattedDeposit],
-      ["Cần thanh toán thêm", `${(Number(amount) - Number(depositAmount)).toLocaleString("vi-VN")}đ`],
+      ["Đã thanh toán (100%)", formattedDeposit],
+      ["Cần thanh toán thêm", "0đ"],
     ].map(([k, v]) => `
             <tr style="border-bottom:1px solid #FAF8F5;">
               <td style="padding:10px 0;color:#8E847B;font-size:13px;width:150px;border-bottom:1px solid #FAF8F5;">${k}</td>
@@ -279,7 +279,7 @@ const sendOrderConfirmEmail = async ({ email, customerName, orderId, product, de
 
   return sendEmailViaResend({
     to: email,
-    subject: `🎉 WEMO — Xác nhận đặt cọc đơn hàng ${orderId}`,
+    subject: `🎉 WEMO — Xác nhận thanh toán đơn hàng ${orderId}`,
     html: buildOrderConfirmHTML({ customerName, orderId, product, depositAmount, paidAt, giftLink, trackLink, address }),
   });
 };
@@ -296,7 +296,7 @@ const sendAdminAlertEmail = async (orderData) => {
 
   return sendEmailViaResend({
     to: adminEmail,
-    subject: `🔔 [WEMO] Đơn mới đặt cọc — ${orderData.orderId}`,
+    subject: `🔔 [WEMO] Đơn mới thanh toán — ${orderData.orderId}`,
     html: buildAdminAlertHTML(orderData),
   });
 };

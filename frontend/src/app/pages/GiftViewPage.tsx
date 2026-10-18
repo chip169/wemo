@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from "motion/react";
 import { Heart, Music, Play, Pause, Sparkles, Volume2 } from "lucide-react";
 import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
+import { StarlightCanvas3D } from "../components/gift3d/StarlightCanvas3D";
+import { CrystalRoseCanvas3D } from "../components/gift3d/CrystalRoseCanvas3D";
 
 const MUSIC_URLS = {
   piano: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
@@ -163,6 +165,10 @@ export function GiftViewPage() {
         {/* 3D Canvas Template selection */}
         {gift.templateId === "solid-heart" ? (
           <SolidHeartCanvas3D gift={gift} />
+        ) : gift.templateId === "starlight-galaxy" ? (
+          <StarlightCanvas3D gift={gift} />
+        ) : gift.templateId === "crystal-rose" ? (
+          <CrystalRoseCanvas3D gift={gift} />
         ) : (
           <HeartCanvas3D gift={gift} />
         )}

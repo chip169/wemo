@@ -133,7 +133,6 @@ export function OrderFormPage() {
   });
 
   const totalPrice = calcTotal(config);
-  const DEPOSIT = 200000;
 
   // Load chibiUrl and originalUrl from sessionStorage on mount
   useEffect(() => {
@@ -186,7 +185,7 @@ export function OrderFormPage() {
           originalUrl,
           productConfig: config,
           amount: totalPrice,
-          depositAmount: DEPOSIT,
+          depositAmount: totalPrice,
         }),
       });
       const data = await res.json();
@@ -533,12 +532,12 @@ export function OrderFormPage() {
                       <p className="text-2xl font-black">{formatPrice(totalPrice)}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-xs text-stone-400 font-medium mb-1">Đặt cọc ngay</p>
-                      <p className="text-xl font-black text-[#E8B4A8]">{formatPrice(DEPOSIT)}</p>
+                      <p className="text-xs text-stone-400 font-medium mb-1">Thanh toán (100%)</p>
+                      <p className="text-xl font-black text-[#E8B4A8]">{formatPrice(totalPrice)}</p>
                     </div>
                   </div>
                   <div className="mt-3 pt-3 border-t border-white/10 text-[10px] text-stone-400">
-                    Số tiền còn lại ({formatPrice(totalPrice - DEPOSIT)}) sẽ thanh toán khi nhận hàng.
+                    Đơn hàng thanh toán 100% qua chuyển khoản VietQR trước khi xưởng tiến hành chế tác.
                   </div>
                 </motion.div>
               </motion.div>
@@ -649,7 +648,7 @@ export function OrderFormPage() {
               >
                 <div>
                   <h2 className="text-xl font-black text-stone-900 mb-1">Xác Nhận Đơn Hàng</h2>
-                  <p className="text-sm text-stone-500">Kiểm tra lại thông tin trước khi đặt cọc.</p>
+                  <p className="text-sm text-stone-500">Kiểm tra lại thông tin trước khi thanh toán.</p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
@@ -696,23 +695,23 @@ export function OrderFormPage() {
                   </div>
                 </div>
 
-                {/* Deposit highlight */}
+                {/* Payment highlight */}
                 <div className="p-5 rounded-2xl bg-gradient-to-r from-[#E8B4A8]/10 to-[#D4AF78]/10 border border-[#E8B4A8]/20 flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-stone-500 font-medium mb-1">Số tiền đặt cọc ngay</p>
-                    <p className="text-2xl font-black text-stone-900">{formatPrice(DEPOSIT)}</p>
-                    <p className="text-[10px] text-stone-400 mt-1">Còn lại {formatPrice(totalPrice - DEPOSIT)} thanh toán khi nhận hàng</p>
+                    <p className="text-xs text-stone-500 font-medium mb-1">Số tiền thanh toán (100%)</p>
+                    <p className="text-2xl font-black text-stone-900">{formatPrice(totalPrice)}</p>
+                    <p className="text-[10px] text-stone-400 mt-1">Thanh toán 100% qua chuyển khoản VietQR</p>
                   </div>
                   <div className="text-4xl">🔒</div>
                 </div>
 
-                {/* Deposit Policy Notice */}
+                {/* Payment Policy Notice */}
                 <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200/50 text-left space-y-1">
                   <p className="text-[10px] font-black text-amber-800 uppercase tracking-wider flex items-center gap-1">
-                    ⚠️ CHÍNH SÁCH ĐẶT CỌC & NHẬN HÀNG
+                    ⚠️ CHÍNH SÁCH THANH TOÁN & ĐƠN HÀNG
                   </p>
                   <p className="text-[11px] text-amber-700 leading-relaxed font-medium">
-                    Do sản phẩm mô hình LEGO được thiết kế cá nhân hóa độc bản theo hình ảnh của bạn, quý khách vui lòng lưu ý: <b>Trường hợp đơn hàng đã đặt cọc nhưng quý khách không nhận hàng (bom hàng), số tiền cọc {formatPrice(DEPOSIT)} sẽ không được hoàn trả.</b>
+                    Do sản phẩm mô hình LEGO được thiết kế cá nhân hóa độc bản theo hình ảnh của bạn, quý khách vui lòng <b>thanh toán 100% ({formatPrice(totalPrice)})</b> trước khi xưởng WEMO bắt đầu tiến hành thiết kế và chế tác.
                   </p>
                 </div>
 
@@ -760,7 +759,7 @@ export function OrderFormPage() {
                 {submitting ? (
                   <><Loader2 className="w-4 h-4 animate-spin" /> Đang xử lý...</>
                 ) : (
-                  <>Đặt Cọc {formatPrice(DEPOSIT)} →</>
+                  <>Thanh Toán 100% ({formatPrice(totalPrice)}) →</>
                 )}
               </button>
             )}

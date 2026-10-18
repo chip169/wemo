@@ -9,6 +9,8 @@ import { motion } from "motion/react";
 import { ArrowLeft, Heart, Loader2, ShieldAlert } from "lucide-react";
 import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
+import { StarlightCanvas3D } from "../components/gift3d/StarlightCanvas3D";
+import { CrystalRoseCanvas3D } from "../components/gift3d/CrystalRoseCanvas3D";
 
 interface TemplateData {
   id: string;
@@ -153,6 +155,10 @@ export function AdminTemplatePreviewPage() {
       {/* Render the correct 3D canvas based on template ID */}
       {template!.id === "solid-heart" ? (
         <SolidHeartCanvas3D gift={demoGift} />
+      ) : template!.id === "starlight-galaxy" ? (
+        <StarlightCanvas3D gift={demoGift} />
+      ) : template!.id === "crystal-rose" ? (
+        <CrystalRoseCanvas3D gift={demoGift} />
       ) : (
         <HeartCanvas3D gift={demoGift} />
       )}

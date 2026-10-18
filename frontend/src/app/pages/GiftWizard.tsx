@@ -29,6 +29,8 @@ import confetti from "canvas-confetti";
 // ─── Import Template Components ──────────────────────────────────────────────
 import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
+import { StarlightCanvas3D } from "../components/gift3d/StarlightCanvas3D";
+import { CrystalRoseCanvas3D } from "../components/gift3d/CrystalRoseCanvas3D";
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -118,11 +120,54 @@ const STATIC_TEMPLATES = [
     light: "#0F0015",
     img: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     theme: "tinh-yeu",
+    themes: ["tinh-yeu", "sinh-nhat"],
     tag: "Độc quyền 3D",
     features: ["Tối đa 16 ảnh kỷ niệm", "Hành tinh điểm sáng 3D", "Sao băng đa hướng luân phiên", "Vòng xoay ảnh kỷ niệm"],
     allowedFeatures: {
       photos: true,
       maxPhotos: 16,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
+  {
+    id: "starlight-galaxy",
+    name: "Dạ Khúc Ánh Sao 3D",
+    description: "Vầng trăng khuyết pha lê 3D phát sáng giữa dải ngân hà lấp lánh, ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm bay bổng thần tiên.",
+    emoji: "🌙",
+    color: "#F59E0B",
+    gradient: "linear-gradient(135deg, #0B1021 0%, #3B82F6 50%, #F59E0B 100%)",
+    light: "#0B1021",
+    img: "https://images.unsplash.com/photo-1519681393784-d120267933ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "ky-niem",
+    themes: ["ky-niem", "tinh-yeu", "giang-sinh"],
+    tag: "Ngân Hà 3D",
+    features: ["Tối đa 12 ảnh kỷ niệm", "Vầng trăng khuyết pha lê 3D", "Dải sao băng lấp lánh", "Vòng xoay ảnh quỹ đạo"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 12,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
+  {
+    id: "crystal-rose",
+    name: "Bông Hồng Pha Lê 3D",
+    description: "Bông hoa hồng pha lê đa giác 3D phát sáng rực rỡ, kèm theo những cánh hoa pha lê xoay chuyển bồng bềnh và thông điệp yêu thương ngọt ngào.",
+    emoji: "🌹",
+    color: "#FB7185",
+    gradient: "linear-gradient(135deg, #180018 0%, #BE123C 50%, #FDA4AF 100%)",
+    light: "#140014",
+    img: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "sinh-nhat",
+    themes: ["sinh-nhat", "tinh-yeu", "giang-sinh"],
+    tag: "Pha Lê 3D",
+    features: ["Tối đa 10 ảnh kỷ niệm", "Hoa hồng pha lê nở 3D", "Cánh hoa rơi bồng bềnh", "Ánh sáng lăng kính đa sắc"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 10,
       video: false,
       voice: false,
       music: false,
@@ -156,6 +201,12 @@ export function RenderLiveTemplate({
 }) {
   if (gift.templateId === "solid-heart") {
     return <SolidHeartCanvas3D gift={gift} />;
+  }
+  if (gift.templateId === "starlight-galaxy") {
+    return <StarlightCanvas3D gift={gift} />;
+  }
+  if (gift.templateId === "crystal-rose") {
+    return <CrystalRoseCanvas3D gift={gift} />;
   }
   return <HeartCanvas3D gift={gift} />;
 }
@@ -444,8 +495,8 @@ function Step1({
   templates: any[];
   onBack: () => void;
 }) {
-  const [demoTemplate, setDemoTemplate] = useState<any | null>(null);
-  const filteredTemplates = templates.filter((t) => t.theme === gift.theme);
+  const matched = templates.filter((t) => t.theme === gift.theme || (t.themes && t.themes.includes(gift.theme)));
+  const filteredTemplates = matched.length > 0 ? matched : templates;
 
   const handleOpenDemo = (e: React.MouseEvent, tpl: any) => {
     e.stopPropagation();

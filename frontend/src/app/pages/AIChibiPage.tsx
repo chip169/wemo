@@ -775,7 +775,7 @@ export function AIChibiPage() {
                         <Gift className="w-4 h-4" />
                         Đặt In Ngay →
                       </button>
-                      <p className="text-[10px] text-stone-500 text-center mt-2">Đặt cọc chỉ 200,000đ</p>
+                      <p className="text-[10px] text-stone-500 text-center mt-2">Thanh toán 100% tiện lợi qua VietQR</p>
                     </div>
                   </div>
                 </motion.div>
@@ -920,7 +920,7 @@ export function AIChibiPage() {
               {[
                 { step: "1", text: "Tạo ảnh Chibi miễn phí (3 lần)", done: usageCount > 0 },
                 { step: "2", text: "Điền form tùy chỉnh sản phẩm", done: false },
-                { step: "3", text: "Thanh toán cọc qua VietQR", done: false },
+                { step: "3", text: "Thanh toán 100% qua VietQR", done: false },
                 { step: "4", text: "Tạo thiệp 3D & chip NFC", done: false },
               ].map((item) => (
                 <div key={item.step} className="flex items-center gap-3">

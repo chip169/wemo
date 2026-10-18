@@ -23,7 +23,7 @@ const OrderSchema = new mongoose.Schema({
   chibiUrl: { type: String, default: "" },
   originalUrl: { type: String, default: "" },
   productConfig: { type: ProductConfigSchema, default: () => ({}) },
-  depositAmount: { type: Number, default: 200000 },
+  depositAmount: { type: Number, default: 0 },
 
   // Order status
   status: {

@@ -24,6 +24,26 @@ const STATIC_TEMPLATES = [
     tag: "Độc quyền 3D",
     features: ["Tối đa 16 ảnh kỷ niệm", "Hành tinh điểm sáng 3D", "Sao băng đa hướng luân phiên", "Vòng xoay ảnh kỷ niệm"],
   },
+  {
+    slug: "da-khuc-anh-sao",
+    title: "Dạ Khúc Ánh Sao 3D",
+    description: "Vầng trăng khuyết pha lê 3D phát sáng giữa dải ngân hà lấp lánh, ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm bay bổng thần tiên.",
+    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#F59E0B",
+    gradient: "linear-gradient(135deg, #0B1021 0%, #3B82F6 50%, #F59E0B 100%)",
+    tag: "Ngân Hà 3D",
+    features: ["Tối đa 12 ảnh kỷ niệm", "Trăng khuyết pha lê 3D", "Dải sao băng lấp lánh", "Vòng xoay ảnh quỹ đạo"],
+  },
+  {
+    slug: "bong-hong-3d",
+    title: "Bông Hồng Pha Lê 3D",
+    description: "Bông hoa hồng pha lê đa giác 3D phát sáng rực rỡ, kèm theo những cánh hoa pha lê xoay chuyển bồng bềnh và thông điệp yêu thương ngọt ngào.",
+    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#FB7185",
+    gradient: "linear-gradient(135deg, #180018 0%, #BE123C 50%, #FDA4AF 100%)",
+    tag: "Pha Lê 3D",
+    features: ["Tối đa 10 ảnh kỷ niệm", "Hoa hồng pha lê nở 3D", "Cánh hoa rơi bồng bềnh", "Ánh sáng lăng kính đa sắc"],
+  },
 ];
 
 const LOCAL_STORAGE_KEY = "wemo_templates_cache_page";

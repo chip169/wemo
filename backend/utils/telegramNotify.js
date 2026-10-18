@@ -248,7 +248,7 @@ const notifyNewOrder = async (order) => {
     hour: "2-digit", minute: "2-digit",
   });
 
-  const message = `🎉 <b>[ĐÃ CỌC THÀNH CÔNG] ĐƠN HÀNG MỚI</b>
+  const message = `🎉 <b>[ĐÃ THANH TOÁN 100%] ĐƠN HÀNG MỚI</b>
 
 🟢 <b>Mã đơn:</b> <code>${orderId}</code>
 🟢 <b>Khách hàng:</b> <b>${customerName}</b>
@@ -257,10 +257,10 @@ const notifyNewOrder = async (order) => {
 
 📦 <b>Sản phẩm:</b> ${product || "Mô hình LEGO Cá Nhân Hóa"}
 💰 <b>Tổng tiền:</b> ${formattedTotal}đ
-✅ <b>Số tiền cọc:</b> <b>${formattedDeposit}đ</b> (ĐÃ THANH TOÁN)
-⏳ <b>Còn lại:</b> ${remaining}đ
+✅ <b>Thanh toán:</b> <b>${formattedTotal}đ</b> (100% ĐÃ THANH TOÁN)
+⏳ <b>Còn lại khi nhận hàng:</b> 0đ
 
-🕐 <b>Thời gian cọc:</b> ${formattedDate}
+🕐 <b>Thời gian thanh toán:</b> ${formattedDate}
 
 🚀 Đơn hàng đã chuyển sang trạng thái chờ sản xuất.`;
 
@@ -301,7 +301,7 @@ Thiệp đã sẵn sàng, đính kèm vào đơn sản xuất.`;
 const notifyPendingPayment = async (order) => {
   const { orderId, customerName } = order;
 
-  const message = `⏳ <b>[CHỜ XÁC NHẬN CỌC]</b> Khách hàng <b>${customerName}</b> đang chờ xác nhận cọc cho đơn hàng <code>${orderId}</code>.`;
+  const message = `⏳ <b>[CHỜ THANH TOÁN 100%]</b> Khách hàng <b>${customerName}</b> đang chờ hoàn tất thanh toán cho đơn hàng <code>${orderId}</code>.`;
 
   const result = await sendTelegramMessage(message);
 
