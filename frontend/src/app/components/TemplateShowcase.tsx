@@ -97,7 +97,7 @@ const INITIAL_TEMPLATES = [
   }
 ];
 
-const LOCAL_STORAGE_KEY = "wemo_templates_cache_v4";
+const LOCAL_STORAGE_KEY = "wemo_templates_cache_v5";
 
 function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEMPLATES[0]; isLoading: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);

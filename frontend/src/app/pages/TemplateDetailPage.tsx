@@ -327,8 +327,8 @@ export function TemplateDetailPage() {
   const [dbTpl, setDbTpl] = useState<any>(() => {
     try {
       const targetId = SLUG_TO_ID_MAP[slug ?? ""] || "love-romantic";
-      const cachedShowcase = localStorage.getItem("wemo_templates_cache_v4");
-      const cachedPage = localStorage.getItem("wemo_templates_cache_page_v4");
+      const cachedShowcase = localStorage.getItem("wemo_templates_cache_v5") || localStorage.getItem("wemo_templates_cache_v4");
+      const cachedPage = localStorage.getItem("wemo_templates_cache_page_v5") || localStorage.getItem("wemo_templates_cache_page_v4");
       const cachedData = cachedPage || cachedShowcase;
       if (cachedData) {
         const parsed = JSON.parse(cachedData);
