@@ -16,7 +16,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#E8B4A8",
     emoji: "💕",
     confettiColors: ["#E8B4A8", "#D4AF78", "#F6C3B7", "#C4776A", "#F0D9D5"],
-    heroImg: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    heroImg: "/assets/templates/love-romantic.jpg",
     photos: [
       "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format",
       "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&auto=format",
@@ -38,7 +38,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#FF80BF",
     emoji: "🪐",
     confettiColors: ["#FF1E82", "#E11D48", "#FFFFFF", "#8B5CF6", "#38BDF8"],
-    heroImg: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    heroImg: "/assets/templates/solid-heart.jpg",
     photos: [
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
       "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80",
@@ -46,16 +46,6 @@ const TEMPLATES: Record<string, TemplateConfig> = {
       "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
       "https://images.unsplash.com/photo-1494774157365-9e04c6720e47?w=400&q=80",
       "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80",
-      "https://images.unsplash.com/photo-1464746133101-a2c3f88e0dd9?w=400&q=80",
-      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
-      "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=400&q=80",
-      "https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?w=400&q=80",
-      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80",
-      "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400&q=80",
-      "https://images.unsplash.com/photo-1501901604252-bb626cc1d545?w=400&q=80",
-      "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&q=80",
-      "https://images.unsplash.com/photo-1494972308805-463bc619d34e?w=400&q=80",
-      "https://images.unsplash.com/photo-1507504038482-7621c3c786d7?w=400&q=80"
     ],
     sampleMessage: "Em ơi, một năm bên nhau là một năm anh cảm thấy mình là người hạnh phúc nhất thế giới. Cảm ơn em đã bước vào cuộc sống của anh và vẽ nên bức tranh tình yêu lấp lánh như ngàn tinh tú. Anh yêu em mãi mãi! 💖",
     sender: "Của em, người đồng hành trọn đời ❤️",
@@ -72,7 +62,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#FDE68A",
     emoji: "🌙",
     confettiColors: ["#F59E0B", "#FDE68A", "#60A5FA", "#FFFFFF", "#38BDF8"],
-    heroImg: "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    heroImg: "/assets/templates/starlight-galaxy.jpg",
     photos: [
       "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
       "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80",
@@ -94,7 +84,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#FDA4AF",
     emoji: "🌹",
     confettiColors: ["#FB7185", "#FDA4AF", "#E11D48", "#10B981", "#FFF1F2"],
-    heroImg: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    heroImg: "/assets/templates/crystal-rose.jpg",
     photos: [
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
       "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
@@ -105,6 +95,126 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     sender: "Với tất cả tình yêu thương ❤️",
     features: ["Tối đa 10 ảnh kỷ niệm", "Đóa hồng pha lê nở rộ 3D", "Cánh hoa rơi bồng bềnh", "Ánh sáng lăng kính đa sắc", "Hộp thư tình yêu ngọt ngào"],
     mood: "Sang trọng · Quý phái · Ngọt ngào",
+  },
+  "ho-den-3d": {
+    slug: "ho-den-3d",
+    title: "Hố Đen Singularity 3D",
+    subtitle: "Đĩa bồi tụ xoáy rực rỡ quanh hố đen vũ trụ kỳ vĩ, ánh sáng quang sai bẻ cong không thời gian",
+    bg: "linear-gradient(135deg, #05050A 0%, #1A0B2E 50%, #F59E0B 100%)",
+    cardBg: "#05050A",
+    accent: "#F59E0B",
+    accentLight: "#FDE68A",
+    emoji: "🕳️",
+    confettiColors: ["#F59E0B", "#FDE68A", "#3B82F6", "#FFFFFF", "#9333EA"],
+    heroImg: "/assets/templates/singularity-blackhole.jpg",
+    photos: [
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80",
+    ],
+    sampleMessage: "Tình yêu như lực hấp dẫn vô cực của hố đen kỳ vĩ, bẻ cong cả không gian và thời gian để đưa chúng ta về bên nhau. Mãi yêu em! 🌌🕳️",
+    sender: "Từ chân trời sự kiện của anh 🪐",
+    features: ["Tối đa 16 ảnh kỷ niệm", "Đĩa bồi tụ xoáy chuyển động 3D", "Vòng quang sai bẻ cong ánh sáng", "Hố đen chân trời sự kiện"],
+    mood: "Hùng vĩ · Vũ trụ · Huyền bí",
+  },
+  "mua-ky-uc": {
+    slug: "mua-ky-uc",
+    title: "Mưa Ký Ức & Lời Yêu",
+    subtitle: "Cơn mưa sao băng ký ức với những bức ảnh và lời chúc yêu thương rơi bồng bềnh",
+    bg: "linear-gradient(135deg, #2b0015 0%, #FF4D6D 50%, #FF85A1 100%)",
+    cardBg: "#1F0010",
+    accent: "#FF4D6D",
+    accentLight: "#FF85A1",
+    emoji: "🌧️",
+    confettiColors: ["#FF4D6D", "#FF85A1", "#FFAFCC", "#FFFFFF"],
+    heroImg: "/assets/templates/falling-memories.jpg",
+    photos: [
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
+    ],
+    sampleMessage: "Từng khoảnh khắc rơi xuống như ngàn lời yêu thương anh muốn gửi đến em. Cảm ơn em vì đã là điều kỳ diệu nhất trong cuộc đời anh! 💕",
+    sender: "Gửi đến em ngàn vì sao ký ức 💖",
+    features: ["Tối đa 20 ảnh kỷ niệm", "Cơn mưa ảnh và thông điệp rơi", "Hiệu ứng nổ tim tương tác", "Bức thư tình yêu ngọt ngào"],
+    mood: "Mộng mơ · Ngọt ngào · Cảm xúc",
+  },
+  "dem-ngay-yeu": {
+    slug: "dem-ngay-yeu",
+    title: "Nhật Ký Đếm Ngày Yêu",
+    subtitle: "Bộ đếm thời gian bên nhau thời gian thực cùng ảnh đại diện đôi và album kỷ niệm",
+    bg: "linear-gradient(135deg, #1A0510 0%, #E11D48 50%, #FDA4AF 100%)",
+    cardBg: "#14000C",
+    accent: "#E11D48",
+    accentLight: "#FDA4AF",
+    emoji: "⏳",
+    confettiColors: ["#E11D48", "#FDA4AF", "#FB7185", "#FFFFFF"],
+    heroImg: "/assets/templates/love-counter.jpg",
+    photos: [
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80",
+    ],
+    sampleMessage: "Mỗi ngày trôi qua bên em đều là một ngày tuyệt vời nhất. Cảm ơn vì chúng ta đã luôn nắm chặt tay nhau trên chặng đường này! ⏳❤️",
+    sender: "Người thương của em ❤️",
+    features: ["Ảnh đại diện cặp đôi", "Bộ đếm ngày, giờ, phút, giây", "Nhấn giữ tim 3s mở thiệp", "Album ảnh kỷ niệm"],
+    mood: "Bền chặt · Lãng mạn · Trân quý",
+  },
+  "slide-ky-uc": {
+    slug: "slide-ky-uc",
+    title: "Trình Chiếu Lời Chúc Ký Ức",
+    subtitle: "Chạm tim mở thiệp, hiệu ứng chữ giải mã hacker và slide trình chiếu ảnh kỷ niệm",
+    bg: "linear-gradient(135deg, #120014 0%, #D946EF 50%, #F472B6 100%)",
+    cardBg: "#0E0010",
+    accent: "#D946EF",
+    accentLight: "#F472B6",
+    emoji: "💌",
+    confettiColors: ["#D946EF", "#F472B6", "#C084FC", "#FFFFFF"],
+    heroImg: "/assets/templates/heart-wish.jpg",
+    photos: [
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
+    ],
+    sampleMessage: "Chúc người tôi thương luôn mỉm cười rạng rỡ và hạnh phúc mỗi ngày. Em luôn xứng đáng với những điều tuyệt vời nhất trần đời! 🌟💖",
+    sender: "Thương gửi từ trái tim 💌",
+    features: ["Chạm tim hiệu ứng mở đầu", "Hiệu ứng chữ giải mã hacker", "Trình chiếu slide ảnh & GIF", "Thanh điều hướng tiện lợi"],
+    mood: "Trẻ trung · Bất ngờ · Tinh tế",
+  },
+  "trai-tim-anh-3d": {
+    slug: "trai-tim-anh-3d",
+    title: "Trái Tim Ghép Ảnh 3D",
+    subtitle: "Những bức ảnh kỷ niệm ghép thành hình trái tim 3D lơ lửng giữa trời sao, xoay 360 độ",
+    bg: "linear-gradient(135deg, #000000 0%, #BE185D 50%, #F472B6 100%)",
+    cardBg: "#050005",
+    accent: "#EC4899",
+    accentLight: "#F472B6",
+    emoji: "❤️",
+    confettiColors: ["#EC4899", "#BE185D", "#F472B6", "#FFFFFF"],
+    heroImg: "/assets/templates/heart-image.jpg",
+    photos: [
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80",
+    ],
+    sampleMessage: "Những khoảnh khắc bên em ghép lại thành trái tim tình yêu hoàn hảo nhất. Cảm ơn em vì đã là tình yêu và định mệnh của đời anh! ❤️✨",
+    sender: "Yêu em vô cùng ❤️",
+    features: ["Tối đa 20 ảnh kỷ niệm", "Trái tim ảnh 3D xoay không gian", "Mưa chữ yêu thương phát sáng", "Bầu trời đêm sao băng lung linh"],
+    mood: "Sáng tạo · Độc đáo · 3D",
+  },
+  "tri-an-20-10": {
+    slug: "tri-an-20-10",
+    title: "Tri Ân Yêu Thương 20/10",
+    subtitle: "Thiết kế tôn vinh phái đẹp và Mẹ yêu. Mưa ảnh kỷ niệm rơi nhẹ nhàng cùng giai điệu piano ngọt ngào",
+    bg: "linear-gradient(135deg, #FFD6E0 0%, #FFF2CC 50%, #FFE5EC 100%)",
+    cardBg: "#FFF7F9",
+    accent: "#FB7185",
+    accentLight: "#FDA4AF",
+    emoji: "💐",
+    confettiColors: ["#FB7185", "#FDA4AF", "#F472B6", "#FFE5EC"],
+    heroImg: "/assets/templates/gift-wday.jpg",
+    photos: [
+      "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+    ],
+    sampleMessage: "Chúc người phụ nữ tuyệt vời nhất luôn ngập tràn niềm vui, mạnh khỏe và hạnh phúc. Cảm ơn vì tất cả những hi sinh và yêu thương vô điều kiện! 💐💕",
+    sender: "Gửi ngàn lời tri ân yêu thương 🌸",
+    features: ["Tối đa 12 ảnh kỷ niệm", "Cơn mưa ảnh hoa rơi bồng bềnh", "Thông điệp chuyển động cảm xúc", "Nhạc nền du dương ngọt ngào"],
+    mood: "Ấm áp · Tri ân · Dịu dàng",
   },
 };
 
@@ -216,13 +326,13 @@ export function TemplateDetailPage() {
   // Dynamic template details from API database
   const [dbTpl, setDbTpl] = useState<any>(() => {
     try {
-      const targetId = slug === "tinh-cau-3d" ? "solid-heart" : "love-romantic";
-      const cachedShowcase = localStorage.getItem("wemo_templates_cache");
-      const cachedPage = localStorage.getItem("wemo_templates_cache_page");
+      const targetId = SLUG_TO_ID_MAP[slug ?? ""] || "love-romantic";
+      const cachedShowcase = localStorage.getItem("wemo_templates_cache_v4");
+      const cachedPage = localStorage.getItem("wemo_templates_cache_page_v4");
       const cachedData = cachedPage || cachedShowcase;
       if (cachedData) {
         const parsed = JSON.parse(cachedData);
-        const found = parsed.find((t: any) => t.id === targetId);
+        const found = parsed.find((t: any) => t.id === targetId || t.slug === slug);
         if (found) {
           return {
             name: found.title,
@@ -242,7 +352,7 @@ export function TemplateDetailPage() {
     fetch("/api/templates")
       .then((res) => (res.ok ? res.json() : []))
       .then((data: any[]) => {
-        const targetId = slug === "tinh-cau-3d" ? "solid-heart" : "love-romantic";
+        const targetId = SLUG_TO_ID_MAP[slug ?? ""] || "love-romantic";
         const found = data.find((t) => t.id === targetId);
         if (found) {
           setDbTpl(found);
