@@ -156,11 +156,7 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
             />
           )}
 
-          {/* Top-left PAID badge */}
-          <div className="absolute top-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EA580C] text-white text-[11px] font-black tracking-wider uppercase shadow-md">
-            <span className="w-1.5 h-1.5 rounded-full bg-white" />
-            <span>PAID</span>
-          </div>
+
 
           {/* Center glass "Xem chi tiết" button */}
           <Link
