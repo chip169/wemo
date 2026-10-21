@@ -202,5 +202,51 @@
       "Thanh điều hướng tiện lợi",
       "Toàn bộ thư chúc yêu thương"
     ]
+  },
+  {
+    "id": "heart-image",
+    "name": "Trái Tim Ghép Ảnh 3D",
+    "category": "romance",
+    "categoryLabel": "Tình yêu & Trái tim 3D",
+    "usageCount": 165,
+    "status": "active",
+    "preview": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "videoUrl": "",
+    "sampleMessage": "Những khoảnh khắc bên em ghép lại thành trái tim tình yêu hoàn hảo nhất. Cảm ơn em vì đã là tình yêu và định mệnh của đời anh! ❤️✨",
+    "photos": [
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80"
+    ],
+    "features": [
+      "Tối đa 20 ảnh kỷ niệm",
+      "Trái tim ảnh 3D xoay không gian",
+      "Mưa chữ yêu thương phát sáng",
+      "Bầu trời đêm sao băng lung linh"
+    ]
+  },
+  {
+    "id": "gift-wday",
+    "name": "Tri Ân Yêu Thương 20/10",
+    "category": "anniversary",
+    "categoryLabel": "Phụ nữ & Tri ân",
+    "usageCount": 180,
+    "status": "active",
+    "preview": "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "videoUrl": "",
+    "sampleMessage": "Chúc người phụ nữ tuyệt vời nhất luôn ngập tràn niềm vui, mạnh khỏe và hạnh phúc. Cảm ơn vì tất cả những hi sinh và yêu thương vô điều kiện! 💐💕",
+    "photos": [
+      "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80",
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80"
+    ],
+    "features": [
+      "Tối đa 12 ảnh kỷ niệm",
+      "Cơn mưa ảnh hoa rơi bồng bềnh",
+      "Thông điệp chuyển động cảm xúc",
+      "Nhạc nền du dương ngọt ngào"
+    ]
   }
 ]

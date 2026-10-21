@@ -40,6 +40,8 @@ import { SingularityCanvas3D } from "../components/gift3d/SingularityCanvas3D";
 import { FallingTextGiftView } from "../components/gift3d/FallingTextGiftView";
 import { LoveCountGiftView } from "../components/gift3d/LoveCountGiftView";
 import { WishSlidesGiftView } from "../components/gift3d/WishSlidesGiftView";
+import { HeartImageGiftView } from "../components/gift3d/HeartImageGiftView";
+import { WDayGiftView } from "../components/gift3d/WDayGiftView";
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -265,6 +267,48 @@ const STATIC_TEMPLATES = [
       music: false,
     }
   },
+  {
+    id: "heart-image",
+    name: "Trái Tim Ghép Ảnh 3D",
+    description: "Những bức ảnh kỷ niệm ghép thành hình trái tim 3D lơ lửng giữa trời sao, tự do xoay 360 độ kèm mưa chữ yêu thương phát sáng lung linh.",
+    emoji: "❤️",
+    color: "#EC4899",
+    gradient: "linear-gradient(135deg, #000000 0%, #BE185D 50%, #F472B6 100%)",
+    light: "#050005",
+    img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "tinh-yeu",
+    themes: ["tinh-yeu", "ky-niem", "sinh-nhat"],
+    tag: "Trái Tim 3D",
+    features: ["Tối đa 20 ảnh kỷ niệm", "Trái tim xoay 3D tương tác", "Bầu trời sao băng lung linh", "Chữ rơi cầu vồng phát sáng"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 20,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
+  {
+    id: "gift-wday",
+    name: "Tri Ân Yêu Thương 20/10",
+    description: "Thiết kế tôn vinh phái đẹp và Mẹ yêu. Mưa ảnh kỷ niệm rơi nhẹ nhàng, chữ chúc chuyển động mềm mại cùng giai điệu piano ngọt ngào.",
+    emoji: "💐",
+    color: "#FB7185",
+    gradient: "linear-gradient(135deg, #FFD6E0 0%, #FFF2CC 50%, #FFE5EC 100%)",
+    light: "#FFF0F4",
+    img: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "ky-niem",
+    themes: ["ky-niem", "tinh-yeu", "sinh-nhat"],
+    tag: "Tri Ân Phái Đẹp",
+    features: ["Tối đa 12 ảnh kỷ niệm", "Cơn mưa ảnh hoa rơi", "Lời chúc chuyển động cảm xúc", "Nút bật/tắt nhạc nền 20/10"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 12,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
 ];
 
 const MUSIC = [
@@ -311,6 +355,12 @@ export function RenderLiveTemplate({
   }
   if (gift.templateId === "heart-wish") {
     return <WishSlidesGiftView gift={gift} />;
+  }
+  if (gift.templateId === "heart-image") {
+    return <HeartImageGiftView gift={gift} />;
+  }
+  if (gift.templateId === "gift-wday") {
+    return <WDayGiftView gift={gift} />;
   }
   return <HeartCanvas3D gift={gift} />;
 }

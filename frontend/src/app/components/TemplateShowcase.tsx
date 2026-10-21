@@ -76,6 +76,24 @@ const INITIAL_TEMPLATES = [
     image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#D946EF",
     gradient: "linear-gradient(135deg, #120014 0%, #D946EF 50%, #F472B6 100%)",
+  },
+  {
+    id: "heart-image",
+    slug: "trai-tim-anh-3d",
+    title: "Trái Tim Ghép Ảnh 3D",
+    description: "Những bức ảnh kỷ niệm ghép thành hình trái tim 3D lơ lửng giữa trời sao, tự do xoay 360 độ kèm mưa chữ yêu thương phát sáng lung linh.",
+    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#EC4899",
+    gradient: "linear-gradient(135deg, #000000 0%, #BE185D 50%, #F472B6 100%)",
+  },
+  {
+    id: "gift-wday",
+    slug: "tri-an-20-10",
+    title: "Tri Ân Yêu Thương 20/10",
+    description: "Thiết kế tôn vinh phái đẹp và Mẹ yêu. Mưa ảnh kỷ niệm rơi nhẹ nhàng, chữ chúc chuyển động mềm mại cùng giai điệu piano ngọt ngào.",
+    image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#FB7185",
+    gradient: "linear-gradient(135deg, #FFD6E0 0%, #FFF2CC 50%, #FFE5EC 100%)",
   }
 ];
 

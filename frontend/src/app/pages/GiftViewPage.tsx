@@ -10,6 +10,8 @@ import { SingularityCanvas3D } from "../components/gift3d/SingularityCanvas3D";
 import { FallingTextGiftView } from "../components/gift3d/FallingTextGiftView";
 import { LoveCountGiftView } from "../components/gift3d/LoveCountGiftView";
 import { WishSlidesGiftView } from "../components/gift3d/WishSlidesGiftView";
+import { HeartImageGiftView } from "../components/gift3d/HeartImageGiftView";
+import { WDayGiftView } from "../components/gift3d/WDayGiftView";
 
 const MUSIC_URLS = {
   piano: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
@@ -181,6 +183,10 @@ export function GiftViewPage() {
           <LoveCountGiftView gift={gift} />
         ) : gift.templateId === "heart-wish" ? (
           <WishSlidesGiftView gift={gift} />
+        ) : gift.templateId === "heart-image" ? (
+          <HeartImageGiftView gift={gift} />
+        ) : gift.templateId === "gift-wday" ? (
+          <WDayGiftView gift={gift} />
         ) : (
           <HeartCanvas3D gift={gift} />
         )}

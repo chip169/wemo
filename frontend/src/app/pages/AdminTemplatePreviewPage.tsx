@@ -15,6 +15,8 @@ import { SingularityCanvas3D } from "../components/gift3d/SingularityCanvas3D";
 import { FallingTextGiftView } from "../components/gift3d/FallingTextGiftView";
 import { LoveCountGiftView } from "../components/gift3d/LoveCountGiftView";
 import { WishSlidesGiftView } from "../components/gift3d/WishSlidesGiftView";
+import { HeartImageGiftView } from "../components/gift3d/HeartImageGiftView";
+import { WDayGiftView } from "../components/gift3d/WDayGiftView";
 
 interface TemplateData {
   id: string;
@@ -171,6 +173,10 @@ export function AdminTemplatePreviewPage() {
         <LoveCountGiftView gift={demoGift} />
       ) : template!.id === "heart-wish" ? (
         <WishSlidesGiftView gift={demoGift} />
+      ) : template!.id === "heart-image" ? (
+        <HeartImageGiftView gift={demoGift} />
+      ) : template!.id === "gift-wday" ? (
+        <WDayGiftView gift={demoGift} />
       ) : (
         <HeartCanvas3D gift={demoGift} />
       )}

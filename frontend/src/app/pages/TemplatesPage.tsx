@@ -100,6 +100,30 @@ const STATIC_TEMPLATES = [
     tag: "Slide Ký Ức",
     features: ["Chạm tim mở đầu", "Chữ giải mã hacker", "Trình chiếu slide ảnh & GIF", "Thanh điều hướng tiện lợi"],
   },
+  {
+    slug: "trai-tim-anh-3d",
+    title: "Trái Tim Ghép Ảnh 3D",
+    category: "romance",
+    emoji: "❤️",
+    description: "Những bức ảnh kỷ niệm ghép thành hình trái tim 3D lơ lửng giữa trời sao, tự do xoay 360 độ kèm mưa chữ yêu thương phát sáng lung linh.",
+    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#EC4899",
+    gradient: "linear-gradient(135deg, #000000 0%, #BE185D 50%, #F472B6 100%)",
+    tag: "Trái Tim 3D",
+    features: ["Tối đa 20 ảnh kỷ niệm", "Trái tim xoay 3D tương tác", "Bầu trời sao băng lung linh", "Chữ rơi cầu vồng phát sáng"],
+  },
+  {
+    slug: "tri-an-20-10",
+    title: "Tri Ân Yêu Thương 20/10",
+    category: "anniversary",
+    emoji: "💐",
+    description: "Thiết kế tôn vinh phái đẹp và Mẹ yêu. Mưa ảnh kỷ niệm rơi nhẹ nhàng, chữ chúc chuyển động mềm mại cùng giai điệu piano ngọt ngào.",
+    image: "https://images.unsplash.com/photo-1563241527-3004b7be0ffd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    color: "#FB7185",
+    gradient: "linear-gradient(135deg, #FFD6E0 0%, #FFF2CC 50%, #FFE5EC 100%)",
+    tag: "Tri Ân Phái Đẹp",
+    features: ["Tối đa 12 ảnh kỷ niệm", "Cơn mưa ảnh hoa rơi", "Lời chúc chuyển động cảm xúc", "Nút bật/tắt nhạc nền 20/10"],
+  },
 ];
 
 const LOCAL_STORAGE_KEY = "wemo_templates_cache_page_v3";
@@ -113,6 +137,8 @@ const SLUG_TO_ID_MAP: Record<string, string> = {
   "mua-ky-uc": "falling-memories",
   "dem-ngay-yeu": "love-counter",
   "slide-ky-uc": "heart-wish",
+  "trai-tim-anh-3d": "heart-image",
+  "tri-an-20-10": "gift-wday",
 };
 
 export function TemplatesPage() {
@@ -223,7 +249,7 @@ export function TemplatesPage() {
             Chọn Mẫu Hoàn Hảo Cho Người Thương
           </h1>
           <p className="max-w-xl mx-auto text-xs sm:text-base text-stone-600 leading-relaxed">
-            Khám phá 8 mẫu thiệp 3D tương tác độc quyền. Mỗi mẫu đều tùy chỉnh toàn bộ hình ảnh, lời chúc và giai điệu theo câu chuyện của riêng hai bạn.
+            Khám phá {STATIC_TEMPLATES.length} mẫu thiệp 3D tương tác độc quyền. Mỗi mẫu đều tùy chỉnh toàn bộ hình ảnh, lời chúc và giai điệu theo câu chuyện của riêng hai bạn.
           </p>
         </motion.div>
       </section>
@@ -293,7 +319,7 @@ export function TemplatesPage() {
               }}
               className="px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold border-0 cursor-pointer"
             >
-              Xem toàn bộ 8 mẫu
+              Xem toàn bộ {STATIC_TEMPLATES.length} mẫu
             </button>
           </div>
         ) : (
