@@ -6,67 +6,148 @@ import { motion, AnimatePresence } from "motion/react";
 import { Moon, Sparkles, Star, X } from "lucide-react";
 import { AudioPlayerWidget, VideoPlayerWidget } from "./GiftContentOverlay";
 
-// ─── Interactive 3D Crescent Moon & Star Cluster ─────────────────────────────
+// ─── Interactive 3D Crescent Moon & Cosmic Nebula ─────────────────────────────
 function InteractiveMoon({ onClick, opened }: { onClick: () => void; opened: boolean }) {
   const groupRef = useRef<THREE.Group>(null);
-  const moonParticlesRef = useRef<THREE.Points>(null);
+  const polarisRef = useRef<THREE.Group>(null);
   const isHovered = useRef(false);
 
-  // Generate 3600 particles shaped into a 3D Crescent Moon
+  // 1. Generate 7,500 particles shaped into a true volumetric 3D Crescent Moon
   const moonParticles = useMemo(() => {
-    const count = 3800;
+    const count = 7500;
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
+
+    const colorDeepGold = new THREE.Color("#D97706");
     const colorGold = new THREE.Color("#F59E0B");
-    const colorLightGold = new THREE.Color("#FDE68A");
+    const colorBrightGold = new THREE.Color("#FBBF24");
+    const colorChampagne = new THREE.Color("#FDE68A");
     const colorWhite = new THREE.Color("#FFFFFF");
 
-    let idx = 0;
-    while (idx < count) {
-      // Rejection sampling for crescent moon shape: outer circle minus inner circle
-      const angle = (Math.random() - 0.5) * Math.PI * 1.5; // crescent arc
-      const outerR = 2.1 + (Math.random() - 0.5) * 0.3;
-      const x = Math.cos(angle) * outerR;
-      const y = Math.sin(angle) * outerR;
+    const R0 = 2.4;
+    const Tmax = 1.35;
+    const Z0 = 0.55;
 
-      // Inner cut-out circle shifted to the right
-      const cutX = x - 0.9;
-      const cutY = y;
-      const distFromCut = Math.sqrt(cutX * cutX + cutY * cutY);
+    for (let i = 0; i < count; i++) {
+      // Angle from bottom horn to top horn
+      const u = (Math.random() - 0.5) * Math.PI * 0.94;
+      const v = Math.random(); // 0 at inner edge, 1 at outer ridge
+      const hornFactor = Math.pow(Math.cos(u), 0.75);
+      const thick = Tmax * hornFactor;
+      const r = R0 - (1 - v) * thick;
 
-      if (distFromCut > 1.6) {
-        const z = (Math.random() - 0.5) * 0.45;
-        pos[idx * 3] = x;
-        pos[idx * 3 + 1] = y;
-        pos[idx * 3 + 2] = z;
+      // Center the crescent moon around origin
+      const x = r * Math.cos(u) - 0.9;
+      const y = r * Math.sin(u);
 
-        const rand = Math.random();
-        const c = rand < 0.6 ? colorGold : rand < 0.85 ? colorLightGold : colorWhite;
-        col[idx * 3] = c.r;
-        col[idx * 3 + 1] = c.g;
-        col[idx * 3 + 2] = c.b;
-        idx++;
+      // Volumetric 3D thickness with smooth elliptical cross section
+      const zProfile = Math.sqrt(Math.max(0, 1 - Math.pow(2 * v - 1, 2)));
+      const z = (Math.random() - 0.5) * 2 * Z0 * hornFactor * zProfile;
+
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = z;
+
+      // Color distribution: deep gold at inner body, brilliant champagne & white at ridge/horns
+      const isRidge = v > 0.78 || hornFactor < 0.25;
+      let c = colorGold;
+      if (isRidge) {
+        c = Math.random() < 0.65 ? colorWhite : colorChampagne;
+      } else if (v < 0.3) {
+        c = colorDeepGold;
+      } else {
+        c = Math.random() < 0.5 ? colorBrightGold : colorChampagne;
       }
+
+      col[i * 3] = c.r;
+      col[i * 3 + 1] = c.g;
+      col[i * 3 + 2] = c.b;
     }
     return { positions: pos, colors: col };
   }, []);
 
-  // Golden star dust ring
-  const stardustRing = useMemo(() => {
-    const count = 2800;
+  // 2. 8-Pointed 3D Polaris Star resting inside the crescent cradle
+  const polarisParticles = useMemo(() => {
+    const count = 1400;
     const pos = new Float32Array(count * 3);
     const col = new Float32Array(count * 3);
-    const colorGold = new THREE.Color("#FBBF24");
-    const colorBlue = new THREE.Color("#60A5FA");
+
+    const colorCore = new THREE.Color("#FEF08A");
+    const colorWhite = new THREE.Color("#FFFFFF");
+    const colorCyan = new THREE.Color("#7DD3FC");
 
     for (let i = 0; i < count; i++) {
-      const r = 2.6 + Math.random() * 2.2;
-      const angle = Math.random() * Math.PI * 2;
-      pos[i * 3] = Math.cos(angle) * r;
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 0.12;
-      pos[i * 3 + 2] = Math.sin(angle) * r;
+      const isRay = Math.random() < 0.72;
+      let rx = 0, ry = 0, rz = 0;
+      let c = colorCore;
 
-      const c = Math.random() < 0.75 ? colorGold : colorBlue;
+      if (isRay) {
+        const rayIdx = Math.floor(Math.random() * 8);
+        const angle = (rayIdx * Math.PI) / 4;
+        const maxLen = rayIdx % 2 === 0 ? 0.95 : 0.6;
+        const len = Math.pow(Math.random(), 0.55) * maxLen;
+        const taper = 1.0 - (len / maxLen);
+        const perp = (Math.random() - 0.5) * 0.08 * taper;
+
+        rx = Math.cos(angle) * len - Math.sin(angle) * perp;
+        ry = Math.sin(angle) * len + Math.cos(angle) * perp;
+        rz = (Math.random() - 0.5) * 0.09 * taper;
+
+        c = len > 0.5 ? (Math.random() < 0.5 ? colorWhite : colorCyan) : colorCore;
+      } else {
+        const u = Math.random() * 2 * Math.PI;
+        const v = Math.acos(2 * Math.random() - 1);
+        const r = Math.random() * 0.24;
+        rx = r * Math.sin(v) * Math.cos(u);
+        ry = r * Math.sin(v) * Math.sin(u);
+        rz = r * Math.cos(v);
+        c = Math.random() < 0.7 ? colorCore : colorWhite;
+      }
+
+      pos[i * 3] = rx;
+      pos[i * 3 + 1] = ry;
+      pos[i * 3 + 2] = rz;
+
+      col[i * 3] = c.r;
+      col[i * 3 + 1] = c.g;
+      col[i * 3 + 2] = c.b;
+    }
+    return { positions: pos, colors: col };
+  }, []);
+
+  // 3. Cosmic Nebula Ribbon Swirling around the Crescent Moon
+  const nebulaRibbon = useMemo(() => {
+    const count = 4800;
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+
+    const colorCyan = new THREE.Color("#38BDF8");
+    const colorIndigo = new THREE.Color("#818CF8");
+    const colorPurple = new THREE.Color("#C084FC");
+    const colorGold = new THREE.Color("#FDE047");
+    const colorWhite = new THREE.Color("#FFFFFF");
+
+    for (let i = 0; i < count; i++) {
+      const t = Math.random() * Math.PI * 4; // 2 loops
+      const baseR = 2.9 + Math.sin(t * 1.5) * 0.85;
+      const ribbonW = (Math.random() - 0.5) * 0.75;
+      const ribbonH = (Math.random() - 0.5) * 0.45;
+
+      const x = Math.cos(t) * (baseR + ribbonW);
+      const z = Math.sin(t) * (baseR + ribbonW);
+      const y = Math.sin(t * 0.8) * 1.6 + ribbonH;
+
+      pos[i * 3] = x;
+      pos[i * 3 + 1] = y;
+      pos[i * 3 + 2] = z;
+
+      const normT = (t / (Math.PI * 4));
+      let c = colorCyan;
+      if (normT < 0.25) c = Math.random() < 0.5 ? colorCyan : colorIndigo;
+      else if (normT < 0.5) c = Math.random() < 0.5 ? colorIndigo : colorPurple;
+      else if (normT < 0.75) c = Math.random() < 0.5 ? colorPurple : colorGold;
+      else c = Math.random() < 0.6 ? colorGold : colorWhite;
+
       col[i * 3] = c.r;
       col[i * 3 + 1] = c.g;
       col[i * 3 + 2] = c.b;
@@ -76,9 +157,15 @@ function InteractiveMoon({ onClick, opened }: { onClick: () => void; opened: boo
 
   useFrame((state, delta) => {
     if (groupRef.current) {
-      const hoverFactor = isHovered.current ? 1.8 : 1.0;
-      groupRef.current.rotation.y += delta * 0.25 * hoverFactor;
-      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.4) * 0.15;
+      const hoverFactor = isHovered.current ? 1.6 : 1.0;
+      groupRef.current.rotation.y += delta * 0.22 * hoverFactor;
+      groupRef.current.rotation.x = 0.18 + Math.sin(state.clock.elapsedTime * 0.4) * 0.06;
+      groupRef.current.rotation.z = Math.sin(state.clock.elapsedTime * 0.3) * 0.04;
+    }
+    if (polarisRef.current) {
+      polarisRef.current.rotation.z -= delta * 0.35;
+      const pulse = 1.0 + Math.sin(state.clock.elapsedTime * 3.2) * 0.12;
+      polarisRef.current.scale.set(pulse, pulse, pulse);
     }
   });
 
@@ -99,8 +186,8 @@ function InteractiveMoon({ onClick, opened }: { onClick: () => void; opened: boo
         document.body.style.cursor = "auto";
       }}
     >
-      {/* Crescent Moon Particles */}
-      <points ref={moonParticlesRef}>
+      {/* Volumetric Crescent Moon */}
+      <points>
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
@@ -121,49 +208,77 @@ function InteractiveMoon({ onClick, opened }: { onClick: () => void; opened: boo
         />
       </points>
 
-      {/* Orbiting Stardust Ring */}
-      <points rotation={[0.4, 0.2, 0]}>
+      {/* 3D Radiant Polaris Star nestled in crescent */}
+      <group ref={polarisRef} position={[-0.1, 0.2, 0]}>
+        <points>
+          <bufferGeometry>
+            <bufferAttribute
+              attach="attributes-position"
+              args={[polarisParticles.positions, 3]}
+            />
+            <bufferAttribute
+              attach="attributes-color"
+              args={[polarisParticles.colors, 3]}
+            />
+          </bufferGeometry>
+          <pointsMaterial
+            size={0.055}
+            vertexColors
+            transparent
+            opacity={0.95}
+            blending={THREE.AdditiveBlending}
+            depthWrite={false}
+          />
+        </points>
+      </group>
+
+      {/* Cosmic Nebula Swirl Ribbon */}
+      <points rotation={[0.3, 0.2, 0]}>
         <bufferGeometry>
           <bufferAttribute
             attach="attributes-position"
-            args={[stardustRing.positions, 3]}
+            args={[nebulaRibbon.positions, 3]}
           />
           <bufferAttribute
             attach="attributes-color"
-            args={[stardustRing.colors, 3]}
+            args={[nebulaRibbon.colors, 3]}
           />
         </bufferGeometry>
         <pointsMaterial
           size={0.045}
           vertexColors
           transparent
-          opacity={0.8}
+          opacity={0.82}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
         />
       </points>
 
-      {/* Central Glowing Star Core */}
-      <mesh>
-        <sphereGeometry args={[0.45, 24, 24]} />
-        <meshBasicMaterial color="#FEF08A" transparent opacity={0.65} />
+      {/* Warm Starlight Glow Light */}
+      <pointLight position={[-0.1, 0.2, 0]} intensity={3.2} color="#FEF08A" distance={6} />
+
+      {/* Invisible Interactive Hit Mesh */}
+      <mesh visible={false} position={[0, 0, 0]}>
+        <sphereGeometry args={[3.0, 16, 16]} />
+        <meshBasicMaterial />
       </mesh>
     </group>
   );
 }
 
-// ─── Golden Shooting Stars ───────────────────────────────────────────────────
+// ─── Golden Shooting Stars with Luminous Streaks ──────────────────────────────
 function GoldenShootingStars() {
   const meshRef = useRef<THREE.InstancedMesh>(null);
-  const count = 12;
+  const count = 16;
 
   const stars = useMemo(() => {
     return Array.from({ length: count }, () => ({
-      x: (Math.random() - 0.5) * 40,
-      y: 15 + Math.random() * 15,
-      z: (Math.random() - 0.5) * 20,
-      speed: 16 + Math.random() * 10,
-      length: 1.5 + Math.random() * 2,
+      x: (Math.random() - 0.5) * 50,
+      y: 12 + Math.random() * 20,
+      z: (Math.random() - 0.5) * 30,
+      speed: 18 + Math.random() * 12,
+      length: 2.2 + Math.random() * 2.5,
+      thickness: 0.05 + Math.random() * 0.04,
     }));
   }, []);
 
@@ -172,17 +287,17 @@ function GoldenShootingStars() {
   useFrame((_, delta) => {
     if (!meshRef.current) return;
     stars.forEach((star, i) => {
-      star.x -= star.speed * delta * 0.9;
-      star.y -= star.speed * delta * 0.7;
+      star.x -= star.speed * delta * 0.88;
+      star.y -= star.speed * delta * 0.65;
 
-      if (star.y < -15 || star.x < -25) {
-        star.x = 20 + Math.random() * 15;
-        star.y = 15 + Math.random() * 10;
-        star.z = (Math.random() - 0.5) * 20;
+      if (star.y < -18 || star.x < -30) {
+        star.x = 25 + Math.random() * 20;
+        star.y = 15 + Math.random() * 15;
+        star.z = (Math.random() - 0.5) * 30;
       }
 
       dummy.position.set(star.x, star.y, star.z);
-      dummy.scale.set(0.08, star.length, 0.08);
+      dummy.scale.set(star.thickness, star.length, star.thickness);
       dummy.rotation.z = Math.PI / 4;
       dummy.updateMatrix();
       meshRef.current!.setMatrixAt(i, dummy.matrix);
@@ -192,9 +307,79 @@ function GoldenShootingStars() {
 
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
-      <cylinderGeometry args={[0.04, 0, 1.5, 6]} />
-      <meshBasicMaterial color="#FDE68A" transparent opacity={0.85} blending={THREE.AdditiveBlending} />
+      <cylinderGeometry args={[0.03, 0.005, 1.8, 6]} />
+      <meshBasicMaterial
+        color="#FDE68A"
+        transparent
+        opacity={0.88}
+        blending={THREE.AdditiveBlending}
+      />
     </instancedMesh>
+  );
+}
+
+// ─── Ambient Floating Starlight Motes ─────────────────────────────────────────
+function FloatingStarMotes() {
+  const motesRef = useRef<THREE.Points>(null);
+  const count = 75;
+
+  const { positions, colors, speeds } = useMemo(() => {
+    const pos = new Float32Array(count * 3);
+    const col = new Float32Array(count * 3);
+    const spd = new Float32Array(count);
+
+    const gold = new THREE.Color("#FDE047");
+    const cyan = new THREE.Color("#38BDF8");
+    const white = new THREE.Color("#FFFFFF");
+
+    for (let i = 0; i < count; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 16;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 14;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 14;
+
+      const c = Math.random() < 0.5 ? gold : Math.random() < 0.8 ? cyan : white;
+      col[i * 3] = c.r;
+      col[i * 3 + 1] = c.g;
+      col[i * 3 + 2] = c.b;
+
+      spd[i] = 0.3 + Math.random() * 0.5;
+    }
+    return { positions: pos, colors: col, speeds: spd };
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!motesRef.current) return;
+    const posAttr = motesRef.current.geometry.attributes.position as THREE.BufferAttribute;
+    const posArr = posAttr.array as Float32Array;
+
+    for (let i = 0; i < count; i++) {
+      posArr[i * 3 + 1] += speeds[i] * delta * 0.4;
+      posArr[i * 3] += Math.sin(state.clock.elapsedTime + i) * delta * 0.15;
+
+      if (posArr[i * 3 + 1] > 7) {
+        posArr[i * 3 + 1] = -7;
+        posArr[i * 3] = (Math.random() - 0.5) * 16;
+        posArr[i * 3 + 2] = (Math.random() - 0.5) * 14;
+      }
+    }
+    posAttr.needsUpdate = true;
+  });
+
+  return (
+    <points ref={motesRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-color" args={[colors, 3]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.06}
+        vertexColors
+        transparent
+        opacity={0.8}
+        blending={THREE.AdditiveBlending}
+        depthWrite={false}
+      />
+    </points>
   );
 }
 
@@ -241,16 +426,23 @@ function OrbitingPhoto({
     <group ref={meshRef}>
       {/* Golden Frame Border */}
       <mesh position={[0, 0, -0.01]}>
-        <planeGeometry args={[1.25, 1.25]} />
-        <meshBasicMaterial color="#D97706" />
+        <planeGeometry args={[1.3, 1.3]} />
+        <meshBasicMaterial color="#F59E0B" />
       </mesh>
+      {/* Corner Gem Stars */}
+      {[[-0.6, 0.6], [0.6, 0.6], [-0.6, -0.6], [0.6, -0.6]].map(([cx, cy], ci) => (
+        <mesh key={ci} position={[cx, cy, 0.005]}>
+          <planeGeometry args={[0.08, 0.08]} />
+          <meshBasicMaterial color="#FEF08A" />
+        </mesh>
+      ))}
       {/* Inner Photo */}
       <mesh>
         <planeGeometry args={[1.18, 1.18]} />
         {texture ? (
           <meshBasicMaterial map={texture} side={THREE.DoubleSide} />
         ) : (
-          <meshBasicMaterial color="#1E293B" />
+          <meshBasicMaterial color="#0F172A" />
         )}
       </mesh>
     </group>
@@ -271,15 +463,17 @@ function StarlightScene({
 
   return (
     <>
-      <color attach="background" args={["#0B1021"]} />
-      <ambientLight intensity={0.8} />
-      <pointLight position={[0, 0, 0]} intensity={3.0} color="#FDE68A" distance={20} />
-      <pointLight position={[6, 8, 8]} intensity={1.5} color="#38BDF8" />
+      <color attach="background" args={["#080C1E"]} />
+      <ambientLight intensity={0.9} />
+      <pointLight position={[0, 0, 0]} intensity={3.5} color="#FEF08A" distance={20} />
+      <pointLight position={[6, 8, 8]} intensity={2.0} color="#38BDF8" />
+      <pointLight position={[-6, -6, -4]} intensity={1.5} color="#C084FC" />
 
-      <Stars radius={70} depth={60} count={3500} factor={4} saturation={0.5} fade speed={1.2} />
+      <Stars radius={75} depth={60} count={4000} factor={4.5} saturation={0.6} fade speed={1.2} />
       <GoldenShootingStars />
+      <FloatingStarMotes />
 
-      <Float speed={1.4} rotationIntensity={0.2} floatIntensity={0.4}>
+      <Float speed={1.4} rotationIntensity={0.15} floatIntensity={0.35}>
         <InteractiveMoon onClick={onOpen} opened={opened} />
       </Float>
 
@@ -412,9 +606,9 @@ export function StarlightCanvas3D({ gift }: { gift: any }) {
   const [opened, setOpened] = useState(false);
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#0B1021]">
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#080C1E]">
       <Canvas
-        camera={{ position: [0, 1, 12], fov: 55 }}
+        camera={{ position: [0, 0.4, 11], fov: 52 }}
         gl={{ antialias: true }}
         style={{ position: "absolute", inset: 0 }}
       >
