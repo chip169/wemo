@@ -719,36 +719,7 @@ function Step1({
         </div>
       </div>
 
-      {/* Horizontal Category Scroll Bar (Mobile App style) */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
-        {categories.map((cat) => {
-          const isActive = activeCategory === cat.id;
-          return (
-            <button
-              key={cat.id}
-              type="button"
-              onClick={() => setActiveCategory(cat.id)}
-              className={`flex-shrink-0 flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-bold transition-all border-0 cursor-pointer ${
-                isActive
-                  ? "bg-stone-900 text-white shadow-md scale-102"
-                  : "bg-white text-stone-600 hover:bg-stone-100 border border-stone-200/80 shadow-xs"
-              }`}
-            >
-              <span>{cat.icon}</span>
-              <span>{cat.label}</span>
-              {cat.count !== undefined && (
-                <span
-                  className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                    isActive ? "bg-white/20 text-white" : "bg-stone-100 text-stone-500"
-                  }`}
-                >
-                  {cat.count}
-                </span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+
 
       {/* Selected Template Quick Summary Bar */}
       {selectedTemplate && (
