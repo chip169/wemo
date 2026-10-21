@@ -82,7 +82,7 @@ const INITIAL_TEMPLATES = [
     slug: "trai-tim-anh-3d",
     title: "Trái Tim Ghép Ảnh 3D",
     description: "Những bức ảnh kỷ niệm ghép thành hình trái tim 3D lơ lửng giữa trời sao, tự do xoay 360 độ kèm mưa chữ yêu thương phát sáng lung linh.",
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "/templates/heart-image/preview.jpg",
     color: "#EC4899",
     gradient: "linear-gradient(135deg, #000000 0%, #BE185D 50%, #F472B6 100%)",
   },

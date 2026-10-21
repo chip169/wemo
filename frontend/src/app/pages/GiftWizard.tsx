@@ -275,7 +275,7 @@ const STATIC_TEMPLATES = [
     color: "#EC4899",
     gradient: "linear-gradient(135deg, #000000 0%, #BE185D 50%, #F472B6 100%)",
     light: "#050005",
-    img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    img: "/templates/heart-image/preview.jpg",
     theme: "tinh-yeu",
     themes: ["tinh-yeu", "ky-niem", "sinh-nhat"],
     tag: "Trái Tim 3D",
