@@ -152,16 +152,27 @@ export function OrdersPage() {
     }
   };
 
-  const handleDelete = (id: string) => {
-    if (window.confirm(`Bạn có chắc chắn muốn xóa đơn hàng ${id}?`)) {
-      adminFetch(`/api/orders/${id}`, { method: "DELETE" })
-        .then((res) => res.json())
-        .then((data) => {
-          alert(data.message || "Xóa đơn hàng thành công.");
-          fetchOrders();
-        })
-        .catch(console.error);
-    }
+  // Delete confirmation state
+  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [deleting, setDeleting] = useState(false);
+
+  const confirmDelete = () => {
+    if (!orderToDelete) return;
+    setDeleting(true);
+    adminFetch(`/api/orders/${orderToDelete.id}`, { method: "DELETE" })
+      .then((res) => res.json())
+      .then((data) => {
+        alert(data.message || "Xóa đơn hàng thành công.");
+        setOrderToDelete(null);
+        fetchOrders();
+      })
+      .catch((err) => {
+        console.error(err);
+        alert("Có lỗi xảy ra khi xóa đơn hàng: " + err.message);
+      })
+      .finally(() => {
+        setDeleting(false);
+      });
   };
 
   const handleCreateOrder = (e: React.FormEvent) => {
@@ -443,8 +454,8 @@ export function OrdersPage() {
                             <Edit2 className="w-4 h-4" />
                           </button>
                           <button
-                            onClick={() => handleDelete(order.id)}
-                            className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-500 rounded transition-colors"
+                            onClick={() => setOrderToDelete(order)}
+                            className="p-1.5 hover:bg-rose-50 dark:hover:bg-rose-950/30 text-rose-500 rounded transition-colors cursor-pointer"
                             title="Xóa đơn hàng"
                           >
                             <Trash2 className="w-4 h-4" />
@@ -770,6 +781,51 @@ export function OrdersPage() {
                   {editSubmitting ? "Đang lưu..." : "Lưu Thay Đổi"}
                 </button>
               </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Delete Confirmation Modal */}
+      <AnimatePresence>
+        {orderToDelete && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-xs">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 10 }}
+              className="bg-white rounded-3xl p-6 w-full max-w-sm relative shadow-2xl border border-stone-100 text-center"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4 border border-rose-100 shadow-inner">
+                <Trash2 className="w-7 h-7" />
+              </div>
+              <h3 className="text-base font-black text-stone-900 mb-2">
+                Xác Nhận Xóa Đơn Hàng?
+              </h3>
+              <p className="text-xs text-stone-500 leading-relaxed mb-6">
+                Bạn có chắc chắn muốn xóa đơn hàng <strong className="text-stone-800 font-bold">#{orderToDelete.id}</strong> của khách hàng <strong className="text-stone-800 font-bold">{orderToDelete.customerName}</strong> không?
+                <br />
+                <span className="text-rose-500 font-medium">Hành động này sẽ xóa dữ liệu vĩnh viễn.</span>
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOrderToDelete(null)}
+                  disabled={deleting}
+                  className="py-2.5 px-4 rounded-xl border border-stone-200 text-stone-700 text-xs font-bold hover:bg-stone-50 transition-colors cursor-pointer disabled:opacity-50"
+                >
+                  Không, quay lại
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  disabled={deleting}
+                  className="py-2.5 px-4 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-md shadow-rose-200 transition-all cursor-pointer disabled:opacity-50 flex items-center justify-center gap-1.5"
+                >
+                  {deleting ? "Đang xóa..." : "Có, xóa ngay"}
+                </button>
+              </div>
             </motion.div>
           </div>
         )}
