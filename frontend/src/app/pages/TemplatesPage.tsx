@@ -181,7 +181,21 @@ export function TemplatesPage() {
   });
 
   return (
-    <div data-context="templates" className="pt-16 sm:pt-20 min-h-screen" style={{ background: "#FCEBE7" }}>
+    <div
+      data-context="templates"
+      className="pt-16 sm:pt-20 min-h-screen relative overflow-hidden"
+      style={{
+        background:
+          "radial-gradient(1300px 900px at 15% 10%, rgba(255, 238, 233, 0.95) 0%, transparent 70%), radial-gradient(1000px 700px at 85% 15%, rgba(254, 238, 224, 0.85) 0%, transparent 65%), radial-gradient(900px 600px at 50% 90%, rgba(255, 232, 236, 0.75) 0%, transparent 60%), linear-gradient(180deg, #FFF9F7 0%, #FAF3F0 50%, #F5ECE8 100%)",
+      }}
+    >
+      {/* Ambient Luxury Lighting Glows */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-gradient-to-br from-[#FFD8D0]/40 to-[#FDEBE3]/10 blur-[100px]" />
+        <div className="absolute top-1/4 -right-32 w-[32rem] h-[32rem] rounded-full bg-gradient-to-br from-[#FFE3D6]/35 to-[#FCE9DC]/10 blur-[100px]" />
+        <div className="absolute -bottom-32 left-1/3 w-[30rem] h-[30rem] rounded-full bg-gradient-to-tr from-[#FFE7EA]/40 to-[#FFF3EF]/10 blur-[100px]" />
+      </div>
+
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }
