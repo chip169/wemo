@@ -10,7 +10,7 @@ const INITIAL_TEMPLATES = [
     slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
     description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
-    image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E8B4A8",
     gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
   },
@@ -19,7 +19,7 @@ const INITIAL_TEMPLATES = [
     slug: "tinh-cau-3d",
     title: "Mẫu Tinh Cầu 3D Vũ Trụ",
     description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
-    image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E11D48",
     gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
   },
@@ -28,7 +28,7 @@ const INITIAL_TEMPLATES = [
     slug: "da-khuc-anh-sao",
     title: "Dạ Khúc Ánh Sao 3D",
     description: "Vầng trăng khuyết pha lê 3D phát sáng giữa dải ngân hà lấp lánh, ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm bay bổng thần tiên.",
-    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#F59E0B",
     gradient: "linear-gradient(135deg, #0B1021 0%, #3B82F6 50%, #F59E0B 100%)",
   },
@@ -37,7 +37,7 @@ const INITIAL_TEMPLATES = [
     slug: "bong-hong-3d",
     title: "Bông Hồng Pha Lê 3D",
     description: "Bông hoa hồng pha lê đa giác 3D phát sáng rực rỡ, kèm theo những cánh hoa pha lê xoay chuyển bồng bềnh và thông điệp yêu thương ngọt ngào.",
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#FB7185",
     gradient: "linear-gradient(135deg, #180018 0%, #BE123C 50%, #FDA4AF 100%)",
   },
@@ -46,7 +46,7 @@ const INITIAL_TEMPLATES = [
     slug: "ho-den-3d",
     title: "Hố Đen Singularity 3D",
     description: "Đĩa bồi tụ xoáy chuyển động rực rỡ quanh hố đen vũ trụ kỳ vĩ, ánh sáng quang sai bẻ cong không thời gian cùng ngàn vì sao.",
-    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#F59E0B",
     gradient: "linear-gradient(135deg, #05050A 0%, #F59E0B 50%, #3B82F6 100%)",
   },
@@ -55,7 +55,7 @@ const INITIAL_TEMPLATES = [
     slug: "mua-ky-uc",
     title: "Mưa Ký Ức & Lời Yêu",
     description: "Cơn mưa sao băng ký ức với những tấm ảnh kỷ niệm và lời chúc yêu thương rơi bồng bềnh, hiệu ứng nổ pháo tim khi chạm.",
-    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#FF4D6D",
     gradient: "linear-gradient(135deg, #2b0015 0%, #FF4D6D 50%, #FF85A1 100%)",
   },
@@ -64,7 +64,7 @@ const INITIAL_TEMPLATES = [
     slug: "dem-ngay-yeu",
     title: "Nhật Ký Đếm Ngày Yêu",
     description: "Nút giữ tim 3 giây mở thiệp cảm xúc, bộ đếm thời gian bên nhau thời gian thực (ngày, giờ, phút, giây), ảnh đại diện cặp đôi.",
-    image: "https://images.unsplash.com/photo-1529636798458-92182e662485?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E11D48",
     gradient: "linear-gradient(135deg, #1A0510 0%, #E11D48 50%, #FDA4AF 100%)",
   },
@@ -73,13 +73,13 @@ const INITIAL_TEMPLATES = [
     slug: "slide-ky-uc",
     title: "Trình Chiếu Lời Chúc Ký Ức",
     description: "Trái tim phát sáng mở thiệp, hiệu ứng chữ giải mã hacker lãng mạn, trình chiếu slide ảnh kỷ niệm mượt mà cùng nhạc nền du dương.",
-    image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#D946EF",
     gradient: "linear-gradient(135deg, #120014 0%, #D946EF 50%, #F472B6 100%)",
   }
 ];
 
-const LOCAL_STORAGE_KEY = "wemo_templates_cache";
+const LOCAL_STORAGE_KEY = "wemo_templates_cache_v3";
 
 function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEMPLATES[0]; isLoading: boolean }) {
   const cardRef = useRef<HTMLDivElement>(null);

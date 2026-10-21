@@ -16,7 +16,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#E8B4A8",
     emoji: "💕",
     confettiColors: ["#E8B4A8", "#D4AF78", "#F6C3B7", "#C4776A", "#F0D9D5"],
-    heroImg: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=1200&h=700&fit=crop&auto=format",
+    heroImg: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     photos: [
       "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&h=300&fit=crop&auto=format",
       "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=300&fit=crop&auto=format",
@@ -38,7 +38,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#FF80BF",
     emoji: "🪐",
     confettiColors: ["#FF1E82", "#E11D48", "#FFFFFF", "#8B5CF6", "#38BDF8"],
-    heroImg: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=1200&h=700&fit=crop&auto=format",
+    heroImg: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     photos: [
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
       "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&q=80",
@@ -72,7 +72,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#FDE68A",
     emoji: "🌙",
     confettiColors: ["#F59E0B", "#FDE68A", "#60A5FA", "#FFFFFF", "#38BDF8"],
-    heroImg: "https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1200&h=700&fit=crop&auto=format",
+    heroImg: "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     photos: [
       "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
       "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80",
@@ -94,7 +94,7 @@ const TEMPLATES: Record<string, TemplateConfig> = {
     accentLight: "#FDA4AF",
     emoji: "🌹",
     confettiColors: ["#FB7185", "#FDA4AF", "#E11D48", "#10B981", "#FFF1F2"],
-    heroImg: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1200&h=700&fit=crop&auto=format",
+    heroImg: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     photos: [
       "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
       "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",

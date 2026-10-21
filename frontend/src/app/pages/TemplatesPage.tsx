@@ -10,7 +10,7 @@ const STATIC_TEMPLATES = [
     category: "romance",
     emoji: "💕",
     description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
-    image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1526047932273-341f2a7631f9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E8B4A8",
     gradient: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
     tag: "Mạng lưới 3D",
@@ -22,7 +22,7 @@ const STATIC_TEMPLATES = [
     category: "galaxy",
     emoji: "🪐",
     description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
-    image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E11D48",
     gradient: "linear-gradient(135deg, #0D0214 0%, #E11D48 100%)",
     tag: "Độc quyền 3D",
@@ -34,7 +34,7 @@ const STATIC_TEMPLATES = [
     category: "anniversary",
     emoji: "🌙",
     description: "Vầng trăng khuyết pha lê 3D phát sáng giữa dải ngân hà lấp lánh, ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm bay bổng thần tiên.",
-    image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1532693322450-2cb5c511067d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#F59E0B",
     gradient: "linear-gradient(135deg, #0B1021 0%, #3B82F6 50%, #F59E0B 100%)",
     tag: "Ngân Hà 3D",
@@ -46,7 +46,7 @@ const STATIC_TEMPLATES = [
     category: "rose",
     emoji: "🌹",
     description: "Bông hoa hồng pha lê đa giác 3D phát sáng rực rỡ, kèm theo những cánh hoa pha lê xoay chuyển bồng bềnh và thông điệp yêu thương ngọt ngào.",
-    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#FB7185",
     gradient: "linear-gradient(135deg, #180018 0%, #BE123C 50%, #FDA4AF 100%)",
     tag: "Pha Lê 3D",
@@ -58,7 +58,7 @@ const STATIC_TEMPLATES = [
     category: "galaxy",
     emoji: "🕳️",
     description: "Đĩa bồi tụ xoáy chuyển động rực rỡ quanh hố đen vũ trụ kỳ vĩ, ánh sáng quang sai bẻ cong không thời gian cùng ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm.",
-    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1506703719100-a0f3a48c0f86?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#F59E0B",
     gradient: "linear-gradient(135deg, #05050A 0%, #F59E0B 50%, #3B82F6 100%)",
     tag: "Vũ Trụ 3D",
@@ -82,7 +82,7 @@ const STATIC_TEMPLATES = [
     category: "counter",
     emoji: "⏳",
     description: "Nút giữ tim 3 giây mở thiệp cảm xúc, bộ đếm thời gian bên nhau thời gian thực (ngày, giờ, phút, giây), ảnh đại diện cặp đôi và album kỷ niệm.",
-    image: "https://images.unsplash.com/photo-1529636798458-92182e662485?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E11D48",
     gradient: "linear-gradient(135deg, #1A0510 0%, #E11D48 50%, #FDA4AF 100%)",
     tag: "Đếm Ngày Yêu",
@@ -94,7 +94,7 @@ const STATIC_TEMPLATES = [
     category: "counter",
     emoji: "💌",
     description: "Trái tim phát sáng mở thiệp, hiệu ứng chữ giải mã hacker lãng mạn, trình chiếu slide ảnh kỷ niệm mượt mà cùng nhạc nền du dương.",
-    image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    image: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#D946EF",
     gradient: "linear-gradient(135deg, #120014 0%, #D946EF 50%, #F472B6 100%)",
     tag: "Slide Ký Ức",
@@ -102,7 +102,7 @@ const STATIC_TEMPLATES = [
   },
 ];
 
-const LOCAL_STORAGE_KEY = "wemo_templates_cache_page";
+const LOCAL_STORAGE_KEY = "wemo_templates_cache_page_v3";
 
 const SLUG_TO_ID_MAP: Record<string, string> = {
   "lang-man": "love-romantic",
