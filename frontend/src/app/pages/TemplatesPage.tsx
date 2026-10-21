@@ -88,6 +88,17 @@ const STATIC_TEMPLATES = [
 
 const LOCAL_STORAGE_KEY = "wemo_templates_cache_page";
 
+const SLUG_TO_ID_MAP: Record<string, string> = {
+  "lang-man": "love-romantic",
+  "tinh-cau-3d": "solid-heart",
+  "da-khuc-anh-sao": "starlight-galaxy",
+  "bong-hong-3d": "crystal-rose",
+  "ho-den-3d": "singularity-blackhole",
+  "mua-ky-uc": "falling-memories",
+  "dem-ngay-yeu": "love-counter",
+  "slide-ky-uc": "heart-wish",
+};
+
 export function TemplatesPage() {
   const [templates, setTemplates] = useState(() => {
     try {
@@ -107,7 +118,7 @@ export function TemplatesPage() {
       .then((res) => (res.ok ? res.json() : []))
       .then((data: any[]) => {
         const merged = STATIC_TEMPLATES.map((staticTpl) => {
-          const dbId = staticTpl.slug === "tinh-cau-3d" ? "solid-heart" : "love-romantic";
+          const dbId = SLUG_TO_ID_MAP[staticTpl.slug] || staticTpl.slug;
           const dbTpl = data.find((t) => t.id === dbId);
           if (!dbTpl) return staticTpl;
           return {

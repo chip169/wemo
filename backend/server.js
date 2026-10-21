@@ -29,7 +29,13 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 const PORT = process.env.PORT || 5000;
 
 // Connect to Database
-connectDB();
+connectDB().then(() => {
+  if (typeof syncTemplatesFromMaster === "function") {
+    syncTemplatesFromMaster();
+  }
+}).catch((err) => {
+  console.error("connectDB error:", err.message);
+});
 
 // Ensure uploads directory exists
 const UPLOADS_DIR = path.join(__dirname, "uploads");
@@ -69,14 +75,54 @@ const saveGiftsList = async (list) => {
   }
 };
 
+const syncTemplatesFromMaster = async () => {
+  try {
+    const templatesPath = path.join(__dirname, "data", "templates.json");
+    if (!fs.existsSync(templatesPath)) {
+      console.warn("[Sync] data/templates.json not found.");
+      return [];
+    }
+    const raw = fs.readFileSync(templatesPath, "utf8");
+    const masterList = JSON.parse(raw);
+    if (!Array.isArray(masterList) || masterList.length === 0) return [];
+
+    if (getDbMode() === "mongodb") {
+      for (const tpl of masterList) {
+        await Template.findOneAndUpdate(
+          { id: tpl.id },
+          { $set: tpl },
+          { upsert: true, new: true }
+        );
+      }
+      console.log(`[Sync] Synced ${masterList.length} templates to MongoDB.`);
+    } else {
+      await writeJsonFile("templates.json", masterList);
+      console.log(`[Sync] Synced ${masterList.length} templates to local JSON.`);
+    }
+    return masterList;
+  } catch (err) {
+    console.error("[Sync] Error syncing templates:", err.message);
+    return [];
+  }
+};
+
 const getTemplates = async () => {
   let list = [];
   if (getDbMode() === "mongodb") {
     list = await Template.find({});
+    // If DB is empty or has fewer templates than master, auto-sync
+    if (!list || list.length < 8) {
+      await syncTemplatesFromMaster();
+      list = await Template.find({});
+    }
   } else {
     list = await readJsonFile("templates.json");
+    if (!list || list.length < 8) {
+      await syncTemplatesFromMaster();
+      list = await readJsonFile("templates.json");
+    }
   }
-  return list.filter((t) => ["love-romantic", "solid-heart"].includes(t.id));
+  return list;
 };
 
 const saveTemplatesList = async (list) => {
@@ -1358,6 +1404,39 @@ app.get("/api/templates", async (req, res) => {
     });
 
     res.json(updatedList);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/api/templates/sync", authMiddleware, async (req, res) => {
+  try {
+    await syncTemplatesFromMaster();
+    const list = await getTemplates();
+    const gifts = await getGifts();
+
+    const countMap = {};
+    gifts.forEach((g) => {
+      if (g.status !== "deleted") {
+        const tId = g.templateId || "";
+        countMap[tId] = (countMap[tId] || 0) + 1;
+      }
+    });
+
+    const updatedList = list.map((t) => {
+      const templateObj = t.toObject ? t.toObject() : t;
+      return {
+        ...templateObj,
+        usageCount: countMap[templateObj.id] || 0
+      };
+    });
+
+    res.json({
+      success: true,
+      message: `Đã đồng bộ thành công ${updatedList.length} mẫu thiệp vào hệ thống.`,
+      count: updatedList.length,
+      templates: updatedList
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
