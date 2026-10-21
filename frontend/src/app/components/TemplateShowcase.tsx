@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
-import { Sparkles, ArrowUpRight } from "lucide-react";
+import { Sparkles, ArrowUpRight, Eye, Play, Mail } from "lucide-react";
 import { Card } from "./ui/card";
 import { Link } from "react-router";
 
@@ -82,13 +82,13 @@ const INITIAL_TEMPLATES = [
 const LOCAL_STORAGE_KEY = "wemo_templates_cache";
 
 function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEMPLATES[0]; isLoading: boolean }) {
-  const cardRef = useRef<HTMLAnchorElement>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [spotlightPos, setSpotlightPos] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = cardRef.current;
     if (!card) return;
     const rect = card.getBoundingClientRect();
@@ -96,8 +96,8 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
     const y = e.clientY - rect.top;
     const xc = rect.width / 2;
     const yc = rect.height / 2;
-    setRotateX((yc - y) / 10); // tilt range
-    setRotateY((x - xc) / 10);
+    setRotateX((yc - y) / 14); // smooth tilt
+    setRotateY((x - xc) / 14);
     setSpotlightPos({ x, y });
     setIsHovered(true);
   };
@@ -111,24 +111,22 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
   const showShimmer = isLoading && template.image.includes("unsplash.com");
 
   return (
-    <Link
-      to={`/templates/${template.slug}`}
+    <div
       ref={cardRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full h-full block cursor-pointer group text-inherit no-underline"
+      className="w-full h-full block group text-inherit select-none"
       style={{
         perspective: "1200px",
         transformStyle: "preserve-3d"
       }}
     >
       <div
-        className="overflow-hidden border border-white/40 rounded-3xl bg-white/45 backdrop-blur-md shadow-sm flex flex-col h-full relative"
+        className="overflow-hidden border border-stone-100 rounded-3xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgb(0,0,0,0.1)] flex flex-col h-full relative transition-all"
         style={{
           transform: `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
           transformStyle: "preserve-3d",
           transition: "transform 0.1s ease-out, box-shadow 0.3s ease",
-          boxShadow: rotateX !== 0 ? "0 25px 50px -12px rgba(0,0,0,0.08)" : "0 4px 20px rgba(0,0,0,0.02)"
         }}
       >
         {/* Spotlight overlay effect on top */}
@@ -146,8 +144,8 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
           />
         )}
 
-        {/* Image view */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-stone-50 z-10">
+        {/* Top Image Box */}
+        <div className="relative aspect-[16/11] overflow-hidden bg-stone-100 z-10 w-full">
           {showShimmer ? (
             <div className="w-full h-full shimmer-bg" />
           ) : (
@@ -157,35 +155,68 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
               className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-            <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1">
-              Xem chi tiết mẫu <ArrowUpRight className="w-3.5 h-3.5" />
-            </span>
+
+          {/* Top-left PAID badge */}
+          <div className="absolute top-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EA580C] text-white text-[11px] font-black tracking-wider uppercase shadow-md">
+            <span className="w-1.5 h-1.5 rounded-full bg-white" />
+            <span>PAID</span>
           </div>
 
-          {/* Accent Color Tag */}
-          <div
-            className="absolute top-4 right-4 w-9 h-9 rounded-full shadow-md border border-white/50"
-            style={{ background: template.gradient }}
-          />
+          {/* Center glass "Xem chi tiết" button */}
+          <Link
+            to={`/templates/${template.slug}`}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/25 transition-all shadow-md no-underline cursor-pointer group/btn"
+          >
+            <Eye className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+            <span>Xem chi tiết</span>
+          </Link>
         </div>
 
-        {/* Info panel */}
-        <div className="p-6 flex-1 flex flex-col justify-between relative z-10">
+        {/* Content panel */}
+        <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between relative z-10 bg-white">
           <div>
-            <h3
-              className="mb-2 text-lg font-bold text-stone-900 group-hover:text-[#E8B4A8] transition-colors"
-              style={{ fontFamily: 'var(--font-body)' }}
+            {/* Title */}
+            <Link
+              to={`/templates/${template.slug}`}
+              className="no-underline text-inherit group-hover:text-[#EA580C] transition-colors"
             >
-              {template.title}
-            </h3>
-            <p className="text-stone-500 text-xs sm:text-sm leading-relaxed">
-              {template.description}
-            </p>
+              <h3 className="text-base sm:text-lg font-bold text-stone-900 tracking-tight leading-snug line-clamp-1 mb-2.5">
+                {template.title}
+              </h3>
+            </Link>
+
+            {/* Description with gold left border line */}
+            <div className="border-l-2 border-[#D4AF78] pl-3 py-0.5">
+              <p className="text-xs sm:text-[13px] text-stone-500 line-clamp-3 leading-relaxed font-normal">
+                {template.description}
+              </p>
+            </div>
+          </div>
+
+          {/* Action Buttons: Video & Contact */}
+          <div className="grid grid-cols-2 gap-3 mt-5 pt-1">
+            <a
+              href={`/adminWemo/preview/${template.id}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs"
+            >
+              <Play className="w-3.5 h-3.5 stroke-[#E63956] fill-transparent" />
+              <span>Video</span>
+            </a>
+            <a
+              href="https://zalo.me/0398768699"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#E5A852] hover:bg-[#D99A40] text-[#2E1D03] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs"
+            >
+              <Mail className="w-3.5 h-3.5" />
+              <span>Contact</span>
+            </a>
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -295,8 +326,8 @@ export function TemplateShowcase() {
           </p>
         </motion.div>
 
-        {/* Template grid - responsive 4 items */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
+        {/* Template grid - responsive 3 items per row matching reference */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 max-w-7xl mx-auto">
           {templateList.map((template, index) => (
             <motion.div
               key={index}

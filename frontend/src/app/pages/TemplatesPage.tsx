@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { ArrowRight, Eye, Sparkles, Heart, Search, Check, Layers } from "lucide-react";
+import { ArrowRight, Eye, Sparkles, Heart, Search, Check, Layers, Play, Mail } from "lucide-react";
 import { Link } from "react-router";
 
 const STATIC_TEMPLATES = [
@@ -283,9 +283,10 @@ export function TemplatesPage() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7">
             {filteredTemplates.map((template, index) => {
               const showShimmer = isLoading && template.image.includes("unsplash.com");
+              const previewId = SLUG_TO_ID_MAP[template.slug] || template.slug;
               return (
                 <motion.div
                   key={template.slug}
@@ -294,84 +295,78 @@ export function TemplatesPage() {
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
                   whileHover={{ y: -6 }}
-                  className="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/80 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between"
+                  className="group bg-white rounded-3xl overflow-hidden border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgb(0,0,0,0.1)] transition-all flex flex-col justify-between"
                 >
-                  <Link
-                    to={`/templates/${template.slug}`}
-                    className="block overflow-hidden cursor-pointer no-underline text-inherit"
-                  >
-                    {/* Image Header with Tag */}
-                    <div className="relative aspect-[16/10] overflow-hidden bg-stone-50 w-full">
-                      {showShimmer ? (
-                        <div className="w-full h-full shimmer-bg" />
-                      ) : (
-                        <motion.img
-                          src={template.image}
-                          alt={template.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        />
-                      )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
-
-                      {/* Tag pill */}
-                      <div
-                        className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-sm flex items-center gap-1"
-                        style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
-                      >
-                        <span>{template.emoji}</span>
-                        <span>{template.tag}</span>
-                      </div>
-
-                      {/* Color dot */}
-                      <div
-                        className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full shadow"
-                        style={{ background: template.gradient }}
+                  {/* Top Image Preview */}
+                  <div className="relative aspect-[16/11] overflow-hidden bg-stone-100 w-full">
+                    {showShimmer ? (
+                      <div className="w-full h-full shimmer-bg" />
+                    ) : (
+                      <img
+                        src={template.image}
+                        alt={template.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+                    )}
 
-                      {/* Feature badge bottom overlay */}
-                      <div className="absolute bottom-2 left-2.5 text-white text-[10px] font-bold drop-shadow">
-                        {template.features?.[0]}
-                      </div>
+                    {/* Top-left PAID badge */}
+                    <div className="absolute top-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EA580C] text-white text-[11px] font-black tracking-wider uppercase shadow-md">
+                      <span className="w-1.5 h-1.5 rounded-full bg-white" />
+                      <span>PAID</span>
                     </div>
 
-                    {/* Content */}
-                    <div className="p-4 sm:p-5 space-y-2.5 flex-1">
-                      <h3 className="text-sm sm:text-base font-bold text-stone-900 group-hover:text-[#A85848] transition-colors leading-snug">
-                        {template.title}
-                      </h3>
-                      <p className="text-xs text-stone-500 line-clamp-2 leading-relaxed">
-                        {template.description}
-                      </p>
-
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {template.features.slice(0, 3).map((f, i) => (
-                          <span
-                            key={i}
-                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 text-stone-600"
-                          >
-                            {f}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </Link>
-
-                  {/* Actions footer */}
-                  <div className="p-4 pt-0 grid grid-cols-2 gap-2 mt-auto">
-                    <a
-                      href={"/adminWemo/preview/" + (SLUG_TO_ID_MAP[template.slug] || template.slug)}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-[11px] font-bold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors no-underline"
-                    >
-                      <Eye className="w-3.5 h-3.5" /> Xem 3D
-                    </a>
+                    {/* Center glass "Xem chi tiết" button */}
                     <Link
                       to={`/templates/${template.slug}`}
-                      className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-[11px] font-bold bg-stone-900 hover:bg-stone-800 text-white transition-colors no-underline shadow-xs"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/25 transition-all shadow-md no-underline cursor-pointer group/btn"
                     >
-                      Tùy chỉnh <ArrowRight className="w-3 h-3" />
+                      <Eye className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+                      <span>Xem chi tiết</span>
                     </Link>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      {/* Title */}
+                      <Link
+                        to={`/templates/${template.slug}`}
+                        className="no-underline text-inherit group-hover:text-[#EA580C] transition-colors"
+                      >
+                        <h3 className="text-base sm:text-lg font-bold text-stone-900 tracking-tight leading-snug line-clamp-1 mb-2.5">
+                          {template.title} {template.emoji || ""}
+                        </h3>
+                      </Link>
+
+                      {/* Description with gold left border line */}
+                      <div className="border-l-2 border-[#D4AF78] pl-3 py-0.5">
+                        <p className="text-xs sm:text-[13px] text-stone-500 line-clamp-3 leading-relaxed font-normal">
+                          {template.description}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons: Video & Contact */}
+                    <div className="grid grid-cols-2 gap-3 mt-5 pt-1">
+                      <a
+                        href={`/adminWemo/preview/${previewId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs"
+                      >
+                        <Play className="w-3.5 h-3.5 stroke-[#E63956] fill-transparent" />
+                        <span>Video</span>
+                      </a>
+                      <a
+                        href="https://zalo.me/0398768699"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#E5A852] hover:bg-[#D99A40] text-[#2E1D03] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs"
+                      >
+                        <Mail className="w-3.5 h-3.5" />
+                        <span>Contact</span>
+                      </a>
+                    </div>
                   </div>
                 </motion.div>
               );
