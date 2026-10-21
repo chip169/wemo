@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/qvjz8QFW/Logo.png" />
+    <title>Anh Yêu Em ❤️</title>
+    <link rel="stylesheet" href="style/style.css" />
+  </head>
+  <body>
+    <div id="modal-inicio">
+      <div class="modal-card">
+        <img
+          src="https://i.pinimg.com/originals/3f/4e/d3/3f4ed3cb1539cb42dc93b78020a3ef55.gif"
+          alt="Bất ngờ"
+          class="modal-gif"
+        />
+        <button id="btnComenzar" class="btn-start">Mở Quà</button>
+      </div>
+    </div>
+    <canvas
+      id="star-canvas"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        display: none;
+      "
+    ></canvas>
+    <div
+      id="love-section"
+      style="display: none; position: relative; z-index: 1"
+    >
+      <audio id="bg-music" preload="auto" loop>
+        <source
+          src="style/nhac.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
+    </div>
+
+    <script src="style/script.js"></script>
+  </body>
+</html>

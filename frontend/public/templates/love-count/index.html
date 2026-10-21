@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đếm ngày yêu</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/qvjz8QFW/Logo.png" />
+    <link rel="stylesheet" href="style/style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pacifico&family=Poppins:wght@400;600&display=swap"
+        rel="stylesheet" />
+
+</head>
+
+<body>
+    <div class="hearts-bg" id="heartsBg"></div>
+
+    <div class="intro-overlay" id="introOverlay">
+        <svg class="intro-heart" viewBox="-2 -2 36 34">
+            <defs>
+                <clipPath id="heartClip">
+                    <path
+                        d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.5-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" />
+                </clipPath>
+            </defs>
+            <path class="intro-heart-outline"
+                d="M23.6,0c-3.4,0-6.3,2.7-7.6,5.6C14.7,2.7,11.8,0,8.4,0C3.8,0,0,3.8,0,8.4c0,9.4,9.5,11.9,16,21.2c6.5-9.3,16-11.8,16-21.2C32,3.8,28.2,0,23.6,0z" />
+            <rect id="introHeartFill" class="intro-heart-fill" x="0" y="30" width="32" height="30"
+                clip-path="url(#heartClip)" />
+        </svg>
+        <button class="hold-btn" id="holdBtn">Nhấn giữ</button>
+    </div>
+
+    <div class="container">
+        <h1 class="title">Chúng ta đã ở bên nhau</h1>
+
+        <div class="people">
+            <div class="person">
+                <div class="avatar"><img src="style/img/boy.jpg" alt="boy"></div>
+                <p class="person-name" id="boyName">Love me</p>
+            </div>
+
+            <div class="counter">
+                <div class="heart-icon">&#10084;</div>
+                <div class="days" id="days">0</div>
+                <p class="days-label">Ngày rùi nè..</p>
+            </div>
+
+            <div class="person">
+                <div class="avatar"><img src="style/img/girl.jpg" alt="girl"></div>
+                <p class="person-name" id="girlName">Love you</p>
+            </div>
+        </div>
+
+        <div class="time-box">
+            <div class="time-unit">
+                <span id="hours">00</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-unit">
+                <span id="minutes">00</span>
+            </div>
+            <span class="colon">:</span>
+            <div class="time-unit">
+                <span id="seconds">00</span>
+            </div>
+        </div>
+
+        <button class="photo-btn" id="photoBtn">Kỷ niệm</button>
+    </div>
+
+    <div class="memories-view" id="memoriesView">
+        <div class="memories-info">
+            <p class="memories-hint">Nhấn vào máy ảnh để<br>xem ảnh chung</p>
+            <img class="memories-gif" src="https://i.pinimg.com/originals/ed/8f/61/ed8f61564a46f4b492490cef7326440a.gif"
+                alt="cute gif">
+            <div class="memories-controls">
+                <button class="icon-btn camera-btn" id="cameraBtn"><img src="style/img/camera.png" alt="camera"
+                        style="width:36px;height:36px;object-fit:contain;"></button>
+                <button class="icon-btn back-btn" id="backBtn">&#8617;</button>
+            </div>
+        </div>
+
+        <div class="polaroid" id="polaroid">
+            <img id="memoryImg" src="" alt="memory">
+        </div>
+    </div>
+
+    <div class="lightbox" id="lightbox">
+        <img id="lightboxImg" src="" alt="memory full">
+    </div>
+
+    <script src="style/script.js"></script>
+</body>
+
+</html>
