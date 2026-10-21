@@ -2507,59 +2507,110 @@ export function GiftWizard() {
     <div className="min-h-screen flex flex-col bg-[#FCEBE7]">
       {/* Top Sticky Header */}
       <div className="sticky top-0 z-50 bg-white border-b border-stone-200/60 shadow-sm flex flex-col">
-        <div className="flex items-center justify-between px-6 py-3.5">
-          {/* Left Area: Logo & Back Button */}
-          <div className="flex items-center gap-4">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78]">
-                <Heart className="w-3.5 h-3.5 text-white fill-white" />
+        <div className="w-full px-4 sm:px-8 py-3.5 flex items-center justify-between relative">
+          {/* Left: Brand Logo */}
+          <div className="flex items-center z-10">
+            <Link to="/" className="flex items-center gap-2 no-underline">
+              <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-gradient-to-br from-[#E8B4A8] to-[#D4AF78] shadow-xs">
+                <Heart className="w-4 h-4 text-white fill-white" />
               </div>
               <span className="font-black text-base text-stone-900 tracking-tight">
                 WEMO
               </span>
             </Link>
-
-            {/* Back Button next to logo */}
-            {step > 0 && (
-              <button
-                onClick={back}
-                className="flex items-center gap-1.5 px-3 py-1.5 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 rounded-xl text-xs font-bold transition-all cursor-pointer"
-              >
-                <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
-              </button>
-            )}
           </div>
 
-          {/* Middle Area: Progress timeline (Desktop only) */}
-          <div className="flex-1 mx-8 hidden sm:block">
-            <ProgressBar step={step} />
+          {/* Center Cluster: [Quay lại] - [ProgressBar] - [Kế Tiếp] */}
+          <div className="hidden sm:flex items-center justify-center gap-4 lg:gap-8 flex-1 max-w-2xl mx-auto">
+            {/* Back Button on left of progress */}
+            <div className="w-28 flex justify-end">
+              {step > 0 ? (
+                <button
+                  type="button"
+                  onClick={back}
+                  className="flex items-center gap-1.5 px-3.5 py-2 bg-stone-50 hover:bg-stone-100 border border-stone-200 text-stone-700 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-2xs active:scale-95"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" /> Quay lại
+                </button>
+              ) : (
+                <div className="w-28" />
+              )}
+            </div>
+
+            {/* Central Steps Timeline */}
+            <div className="flex-shrink-0">
+              <ProgressBar step={step} />
+            </div>
+
+            {/* Next / Save Button on right of progress */}
+            <div className="w-28 flex justify-start">
+              {step < STEPS.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={next}
+                  disabled={!canContinue()}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-bold text-white shadow-xs transition-all ${
+                    canContinue()
+                      ? "bg-stone-900 hover:bg-black active:scale-95 cursor-pointer shadow-md"
+                      : "bg-stone-200 text-stone-400 cursor-not-allowed"
+                  }`}
+                >
+                  Kế Tiếp <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] hover:opacity-95 text-white rounded-xl text-xs font-bold shadow-md transition-all cursor-pointer active:scale-95"
+                >
+                  {saving ? "Đang lưu..." : "Đóng Gói"} <Check className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
           </div>
 
-          {/* Right Area: Action Buttons & Close */}
-          <div className="flex items-center gap-3">
-            {step < STEPS.length - 1 ? (
-              <button
-                onClick={next}
-                disabled={!canContinue()}
-                className={`flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-bold text-white shadow-sm transition-all ${
-                  canContinue()
-                    ? "bg-gradient-to-r from-stone-800 to-stone-950 hover:from-stone-900 hover:to-black active:scale-98 cursor-pointer"
-                    : "bg-stone-200 text-stone-400 cursor-not-allowed"
-                }`}
-              >
-                Kế Tiếp <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            ) : (
-              <button
-                onClick={handleSave}
-                disabled={saving}
-                className="flex items-center gap-1.5 px-5 py-2 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] hover:opacity-95 text-white rounded-xl text-xs font-bold shadow-sm transition-all cursor-pointer"
-              >
-                {saving ? "Đang lưu..." : "Đóng Gói Thiệp"} <Check className="w-3.5 h-3.5" />
-              </button>
-            )}
+          {/* Right: Close (X) button & Mobile Next/Back Controls */}
+          <div className="flex items-center gap-2 z-10">
+            {/* Mobile-only action buttons */}
+            <div className="sm:hidden flex items-center gap-2">
+              {step > 0 && (
+                <button
+                  type="button"
+                  onClick={back}
+                  className="px-2.5 py-1.5 bg-stone-50 border border-stone-200 text-stone-700 rounded-lg text-xs font-bold"
+                >
+                  ←
+                </button>
+              )}
+              {step < STEPS.length - 1 ? (
+                <button
+                  type="button"
+                  onClick={next}
+                  disabled={!canContinue()}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white ${
+                    canContinue() ? "bg-stone-900" : "bg-stone-200 text-stone-400"
+                  }`}
+                >
+                  Tiếp →
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleSave}
+                  disabled={saving}
+                  className="px-3 py-1.5 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white rounded-lg text-xs font-bold"
+                >
+                  Lưu
+                </button>
+              )}
+            </div>
 
-            <Link to="/" className="text-stone-400 hover:text-stone-600 border-l border-stone-100 pl-3">
+            <Link
+              to="/"
+              className="text-stone-400 hover:text-stone-600 p-1.5 rounded-lg hover:bg-stone-100 transition-colors"
+              title="Đóng"
+            >
               <X className="w-5 h-5" />
             </Link>
           </div>
