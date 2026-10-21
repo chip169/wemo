@@ -415,59 +415,44 @@ export function TemplateDetailPage() {
       </div>
 
       {/* ── Back nav ── */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-2">
-        <Link to="/templates" className="inline-flex items-center gap-2 text-sm font-medium transition-colors hover:opacity-70" style={{ color: "#6B6B6B" }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-3">
+        <Link to="/templates" className="inline-flex items-center gap-2 text-sm font-medium transition-colors hover:text-stone-900" style={{ color: "#6B6B6B" }}>
           <ArrowLeft className="w-4 h-4" />
           Tất cả mẫu thiệp
         </Link>
       </div>
 
-      {/* ── Hero banner ── */}
-      <section className="relative overflow-hidden mx-4 sm:mx-6 lg:mx-8 rounded-3xl mb-12" style={{ maxWidth: "calc(72rem)", margin: "0 auto 3rem", marginLeft: "auto", marginRight: "auto" }}>
-        <div className="relative h-72 md:h-96 overflow-hidden rounded-3xl">
-          <img src={tpl.heroImg} alt={tpl.title} className="w-full h-full object-cover" />
-          <div className="absolute inset-0 rounded-3xl" style={{ background: `${tpl.bg.replace("135deg", "160deg")}bb` }} />
-
-          {/* Particles */}
-          <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
-            {Array.from({ length: 18 }).map((_, i) => (
-              <Particle key={i} color={tpl.confettiColors[i % tpl.confettiColors.length]} delay={i * 0.3} />
-            ))}
-          </div>
-
-          <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6">
-            <motion.div
-              initial={{ scale: 0, rotate: -20 }}
-              animate={{ scale: 1, rotate: 0 }}
-              transition={{ type: "spring", delay: 0.2 }}
-              className="text-6xl md:text-7xl mb-4"
-            >
-              {tpl.emoji}
-            </motion.div>
-            <motion.h1
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.35 }}
-              className="text-white font-bold mb-2"
-              style={{ fontSize: "clamp(1.75rem, 4vw, 3rem)", textShadow: "0 2px 16px rgba(0,0,0,0.25)" }}
-            >
-              {tpl.title}
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="text-white/90 max-w-xl"
-              style={{ fontSize: "1rem" }}
-            >
+      {/* ── Template Header Info (Cleanly outside of image) ── */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-6">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-3 mb-2 flex-wrap">
+              <span className="text-3xl md:text-4xl">{tpl.emoji}</span>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#1A1818] tracking-tight">
+                {tpl.title}
+              </h1>
+              <span
+                className="px-3.5 py-1 rounded-full text-xs font-semibold shadow-sm"
+                style={{
+                  background: `${tpl.accentLight}35`,
+                  color: tpl.accent === "#F59E0B" ? "#B45309" : tpl.accent,
+                  border: `1px solid ${tpl.accent}30`,
+                }}
+              >
+                {tpl.mood}
+              </span>
+            </div>
+            <p className="text-sm sm:text-base text-gray-600 max-w-2xl leading-relaxed">
               {tpl.subtitle}
-            </motion.p>
+            </p>
           </div>
         </div>
+      </div>
 
-        {/* Mood badge */}
-        <div className="absolute bottom-4 right-4 px-4 py-1.5 rounded-full text-xs font-semibold text-white" style={{ background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)" }}>
-          {tpl.mood}
+      {/* ── Hero banner (Clean image without any text on top) ── */}
+      <section className="relative overflow-hidden mx-4 sm:mx-6 lg:mx-8 rounded-3xl mb-12 shadow-2xl border border-black/5" style={{ maxWidth: "calc(72rem)", margin: "0 auto 3rem", marginLeft: "auto", marginRight: "auto" }}>
+        <div className="relative h-72 sm:h-96 md:h-[460px] overflow-hidden rounded-3xl bg-slate-900 group">
+          <img src={tpl.heroImg} alt={tpl.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" />
         </div>
       </section>
 
