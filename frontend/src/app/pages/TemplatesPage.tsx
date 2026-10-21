@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
-import { ArrowRight } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { ArrowRight, Eye, Sparkles, Heart, Search, Check, Layers } from "lucide-react";
 import { Link } from "react-router";
 
 const STATIC_TEMPLATES = [
   {
     slug: "lang-man",
     title: "Ký Ức Lãng Mạn",
+    category: "romance",
+    emoji: "💕",
     description: "Bày tỏ tình yêu qua ảnh, video và những lời nhắn chân thành. Mẫu mạng lưới trái tim 3D lãng mạn.",
     image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxyb21hbnRpYyUyMGNvdXBsZSUyMGxvdmUlMjBjZWxlYnJhdGlvbnxlbnwxfHx8fDE3Nzk2MTE4MzJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
     color: "#E8B4A8",
@@ -17,6 +19,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "tinh-cau-3d",
     title: "Mẫu Tinh Cầu 3D Vũ Trụ",
+    category: "galaxy",
+    emoji: "🪐",
     description: "Lời nhắn bay lơ lửng giữa tinh vân lấp lánh và sao băng rực rỡ, kèm theo 16 ảnh kỷ niệm bay vòng quanh cực đẹp.",
     image: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E11D48",
@@ -27,6 +31,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "da-khuc-anh-sao",
     title: "Dạ Khúc Ánh Sao 3D",
+    category: "anniversary",
+    emoji: "🌙",
     description: "Vầng trăng khuyết pha lê 3D phát sáng giữa dải ngân hà lấp lánh, ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm bay bổng thần tiên.",
     image: "https://images.unsplash.com/photo-1519681393784-d120267933ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#F59E0B",
@@ -37,6 +43,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "bong-hong-3d",
     title: "Bông Hồng Pha Lê 3D",
+    category: "rose",
+    emoji: "🌹",
     description: "Bông hoa hồng pha lê đa giác 3D phát sáng rực rỡ, kèm theo những cánh hoa pha lê xoay chuyển bồng bềnh và thông điệp yêu thương ngọt ngào.",
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#FB7185",
@@ -47,6 +55,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "ho-den-3d",
     title: "Hố Đen Singularity 3D",
+    category: "galaxy",
+    emoji: "🕳️",
     description: "Đĩa bồi tụ xoáy chuyển động rực rỡ quanh hố đen vũ trụ kỳ vĩ, ánh sáng quang sai bẻ cong không thời gian cùng ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm.",
     image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#F59E0B",
@@ -57,6 +67,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "mua-ky-uc",
     title: "Mưa Ký Ức & Lời Yêu",
+    category: "romance",
+    emoji: "🌧️",
     description: "Cơn mưa sao băng ký ức với những tấm ảnh kỷ niệm và lời chúc yêu thương rơi bồng bềnh, hiệu ứng nổ pháo tim khi chạm, nền trời lung linh.",
     image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#FF4D6D",
@@ -67,6 +79,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "dem-ngay-yeu",
     title: "Nhật Ký Đếm Ngày Yêu",
+    category: "counter",
+    emoji: "⏳",
     description: "Nút giữ tim 3 giây mở thiệp cảm xúc, bộ đếm thời gian bên nhau thời gian thực (ngày, giờ, phút, giây), ảnh đại diện cặp đôi và album kỷ niệm.",
     image: "https://images.unsplash.com/photo-1529636798458-92182e662485?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#E11D48",
@@ -77,6 +91,8 @@ const STATIC_TEMPLATES = [
   {
     slug: "slide-ky-uc",
     title: "Trình Chiếu Lời Chúc Ký Ức",
+    category: "counter",
+    emoji: "💌",
     description: "Trái tim phát sáng mở thiệp, hiệu ứng chữ giải mã hacker lãng mạn, trình chiếu slide ảnh kỷ niệm mượt mà cùng nhạc nền du dương.",
     image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
     color: "#D946EF",
@@ -112,6 +128,8 @@ export function TemplatesPage() {
     return STATIC_TEMPLATES;
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetch("/api/templates")
@@ -139,8 +157,31 @@ export function TemplatesPage() {
       });
   }, []);
 
+  const categories = [
+    { id: "all", label: "Tất cả", icon: "✨", count: templates.length },
+    { id: "romance", label: "Tình yêu 💕", icon: "💕" },
+    { id: "galaxy", label: "Vũ trụ 🪐", icon: "🪐" },
+    { id: "rose", label: "Hoa hồng 🌹", icon: "🌹" },
+    { id: "anniversary", label: "Kỷ niệm 🌙", icon: "🌙" },
+    { id: "counter", label: "Đếm ngày & Slide ⏳", icon: "⏳" },
+  ];
+
+  const filteredTemplates = templates.filter((template) => {
+    if (activeCategory !== "all" && template.category !== activeCategory) {
+      return false;
+    }
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      const matchTitle = template.title?.toLowerCase().includes(q);
+      const matchDesc = template.description?.toLowerCase().includes(q);
+      const matchTag = template.tag?.toLowerCase().includes(q);
+      if (!matchTitle && !matchDesc && !matchTag) return false;
+    }
+    return true;
+  });
+
   return (
-    <div data-context="templates" className="pt-20" style={{ background: "#FCEBE7" }}>
+    <div data-context="templates" className="pt-16 sm:pt-20 min-h-screen" style={{ background: "#FCEBE7" }}>
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes shimmer {
           0% { background-position: -200% 0; }
@@ -153,143 +194,215 @@ export function TemplatesPage() {
         }
       `}} />
 
-      {/* Hero */}
-      <section className="py-20 text-center px-4">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+      {/* Hero Header - Optimized for mobile */}
+      <section className="py-8 sm:py-16 text-center px-4 max-w-4xl mx-auto">
+        <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
           <span
-            className="inline-block px-4 py-1.5 rounded-full text-sm font-semibold mb-6"
-            style={{ background: "rgba(232,180,168,0.2)", color: "#A85B4C" }}
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold mb-4 shadow-xs"
+            style={{ background: "rgba(232,180,168,0.25)", color: "#A85B4C" }}
           >
-            Mẫu Thiết Kế
+            <Sparkles className="w-3.5 h-3.5" /> Kho Mẫu Thiệp 3D Wemo
           </span>
           <h1
-            className="mb-4"
-            style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 700, color: "#1A1818", lineHeight: 1.2 }}
+            className="mb-3 text-2xl sm:text-4xl md:text-5xl font-black text-stone-900 tracking-tight leading-tight"
           >
-            Chọn Mẫu Hoàn Hảo
+            Chọn Mẫu Hoàn Hảo Cho Người Thương
           </h1>
-          <p className="max-w-2xl mx-auto" style={{ fontSize: "1.125rem", color: "#6B6B6B", lineHeight: 1.6 }}>
-            2 mẫu thiết kế 3D tương tác độc đáo cho nửa kia của bạn. Mỗi mẫu đều có thể tùy chỉnh hoàn toàn theo ý bạn.
+          <p className="max-w-xl mx-auto text-xs sm:text-base text-stone-600 leading-relaxed">
+            Khám phá 8 mẫu thiệp 3D tương tác độc quyền. Mỗi mẫu đều tùy chỉnh toàn bộ hình ảnh, lời chúc và giai điệu theo câu chuyện của riêng hai bạn.
           </p>
         </motion.div>
       </section>
 
-      {/* Templates grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {templates.map((template, index) => {
-            const showShimmer = isLoading && template.image.includes("unsplash.com");
-            return (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.08 }}
-                whileHover={{ y: -8 }}
-              >
-              <Link
-                to={`/templates/${template.slug}`}
-                data-bot-guide="template-card"
-                className="block group overflow-hidden rounded-3xl cursor-pointer"
-                style={{
-                  background: "white",
-                  boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
-                  border: "1px solid rgba(0,0,0,0.06)",
-                }}
-              >
-                {/* Image */}
-                <div className="relative h-52 overflow-hidden bg-stone-50">
-                  {showShimmer ? (
-                    <div className="w-full h-full shimmer-bg" />
-                  ) : (
-                    <motion.img
-                      src={template.image}
-                      alt={template.title}
-                      className="w-full h-full object-cover"
-                      whileHover={{ scale: 1.08 }}
-                      transition={{ duration: 0.5 }}
-                    />
-                  )}
-                <div
-                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, transparent 60%)" }}
-                />
-                {/* Tag */}
-                <div
-                  className="absolute top-3 left-3 px-3 py-1 rounded-full text-xs font-semibold text-white"
-                  style={{ background: "rgba(0,0,0,0.45)", backdropFilter: "blur(8px)" }}
+      {/* Controls: Category Pills & Search */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          {/* Horizontal Category Scroll Bar */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat.id;
+              return (
+                <button
+                  key={cat.id}
+                  type="button"
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={`flex-shrink-0 flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold transition-all border-0 cursor-pointer ${
+                    isActive
+                      ? "bg-stone-900 text-white shadow-md scale-102"
+                      : "bg-white text-stone-700 hover:bg-stone-100 border border-stone-200/80 shadow-xs"
+                  }`}
                 >
-                  {template.tag}
-                </div>
-                {/* Color dot */}
-                <div
-                  className="absolute top-3 right-3 w-8 h-8 rounded-full shadow"
-                  style={{ background: template.gradient }}
-                />
-              </div>
+                  <span>{cat.icon}</span>
+                  <span>{cat.label}</span>
+                </button>
+              );
+            })}
+          </div>
 
-              {/* Content */}
-              <div className="p-6">
-                <h3 className="mb-2" style={{ fontSize: "1.375rem", fontWeight: 600, color: "#1A1818" }}>
-                  {template.title}
-                </h3>
-                <p className="mb-4" style={{ color: "#6B6B6B", lineHeight: 1.6, fontSize: "0.9375rem" }}>
-                  {template.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-5">
-                  {template.features.map((f, i) => (
-                    <span
-                      key={i}
-                      className="px-2.5 py-1 rounded-full text-xs font-semibold"
-                      style={{ background: `${template.color}15`, color: template.color }}
-                    >
-                      {f}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex items-center gap-2 text-sm font-semibold transition-all" style={{ color: template.color }}>
-                  Xem Mẫu Này
-                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </Link>
-            </motion.div>
-          );
-          })}
+          {/* Quick Search */}
+          <div className="relative w-full sm:w-64 flex-shrink-0">
+            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Tìm theo tên mẫu thiệp..."
+              className="w-full pl-9 pr-3 py-2 rounded-xl border border-stone-200 text-xs bg-white text-stone-700 outline-none focus:border-[#E8B4A8] shadow-xs"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs font-bold bg-transparent border-0 cursor-pointer"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
+      </section>
+
+      {/* Templates Grid - Mobile App Optimized (2 cols on mobile, 3-4 on desktop) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
+        {filteredTemplates.length === 0 ? (
+          <div className="p-12 text-center bg-white rounded-3xl border border-stone-200 max-w-md mx-auto space-y-3">
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto text-xl">
+              🔍
+            </div>
+            <h3 className="text-sm font-bold text-stone-800">Không tìm thấy mẫu thiệp nào</h3>
+            <p className="text-xs text-stone-500">
+              Hãy thử chọn mục "Tất cả" hoặc xóa từ khóa tìm kiếm.
+            </p>
+            <button
+              onClick={() => {
+                setActiveCategory("all");
+                setSearchQuery("");
+              }}
+              className="px-4 py-2 bg-stone-900 text-white rounded-xl text-xs font-bold border-0 cursor-pointer"
+            >
+              Xem toàn bộ 8 mẫu
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            {filteredTemplates.map((template, index) => {
+              const showShimmer = isLoading && template.image.includes("unsplash.com");
+              return (
+                <motion.div
+                  key={template.slug}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ y: -6 }}
+                  className="group bg-white rounded-2xl sm:rounded-3xl overflow-hidden border border-stone-200/80 shadow-xs hover:shadow-xl transition-all flex flex-col justify-between"
+                >
+                  <Link
+                    to={`/templates/${template.slug}`}
+                    className="block overflow-hidden cursor-pointer no-underline text-inherit"
+                  >
+                    {/* Image Header with Tag */}
+                    <div className="relative aspect-[16/10] overflow-hidden bg-stone-50 w-full">
+                      {showShimmer ? (
+                        <div className="w-full h-full shimmer-bg" />
+                      ) : (
+                        <motion.img
+                          src={template.image}
+                          alt={template.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      )}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Tag pill */}
+                      <div
+                        className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-sm flex items-center gap-1"
+                        style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
+                      >
+                        <span>{template.emoji}</span>
+                        <span>{template.tag}</span>
+                      </div>
+
+                      {/* Color dot */}
+                      <div
+                        className="absolute top-2.5 right-2.5 w-6 h-6 rounded-full shadow"
+                        style={{ background: template.gradient }}
+                      />
+
+                      {/* Feature badge bottom overlay */}
+                      <div className="absolute bottom-2 left-2.5 text-white text-[10px] font-bold drop-shadow">
+                        {template.features?.[0]}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 sm:p-5 space-y-2.5 flex-1">
+                      <h3 className="text-sm sm:text-base font-bold text-stone-900 group-hover:text-[#A85848] transition-colors leading-snug">
+                        {template.title}
+                      </h3>
+                      <p className="text-xs text-stone-500 line-clamp-2 leading-relaxed">
+                        {template.description}
+                      </p>
+
+                      <div className="flex flex-wrap gap-1 pt-1">
+                        {template.features.slice(0, 3).map((f, i) => (
+                          <span
+                            key={i}
+                            className="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-stone-100 text-stone-600"
+                          >
+                            {f}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </Link>
+
+                  {/* Actions footer */}
+                  <div className="p-4 pt-0 grid grid-cols-2 gap-2 mt-auto">
+                    <a
+                      href={"/adminWemo/preview/" + (SLUG_TO_ID_MAP[template.slug] || template.slug)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-[11px] font-bold bg-stone-100 hover:bg-stone-200 text-stone-700 transition-colors no-underline"
+                    >
+                      <Eye className="w-3.5 h-3.5" /> Xem 3D
+                    </a>
+                    <Link
+                      to={`/templates/${template.slug}`}
+                      className="flex items-center justify-center gap-1 px-3 py-2 rounded-xl text-[11px] font-bold bg-stone-900 hover:bg-stone-800 text-white transition-colors no-underline shadow-xs"
+                    >
+                      Tùy chỉnh <ArrowRight className="w-3 h-3" />
+                    </Link>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
 
         {/* Custom template CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="mt-16 rounded-3xl p-10 text-center"
-          style={{
-            background: "white",
-            border: "2px dashed rgba(232,180,168,0.5)",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.04)",
-          }}
+          className="mt-14 rounded-3xl p-6 sm:p-10 text-center max-w-3xl mx-auto bg-white border-2 border-dashed border-[#E8B4A8]/60 shadow-xs"
         >
           <div
-            className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl"
-            style={{ background: "rgba(232,180,168,0.15)" }}
+            className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 text-2xl bg-[#E8B4A8]/15"
           >
             ✨
           </div>
-          <h2 className="mb-2" style={{ fontSize: "1.75rem", fontWeight: 700, color: "#1A1818" }}>
-            Tạo Mẫu Riêng Của Bạn
+          <h2 className="text-lg sm:text-2xl font-black text-stone-900 mb-1.5">
+            Bạn Muốn Thiết Kế Mẫu Riêng Biệt?
           </h2>
-          <p className="mb-6 max-w-xl mx-auto" style={{ color: "#6B6B6B", lineHeight: 1.6 }}>
-            Không tìm thấy mẫu phù hợp? Gói Doanh Nghiệp cho phép thiết kế mẫu tùy chỉnh hoàn toàn.
+          <p className="text-xs sm:text-sm text-stone-500 max-w-md mx-auto mb-5 leading-relaxed">
+            Wemo hỗ trợ dựng hiệu ứng 3D tùy biến theo yêu cầu cá nhân hóa hoặc quà tặng doanh nghiệp độc quyền.
           </p>
-          <a
-            href="/pricing"
-            className="inline-block px-8 py-3 rounded-full font-semibold text-sm text-white"
-            style={{ background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)" }}
+          <Link
+            to="/wizard"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs text-white bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] hover:opacity-95 shadow-md no-underline"
           >
-            Xem Gói Doanh Nghiệp
-          </a>
+            Bắt đầu tạo thiệp ngay <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </motion.div>
       </section>
     </div>
