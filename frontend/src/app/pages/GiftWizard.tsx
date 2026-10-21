@@ -495,6 +495,7 @@ function Step1({
   templates: any[];
   onBack: () => void;
 }) {
+  const [demoTemplate, setDemoTemplate] = useState<GiftData | null>(null);
   const matched = templates.filter((t) => t.theme === gift.theme || (t.themes && t.themes.includes(gift.theme)));
   const filteredTemplates = matched.length > 0 ? matched : templates;
 
