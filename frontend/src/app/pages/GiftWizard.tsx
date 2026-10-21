@@ -26,6 +26,7 @@ import {
   List,
   Eye,
   CheckCircle2,
+  Mail,
 } from "lucide-react";
 import { Link } from "react-router";
 import confetti from "canvas-confetti";
@@ -805,8 +806,8 @@ function Step1({
           </button>
         </div>
       ) : viewMode === "grid" ? (
-        /* ── GRID VIEW (2 CỘT MOBILE) ── */
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-2.5 sm:gap-4">
+        /* ── GRID VIEW (MATCHING REFERENCE DESIGN) ── */
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 sm:gap-6">
           {filteredTemplates.map((tpl) => {
             const selected = gift.templateId === tpl.id;
             return (
@@ -814,94 +815,97 @@ function Step1({
                 key={tpl.id}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => setGift({ ...gift, templateId: tpl.id })}
-                className={`group relative overflow-hidden rounded-2xl sm:rounded-3xl cursor-pointer text-left transition-all bg-white flex flex-col ${
+                className={`group relative overflow-hidden rounded-3xl cursor-pointer text-left transition-all bg-white flex flex-col justify-between ${
                   selected
-                    ? "ring-2 ring-offset-2 ring-stone-900 shadow-lg"
-                    : "border border-stone-200/80 shadow-xs hover:shadow-md"
+                    ? "ring-3 ring-[#EA580C] shadow-xl"
+                    : "border border-stone-100 shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:shadow-[0_16px_36px_rgb(0,0,0,0.1)] hover:-translate-y-1"
                 }`}
               >
-                {/* Image & Badges */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100 flex-shrink-0">
+                {/* Image & Overlays */}
+                <div className="relative aspect-[16/11] w-full overflow-hidden bg-stone-100 flex-shrink-0">
                   <img
                     src={tpl.img}
                     alt={tpl.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent pointer-events-none" />
 
-                  {/* Tag top-left */}
-                  <div
-                    className="absolute top-2 left-2 px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold text-white shadow-sm flex items-center gap-1"
-                    style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
+                  {/* Top-left PAID badge */}
+                  <div className="absolute top-3.5 left-3.5 z-10 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EA580C] text-white text-[11px] font-black tracking-wider uppercase shadow-md">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+                    <span>PAID</span>
+                  </div>
+
+                  {/* Center glass "Xem chi tiết" button */}
+                  <button
+                    type="button"
+                    onClick={(e) => handleOpenDemo(e, tpl)}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white text-xs font-semibold border border-white/25 transition-all shadow-md cursor-pointer group/btn"
                   >
-                    <span>{tpl.emoji}</span>
-                    <span className="truncate max-w-[80px] sm:max-w-none">{tpl.tag}</span>
-                  </div>
+                    <Eye className="w-3.5 h-3.5 transition-transform group-hover/btn:scale-110" />
+                    <span>Xem chi tiết</span>
+                  </button>
 
-                  {/* Selection Checkmark top-right */}
-                  <div className="absolute top-2 right-2">
-                    {selected ? (
-                      <div
-                        className="w-6 h-6 sm:w-7 sm:h-7 rounded-full shadow-md flex items-center justify-center text-white bg-stone-900 animate-in zoom-in-50 duration-200"
-                      >
-                        <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4 stroke-[3]" />
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={(e) => handleOpenDemo(e, tpl)}
-                        className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/80 hover:bg-white text-stone-700 shadow-md flex items-center justify-center backdrop-blur-md border-0 cursor-pointer transition-all active:scale-90"
-                        title="Xem thử 3D"
-                      >
-                        <Eye className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Bottom Image Overlay: Photo Count */}
-                  <div className="absolute bottom-2 left-2 text-[10px] font-bold text-white drop-shadow">
-                    {tpl.allowedFeatures?.maxPhotos
-                      ? `Tối đa ${tpl.allowedFeatures.maxPhotos} ảnh`
-                      : tpl.features?.[0] || "Tương tác 3D"}
-                  </div>
+                  {/* Top-right selection tick */}
+                  {selected && (
+                    <div className="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-stone-900 text-white flex items-center justify-center shadow-lg animate-in zoom-in-50">
+                      <Check className="w-4 h-4 stroke-[3]" />
+                    </div>
+                  )}
                 </div>
 
                 {/* Content */}
-                <div className="p-3 sm:p-4 flex-1 flex flex-col justify-between gap-2.5">
+                <div className="p-5 flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-xs sm:text-sm font-black text-stone-900 line-clamp-1 leading-snug group-hover:text-[#A85848] transition-colors">
-                      {tpl.name}
-                    </h3>
-                    <p className="text-[10px] sm:text-xs text-stone-500 line-clamp-1 mt-0.5">
-                      {tpl.description}
-                    </p>
+                    {/* Title */}
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <h3 className="text-base sm:text-[17px] font-bold text-stone-900 tracking-tight leading-snug line-clamp-1 group-hover:text-[#EA580C] transition-colors">
+                        {tpl.name} {tpl.emoji || ""}
+                      </h3>
+                      {selected && (
+                        <span className="flex-shrink-0 px-2 py-0.5 rounded-full text-[10px] font-black bg-stone-900 text-white flex items-center gap-1">
+                          <Check className="w-3 h-3 stroke-[3]" /> Đã chọn
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Description with gold left border line */}
+                    <div className="border-l-2 border-[#D4AF78] pl-3 py-0.5">
+                      <p className="text-xs sm:text-[13px] text-stone-500 line-clamp-3 leading-relaxed font-normal">
+                        {tpl.description}
+                      </p>
+                    </div>
                   </div>
 
-                  {/* Actions Row */}
-                  <div className="flex items-center gap-1.5 pt-1 border-t border-stone-100">
+                  {/* Actions Row: Video & Contact / Chọn mẫu */}
+                  <div className="grid grid-cols-2 gap-3 mt-5 pt-1">
                     <button
                       type="button"
-                      className={`flex-1 py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all border-0 flex items-center justify-center gap-1 ${
+                      onClick={(e) => handleOpenDemo(e, tpl)}
+                      className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all shadow-2xs cursor-pointer"
+                    >
+                      <Play className="w-3.5 h-3.5 stroke-[#E63956] fill-transparent" />
+                      <span>Video</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setGift({ ...gift, templateId: tpl.id })}
+                      className={`inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-2xs cursor-pointer border-0 ${
                         selected
-                          ? "bg-stone-900 text-white shadow-xs"
-                          : "bg-stone-100 hover:bg-stone-200 text-stone-700"
+                          ? "bg-stone-900 text-white shadow-sm"
+                          : "bg-[#E5A852] hover:bg-[#D99A40] text-[#2E1D03]"
                       }`}
                     >
                       {selected ? (
                         <>
-                          <Check className="w-3 h-3" /> Đã chọn
+                          <Check className="w-3.5 h-3.5" />
+                          <span>Đã chọn</span>
                         </>
                       ) : (
-                        "Chọn mẫu"
+                        <>
+                          <Mail className="w-3.5 h-3.5" />
+                          <span>Chọn mẫu</span>
+                        </>
                       )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={(e) => handleOpenDemo(e, tpl)}
-                      className="p-1.5 rounded-xl bg-stone-50 hover:bg-stone-100 text-stone-500 hover:text-stone-800 border border-stone-200 transition-colors cursor-pointer flex-shrink-0"
-                      title="Xem thử mẫu 3D"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
                     </button>
                   </div>
                 </div>
@@ -2571,7 +2575,7 @@ export function GiftWizard() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Workspace Panel */}
         <div ref={contentRef} className="flex-1 overflow-y-auto bg-[#FCEBE7] no-scrollbar">
-          <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 flex flex-col h-full justify-between">
+          <div className={`w-full mx-auto px-4 sm:px-8 py-6 sm:py-8 flex flex-col h-full justify-between transition-all ${step === 1 ? "max-w-7xl" : "max-w-5xl"}`}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={step}
