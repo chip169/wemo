@@ -53,6 +53,7 @@ export function OrdersPage() {
   const [formAmount, setFormAmount] = useState("");
   const [formStatus, setFormStatus] = useState<Order["status"]>("pending_payment");
   const [formPayment, setFormPayment] = useState<Order["paymentStatus"]>("unpaid");
+  const [formCreatedDate, setFormCreatedDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [submitting, setSubmitting] = useState(false);
 
   // Edit Form states
@@ -63,6 +64,7 @@ export function OrdersPage() {
   const [editAmount, setEditAmount] = useState("");
   const [editStatus, setEditStatus] = useState<Order["status"]>("pending_payment");
   const [editPayment, setEditPayment] = useState<Order["paymentStatus"]>("unpaid");
+  const [editCreatedDate, setEditCreatedDate] = useState("");
   const [editSubmitting, setEditSubmitting] = useState(false);
 
   const handleOpenEditModal = (order: Order) => {
@@ -72,6 +74,11 @@ export function OrdersPage() {
     setEditAmount(order.amount.toString());
     setEditStatus(order.status);
     setEditPayment(order.paymentStatus);
+    setEditCreatedDate(
+      order.createdDate
+        ? (order.createdDate.includes("T") ? order.createdDate.split("T")[0] : order.createdDate)
+        : new Date().toISOString().split("T")[0]
+    );
     setIsEditModalOpen(true);
   };
 
@@ -86,6 +93,7 @@ export function OrdersPage() {
       amount: Number(editAmount),
       status: editStatus,
       paymentStatus: editPayment,
+      createdDate: editCreatedDate,
     };
 
     adminFetch(`/api/orders/${editOrderId}`, {
@@ -167,6 +175,7 @@ export function OrdersPage() {
       amount: Number(formAmount),
       status: formStatus,
       paymentStatus: formPayment,
+      createdDate: formCreatedDate,
     };
 
     adminFetch("/api/orders", {
@@ -183,6 +192,7 @@ export function OrdersPage() {
         setFormAmount("");
         setFormStatus("pending_payment");
         setFormPayment("unpaid");
+        setFormCreatedDate(new Date().toISOString().split("T")[0]);
         fetchOrders();
       })
       .catch((err) => {
@@ -548,18 +558,32 @@ export function OrdersPage() {
                   </select>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-bold text-stone-700 uppercase tracking-wider pl-1">
-                    Giá trị đơn hàng (VNĐ) *
-                  </label>
-                  <input
-                    type="number"
-                    value={formAmount}
-                    onChange={(e) => setFormAmount(e.target.value)}
-                    placeholder="Ví dụ: 199000..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50"
-                    required
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-stone-700 uppercase tracking-wider pl-1">
+                      Giá trị đơn hàng (VNĐ) *
+                    </label>
+                    <input
+                      type="number"
+                      value={formAmount}
+                      onChange={(e) => setFormAmount(e.target.value)}
+                      placeholder="Ví dụ: 199000..."
+                      className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-stone-700 uppercase tracking-wider pl-1">
+                      Ngày đặt hàng *
+                    </label>
+                    <input
+                      type="date"
+                      value={formCreatedDate}
+                      onChange={(e) => setFormCreatedDate(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-800 font-medium"
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -668,18 +692,32 @@ export function OrdersPage() {
                   </select>
                 </div>
 
-                <div className="space-y-1">
-                  <label className="block text-[10px] font-bold text-stone-700 uppercase tracking-wider pl-1">
-                    Giá trị đơn hàng (VNĐ) *
-                  </label>
-                  <input
-                    type="number"
-                    value={editAmount}
-                    onChange={(e) => setEditAmount(e.target.value)}
-                    placeholder="Ví dụ: 199000..."
-                    className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50"
-                    required
-                  />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-stone-700 uppercase tracking-wider pl-1">
+                      Giá trị đơn hàng (VNĐ) *
+                    </label>
+                    <input
+                      type="number"
+                      value={editAmount}
+                      onChange={(e) => setEditAmount(e.target.value)}
+                      placeholder="Ví dụ: 199000..."
+                      className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50"
+                      required
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <label className="block text-[10px] font-bold text-stone-700 uppercase tracking-wider pl-1">
+                      Ngày đặt hàng *
+                    </label>
+                    <input
+                      type="date"
+                      value={editCreatedDate}
+                      onChange={(e) => setEditCreatedDate(e.target.value)}
+                      className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-800 font-medium"
+                      required
+                    />
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

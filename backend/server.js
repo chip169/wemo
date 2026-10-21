@@ -1071,7 +1071,7 @@ app.post("/api/orders", authMiddleware, async (req, res) => {
       amount: Number(orderData.amount),
       status: orderData.status || "pending_payment",
       paymentStatus: orderData.paymentStatus || "unpaid",
-      createdDate: new Date().toISOString().split("T")[0],
+      createdDate: orderData.createdDate || new Date().toISOString().split("T")[0],
     };
 
     if (getDbMode() === "mongodb") {
@@ -1091,7 +1091,7 @@ app.post("/api/orders", authMiddleware, async (req, res) => {
 
 app.put("/api/orders/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
-  const { customerName, product, amount, status, paymentStatus } = req.body;
+  const { customerName, product, amount, status, paymentStatus, createdDate } = req.body;
 
   try {
     let oldStatus = "";
@@ -1109,6 +1109,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       if (amount !== undefined) order.amount = Number(amount);
       if (status !== undefined) order.status = status;
       if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
+      if (createdDate !== undefined) order.createdDate = createdDate;
 
       // Update payment status automatically based on order status transition
       if (status === "completed") {
@@ -1140,6 +1141,7 @@ app.put("/api/orders/:id", authMiddleware, async (req, res) => {
       if (amount !== undefined) order.amount = Number(amount);
       if (status !== undefined) order.status = status;
       if (paymentStatus !== undefined) order.paymentStatus = paymentStatus;
+      if (createdDate !== undefined) order.createdDate = createdDate;
 
       // Update payment status automatically based on order status transition
       if (status === "completed") {
