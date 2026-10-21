@@ -1370,7 +1370,10 @@ app.get("/api/customers", authMiddleware, async (req, res) => {
         };
       }
       customersMap[name].totalOrders += 1;
-      customersMap[name].totalSpend += o.amount;
+      const isCancelledOrRefunded = o.status === "cancelled" || o.paymentStatus === "refunded";
+      if (!isCancelledOrRefunded) {
+        customersMap[name].totalSpend += Number(o.amount) || 0;
+      }
       if (new Date(o.createdDate) > new Date(customersMap[name].lastActive)) {
         customersMap[name].lastActive = o.createdDate;
       }

@@ -58,8 +58,9 @@ export function AnalyticsPage() {
         const giftsList = Array.isArray(giftsData) ? giftsData : [];
         const nfcList = Array.isArray(nfcData) ? nfcData : [];
 
-        // 1. Total revenue
-        const totalRev = ordersList.reduce((sum, o) => sum + (o.amount || 0), 0);
+        // 1. Total revenue (không tính đơn hủy hoặc đã hoàn tiền)
+        const validOrders = ordersList.filter((o) => o.status !== "cancelled" && o.paymentStatus !== "refunded");
+        const totalRev = validOrders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
 
         // 2. Average views
         const totalViews = giftsList.reduce((sum, g) => sum + (g.views || 0), 0);
@@ -95,14 +96,15 @@ export function AnalyticsPage() {
           });
         }
 
-        // Aggregate actual orders
+        // Aggregate actual orders (loại bỏ đơn hủy hoặc hoàn tiền)
         ordersList.forEach((o) => {
           if (!o.createdDate) return;
+          if (o.status === "cancelled" || o.paymentStatus === "refunded") return;
           const date = new Date(o.createdDate);
           const mIdx = date.getMonth();
           const target = past6Months.find((m) => m.monthIndex === mIdx);
           if (target) {
-            target.revenue += o.amount || 0;
+            target.revenue += Number(o.amount) || 0;
           }
         });
 

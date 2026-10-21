@@ -10,6 +10,10 @@ import {
   Sparkles,
   X,
   Check,
+  DollarSign,
+  ShoppingBag,
+  XCircle,
+  CheckCircle2,
 } from "lucide-react";
 import { adminFetch } from "../../utils/api";
 
@@ -224,6 +228,13 @@ export function OrdersPage() {
     return matchesSearch && matchesPayment;
   });
 
+  const validOrders = orders.filter(
+    (o) => o.status !== "cancelled" && o.paymentStatus !== "refunded"
+  );
+  const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
+  const cancelledOrdersCount = orders.filter(
+    (o) => o.status === "cancelled" || o.paymentStatus === "refunded"
+  ).length;
   const itemsPerPage = 8;
   const totalPages = Math.ceil(filteredOrders.length / itemsPerPage);
   const currentOrders = filteredOrders.slice(
@@ -251,11 +262,86 @@ export function OrdersPage() {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => setIsModalOpen(true)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-xs font-bold shadow bg-gradient-to-r from-stone-800 to-stone-950"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-white text-xs font-bold shadow bg-gradient-to-r from-stone-800 to-stone-950 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           Tạo Đơn Hàng Mới
         </motion.button>
+      </div>
+
+      {/* Revenue & Order Stats Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Revenue */}
+        <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+            <DollarSign className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
+              Doanh thu thực nhận
+            </span>
+            <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight block">
+              {totalRevenue.toLocaleString()}đ
+            </span>
+            <span className="text-[10px] text-emerald-600 font-semibold block">
+              (Loại trừ đơn hủy/hoàn)
+            </span>
+          </div>
+        </div>
+
+        {/* Total Orders */}
+        <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+            <ShoppingBag className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
+              Tổng số đơn hàng
+            </span>
+            <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight block">
+              {orders.length}
+            </span>
+            <span className="text-[10px] text-stone-400 font-medium block">
+              Toàn bộ các đơn
+            </span>
+          </div>
+        </div>
+
+        {/* Valid Orders */}
+        <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-600 flex items-center justify-center flex-shrink-0">
+            <CheckCircle2 className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
+              Đơn hàng hợp lệ
+            </span>
+            <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight block">
+              {validOrders.length}
+            </span>
+            <span className="text-[10px] text-teal-600 font-medium block">
+              Đang & đã hoàn thành
+            </span>
+          </div>
+        </div>
+
+        {/* Cancelled / Refunded Orders */}
+        <div className="p-4 rounded-2xl bg-white border border-stone-200/80 shadow-xs flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0">
+            <XCircle className="w-5 h-5" />
+          </div>
+          <div>
+            <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
+              Đã hủy / Đã hoàn
+            </span>
+            <span className="text-base sm:text-lg font-black text-rose-600 tracking-tight block">
+              {cancelledOrdersCount}
+            </span>
+            <span className="text-[10px] text-rose-500 font-medium block">
+              Không tính vào doanh thu
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Filters and search */}

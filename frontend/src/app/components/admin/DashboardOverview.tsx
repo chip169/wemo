@@ -40,7 +40,10 @@ export function DashboardOverview() {
           adminFetch("/api/nfc").then((res) => res.json()),
         ]);
 
-        const totalRevenue = ordersRes.reduce((sum: number, o: any) => sum + o.amount, 0);
+        const validOrders = Array.isArray(ordersRes)
+          ? ordersRes.filter((o: any) => o.status !== "cancelled" && o.paymentStatus !== "refunded")
+          : [];
+        const totalRevenue = validOrders.reduce((sum: number, o: any) => sum + (Number(o.amount) || 0), 0);
         const totalViews = giftsRes.reduce((sum: number, g: any) => sum + (g.views || 0), 0);
         const assignedNFC = nfcRes.filter((t: any) => t.status === "assigned").length;
 
