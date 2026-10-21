@@ -316,6 +316,24 @@ function TimelineRow({ year, event, accent }: { year: string; event: string; acc
   );
 }
 
+function isDarkColor(hex?: string): boolean {
+  if (!hex || typeof hex !== "string" || !hex.startsWith("#")) return false;
+  const c = hex.replace("#", "").trim();
+  let r = 0, g = 0, b = 0;
+  if (c.length === 3) {
+    r = parseInt(c[0] + c[0], 16);
+    g = parseInt(c[1] + c[1], 16);
+    b = parseInt(c[2] + c[2], 16);
+  } else if (c.length >= 6) {
+    r = parseInt(c.substring(0, 2), 16);
+    g = parseInt(c.substring(2, 4), 16);
+    b = parseInt(c.substring(4, 6), 16);
+  } else {
+    return false;
+  }
+  return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+}
+
 /* ─── Main component ────────────────────────────────────────── */
 export function TemplateDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -376,9 +394,10 @@ export function TemplateDetailPage() {
   useEffect(() => { window.scrollTo(0, 0); }, [slug]);
 
   const isAnniversary = slug === "ky-niem";
-  const isDarkCard = tpl.cardBg === "#0D0214";
-  const textColor = isDarkCard ? "#F3F4F6" : "#2A2A2A";
-  const subTextColor = isDarkCard ? "#9CA3AF" : "#9B9B9B";
+  const isDarkCard = isDarkColor(tpl.cardBg);
+  const textColor = isDarkCard ? "#FFFFFF" : "#1E293B";
+  const subTextColor = isDarkCard ? "rgba(255, 255, 255, 0.75)" : "#64748B";
+  const cardAccent = isDarkCard ? (tpl.accentLight || tpl.accent) : tpl.accent;
 
   return (
     <div
@@ -464,22 +483,63 @@ export function TemplateDetailPage() {
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="rounded-3xl p-8"
-              style={{ background: tpl.cardBg, border: `1px solid ${tpl.accentLight}50` }}
+              className="rounded-3xl p-8 relative overflow-hidden transition-all duration-300"
+              style={{
+                background: isDarkCard
+                  ? `linear-gradient(145deg, ${tpl.cardBg} 0%, #0F172A 100%)`
+                  : (tpl.cardBg || "#FFFFFF"),
+                border: isDarkCard
+                  ? `1px solid ${tpl.accent}45`
+                  : `1px solid ${tpl.accentLight}60`,
+                boxShadow: isDarkCard
+                  ? `0 20px 40px -15px rgba(0,0,0,0.5), 0 0 25px -5px ${tpl.accent}30`
+                  : "0 10px 30px -10px rgba(0,0,0,0.06)",
+              }}
             >
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: tpl.accentLight }}>
-                  <Heart className="w-5 h-5 text-white" style={{ color: tpl.accent }} />
+              {/* Subtle ambient light glow inside dark card */}
+              {isDarkCard && (
+                <div
+                  className="absolute -top-24 -right-24 w-48 h-48 rounded-full pointer-events-none blur-3xl opacity-25"
+                  style={{ background: tpl.accent }}
+                />
+              )}
+
+              <div className="flex items-center gap-3 mb-5 relative z-10">
+                <div
+                  className="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm"
+                  style={{
+                    background: isDarkCard ? `${tpl.accent}30` : tpl.accentLight,
+                    border: isDarkCard ? `1px solid ${tpl.accent}60` : undefined,
+                  }}
+                >
+                  <Heart className="w-5 h-5" style={{ color: cardAccent }} />
                 </div>
                 <div>
-                  <div className="text-xs font-semibold uppercase tracking-wider" style={{ color: tpl.accent }}>Lời Nhắn Cảm Xúc</div>
-                  <div className="text-xs" style={{ color: subTextColor }}>Mẫu tin nhắn cá nhân hóa</div>
+                  <div className="text-xs font-bold uppercase tracking-wider" style={{ color: cardAccent }}>
+                    Lời Nhắn Cảm Xúc
+                  </div>
+                  <div className="text-xs font-medium" style={{ color: subTextColor }}>
+                    Mẫu tin nhắn cá nhân hóa
+                  </div>
                 </div>
               </div>
-              <p className="leading-relaxed mb-4" style={{ color: textColor, fontSize: "1rem", lineHeight: 1.8, fontStyle: "italic" }}>
+
+              <p
+                className="leading-relaxed mb-5 font-normal relative z-10"
+                style={{
+                  color: textColor,
+                  fontSize: "1.0625rem",
+                  lineHeight: 1.85,
+                  fontStyle: "italic",
+                  textShadow: isDarkCard ? "0 1px 3px rgba(0,0,0,0.6)" : "none",
+                }}
+              >
                 "{tpl.sampleMessage}"
               </p>
-              <div className="text-sm font-medium" style={{ color: tpl.accent }}>{tpl.sender}</div>
+
+              <div className="text-sm font-semibold flex items-center gap-1.5 relative z-10" style={{ color: cardAccent }}>
+                {tpl.sender}
+              </div>
             </motion.div>
 
             {/* Photo gallery */}
@@ -556,7 +616,7 @@ export function TemplateDetailPage() {
                       transition={playing ? { duration: 12, ease: "linear", repeat: Infinity } : {}}
                     />
                   </div>
-                  <div className="flex justify-between text-xs mt-1" style={{ color: "#9B9B9B" }}>
+                  <div className="flex justify-between text-xs mt-1" style={{ color: "#4B5563" }}>
                     <span>0:00</span><span>0:42</span>
                   </div>
                 </div>
@@ -612,12 +672,12 @@ export function TemplateDetailPage() {
               <h2 style={{ fontSize: "1.75rem", fontWeight: 700, color: "#1A1818", lineHeight: 1.2 }} className="mb-1">
                 {tpl.title}
               </h2>
-              <p style={{ color: "#6B6B6B", lineHeight: 1.6, fontSize: "0.9375rem" }} className="mb-5">
+              <p style={{ color: "#4B5563", lineHeight: 1.6, fontSize: "0.9375rem" }} className="mb-5">
                 {tpl.subtitle}
               </p>
               <div className="flex flex-wrap gap-2 mb-6">
                 {["NFC", "QR Code", "Mobile"].map((tag) => (
-                  <span key={tag} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: `${tpl.accentLight}40`, color: tpl.accent }}>
+                  <span key={tag} className="px-3 py-1 rounded-full text-xs font-semibold" style={{ background: `${tpl.accentLight}40`, color: tpl.accent === "#F59E0B" ? "#B45309" : tpl.accent }}>
                     {tag}
                   </span>
                 ))}
@@ -643,8 +703,8 @@ export function TemplateDetailPage() {
                     initial={{ opacity: 0, x: 12 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.3 + i * 0.06 }}
-                    className="flex items-center gap-3 text-sm"
-                    style={{ color: "#2A2A2A" }}
+                    className="flex items-center gap-3 text-sm font-medium"
+                    style={{ color: "#1F2937" }}
                   >
                     <div className="w-5 h-5 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: `${tpl.accentLight}60` }}>
                       <div className="w-2 h-2 rounded-full" style={{ background: tpl.accent }} />
@@ -661,18 +721,18 @@ export function TemplateDetailPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.35 }}
               className="rounded-3xl p-5 flex items-center gap-4"
-              style={{ background: `${tpl.accentLight}25`, border: `1px solid ${tpl.accentLight}50` }}
+              style={{ background: `${tpl.accentLight}25`, border: `1px solid ${tpl.accentLight}60` }}
             >
               <div className="text-center">
-                <div className="font-bold" style={{ fontSize: "2rem", color: tpl.accent }}>4.9</div>
+                <div className="font-bold" style={{ fontSize: "2rem", color: tpl.accent === "#F59E0B" ? "#D97706" : tpl.accent }}>4.9</div>
                 <div className="flex gap-0.5 justify-center">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <Star key={i} className="w-3 h-3 fill-current" style={{ color: tpl.accent }} />
+                    <Star key={i} className="w-3 h-3 fill-current" style={{ color: tpl.accent === "#F59E0B" ? "#D97706" : tpl.accent }} />
                   ))}
                 </div>
-                <div className="text-xs mt-0.5" style={{ color: "#9B9B9B" }}>2.4K đánh giá</div>
+                <div className="text-xs mt-0.5 font-medium" style={{ color: "#4B5563" }}>2.4K đánh giá</div>
               </div>
-              <div className="flex-1 text-sm" style={{ color: "#4A4A4A", lineHeight: 1.6 }}>
+              <div className="flex-1 text-sm font-medium" style={{ color: "#1F2937", lineHeight: 1.6 }}>
                 "Món quà ý nghĩa nhất tôi từng nhận được. Mỗi lần chạm NFC là một lần xúc động."
               </div>
             </motion.div>
@@ -683,7 +743,12 @@ export function TemplateDetailPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.45 }}
               className="rounded-3xl p-6 text-center"
-              style={{ background: `linear-gradient(135deg, ${tpl.accent} 0%, ${tpl.accentLight} 100%)` }}
+              style={{
+                background: tpl.accent === "#F59E0B"
+                  ? "linear-gradient(135deg, #B45309 0%, #D97706 50%, #F59E0B 100%)"
+                  : `linear-gradient(135deg, ${tpl.accent} 0%, ${tpl.accentLight} 100%)`,
+                boxShadow: `0 20px 35px -10px ${tpl.accent}45`,
+              }}
             >
               <div className="text-3xl mb-3">{tpl.emoji}</div>
               <h3 className="font-bold text-white mb-1" style={{ fontSize: "1.25rem" }}>Dùng Mẫu Này</h3>
