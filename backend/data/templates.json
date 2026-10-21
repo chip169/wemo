@@ -106,5 +106,101 @@
       "Ánh sáng lăng kính đa sắc",
       "Hộp thư tình yêu ngọt ngào"
     ]
+  },
+  {
+    "id": "singularity-blackhole",
+    "name": "Hố Đen Singularity 3D",
+    "category": "anniversary",
+    "categoryLabel": "Vũ trụ & Kỷ niệm",
+    "usageCount": 98,
+    "status": "active",
+    "preview": "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "videoUrl": "",
+    "sampleMessage": "Tình yêu như lực hấp dẫn vô cực của hố đen kỳ vĩ, bẻ cong cả không gian và thời gian để đưa chúng ta về bên nhau. Mãi yêu em! 🌌🕳️",
+    "photos": [
+      "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=400&q=80",
+      "https://images.unsplash.com/photo-1529636798458-92182e662485?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1474552226712-ac0f0961a954?w=400&q=80"
+    ],
+    "features": [
+      "Tối đa 16 ảnh kỷ niệm",
+      "Đĩa bồi tụ xoáy chuyển động 3D",
+      "Vòng quang sai bẻ cong ánh sáng",
+      "Hố đen chân trời sự kiện",
+      "Quỹ đạo ảnh không thời gian"
+    ]
+  },
+  {
+    "id": "falling-memories",
+    "name": "Mưa Ký Ức & Lời Yêu",
+    "category": "love",
+    "categoryLabel": "Tình yêu lãng mạn",
+    "usageCount": 112,
+    "status": "active",
+    "preview": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "videoUrl": "",
+    "sampleMessage": "Từng khoảnh khắc rơi xuống như ngàn lời yêu thương anh muốn gửi đến em. Cảm ơn em vì đã là điều kỳ diệu nhất trong cuộc đời anh! 💕",
+    "photos": [
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80"
+    ],
+    "features": [
+      "Tối đa 20 ảnh kỷ niệm",
+      "Cơn mưa ảnh và thông điệp rơi",
+      "Hiệu ứng nổ tim tương tác",
+      "Nền bầu trời đêm lung linh",
+      "Bức thư tình yêu ngọt ngào"
+    ]
+  },
+  {
+    "id": "love-counter",
+    "name": "Nhật Ký Đếm Ngày Yêu",
+    "category": "love",
+    "categoryLabel": "Kỷ niệm ngày yêu",
+    "usageCount": 210,
+    "status": "active",
+    "preview": "https://images.unsplash.com/photo-1529636798458-92182e662485?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "videoUrl": "",
+    "sampleMessage": "Mỗi ngày trôi qua bên em đều là một ngày tuyệt vời nhất. Cảm ơn vì chúng ta đã luôn nắm chặt tay nhau trên chặng đường này! ⏳❤️",
+    "photos": [
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&q=80",
+      "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80"
+    ],
+    "features": [
+      "Ảnh đại diện cặp đôi",
+      "Bộ đếm ngày, giờ, phút, giây",
+      "Nhấn giữ tim 3s mở thiệp",
+      "Album ảnh kỷ niệm",
+      "Hộp thư tình cảm động"
+    ]
+  },
+  {
+    "id": "heart-wish",
+    "name": "Trình Chiếu Lời Chúc Ký Ức",
+    "category": "birthday",
+    "categoryLabel": "Lời chúc & Kỷ niệm",
+    "usageCount": 130,
+    "status": "active",
+    "preview": "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    "videoUrl": "",
+    "sampleMessage": "Chúc người tôi thương luôn mỉm cười rạng rỡ và hạnh phúc mỗi ngày. Em luôn xứng đáng với những điều tuyệt vời nhất trần đời! 🌟💖",
+    "photos": [
+      "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=400&q=80",
+      "https://images.unsplash.com/photo-1513279922550-250c2129b13a?w=400&q=80",
+      "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&q=80",
+      "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400&q=80"
+    ],
+    "features": [
+      "Chạm tim hiệu ứng mở đầu",
+      "Hiệu ứng chữ giải mã hacker",
+      "Trình chiếu slide ảnh & GIF",
+      "Thanh điều hướng tiện lợi",
+      "Toàn bộ thư chúc yêu thương"
+    ]
   }
 ]

@@ -6,6 +6,10 @@ import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
 import { StarlightCanvas3D } from "../components/gift3d/StarlightCanvas3D";
 import { CrystalRoseCanvas3D } from "../components/gift3d/CrystalRoseCanvas3D";
+import { SingularityCanvas3D } from "../components/gift3d/SingularityCanvas3D";
+import { FallingTextGiftView } from "../components/gift3d/FallingTextGiftView";
+import { LoveCountGiftView } from "../components/gift3d/LoveCountGiftView";
+import { WishSlidesGiftView } from "../components/gift3d/WishSlidesGiftView";
 
 const MUSIC_URLS = {
   piano: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3",
@@ -169,6 +173,14 @@ export function GiftViewPage() {
           <StarlightCanvas3D gift={gift} />
         ) : gift.templateId === "crystal-rose" ? (
           <CrystalRoseCanvas3D gift={gift} />
+        ) : gift.templateId === "singularity-blackhole" ? (
+          <SingularityCanvas3D gift={gift} />
+        ) : gift.templateId === "falling-memories" ? (
+          <FallingTextGiftView gift={gift} />
+        ) : gift.templateId === "love-counter" ? (
+          <LoveCountGiftView gift={gift} />
+        ) : gift.templateId === "heart-wish" ? (
+          <WishSlidesGiftView gift={gift} />
         ) : (
           <HeartCanvas3D gift={gift} />
         )}

@@ -40,6 +40,42 @@ const INITIAL_TEMPLATES = [
     image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
     color: "#FB7185",
     gradient: "linear-gradient(135deg, #180018 0%, #BE123C 50%, #FDA4AF 100%)",
+  },
+  {
+    id: "singularity-blackhole",
+    slug: "ho-den-3d",
+    title: "Hố Đen Singularity 3D",
+    description: "Đĩa bồi tụ xoáy chuyển động rực rỡ quanh hố đen vũ trụ kỳ vĩ, ánh sáng quang sai bẻ cong không thời gian cùng ngàn vì sao.",
+    image: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    color: "#F59E0B",
+    gradient: "linear-gradient(135deg, #05050A 0%, #F59E0B 50%, #3B82F6 100%)",
+  },
+  {
+    id: "falling-memories",
+    slug: "mua-ky-uc",
+    title: "Mưa Ký Ức & Lời Yêu",
+    description: "Cơn mưa sao băng ký ức với những tấm ảnh kỷ niệm và lời chúc yêu thương rơi bồng bềnh, hiệu ứng nổ pháo tim khi chạm.",
+    image: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    color: "#FF4D6D",
+    gradient: "linear-gradient(135deg, #2b0015 0%, #FF4D6D 50%, #FF85A1 100%)",
+  },
+  {
+    id: "love-counter",
+    slug: "dem-ngay-yeu",
+    title: "Nhật Ký Đếm Ngày Yêu",
+    description: "Nút giữ tim 3 giây mở thiệp cảm xúc, bộ đếm thời gian bên nhau thời gian thực (ngày, giờ, phút, giây), ảnh đại diện cặp đôi.",
+    image: "https://images.unsplash.com/photo-1529636798458-92182e662485?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    color: "#E11D48",
+    gradient: "linear-gradient(135deg, #1A0510 0%, #E11D48 50%, #FDA4AF 100%)",
+  },
+  {
+    id: "heart-wish",
+    slug: "slide-ky-uc",
+    title: "Trình Chiếu Lời Chúc Ký Ức",
+    description: "Trái tim phát sáng mở thiệp, hiệu ứng chữ giải mã hacker lãng mạn, trình chiếu slide ảnh kỷ niệm mượt mà cùng nhạc nền du dương.",
+    image: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600",
+    color: "#D946EF",
+    gradient: "linear-gradient(135deg, #120014 0%, #D946EF 50%, #F472B6 100%)",
   }
 ];
 

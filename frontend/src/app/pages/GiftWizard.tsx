@@ -31,6 +31,10 @@ import { HeartCanvas3D } from "../components/gift3d/HeartCanvas3D";
 import { SolidHeartCanvas3D } from "../components/gift3d/SolidHeartCanvas3D";
 import { StarlightCanvas3D } from "../components/gift3d/StarlightCanvas3D";
 import { CrystalRoseCanvas3D } from "../components/gift3d/CrystalRoseCanvas3D";
+import { SingularityCanvas3D } from "../components/gift3d/SingularityCanvas3D";
+import { FallingTextGiftView } from "../components/gift3d/FallingTextGiftView";
+import { LoveCountGiftView } from "../components/gift3d/LoveCountGiftView";
+import { WishSlidesGiftView } from "../components/gift3d/WishSlidesGiftView";
 
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -173,6 +177,90 @@ const STATIC_TEMPLATES = [
       music: false,
     }
   },
+  {
+    id: "singularity-blackhole",
+    name: "Hố Đen Singularity 3D",
+    description: "Đĩa bồi tụ xoáy chuyển động rực rỡ quanh hố đen vũ trụ kỳ vĩ, ánh sáng quang sai bẻ cong không thời gian cùng ngàn vì sao hộ tống lời chúc và ảnh kỷ niệm.",
+    emoji: "🕳️",
+    color: "#F59E0B",
+    gradient: "linear-gradient(135deg, #05050A 0%, #F59E0B 50%, #3B82F6 100%)",
+    light: "#030308",
+    img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "ky-niem",
+    themes: ["ky-niem", "tinh-yeu", "sinh-nhat"],
+    tag: "Vũ Trụ 3D",
+    features: ["Tối đa 16 ảnh kỷ niệm", "Đĩa bồi tụ xoáy 3D", "Quang sai bẻ cong ánh sáng", "Hố đen chân trời sự kiện"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 16,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
+  {
+    id: "falling-memories",
+    name: "Mưa Ký Ức & Lời Yêu",
+    description: "Cơn mưa sao băng ký ức với những tấm ảnh kỷ niệm và lời chúc yêu thương rơi bồng bềnh, hiệu ứng nổ pháo tim khi chạm, nền trời lung linh.",
+    emoji: "🌧️",
+    color: "#FF4D6D",
+    gradient: "linear-gradient(135deg, #2b0015 0%, #FF4D6D 50%, #FF85A1 100%)",
+    light: "#000000",
+    img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "tinh-yeu",
+    themes: ["tinh-yeu", "sinh-nhat", "ky-niem"],
+    tag: "Mưa Ký Ức",
+    features: ["Tối đa 20 ảnh kỷ niệm", "Cơn mưa ảnh và lời yêu rơi", "Hiệu ứng nổ tim tương tác", "Bức thư tình yêu ngọt ngào"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 20,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
+  {
+    id: "love-counter",
+    name: "Nhật Ký Đếm Ngày Yêu",
+    description: "Nút giữ tim 3 giây mở thiệp cảm xúc, bộ đếm thời gian bên nhau thời gian thực (ngày, giờ, phút, giây), ảnh đại diện cặp đôi và album kỷ niệm.",
+    emoji: "⏳",
+    color: "#E11D48",
+    gradient: "linear-gradient(135deg, #1A0510 0%, #E11D48 50%, #FDA4AF 100%)",
+    light: "#14000C",
+    img: "https://images.unsplash.com/photo-1529636798458-92182e662485?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "tinh-yeu",
+    themes: ["tinh-yeu", "ky-niem"],
+    tag: "Đếm Ngày Yêu",
+    features: ["Ảnh đại diện cặp đôi", "Đếm ngày, giờ, phút, giây", "Nhấn giữ tim 3s mở thiệp", "Album ảnh kỷ niệm"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 12,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
+  {
+    id: "heart-wish",
+    name: "Trình Chiếu Lời Chúc Ký Ức",
+    description: "Trái tim phát sáng mở thiệp, hiệu ứng chữ giải mã hacker lãng mạn, trình chiếu slide ảnh kỷ niệm mượt mà cùng nhạc nền du dương.",
+    emoji: "💌",
+    color: "#D946EF",
+    gradient: "linear-gradient(135deg, #120014 0%, #D946EF 50%, #F472B6 100%)",
+    light: "#0A000C",
+    img: "https://images.unsplash.com/photo-1513279922550-250c2129b13a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+    theme: "sinh-nhat",
+    themes: ["sinh-nhat", "tinh-yeu", "giang-sinh"],
+    tag: "Slide Ký Ức",
+    features: ["Chạm tim mở đầu", "Chữ giải mã hacker", "Trình chiếu slide ảnh & GIF", "Thanh điều hướng tiện lợi"],
+    allowedFeatures: {
+      photos: true,
+      maxPhotos: 15,
+      video: false,
+      voice: false,
+      music: false,
+    }
+  },
 ];
 
 const MUSIC = [
@@ -207,6 +295,18 @@ export function RenderLiveTemplate({
   }
   if (gift.templateId === "crystal-rose") {
     return <CrystalRoseCanvas3D gift={gift} />;
+  }
+  if (gift.templateId === "singularity-blackhole") {
+    return <SingularityCanvas3D gift={gift} />;
+  }
+  if (gift.templateId === "falling-memories") {
+    return <FallingTextGiftView gift={gift} />;
+  }
+  if (gift.templateId === "love-counter") {
+    return <LoveCountGiftView gift={gift} />;
+  }
+  if (gift.templateId === "heart-wish") {
+    return <WishSlidesGiftView gift={gift} />;
   }
   return <HeartCanvas3D gift={gift} />;
 }
