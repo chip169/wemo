@@ -61,7 +61,6 @@ export type GiftData = {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const STEPS = [
-  "Chủ Đề",
   "Chọn Mẫu",
   "Thiết Kế",
   "Hoàn Thành",
@@ -528,128 +527,21 @@ function OrderCheckGateway({
 
 // ─── Step Components ─────────────────────────────────────────────────────────
 
-// Bước 0: Chọn Chủ Đề
-function Step0({
-  gift,
-  setGift,
-  templates,
-}: {
-  gift: GiftData;
-  setGift: (g: GiftData) => void;
-  templates: any[];
-}) {
-  return (
-    <div>
-      <h2 className="mb-2 text-2xl font-bold text-stone-900">Chọn Chủ Đề Thiệp</h2>
-      <p className="mb-8 text-sm text-stone-500">
-        Chọn không gian cảm xúc phù hợp nhất với dịp tặng quà của bạn
-      </p>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {THEMES.map((theme) => {
-          const selected = gift.theme === theme.id;
-          return (
-            <motion.button
-              key={theme.id}
-              whileHover={{ scale: 1.02 }}
-              onClick={() => {
-                // Find first template of this theme
-                const defaultTpl = templates.find((t) => t.theme === theme.id) || templates[0];
-                setGift({
-                  ...gift,
-                  theme: theme.id,
-                  templateId: defaultTpl ? defaultTpl.id : "",
-                });
-              }}
-              className="p-5 rounded-2xl text-left border-2 transition-all relative overflow-hidden flex flex-col justify-between h-36"
-              style={{
-                borderColor: selected ? "#E8B4A8" : "rgba(0,0,0,0.06)",
-                background: selected ? "rgba(232, 180, 168, 0.05)" : "white",
-              }}
-            >
-              <div className="flex justify-between items-start">
-                <span className="text-3xl">{theme.emoji}</span>
-                {selected && (
-                  <div className="w-5 h-5 rounded-full bg-[#E8B4A8] flex items-center justify-center text-white">
-                    <Check className="w-3.5 h-3.5" />
-                  </div>
-                )}
-              </div>
-              <div>
-                <h3 className="font-bold text-stone-900 text-sm">{theme.name}</h3>
-                <p className="text-stone-500 text-xs mt-1 leading-relaxed">
-                  {theme.description}
-                </p>
-              </div>
-            </motion.button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 // Bước 1: Chọn Mẫu Thiệp (Bố cục tối ưu giao diện Mobile App)
 function Step1({
   gift,
   setGift,
   templates,
-  onBack,
 }: {
   gift: GiftData;
   setGift: (g: GiftData) => void;
   templates: any[];
-  onBack: () => void;
+  onBack?: () => void;
 }) {
   const [demoTemplate, setDemoTemplate] = useState<GiftData | null>(null);
-  const [activeCategory, setActiveCategory] = useState<string>("all");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Matched by theme chosen in Step 0
-  const matchedTheme = templates.filter(
-    (t) => t.theme === gift.theme || (t.themes && t.themes.includes(gift.theme))
-  );
-
-  // Category definitions for quick horizontal filter pills
-  const categories = [
-    { id: "all", label: "Tất cả", count: templates.length, icon: "✨" },
-    ...(matchedTheme.length > 0 && matchedTheme.length < templates.length
-      ? [{ id: "matched", label: "Gợi ý", count: matchedTheme.length, icon: "🎯" }]
-      : []),
-    { id: "tinh-yeu", label: "Tình yêu", icon: "💕" },
-    { id: "vu-tru", label: "Vũ trụ & Tinh cầu", icon: "🪐" },
-    { id: "pha-le", label: "Hoa hồng 3D", icon: "🌹" },
-    { id: "ky-niem", label: "Kỷ niệm & Dạ khúc", icon: "🌙" },
-    { id: "dem-ngay", label: "Đếm ngày & Slide", icon: "⏳" },
-  ];
-
-  // Filtering logic
-  const filteredTemplates = templates.filter((tpl) => {
-    if (activeCategory === "all") return true;
-    if (activeCategory === "matched") {
-      return tpl.theme === gift.theme || (tpl.themes && tpl.themes.includes(gift.theme));
-    }
-    if (activeCategory === "tinh-yeu") {
-      return (
-        tpl.id === "love-romantic" ||
-        tpl.id === "falling-memories" ||
-        tpl.theme === "tinh-yeu"
-      );
-    }
-    if (activeCategory === "vu-tru") {
-      return tpl.id === "solid-heart" || tpl.id === "singularity-blackhole";
-    }
-    if (activeCategory === "pha-le") {
-      return tpl.id === "crystal-rose";
-    }
-    if (activeCategory === "ky-niem") {
-      return tpl.id === "starlight-galaxy" || tpl.theme === "ky-niem";
-    }
-    if (activeCategory === "dem-ngay") {
-      return tpl.id === "love-counter" || tpl.id === "heart-wish";
-    }
-    return true;
-  });
-
+  const filteredTemplates = templates;
   const selectedTemplate = templates.find((t) => t.id === gift.templateId) || templates[0];
 
   const handleOpenDemo = (e: React.MouseEvent, tpl: any) => {
@@ -785,7 +677,7 @@ function Step1({
               <motion.div
                 key={tpl.id}
                 whileTap={{ scale: 0.98 }}
-                onClick={() => setGift({ ...gift, templateId: tpl.id })}
+                onClick={() => setGift({ ...gift, templateId: tpl.id, theme: tpl.theme || gift.theme || "tinh-yeu" })}
                 className={`group relative overflow-hidden rounded-3xl cursor-pointer text-left transition-all bg-white flex flex-col justify-between ${
                   selected
                     ? "ring-3 ring-[#EA580C] shadow-xl"
@@ -855,7 +747,7 @@ function Step1({
                     </button>
                     <button
                       type="button"
-                      onClick={() => setGift({ ...gift, templateId: tpl.id })}
+                      onClick={() => setGift({ ...gift, templateId: tpl.id, theme: tpl.theme || gift.theme || "tinh-yeu" })}
                       className={`inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-2xs cursor-pointer border-0 ${
                         selected
                           ? "bg-stone-900 text-white shadow-sm"
@@ -889,7 +781,7 @@ function Step1({
               <motion.div
                 key={tpl.id}
                 whileTap={{ scale: 0.99 }}
-                onClick={() => setGift({ ...gift, templateId: tpl.id })}
+                onClick={() => setGift({ ...gift, templateId: tpl.id, theme: tpl.theme || gift.theme || "tinh-yeu" })}
                 className={`p-3 sm:p-4 rounded-2xl sm:rounded-3xl cursor-pointer transition-all bg-white flex items-center gap-3.5 ${
                   selected
                     ? "ring-2 ring-offset-2 ring-stone-900 shadow-md"
@@ -1000,7 +892,7 @@ function Step1({
                 <button
                   type="button"
                   onClick={() => {
-                    setGift({ ...gift, templateId: demoTemplate.templateId });
+                    setGift({ ...gift, templateId: demoTemplate.templateId, theme: demoTemplate.theme || gift.theme || "tinh-yeu" });
                     setDemoTemplate(null);
                   }}
                   className="flex-1 py-2.5 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-bold shadow-md border-0 cursor-pointer flex items-center justify-center gap-1.5 active:scale-98 transition-all"
@@ -2385,9 +2277,8 @@ export function GiftWizard() {
 
   const canContinue = () => {
     if (!gift) return false;
-    if (step === 0) return Boolean(gift.theme);
-    if (step === 1) return Boolean(gift.templateId);
-    if (step === 2)
+    if (step === 0) return Boolean(gift.templateId);
+    if (step === 1)
       return gift.recipientName.trim() !== "" && gift.message.trim() !== "";
     return true;
   };
@@ -2476,7 +2367,6 @@ export function GiftWizard() {
     );
 
   const stepComponents = [
-    <Step0 gift={gift} setGift={setGift} templates={templates} />,
     <Step1 gift={gift} setGift={setGift} templates={templates} onBack={back} />,
     <Step2 gift={gift} setGift={setGift} templates={templates} />,
     <Step4 gift={gift} onSave={handleSave} saving={saving} templates={templates} />,
@@ -2618,7 +2508,7 @@ export function GiftWizard() {
       <div className="flex-1 flex overflow-hidden">
         {/* Left Workspace Panel */}
         <div ref={contentRef} className="flex-1 overflow-y-auto bg-transparent no-scrollbar relative z-10">
-          <div className={`w-full mx-auto px-4 sm:px-8 py-6 sm:py-8 flex flex-col h-full justify-between transition-all ${step === 1 ? "max-w-7xl" : "max-w-5xl"}`}>
+          <div className={`w-full mx-auto px-4 sm:px-8 py-6 sm:py-8 flex flex-col h-full justify-between transition-all ${step === 0 ? "max-w-7xl" : "max-w-5xl"}`}>
             <AnimatePresence mode="wait">
               <motion.div
                 key={step}
