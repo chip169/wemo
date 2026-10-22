@@ -126,7 +126,7 @@ const STATIC_TEMPLATES = [
   },
 ];
 
-const LOCAL_STORAGE_KEY = "wemo_templates_cache_page_v5";
+const LOCAL_STORAGE_KEY = "wemo_templates_cache_page_v6";
 
 const SLUG_TO_ID_MAP: Record<string, string> = {
   "lang-man": "love-romantic",
