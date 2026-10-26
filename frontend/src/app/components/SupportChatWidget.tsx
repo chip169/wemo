@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Phone, MessageSquare, X, User, Smartphone, Bot, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
+import legoBotImg from "../assets/lego-bot.png";
 
 
 
@@ -67,8 +68,8 @@ function aiReply(t: string) {
   return FALL[Math.floor(Math.random() * FALL.length)];
 }
 
-// ─── PANGOLIN BUTLER — Premium SVG with tuxedo, bow-tie & interactive poses ───
-function PangolinBot({ pose, size = 72, eyeOff = {x:0,y:0} }: {
+// ─── 3D LEGO MASCOT BOT — Ultra-sharp 3D Lego figure with animations ───
+function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
   pose: BotPose;
   size?: number;
   eyeOff?: { x: number; y: number };
@@ -79,345 +80,80 @@ function PangolinBot({ pose, size = 72, eyeOff = {x:0,y:0} }: {
   const isBow     = pose === "bow" || pose === "landed";
   const isWave    = pose === "wave";
 
-  // ── ROLLING / CURLED BALL ─────────────────────────────────────────────────
-  if (isRolling) {
-    return (
-      <svg viewBox="0 0 120 120" width={size} height={size}
-        style={{ display:"block", overflow:"visible" }}>
-        <defs>
-          <radialGradient id="rbG" cx="38%" cy="30%" r="68%">
-            <stop offset="0%"   stopColor="#EFC070"/>
-            <stop offset="55%"  stopColor="#D09848"/>
-            <stop offset="100%" stopColor="#A87230"/>
-          </radialGradient>
-        </defs>
-        <ellipse cx="60" cy="116" rx="30" ry="5" fill="rgba(0,0,0,0.13)"/>
-        <motion.g animate={{}} transition={{}} style={{ originX:"60px", originY:"60px" }}>
-          <circle cx="60" cy="60" r="48" fill="url(#rbG)"/>
-          <circle cx="94" cy="40" r="16" fill="#A87230" stroke="#8A5818" strokeWidth="1.5" />
-          <circle cx="98" cy="60" r="17" fill="#A87230" stroke="#8A5818" strokeWidth="1.5" />
-          <circle cx="90" cy="80" r="16" fill="#A87230" stroke="#8A5818" strokeWidth="1.5" />
-          <circle cx="82" cy="30" r="15" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
-          <circle cx="86" cy="50" r="16" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
-          <circle cx="84" cy="70" r="16" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
-          <circle cx="76" cy="88" r="15" fill="#D09848" stroke="#9A6B28" strokeWidth="1.5" />
-          <circle cx="50" cy="60" r="28" fill="#FFFAE8" />
-          <circle cx="50" cy="60" r="26" fill="#EDBC68" />
-          <circle cx="36" cy="66" r="6" fill="#F4906A" opacity="0.7" />
-          <circle cx="60" cy="66" r="6" fill="#F4906A" opacity="0.7" />
-          <path d="M34 56 Q39 51 44 56" stroke="#5A3010" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          <path d="M52 56 Q57 51 62 56" stroke="#5A3010" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-          <path d="M44 68 Q47 72 50 68" stroke="#7A3810" strokeWidth="2" fill="none" strokeLinecap="round" />
-          <path d="M30 85 C45 105 75 105 92 88" stroke="#C08A30" strokeWidth="11" fill="none" strokeLinecap="round" />
-          <circle cx="50" cy="98" r="7" fill="#8A6018" />
-          <circle cx="66" cy="99" r="7" fill="#8A6018" />
-          <circle cx="80" cy="95" r="7" fill="#8A6018" />
-          <ellipse cx="44" cy="40" rx="14" ry="8" fill="white" opacity="0.18" transform="rotate(-15 44 40)" />
-        </motion.g>
-      </svg>
-    );
-  }
-
-  // ── STANDING BUTLER — tuxedo, bow-tie, eye-tracking, conditional poses ──────
   return (
-    <svg
-      viewBox="0 0 200 230"
-      width={size}
-      height={size}
+    <motion.div
+      animate={
+        isRolling
+          ? { rotate: 360 }
+          : isWave
+          ? { rotate: [-5, 8, -5, 8, 0], y: [0, -4, 0] }
+          : isThink
+          ? { rotate: -10, y: -4, scale: 1.02 }
+          : isExcited
+          ? { y: [0, -10, 0, -6, 0], scale: [1, 1.08, 1, 1.04, 1] }
+          : isBow
+          ? { scaleY: [1, 0.9, 1], y: [0, 5, 0] }
+          : { y: [0, -3, 0], rotate: [0, 1, -1, 0] }
+      }
+      transition={
+        isRolling
+          ? { duration: 0.8, repeat: Infinity, ease: "linear" }
+          : isWave
+          ? { duration: 1.2, repeat: Infinity, ease: "easeInOut" }
+          : isThink
+          ? { duration: 0.4 }
+          : isExcited
+          ? { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
+          : isBow
+          ? { duration: 0.6 }
+          : { duration: 3.5, repeat: Infinity, ease: "easeInOut" }
+      }
       style={{
-        display: "block",
-        overflow: "visible",
-        transform: isBow ? "perspective(400px) rotateX(22deg)" : undefined,
-        transformOrigin: "center bottom",
-        transition: "transform 0.4s ease",
+        width: size,
+        height: size,
+        position: "relative",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}
     >
-      <defs>
-        <radialGradient id="bdG" cx="38%" cy="30%" r="65%">
-          <stop offset="0%"   stopColor="#EDBC68"/>
-          <stop offset="55%"  stopColor="#D09A45"/>
-          <stop offset="100%" stopColor="#A87028"/>
-        </radialGradient>
-        <radialGradient id="scG" cx="50%" cy="35%" r="60%">
-          <stop offset="0%"   stopColor="#C08A30"/>
-          <stop offset="100%" stopColor="#8A6018"/>
-        </radialGradient>
-        <radialGradient id="blG" cx="50%" cy="35%" r="65%">
-          <stop offset="0%"   stopColor="#FFFAE8"/>
-          <stop offset="100%" stopColor="#EED4A0"/>
-        </radialGradient>
-        <radialGradient id="erG" cx="50%" cy="30%" r="60%">
-          <stop offset="0%"   stopColor="#E0A848"/>
-          <stop offset="100%" stopColor="#B88030"/>
-        </radialGradient>
-        {/* 3D specular highlight gradient — top-left bright spot on head */}
-        <radialGradient id="specG" cx="32%" cy="22%" r="55%">
-          <stop offset="0%"   stopColor="rgba(255,255,230,0.55)"/>
-          <stop offset="40%"  stopColor="rgba(255,240,200,0.18)"/>
-          <stop offset="100%" stopColor="rgba(255,220,150,0)"/>
-        </radialGradient>
-        {/* Soft blur filter for glow effects */}
-        <filter id="softBlur" x="-40%" y="-40%" width="180%" height="180%">
-          <feGaussianBlur stdDeviation="4"/>
-        </filter>
-        {/* Stronger blur for rim light */}
-        <filter id="rimBlur" x="-20%" y="-20%" width="140%" height="140%">
-          <feGaussianBlur stdDeviation="6"/>
-        </filter>
-        <filter id="pgDrp" x="-25%" y="-15%" width="150%" height="150%">
-          <feDropShadow dx="0" dy="5" stdDeviation="6" floodColor="rgba(100,55,10,0.22)"/>
-        </filter>
-      </defs>
-
-      <ellipse cx="100" cy="227" rx="46" ry="7" fill="rgba(0,0,0,0.13)"/>
-
-      <ellipse cx="148" cy="172" rx="20" ry="11" fill="url(#bdG)" transform="rotate(-18 148 172)"/>
-      <ellipse cx="160" cy="158" rx="17" ry="10" fill="url(#bdG)" transform="rotate(-35 160 158)"/>
-      <ellipse cx="165" cy="143" rx="14" ry="9"  fill="url(#bdG)" transform="rotate(-50 165 143)"/>
-      <ellipse cx="161" cy="130" rx="11" ry="7"  fill="url(#bdG)" transform="rotate(-58 161 130)"/>
-      <ellipse cx="148" cy="172" rx="16" ry="8"  fill="url(#scG)" transform="rotate(-18 148 172)"/>
-      <ellipse cx="160" cy="158" rx="13" ry="7"  fill="url(#scG)" transform="rotate(-35 160 158)"/>
-      <ellipse cx="165" cy="143" rx="10" ry="6"  fill="url(#scG)" transform="rotate(-50 165 143)"/>
-      <ellipse cx="161" cy="130" rx="8"  ry="5"  fill="url(#scG)" transform="rotate(-58 161 130)"/>
-
-      <ellipse cx="100" cy="170" rx="58" ry="52" fill="url(#bdG)" filter="url(#pgDrp)"/>
-      {[78,100,122].map((x,i)  => <ellipse key={`b4${i}`} cx={x} cy={205} rx={23} ry={14} fill="url(#scG)"/>)}
-      {[70,92,114,134].map((x,i)=> <ellipse key={`b3${i}`} cx={x} cy={192} rx={22} ry={14} fill="url(#scG)"/>)}
-      {[70,92,114,134].map((x,i)=> <ellipse key={`b2${i}`} cx={x} cy={180} rx={22} ry={14} fill="url(#scG)"/>)}
-      {[74,96,118,138].map((x,i)=> <ellipse key={`b1${i}`} cx={x} cy={167} rx={21} ry={13} fill="url(#scG)"/>)}
-      {/* Belly — breathing animation when standing */}
-      <motion.ellipse cx="98" cy="181" rx="36" ry="32" fill="url(#blG)"
-        animate={pose==="stand" ? {ry:[32,35,32], cy:[181,179,181]} : {ry:32, cy:181}}
-        transition={{duration:3.2, repeat:Infinity, ease:"easeInOut"}}/>
-      {/* Body AO shadow — dark crescent at top where head meets body */}
-      <ellipse cx="100" cy="148" rx="40" ry="10" fill="rgba(70,35,0,0.18)" filter="url(#softBlur)"/>
-
-
-      <ellipse cx="78"  cy="210" rx="17" ry="12" fill="url(#bdG)"/>
-      <ellipse cx="122" cy="210" rx="17" ry="12" fill="url(#bdG)"/>
-      {[70,77,84].map((x,i)   => <ellipse key={`tL${i}`} cx={x} cy={216} rx={4.5} ry={4} fill="#8A5818"/>)}
-      {[116,123,130].map((x,i) => <ellipse key={`tR${i}`} cx={x} cy={216} rx={4.5} ry={4} fill="#8A5818"/>)}
-
-      {isWave ? (
-        <>
-          {/* Left arm resting */}
-          <ellipse cx="66" cy="180" rx="14" ry="24" fill="url(#bdG)" transform="rotate(-10 66 180)"/>
-          <ellipse cx="78" cy="188" rx="8" ry="8" fill="url(#blG)"/>
-          {/* Right waving arm */}
-          <motion.g animate={{rotate:[0,-6,4,-6,4,0]}} transition={{duration:1.5,repeat:Infinity,ease:"easeInOut"}} style={{originX:"132px",originY:"165px"}}>
-            <path d="M132 165 C142 144 150 128 152 116" stroke="url(#bdG)" strokeWidth="24" strokeLinecap="round" fill="none"/>
-            <motion.g animate={{rotate:[-24,24,-24,24,-24]}} transition={{duration:0.8,repeat:Infinity,ease:"easeInOut"}} style={{originX:"152px",originY:"116px"}}>
-              <ellipse cx="152" cy="102" rx="12" ry="14" fill="#F0EBE0" transform="rotate(10 152 102)"/>
-              {[144,152,160].map((cx,i) => <circle key={i} cx={cx} cy={93} r="2.8" fill="#8A5818"/>)}
-            </motion.g>
-          </motion.g>
-          {/* Ear follow-through on wave — left ear wiggles slightly */}
-          <motion.ellipse cx="46" cy="46" rx="20" ry="25" fill="url(#erG)"
-            animate={{rotate:[-4,2,-4]}} transition={{duration:1.6,repeat:Infinity,ease:"easeInOut"}}
-            style={{originX:"46px",originY:"72px"}}/>
-        </>
-      ) : isThink ? (
-        <>
-          <ellipse cx="64" cy="180" rx="14" ry="25" fill="url(#bdG)" transform="rotate(-5 64 180)"/>
-          <ellipse cx="70" cy="200" rx="11" ry="9" fill="url(#blG)"/>
-          <path d="M136 170 C150 156 158 142 152 128" stroke="url(#bdG)" strokeWidth="22" strokeLinecap="round" fill="none"/>
-          <ellipse cx="152" cy="125" rx="14" ry="11" fill="url(#blG)" transform="rotate(-18 152 125)"/>
-          <path d="M143 120 Q148 115 154 118" stroke="#C0A880" strokeWidth="2" fill="none" strokeLinecap="round"/>
-        </>
-      ) : isExcited ? (
-        <>
-          <path d="M70 168 C52 148 44 128 56 114" stroke="url(#bdG)" strokeWidth="22" strokeLinecap="round" fill="none"/>
-          <ellipse cx="56" cy="110" rx="13" ry="12" fill="url(#blG)" transform="rotate(18 56 110)"/>
-          <path d="M130 168 C148 148 156 128 144 114" stroke="url(#bdG)" strokeWidth="22" strokeLinecap="round" fill="none"/>
-          <ellipse cx="144" cy="110" rx="13" ry="12" fill="url(#blG)" transform="rotate(-18 144 110)"/>
-        </>
-      ) : (
-        <>
-          <ellipse cx="64"  cy="178" rx="15" ry="26" fill="url(#bdG)"/>
-          <ellipse cx="136" cy="178" rx="15" ry="26" fill="url(#bdG)"/>
-          <ellipse cx="100" cy="198" rx="30" ry="14" fill="url(#bdG)"/>
-          <ellipse cx="100" cy="196" rx="24" ry="11" fill="url(#blG)"/>
-          {[86,93,100,107,114].map((x,i) => <circle key={`k${i}`} cx={x} cy={194} r={2.2} fill="#B07830" opacity="0.55"/>)}
-        </>
-      )}
-
-      <ellipse cx="100" cy="86" rx="68" ry="66" fill="url(#bdG)" filter="url(#pgDrp)"/>
-      {[88,112].map((x,i)         => <ellipse key={`h0${i}`} cx={x} cy={30} rx={19} ry={13} fill="url(#scG)"/>)}
-      {[72,96,120,144].map((x,i)  => <ellipse key={`h1${i}`} cx={x} cy={44} rx={20} ry={14} fill="url(#scG)"/>)}
-      {[66,90,114,138,156].map((x,i)=> <ellipse key={`h2${i}`} cx={x} cy={59} rx={21} ry={14} fill="url(#scG)"/>)}
-      {[62,86,110,134,152].map((x,i)=> <ellipse key={`h3${i}`} cx={x} cy={74} rx={21} ry={13} fill="url(#scG)"/>)}
-
-      <ellipse cx="46"  cy="46" rx="20" ry="25" fill="url(#erG)"/>
-      <ellipse cx="154" cy="46" rx="20" ry="25" fill="url(#erG)"/>
-      {/* Ear AO shadow — depth at base of ears */}
-      <ellipse cx="46"  cy="68" rx="10" ry="5" fill="rgba(60,28,0,0.22)" filter="url(#softBlur)"/>
-      <ellipse cx="154" cy="68" rx="10" ry="5" fill="rgba(60,28,0,0.22)" filter="url(#softBlur)"/>
-      <ellipse cx="46"  cy="47" rx="11" ry="15" fill="url(#bdG)"/>
-      <ellipse cx="154" cy="47" rx="11" ry="15" fill="url(#bdG)"/>
-      {/* Ear inner highlight */}
-      <ellipse cx="43"  cy="40" rx="5" ry="7" fill="rgba(255,220,150,0.25)"/>
-      <ellipse cx="157" cy="40" rx="5" ry="7" fill="rgba(255,220,150,0.25)"/>
-
-      {/* ═ RIM LIGHT — warm backlight fringe around head = key 3D cue */}
-      <circle cx="100" cy="82" r="74" fill="none"
-        stroke="rgba(255,210,120,0.28)" strokeWidth="12"
-        filter="url(#rimBlur)"/>
-
-      {/* ═ SPECULAR HIGHLIGHT — glossy bright spot top-left of head */}
-      <ellipse cx="72" cy="52" rx="32" ry="22"
-        fill="url(#specG)" transform="rotate(-20 72 52)"/>
-      {/* Tighter bright core */}
-      <ellipse cx="66" cy="46" rx="14" ry="9"
-        fill="rgba(255,252,220,0.38)" transform="rotate(-25 66 46)"/>
-
-      {/* ═ AMBIENT OCCLUSION — subtle shadow under head base */}
-      <ellipse cx="100" cy="148" rx="46" ry="8" fill="rgba(70,35,0,0.16)" filter="url(#softBlur)"/>
-
-      {/* Face glow highlight — makes head look rounder and cuter */}
-      <ellipse cx="88" cy="72" rx="30" ry="22" fill="white" opacity="0.09" transform="rotate(-12 88 72)"/>
-
-      {/* Cheeks — softer, larger, more blush */}
-      <motion.ellipse cx="52" cy="102" rx={isExcited?30:25} ry={isExcited?18:15} fill="#F4906A"
-        animate={{opacity:[0.32,0.58,0.32]}} transition={{duration:2.8,repeat:Infinity,ease:"easeInOut"}}/>
-      <motion.ellipse cx="148" cy="102" rx={isExcited?30:25} ry={isExcited?18:15} fill="#F4906A"
-        animate={{opacity:[0.32,0.58,0.32]}} transition={{duration:2.8,repeat:Infinity,ease:"easeInOut",delay:0.4}}/>
-
-      {/* Think: monocle stays; also add thought bubbles */}
-      {isThink && (
-        <g opacity="0.92">
-          <circle cx="80" cy="90" r="20" fill="none" stroke="#C8A84B" strokeWidth="2.4"/>
-          <path d="M96 102 Q101 114 98 126" stroke="#C8A84B" strokeWidth="1.6" fill="none"/>
-          <circle cx="98" cy="128" r="2.2" fill="#C8A84B"/>
-        </g>
-      )}
-      {/* Thought bubbles — float up from head-right when thinking */}
-      {isThink && (
-        <>
-          <motion.circle cx="168" cy="88" r="5" fill="white"
-            animate={{cy:[88,70,50], opacity:[0,0.85,0], scale:[0.5,1,0]}}
-            transition={{duration:2.2, repeat:Infinity, ease:"easeOut"}}/>
-          <motion.circle cx="178" cy="68" r="8" fill="white"
-            animate={{cy:[68,48,28], opacity:[0,0.7,0], scale:[0.4,1,0]}}
-            transition={{duration:2.2, repeat:Infinity, ease:"easeOut", delay:0.5}}/>
-          <motion.circle cx="170" cy="44" r="12" fill="white"
-            animate={{cy:[44,22,2], opacity:[0,0.6,0], scale:[0.3,1,0]}}
-            transition={{duration:2.2, repeat:Infinity, ease:"easeOut", delay:1.0}}/>
-        </>
-      )}
-
-      {/* Snout — rounder, cuter */}
-      <ellipse cx="100" cy="112" rx="26" ry="18" fill="#C8904E"/>
-      <ellipse cx="100" cy="104" rx="20" ry="12" fill="url(#bdG)"/>
-      {/* Rounder cute nostrils */}
-      <ellipse cx="92"  cy="113" rx="4.5" ry="4" fill="#5A3010"/>
-      <ellipse cx="108" cy="113" rx="4.5" ry="4" fill="#5A3010"/>
-      {/* Snout highlight */}
-      <ellipse cx="100" cy="108" rx="10" ry="5" fill="white" opacity="0.12"/>
-
-      {/* Eyelashes — left eye */}
-      <path d="M68 78 Q72 73 76 76" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
-      <path d="M77 75 Q80 69 84 72" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
-      <path d="M85 74 Q89 70 92 74" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
-
-      {/* Left eye */}
-      <motion.g
-        animate={{ scaleY: isBow ? [0.08,0.08] : [1,0.05,1] }}
-        transition={isBow ? {duration:0.1} : {duration:0.18,repeat:Infinity,repeatDelay:3.8,ease:"easeInOut"}}
-        style={{ transformOrigin:"80px 91px" }}
-      >
-        <ellipse cx="80" cy="90" rx="15" ry={isExcited?19:16} fill="#FFF9F0"/>
-        {/* Iris color ring — warm amber for depth */}
-        <ellipse cx={80+eyeOff.x} cy={91+eyeOff.y} rx="13" ry={isExcited?17:14} fill="#2C1A06"/>
-        <ellipse cx={80+eyeOff.x} cy={91+eyeOff.y} rx="10" ry={isExcited?13:11} fill="#4A2010"/>
-        <ellipse cx={80+eyeOff.x} cy={92+eyeOff.y} rx="7"  ry={isExcited?9:8}   fill="#0E0604"/>
-        {/* Main sparkle */}
-        <circle cx={74+eyeOff.x*0.6} cy={84+eyeOff.y*0.6} r="5.5" fill="white"/>
-        <circle cx={85+eyeOff.x*0.6} cy={87+eyeOff.y*0.6} r="3"   fill="white" opacity="0.75"/>
-        <circle cx={75+eyeOff.x*0.6} cy={97+eyeOff.y*0.6} r="1.8" fill="white" opacity="0.45"/>
-      </motion.g>
-
-      {/* Eyelashes — right eye (hidden when squinting for think) */}
-      {!isThink && (
-        <>
-          <path d="M108 74 Q112 70 115 74" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.6"/>
-          <path d="M116 72 Q120 67 123 71" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
-          <path d="M124 74 Q128 70 132 75" stroke="#5A3010" strokeWidth="2" fill="none" strokeLinecap="round" opacity="0.7"/>
-        </>
-      )}
-
-      {isThink ? (
-        <path d="M108 91 Q120 84 132 91" stroke="#5A3010" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
-      ) : (
-        <motion.g
-          animate={{ scaleY: isBow ? [0.08,0.08] : [1,0.05,1] }}
-          transition={isBow ? {duration:0.1} : {duration:0.18,repeat:Infinity,repeatDelay:3.8,ease:"easeInOut"}}
-          style={{ transformOrigin:"120px 91px" }}
-        >
-          <ellipse cx="120" cy="90" rx="15" ry={isExcited?19:16} fill="#FFF9F0"/>
-          {/* Iris color ring */}
-          <ellipse cx={120+eyeOff.x} cy={91+eyeOff.y} rx="13" ry={isExcited?17:14} fill="#2C1A06"/>
-          <ellipse cx={120+eyeOff.x} cy={91+eyeOff.y} rx="10" ry={isExcited?13:11} fill="#4A2010"/>
-          <ellipse cx={120+eyeOff.x} cy={92+eyeOff.y} rx="7"  ry={isExcited?9:8}   fill="#0E0604"/>
-          <circle cx={114+eyeOff.x*0.6} cy={84+eyeOff.y*0.6} r="5.5" fill="white"/>
-          <circle cx={125+eyeOff.x*0.6} cy={87+eyeOff.y*0.6} r="3"   fill="white" opacity="0.75"/>
-          <circle cx={115+eyeOff.x*0.6} cy={97+eyeOff.y*0.6} r="1.8" fill="white" opacity="0.45"/>
-        </motion.g>
-      )}
-
-      {/* Eyebrows — softer, more expressive */}
-      <path d="M67 70 Q80 63 93 70" stroke="#7A4818" strokeWidth="3" fill="none" strokeLinecap="round" opacity="0.6"/>
-      <path
-        d={isThink ? "M107 63 Q120 56 133 63" : "M107 70 Q120 63 133 70"}
-        stroke="#7A4818" strokeWidth="3" fill="none" strokeLinecap="round"
-        opacity={isThink ? 0.8 : 0.6}
+      <img
+        src={legoBotImg}
+        alt="WEMO 3D Lego Mascot"
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "contain",
+          filter: "drop-shadow(0 8px 16px rgba(74,50,30,0.22)) drop-shadow(0 2px 4px rgba(0,0,0,0.12))",
+          userSelect: "none",
+          pointerEvents: "none",
+        }}
+        draggable={false}
       />
 
-      {isExcited ? (
-        <>
-          <ellipse cx="100" cy="122" rx="17" ry="11" fill="white"/>
-          <path d="M77 112 Q100 136 123 112" stroke="#7A3810" strokeWidth="3.6" fill="none" strokeLinecap="round"/>
-          <line x1="100" y1="113" x2="100" y2="130" stroke="#DDCCAA" strokeWidth="1.5" opacity="0.6"/>
-        </>
-      ) : isBow ? (
-        <path d="M84 116 Q100 132 116 116" stroke="#7A3810" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
-      ) : isThink ? (
-        <path d="M90 119 Q100 125 110 119" stroke="#7A3810" strokeWidth="2.6" fill="none" strokeLinecap="round"/>
-      ) : (
-        <>
-          <ellipse cx="100" cy="121" rx="13" ry="8" fill="white"/>
-          <path d="M82 114 Q100 128 118 114" stroke="#7A3810" strokeWidth="3.2" fill="none" strokeLinecap="round"/>
-          <line x1="100" y1="115" x2="100" y2="126" stroke="#DDCCAA" strokeWidth="1.5" opacity="0.6"/>
-        </>
+      {/* Sparkles when excited */}
+      {isExcited && (
+        <motion.div
+          animate={{ scale: [0.8, 1.2, 0.8], opacity: [0.7, 1, 0.7] }}
+          transition={{ duration: 0.8, repeat: Infinity }}
+          style={{ position: "absolute", top: -6, right: -4, fontSize: 16, pointerEvents: "none" }}
+        >
+          ✨
+        </motion.div>
       )}
 
-      {isExcited && (
-        <>
-          {/* Multi-color burst particles */}
-          <motion.circle cx="28" cy="68" r="5" fill="#FF6B6B"
-            animate={{x:[-8,8,-5,0],y:[0,-28,-48,-60],opacity:[1,1,0.5,0],scale:[1,1.4,0.8,0]}}
-            transition={{duration:0.9,repeat:Infinity,ease:"easeOut"}}/>
-          <motion.circle cx="45" cy="55" r="3.5" fill="#FFD700"
-            animate={{x:[0,-12,-18],y:[0,-20,-38],opacity:[1,1,0],scale:[1,1.2,0]}}
-            transition={{duration:0.75,repeat:Infinity,ease:"easeOut",delay:0.15}}/>
-          <motion.circle cx="172" cy="60" r="4" fill="#4ECDC4"
-            animate={{x:[8,-5,12],y:[0,-25,-45],opacity:[1,1,0],scale:[1,1.3,0]}}
-            transition={{duration:0.85,repeat:Infinity,ease:"easeOut",delay:0.3}}/>
-          <motion.circle cx="158" cy="52" r="3" fill="#FF9F43"
-            animate={{x:[-5,10,5],y:[0,-18,-35],opacity:[1,0.9,0],scale:[1,1,0]}}
-            transition={{duration:0.7,repeat:Infinity,ease:"easeOut",delay:0.1}}/>
-          {/* Stars */}
-          <motion.g animate={{scale:[1,1.35,1],rotate:[0,20,0]}} transition={{duration:0.55,repeat:Infinity}}>
-            <path d="M18 68 L21 76 L29 79 L21 82 L18 90 L15 82 L7 79 L15 76 Z" fill="#FFD700" opacity="0.92"/>
-          </motion.g>
-          <motion.g animate={{scale:[1,1.2,1],rotate:[0,-15,0]}} transition={{duration:0.7,repeat:Infinity,delay:0.25}}>
-            <path d="M163 42 L165 50 L173 52 L165 54 L163 62 L161 54 L153 52 L161 50 Z" fill="#FF6B6B" opacity="0.9"/>
-          </motion.g>
-          <motion.g animate={{scale:[1,1.1,1]}} transition={{duration:0.9,repeat:Infinity,delay:0.5}}>
-            <path d="M175 80 L177 86 L183 88 L177 90 L175 96 L173 90 L167 88 L173 86 Z" fill="#4ECDC4" opacity="0.8"/>
-          </motion.g>
-        </>
+      {/* Thought bubble icon when thinking */}
+      {isThink && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5, y: 0 }}
+          animate={{ opacity: 1, scale: 1, y: -8 }}
+          transition={{ duration: 0.3 }}
+          style={{ position: "absolute", top: -8, right: 2, fontSize: 14, pointerEvents: "none" }}
+        >
+          💭
+        </motion.div>
       )}
-    </svg>
+    </motion.div>
   );
 }
 
