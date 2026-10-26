@@ -4,22 +4,24 @@ import { Float, Sparkles, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { motion } from "motion/react";
 
-// ─── Authentic LEGO Colors (High-Gloss ABS Plastic) ─────────────────────────
-const LEGO_COLORS = {
-  skinYellow: "#FFC53D",       // Classic Minifigure Warm Yellow
-  shirtWhite: "#FFFFFF",       // Crisp White Studio Tee
-  pantsBrown: "#BD7A36",       // Warm Caramel Pants
-  pantsDark: "#854A18",        // Dark caramel accents & hip bar
-  heartPink: "#FF4D6D",        // Translucent candy heart
-  eyeBlack: "#18100C",         // Glossy black pupil
-  eyeIris: "#5A3010",          // Warm amber iris
-  cheeks: "#FF7D6B",           // Soft rosy cheek blush
-  goldAccent: "#D4AF78",       // Rose gold / gold emblem
-  wemoCoral: "#E8B4A8",        // WEMO signature coral
+// ─── Authentic LEGO Butler Colors (High-Gloss ABS & Metallic) ───────────────
+const BUTLER_COLORS = {
+  suitBlack: "#141416",        // High-gloss obsidian black (Tuxedo & Top Hat)
+  suitLapel: "#0D0D0F",        // Deep satin lapel
+  shirtWhite: "#FFFFFF",       // Crisp white butler dress shirt
+  bowTieRed: "#E11D48",        // Vibrant classic red bow tie (Rose Red)
+  robotSilver: "#D1D5DB",      // Metallic silver robot head & limbs
+  robotDarkGray: "#374151",    // Mechanical joints & details
+  visorScreen: "#0B0F19",      // Obsidian dark front visor screen
+  neonCyan: "#00F0FF",         // Glowing cyan LED eyes & smile
+  neonCyanGlow: "#38BDF8",     // Soft cyan ambient bounce
+  earBlue: "#2563EB",          // High-tech cobalt blue earhub
+  goldChain: "#F59E0B",        // Gold watch chain accent
+  bootBlue: "#1E3A8A",         // Classic LEGO cobalt blue boot feet
 };
 
 // ─── Authentic LEGO Stud with Hollow Center Rim ──────────────────────────────
-function LegoStud({ position, scale = [1, 1, 1], color = LEGO_COLORS.skinYellow }: {
+function LegoStud({ position, scale = [1, 1, 1], color = BUTLER_COLORS.suitBlack }: {
   position: [number, number, number];
   scale?: [number, number, number];
   color?: string;
@@ -30,22 +32,22 @@ function LegoStud({ position, scale = [1, 1, 1], color = LEGO_COLORS.skinYellow 
         <cylinderGeometry args={[0.26, 0.26, 0.18, 28]} />
         <meshPhysicalMaterial
           color={color}
-          roughness={0.14}
+          roughness={0.16}
           clearcoat={1.0}
-          clearcoatRoughness={0.06}
+          clearcoatRoughness={0.08}
         />
       </mesh>
-      {/* Authentic inner recessed hole circle */}
+      {/* Inner recessed circle rim */}
       <mesh position={[0, 0.091, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <ringGeometry args={[0.1, 0.18, 24]} />
-        <meshBasicMaterial color="#333333" transparent opacity={0.35} />
+        <meshBasicMaterial color="#111111" transparent opacity={0.4} />
       </mesh>
     </group>
   );
 }
 
 // ─── Authentic LEGO Minifigure C-Claw Hand ──────────────────────────────────
-function LegoHand({ position, rotation = [0, 0, 0], color = LEGO_COLORS.skinYellow }: {
+function LegoHand({ position, rotation = [0, 0, 0], color = BUTLER_COLORS.robotSilver }: {
   position: [number, number, number];
   rotation?: [number, number, number];
   color?: string;
@@ -55,25 +57,260 @@ function LegoHand({ position, rotation = [0, 0, 0], color = LEGO_COLORS.skinYell
       {/* Wrist cylinder peg */}
       <mesh position={[0, 0.12, 0]}>
         <cylinderGeometry args={[0.12, 0.14, 0.22, 18]} />
-        <meshPhysicalMaterial color={color} roughness={0.16} clearcoat={0.9} />
+        <meshPhysicalMaterial color={color} roughness={0.2} metalness={0.3} clearcoat={0.8} />
       </mesh>
-      {/* Curved C-Claw (open torus arc) */}
+      {/* Curved C-Claw */}
       <mesh position={[0, -0.06, 0]} rotation={[0, 0, Math.PI / 2]}>
         <torusGeometry args={[0.22, 0.075, 16, 28, Math.PI * 1.42]} />
         <meshPhysicalMaterial
           color={color}
-          roughness={0.15}
-          clearcoat={0.95}
-          clearcoatRoughness={0.08}
+          roughness={0.18}
+          metalness={0.35}
+          clearcoat={0.9}
         />
       </mesh>
     </group>
   );
 }
 
-// ─── Authentic LEGO Trapezoid Torso ─────────────────────────────────────────
-function LegoTorso() {
-  const geom = useMemo(() => {
+// ─── Elegant Top Hat (Mũ chóp cao lịch lãm với LEGO Studs) ──────────────────
+function LegoTopHat() {
+  return (
+    <group position={[0, 0.88, 0]}>
+      {/* Wide Hat Brim Plate */}
+      <mesh position={[0, 0.02, 0]} castShadow>
+        <cylinderGeometry args={[0.92, 0.94, 0.1, 32]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.suitBlack}
+          roughness={0.14}
+          clearcoat={1.0}
+          clearcoatRoughness={0.06}
+        />
+      </mesh>
+
+      {/* Ring of Studs along the Brim Rim (Authentic LEGO build) */}
+      {[0, 60, 120, 180, 240, 300].map((deg, i) => {
+        const rad = (deg * Math.PI) / 180;
+        const r = 0.76;
+        return (
+          <LegoStud
+            key={`brim-${i}`}
+            position={[Math.cos(rad) * r, 0.09, Math.sin(rad) * r]}
+            scale={[0.42, 0.4, 0.42]}
+            color={BUTLER_COLORS.suitBlack}
+          />
+        );
+      })}
+
+      {/* Tall Cylinder Crown */}
+      <mesh position={[0, 0.58, 0]} castShadow>
+        <cylinderGeometry args={[0.66, 0.62, 1.04, 32]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.suitBlack}
+          roughness={0.14}
+          clearcoat={1.0}
+          clearcoatRoughness={0.06}
+        />
+      </mesh>
+
+      {/* Top Cap of the Crown */}
+      <mesh position={[0, 1.1, 0]}>
+        <cylinderGeometry args={[0.67, 0.66, 0.06, 32]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.suitBlack}
+          roughness={0.14}
+          clearcoat={1.0}
+        />
+      </mesh>
+
+      {/* Top Studs on the Hat Crown (Classic LEGO Top) */}
+      <LegoStud position={[0, 1.16, 0]} scale={[0.82, 0.75, 0.82]} color={BUTLER_COLORS.suitBlack} />
+      {[-0.32, 0.32].map((x, i) =>
+        [-0.32, 0.32].map((z, j) => (
+          <LegoStud
+            key={`top-${i}-${j}`}
+            position={[x, 1.16, z]}
+            scale={[0.55, 0.5, 0.55]}
+            color={BUTLER_COLORS.suitBlack}
+          />
+        ))
+      )}
+    </group>
+  );
+}
+
+// ─── Robot Butler Head with Glowing Cyan Visor & Ear Hubs ────────────────────
+function LegoRobotHead({ eyeState = "normal" }: { eyeState: "normal" | "blink" | "happy" }) {
+  return (
+    <group position={[0, 0.92, 0]}>
+      {/* Metallic Silver Main Head Cylinder */}
+      <mesh castShadow receiveShadow>
+        <cylinderGeometry args={[0.74, 0.74, 0.94, 32]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.robotSilver}
+          metalness={0.3}
+          roughness={0.22}
+          clearcoat={0.9}
+        />
+      </mesh>
+
+      {/* Head Top Smooth Dome Joint */}
+      <mesh position={[0, 0.44, 0]} castShadow>
+        <sphereGeometry args={[0.735, 32, 16]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.robotSilver}
+          metalness={0.3}
+          roughness={0.22}
+          clearcoat={0.9}
+        />
+      </mesh>
+
+      {/* Top Hat sitting proudly on the head */}
+      <LegoTopHat />
+
+      {/* Front Glossy Visor Screen Panel */}
+      <mesh position={[0, 0.05, 0.68]} castShadow>
+        <boxGeometry args={[0.96, 0.48, 0.14]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.visorScreen}
+          roughness={0.08}
+          clearcoat={1.0}
+          clearcoatRoughness={0.02}
+        />
+      </mesh>
+
+      {/* ── Glowing Cyan Visor Eyes ── */}
+      {eyeState === "happy" ? (
+        // Happy smiling glowing arches (^ ^)
+        <>
+          <group position={[-0.26, 0.08, 0.76]} rotation={[0, 0, Math.PI]}>
+            <mesh>
+              <torusGeometry args={[0.085, 0.025, 12, 24, Math.PI]} />
+              <meshStandardMaterial
+                color={BUTLER_COLORS.neonCyan}
+                emissive={BUTLER_COLORS.neonCyan}
+                emissiveIntensity={3.8}
+                roughness={0.1}
+              />
+            </mesh>
+          </group>
+          <group position={[0.26, 0.08, 0.76]} rotation={[0, 0, Math.PI]}>
+            <mesh>
+              <torusGeometry args={[0.085, 0.025, 12, 24, Math.PI]} />
+              <meshStandardMaterial
+                color={BUTLER_COLORS.neonCyan}
+                emissive={BUTLER_COLORS.neonCyan}
+                emissiveIntensity={3.8}
+                roughness={0.1}
+              />
+            </mesh>
+          </group>
+        </>
+      ) : eyeState === "blink" ? (
+        // Sleek horizontal glowing slits (- -)
+        <>
+          <mesh position={[-0.26, 0.06, 0.76]}>
+            <boxGeometry args={[0.24, 0.035, 0.02]} />
+            <meshStandardMaterial
+              color={BUTLER_COLORS.neonCyan}
+              emissive={BUTLER_COLORS.neonCyan}
+              emissiveIntensity={3.5}
+            />
+          </mesh>
+          <mesh position={[0.26, 0.06, 0.76]}>
+            <boxGeometry args={[0.24, 0.035, 0.02]} />
+            <meshStandardMaterial
+              color={BUTLER_COLORS.neonCyan}
+              emissive={BUTLER_COLORS.neonCyan}
+              emissiveIntensity={3.5}
+            />
+          </mesh>
+        </>
+      ) : (
+        // Iconic bright glowing rounded eyes
+        <>
+          <group position={[-0.26, 0.06, 0.76]}>
+            <mesh>
+              <boxGeometry args={[0.24, 0.22, 0.02]} />
+              <meshStandardMaterial
+                color={BUTLER_COLORS.neonCyan}
+                emissive={BUTLER_COLORS.neonCyan}
+                emissiveIntensity={3.6}
+                roughness={0.1}
+              />
+            </mesh>
+            {/* Inner pupil mesh texture */}
+            <mesh position={[0, 0, 0.012]}>
+              <ringGeometry args={[0.03, 0.07, 16]} />
+              <meshBasicMaterial color="#FFFFFF" transparent opacity={0.8} />
+            </mesh>
+          </group>
+
+          <group position={[0.26, 0.06, 0.76]}>
+            <mesh>
+              <boxGeometry args={[0.24, 0.22, 0.02]} />
+              <meshStandardMaterial
+                color={BUTLER_COLORS.neonCyan}
+                emissive={BUTLER_COLORS.neonCyan}
+                emissiveIntensity={3.6}
+                roughness={0.1}
+              />
+            </mesh>
+            {/* Inner pupil mesh texture */}
+            <mesh position={[0, 0, 0.012]}>
+              <ringGeometry args={[0.03, 0.07, 16]} />
+              <meshBasicMaterial color="#FFFFFF" transparent opacity={0.8} />
+            </mesh>
+          </group>
+        </>
+      )}
+
+      {/* Friendly Glowing Cyan Robot Smile Slit */}
+      <mesh position={[0, -0.12, 0.76]}>
+        <boxGeometry args={[0.34, 0.04, 0.02]} />
+        <meshStandardMaterial
+          color={BUTLER_COLORS.neonCyan}
+          emissive={BUTLER_COLORS.neonCyan}
+          emissiveIntensity={3.0}
+        />
+      </mesh>
+
+      {/* Left Robotic Ear Audio Hub */}
+      <group position={[-0.76, 0.05, 0]} rotation={[0, 0, Math.PI / 2]}>
+        <mesh castShadow>
+          <cylinderGeometry args={[0.24, 0.24, 0.12, 24]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.robotSilver} metalness={0.4} roughness={0.2} />
+        </mesh>
+        <mesh position={[0, -0.07, 0]}>
+          <cylinderGeometry args={[0.16, 0.16, 0.06, 24]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.earBlue} clearcoat={1.0} />
+        </mesh>
+      </group>
+
+      {/* Right Robotic Ear Audio Hub */}
+      <group position={[0.76, 0.05, 0]} rotation={[0, 0, -Math.PI / 2]}>
+        <mesh castShadow>
+          <cylinderGeometry args={[0.24, 0.24, 0.12, 24]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.robotSilver} metalness={0.4} roughness={0.2} />
+        </mesh>
+        <mesh position={[0, -0.07, 0]}>
+          <cylinderGeometry args={[0.16, 0.16, 0.06, 24]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.earBlue} clearcoat={1.0} />
+        </mesh>
+      </group>
+
+      {/* Neck Peg */}
+      <mesh position={[0, -0.56, 0]} castShadow>
+        <cylinderGeometry args={[0.34, 0.34, 0.2, 24]} />
+        <meshPhysicalMaterial color={BUTLER_COLORS.robotDarkGray} metalness={0.4} roughness={0.3} />
+      </mesh>
+    </group>
+  );
+}
+
+// ─── Authentic LEGO Tuxedo Butler Torso with Red Bow Tie ─────────────────────
+function LegoButlerTorso() {
+  const torsoGeom = useMemo(() => {
     const shape = new THREE.Shape();
     const topW = 0.92;
     const botW = 1.22;
@@ -100,202 +337,206 @@ function LegoTorso() {
   }, []);
 
   return (
-    <group>
-      {/* White Studio Tee */}
-      <mesh geometry={geom} castShadow receiveShadow>
+    <group position={[0, 0.05, 0]}>
+      {/* Black Tuxedo Jacket Shell */}
+      <mesh geometry={torsoGeom} castShadow receiveShadow>
         <meshPhysicalMaterial
-          color={LEGO_COLORS.shirtWhite}
-          roughness={0.15}
+          color={BUTLER_COLORS.suitBlack}
+          roughness={0.14}
           clearcoat={1.0}
-          clearcoatRoughness={0.08}
+          clearcoatRoughness={0.06}
         />
       </mesh>
 
-      {/* Front Heart & WEMO Print Decal */}
-      <mesh position={[0, 0.08, 0.44]}>
-        <circleGeometry args={[0.26, 24]} />
-        <meshBasicMaterial color="#FFF0EC" />
-      </mesh>
-      <mesh position={[0, 0.08, 0.445]}>
-        <circleGeometry args={[0.16, 24]} />
-        <meshBasicMaterial color={LEGO_COLORS.wemoCoral} />
+      {/* Crisp White Collared Shirt Insert (V-Shape Center) */}
+      <mesh position={[0, 0.12, 0.44]}>
+        <planeGeometry args={[0.44, 0.88]} />
+        <meshPhysicalMaterial
+          color={BUTLER_COLORS.shirtWhite}
+          roughness={0.2}
+          clearcoat={0.6}
+        />
       </mesh>
 
-      {/* WEMO Mini Text Badge */}
-      <mesh position={[0, -0.22, 0.44]}>
-        <planeGeometry args={[0.42, 0.12]} />
-        <meshBasicMaterial color={LEGO_COLORS.goldAccent} />
+      {/* Left Tuxedo Satin Lapel */}
+      <mesh position={[-0.32, 0.06, 0.45]} rotation={[0, 0, -0.16]}>
+        <boxGeometry args={[0.22, 1.05, 0.02]} />
+        <meshPhysicalMaterial color={BUTLER_COLORS.suitLapel} roughness={0.12} clearcoat={1.0} />
       </mesh>
-      <mesh position={[0, -0.22, 0.445]}>
-        <planeGeometry args={[0.36, 0.08]} />
-        <meshBasicMaterial color="#FFFFFF" />
+
+      {/* Right Tuxedo Satin Lapel */}
+      <mesh position={[0.32, 0.06, 0.45]} rotation={[0, 0, 0.16]}>
+        <boxGeometry args={[0.22, 1.05, 0.02]} />
+        <meshPhysicalMaterial color={BUTLER_COLORS.suitLapel} roughness={0.12} clearcoat={1.0} />
+      </mesh>
+
+      {/* ── Vibrant Red Bow Tie (Nơ đỏ nổi bật của AI Butler) ── */}
+      <group position={[0, 0.46, 0.48]}>
+        {/* Center knot stud */}
+        <mesh castShadow>
+          <boxGeometry args={[0.12, 0.12, 0.08]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.bowTieRed} roughness={0.18} clearcoat={0.9} />
+        </mesh>
+        {/* Left wing */}
+        <mesh position={[-0.14, 0, 0]} rotation={[0, 0, -0.18]} castShadow>
+          <coneGeometry args={[0.13, 0.22, 4]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.bowTieRed} roughness={0.18} clearcoat={0.9} />
+        </mesh>
+        {/* Right wing */}
+        <mesh position={[0.14, 0, 0]} rotation={[0, 0, 0.18]} castShadow>
+          <coneGeometry args={[0.13, 0.22, 4]} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.bowTieRed} roughness={0.18} clearcoat={0.9} />
+        </mesh>
+      </group>
+
+      {/* Tiny Black Tuxedo Buttons down the white shirt */}
+      <mesh position={[0, 0.18, 0.455]}>
+        <circleGeometry args={[0.026, 16]} />
+        <meshBasicMaterial color="#0A0A0A" />
+      </mesh>
+      <mesh position={[0, 0.02, 0.455]}>
+        <circleGeometry args={[0.026, 16]} />
+        <meshBasicMaterial color="#0A0A0A" />
+      </mesh>
+      <mesh position={[0, -0.14, 0.455]}>
+        <circleGeometry args={[0.026, 16]} />
+        <meshBasicMaterial color="#0A0A0A" />
+      </mesh>
+
+      {/* White Folded Pocket Square (Khăn cài túi ngực) */}
+      <group position={[0.34, 0.26, 0.455]} rotation={[0, 0, -0.15]}>
+        <mesh>
+          <planeGeometry args={[0.16, 0.04]} />
+          <meshBasicMaterial color={BUTLER_COLORS.shirtWhite} />
+        </mesh>
+        {/* Triangular handkerchief peaks */}
+        <mesh position={[0, 0.035, 0]}>
+          <coneGeometry args={[0.04, 0.06, 3]} />
+          <meshBasicMaterial color={BUTLER_COLORS.shirtWhite} />
+        </mesh>
+      </group>
+
+      {/* Elegant Gold Chain / Watch Accent */}
+      <mesh position={[-0.18, -0.22, 0.455]} rotation={[0, 0, 0.35]}>
+        <torusGeometry args={[0.1, 0.014, 8, 16, Math.PI * 0.9]} />
+        <meshStandardMaterial color={BUTLER_COLORS.goldChain} metalness={0.8} roughness={0.2} />
       </mesh>
     </group>
   );
 }
 
-// ─── Translucent Candy Heart Brick ──────────────────────────────────────────
-function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, number, number] }) {
-  const heartShape = useMemo(() => {
-    const s = new THREE.Shape();
-    s.moveTo(0, 0.25);
-    s.bezierCurveTo(0, 0.35, -0.25, 0.55, -0.45, 0.55);
-    s.bezierCurveTo(-0.75, 0.55, -0.75, 0.2, -0.75, 0.2);
-    s.bezierCurveTo(-0.75, -0.05, -0.5, -0.3, 0, -0.65);
-    s.bezierCurveTo(0.5, -0.3, 0.75, -0.05, 0.75, 0.2);
-    s.bezierCurveTo(0.75, 0.2, 0.75, 0.55, 0.45, 0.55);
-    s.bezierCurveTo(0.25, 0.55, 0, 0.35, 0, 0.25);
-    return s;
-  }, []);
-
-  const geom = useMemo(() => {
-    return new THREE.ExtrudeGeometry(heartShape, {
-      depth: 0.24,
-      bevelEnabled: true,
-      bevelSegments: 3,
-      steps: 1,
-      bevelSize: 0.04,
-      bevelThickness: 0.04,
-    });
-  }, [heartShape]);
-
-  return (
-    <group position={position} scale={[0.44, 0.44, 0.44]}>
-      <mesh geometry={geom} castShadow>
-        <meshPhysicalMaterial
-          color={LEGO_COLORS.heartPink}
-          emissive={LEGO_COLORS.heartPink}
-          emissiveIntensity={0.85}
-          roughness={0.08}
-          transmission={0.88}
-          thickness={0.8}
-          clearcoat={1.0}
-        />
-      </mesh>
-      <LegoStud position={[-0.32, 0.58, 0.12]} color={LEGO_COLORS.heartPink} scale={[0.55, 0.55, 0.55]} />
-      <LegoStud position={[0.32, 0.58, 0.12]} color={LEGO_COLORS.heartPink} scale={[0.55, 0.55, 0.55]} />
-    </group>
-  );
-}
-
-// ─── Complete Autonomous LEGO Minifigure Character ──────────────────────────
-function LegoMinifigureBot({
-  isHovered,
-  isClicked,
-}: {
-  isHovered: boolean;
-  isClicked: boolean;
-}) {
+// ─── Main LEGO Robot Butler Minifigure Model ─────────────────────────────────
+function LegoRobotButlerModel({ isHovered, isClicked }: { isHovered: boolean; isClicked: boolean }) {
   const figureGroupRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
-  const rightArmRef = useRef<THREE.Group>(null);
   const leftArmRef = useRef<THREE.Group>(null);
+  const rightArmRef = useRef<THREE.Group>(null);
   const leftLegRef = useRef<THREE.Group>(null);
   const rightLegRef = useRef<THREE.Group>(null);
 
-  const [eyeState, setEyeState] = useState<"normal" | "blink" | "happy">("normal");
+  const { pointer } = useThree();
 
-  const { mouse } = useThree();
+  // Natural Eye-State Machine (Normal -> Periodic Blinking -> Happy on Hover)
+  const [eyeState, setEyeState] = useState<"normal" | "blink" | "happy">("normal");
 
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
-    // ── 1. Autonomous Natural Behavior Cycle (16s timeline) ─────────────────
-    // 0s-6s: Calm idle float & curious eye blinking
-    // 6s-9.5s: Spontaneous friendly wave
-    // 9.5s-12.5s: Cute head tilt
-    // 12.5s-16s: Light bipedal step / walk
-    const cycle = t % 16;
-    let mode: "idle" | "wave" | "tilt" | "walk" | "dance" = "idle";
-
-    if (isClicked) {
-      mode = "dance";
-    } else if (isHovered) {
-      mode = "wave";
-    } else if (cycle >= 6 && cycle < 9.5) {
-      mode = "wave";
-    } else if (cycle >= 9.5 && cycle < 12.5) {
-      mode = "tilt";
-    } else if (cycle >= 12.5) {
-      mode = "walk";
-    }
-
-    // ── 2. Cute Natural Eye Blinking (Every ~3.8s for 0.16s) ────────────────
-    const blinkCycle = t % 3.8;
-    const isBlinking = blinkCycle < 0.16;
-    if (isHovered || isClicked || mode === "wave") {
-      setEyeState("happy");
-    } else if (isBlinking) {
-      setEyeState("blink");
+    // ── 1. Autonomous Blinking Logic ─────────────────────────────────────────
+    if (isHovered) {
+      if (eyeState !== "happy") setEyeState("happy");
     } else {
-      setEyeState("normal");
-    }
-
-    // ── 3. Head Mouse Tracking & Natural Tilt ───────────────────────────────
-    if (headRef.current) {
-      const targetRotY = mouse.x * 0.42;
-      const targetRotX = -mouse.y * 0.24;
-      const tiltZ = mode === "tilt" ? Math.sin(t * 1.8) * 0.12 : 0;
-
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.08);
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.08);
-      headRef.current.rotation.z = THREE.MathUtils.lerp(headRef.current.rotation.z, tiltZ, 0.08);
-    }
-
-    // ── 4. Natural Body Breathing & Bounce ──────────────────────────────────
-    if (figureGroupRef.current) {
-      if (mode === "dance") {
-        figureGroupRef.current.position.y = -0.18 + Math.sin(t * 8) * 0.08;
-        figureGroupRef.current.rotation.y = Math.sin(t * 4) * 0.22;
-      } else if (mode === "walk") {
-        figureGroupRef.current.position.y = -0.18 + Math.abs(Math.sin(t * 5)) * 0.04;
-        figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.06;
+      const blinkCycle = (t % 3.6);
+      if (blinkCycle < 0.16) {
+        if (eyeState !== "blink") setEyeState("blink");
       } else {
-        // Natural gentle idle breathing float
-        figureGroupRef.current.position.y = -0.18 + Math.sin(t * 2.2) * 0.03;
-        figureGroupRef.current.rotation.y = THREE.MathUtils.lerp(figureGroupRef.current.rotation.y, 0, 0.08);
+        if (eyeState !== "normal") setEyeState("normal");
       }
     }
 
-    // ── 5. Right Arm (Spontaneous Waving & Resting) ──────────────────────────
+    // ── 2. Head Mouse-Tracking & Inquisitive Tilts ────────────────────────────
+    if (headRef.current) {
+      const targetRotY = pointer.x * 0.45;
+      const targetRotX = -pointer.y * 0.28 + Math.sin(t * 1.4) * 0.03;
+      const targetTiltZ = isHovered ? -0.1 : Math.sin(t * 0.9) * 0.05;
+
+      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.08);
+      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.08);
+      headRef.current.rotation.z = THREE.MathUtils.lerp(headRef.current.rotation.z, targetTiltZ, 0.08);
+    }
+
+    // ── 3. Autonomous Butler Animation Modes ──────────────────────────────────
+    const animPhase = t % 15;
+    let mode: "idle" | "wave" | "walk" | "bow" = "idle";
+
+    if (isClicked) {
+      mode = "bow";
+    } else if (isHovered) {
+      mode = "wave";
+    } else if (animPhase > 4 && animPhase < 8.5) {
+      mode = "wave";
+    } else if (animPhase >= 11 && animPhase <= 14) {
+      mode = "walk";
+    }
+
+    // ── 4. Natural Body Float & Polite Butler Bow ────────────────────────────
+    if (figureGroupRef.current) {
+      if (mode === "bow") {
+        figureGroupRef.current.position.y = -0.22;
+        figureGroupRef.current.rotation.x = 0.2; // Polite respectful bow
+        figureGroupRef.current.rotation.y = THREE.MathUtils.lerp(figureGroupRef.current.rotation.y, 0, 0.1);
+      } else if (mode === "walk") {
+        figureGroupRef.current.position.y = -0.16 + Math.abs(Math.sin(t * 5)) * 0.04;
+        figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.06;
+        figureGroupRef.current.rotation.x = THREE.MathUtils.lerp(figureGroupRef.current.rotation.x, 0, 0.1);
+      } else {
+        // Natural gentle idle breathing float
+        figureGroupRef.current.position.y = -0.16 + Math.sin(t * 2.2) * 0.03;
+        figureGroupRef.current.rotation.y = THREE.MathUtils.lerp(figureGroupRef.current.rotation.y, 0, 0.08);
+        figureGroupRef.current.rotation.x = THREE.MathUtils.lerp(figureGroupRef.current.rotation.x, 0, 0.08);
+      }
+    }
+
+    // ── 5. Right Arm (Welcoming Butler Wave & Presentation) ──────────────────
     if (rightArmRef.current) {
-      if (mode === "dance") {
-        rightArmRef.current.rotation.z = -0.5 + Math.sin(t * 8) * 0.4;
-        rightArmRef.current.rotation.x = 0.25 + Math.cos(t * 8) * 0.25;
+      if (mode === "bow") {
+        rightArmRef.current.rotation.z = -0.25;
+        rightArmRef.current.rotation.x = 0.4;
       } else if (mode === "walk") {
         rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.2, 0.1);
-        rightArmRef.current.rotation.x = Math.sin(t * 5) * 0.4;
+        rightArmRef.current.rotation.x = Math.sin(t * 5) * 0.38;
       } else if (mode === "wave") {
-        const waveSpeed = isHovered ? 7.0 : 3.6;
-        const waveAmp = isHovered ? 0.36 : 0.24;
+        const waveSpeed = isHovered ? 7.2 : 3.8;
+        const waveAmp = isHovered ? 0.38 : 0.25;
         const wave = Math.sin(t * waveSpeed) * waveAmp;
         rightArmRef.current.rotation.z = -0.42 + wave;
         rightArmRef.current.rotation.x = 0.15 + Math.cos(t * 2.5) * 0.08;
       } else {
-        // Natural relaxed rest
-        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.15, 0.08);
+        // Polite rest
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.16, 0.08);
         rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0.08, 0.08);
       }
     }
 
-    // ── 6. Left Arm (Gently holding candy heart) ─────────────────────────────
+    // ── 6. Left Arm (Hospitable Butler Welcome Pose) ─────────────────────────
     if (leftArmRef.current) {
-      if (mode === "dance") {
-        leftArmRef.current.rotation.x = 0.15 - Math.cos(t * 8) * 0.22;
+      if (mode === "bow") {
+        leftArmRef.current.rotation.x = 0.4;
+        leftArmRef.current.rotation.z = 0.25;
       } else if (mode === "walk") {
         leftArmRef.current.rotation.x = 0.12 - Math.sin(t * 5) * 0.3;
       } else {
-        leftArmRef.current.rotation.x = 0.08 + Math.sin(t * 1.5) * 0.03;
+        // Welcoming outstretched butler gesture
+        leftArmRef.current.rotation.x = 0.18 + Math.sin(t * 1.5) * 0.04;
+        leftArmRef.current.rotation.z = 0.18;
       }
     }
 
     // ── 7. Legs (Autonomous stepping) ───────────────────────────────────────
     if (leftLegRef.current && rightLegRef.current) {
-      if (mode === "walk" || mode === "dance") {
-        const legSpeed = mode === "dance" ? 8 : 5;
-        const legAmp = mode === "dance" ? 0.35 : 0.38;
-        leftLegRef.current.rotation.x = Math.sin(t * legSpeed) * legAmp;
-        rightLegRef.current.rotation.x = -Math.sin(t * legSpeed) * legAmp;
+      if (mode === "walk") {
+        leftLegRef.current.rotation.x = Math.sin(t * 5) * 0.36;
+        rightLegRef.current.rotation.x = -Math.sin(t * 5) * 0.36;
       } else {
         leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, 0.1);
         rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, 0.1);
@@ -304,213 +545,114 @@ function LegoMinifigureBot({
   });
 
   return (
-    <group ref={figureGroupRef} position={[0, -0.18, 0]}>
-      {/* ── 1. Authentic LEGO Minifigure Head ── */}
-      <group ref={headRef} position={[0, 0.94, 0]}>
-        {/* Main Head Cylinder */}
-        <mesh castShadow receiveShadow>
-          <cylinderGeometry args={[0.74, 0.74, 0.96, 32]} />
-          <meshPhysicalMaterial
-            color={LEGO_COLORS.skinYellow}
-            roughness={0.14}
-            clearcoat={1.0}
-            clearcoatRoughness={0.06}
-          />
-        </mesh>
-
-        {/* Smooth Rounded Top Rim Cap (Completely solid, zero holes) */}
-        <mesh position={[0, 0.44, 0]} castShadow>
-          <sphereGeometry args={[0.735, 32, 16]} />
-          <meshPhysicalMaterial
-            color={LEGO_COLORS.skinYellow}
-            roughness={0.14}
-            clearcoat={1.0}
-            clearcoatRoughness={0.06}
-          />
-        </mesh>
-
-        {/* Classic Center Top Stud */}
-        <LegoStud position={[0, 0.88, 0]} color={LEGO_COLORS.skinYellow} scale={[1.1, 0.9, 1.1]} />
-
-        {/* Neck Peg */}
-        <mesh position={[0, -0.56, 0]} castShadow>
-          <cylinderGeometry args={[0.34, 0.34, 0.18, 24]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.skinYellow} roughness={0.18} />
-        </mesh>
-
-        {/* ── Anime Face Print on Head ── */}
-        {eyeState === "happy" ? (
-          // Happy smiling arches (^ ^)
-          <>
-            <group position={[-0.26, 0.08, 0.74]} rotation={[0, 0, Math.PI]}>
-              <mesh>
-                <torusGeometry args={[0.085, 0.024, 12, 24, Math.PI]} />
-                <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-              </mesh>
-            </group>
-            <group position={[0.26, 0.08, 0.74]} rotation={[0, 0, Math.PI]}>
-              <mesh>
-                <torusGeometry args={[0.085, 0.024, 12, 24, Math.PI]} />
-                <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-              </mesh>
-            </group>
-          </>
-        ) : eyeState === "blink" ? (
-          // Cute horizontal blinking lines (- -)
-          <>
-            <mesh position={[-0.26, 0.06, 0.74]}>
-              <planeGeometry args={[0.16, 0.03]} />
-              <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-            </mesh>
-            <mesh position={[0.26, 0.06, 0.74]}>
-              <planeGeometry args={[0.16, 0.03]} />
-              <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-            </mesh>
-          </>
-        ) : (
-          // Big, sparkling anime eyes with double catchlights
-          <>
-            <group position={[-0.26, 0.06, 0.74]} rotation={[-0.05, -0.08, 0]}>
-              <mesh scale={[1, 1.3, 1]}>
-                <circleGeometry args={[0.14, 28]} />
-                <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-              </mesh>
-              <mesh position={[0, -0.02, 0.002]} scale={[0.9, 1.1, 1]}>
-                <circleGeometry args={[0.11, 24]} />
-                <meshBasicMaterial color={LEGO_COLORS.eyeIris} />
-              </mesh>
-              <mesh position={[-0.04, 0.05, 0.005]}>
-                <circleGeometry args={[0.05, 16]} />
-                <meshBasicMaterial color="#FFFFFF" />
-              </mesh>
-              <mesh position={[0.03, -0.03, 0.005]}>
-                <circleGeometry args={[0.025, 14]} />
-                <meshBasicMaterial color="#FFFFFF" />
-              </mesh>
-            </group>
-
-            <group position={[0.26, 0.06, 0.74]} rotation={[-0.05, 0.08, 0]}>
-              <mesh scale={[1, 1.3, 1]}>
-                <circleGeometry args={[0.14, 28]} />
-                <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-              </mesh>
-              <mesh position={[0, -0.02, 0.002]} scale={[0.9, 1.1, 1]}>
-                <circleGeometry args={[0.11, 24]} />
-                <meshBasicMaterial color={LEGO_COLORS.eyeIris} />
-              </mesh>
-              <mesh position={[-0.04, 0.05, 0.005]}>
-                <circleGeometry args={[0.05, 16]} />
-                <meshBasicMaterial color="#FFFFFF" />
-              </mesh>
-              <mesh position={[0.03, -0.03, 0.005]}>
-                <circleGeometry args={[0.025, 14]} />
-                <meshBasicMaterial color="#FFFFFF" />
-              </mesh>
-            </group>
-          </>
-        )}
-
-        {/* Happy Smile Arc */}
-        <mesh position={[0, -0.14, 0.74]} rotation={[0, 0, Math.PI]}>
-          <torusGeometry args={[0.11, 0.022, 12, 24, Math.PI * 0.85]} />
-          <meshBasicMaterial color={LEGO_COLORS.eyeBlack} />
-        </mesh>
-
-        {/* Rosy Cheek Blush */}
-        <mesh position={[-0.42, -0.06, 0.68]} rotation={[-0.08, -0.35, 0]}>
-          <circleGeometry args={[0.12, 20]} />
-          <meshBasicMaterial color={LEGO_COLORS.cheeks} transparent opacity={0.65} />
-        </mesh>
-        <mesh position={[0.42, -0.06, 0.68]} rotation={[-0.08, 0.35, 0]}>
-          <circleGeometry args={[0.12, 20]} />
-          <meshBasicMaterial color={LEGO_COLORS.cheeks} transparent opacity={0.65} />
-        </mesh>
+    <group ref={figureGroupRef} position={[0, -0.16, 0]}>
+      {/* ── 1. Robot Butler Head & Top Hat ── */}
+      <group ref={headRef}>
+        <LegoRobotHead eyeState={eyeState} />
       </group>
 
-      {/* ── 2. Torso ── */}
-      <group position={[0, 0.05, 0]}>
-        <LegoTorso />
+      {/* ── 2. Tuxedo Butler Torso ── */}
+      <group>
+        <LegoButlerTorso />
 
-        {/* ── Left Arm (Holding glowing heart) ── */}
+        {/* ── Left Arm (Welcoming Butler Gesture) ── */}
         <group ref={leftArmRef} position={[-0.62, 0.52, 0]}>
-          {/* Shoulder ball */}
+          {/* Shoulder ball joint */}
           <mesh>
             <sphereGeometry args={[0.18, 16, 16]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.suitBlack} roughness={0.2} />
           </mesh>
-          {/* Angled Arm Capsule */}
-          <mesh position={[0.08, -0.25, 0.14]} rotation={[-0.38, 0.18, -0.26]} castShadow>
-            <capsuleGeometry args={[0.13, 0.44, 12, 18]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.skinYellow} roughness={0.16} clearcoat={0.9} />
+          {/* Upper Arm Capsule */}
+          <mesh position={[0.08, -0.22, 0.12]} rotation={[-0.32, 0.14, -0.22]} castShadow>
+            <capsuleGeometry args={[0.13, 0.42, 12, 18]} />
+            <meshPhysicalMaterial
+              color={BUTLER_COLORS.robotSilver}
+              metalness={0.35}
+              roughness={0.2}
+              clearcoat={0.9}
+            />
           </mesh>
-          {/* Authentic C-Hand */}
-          <LegoHand position={[0.16, -0.48, 0.24]} rotation={[-0.4, 0.5, 0.3]} />
-          {/* Candy Heart held in hand */}
-          <GlowingHeartBrick position={[0.18, -0.38, 0.36]} />
+          {/* Metallic C-Hand in hospitable welcoming pose */}
+          <LegoHand position={[0.16, -0.46, 0.24]} rotation={[-0.3, 0.4, 0.2]} />
         </group>
 
-        {/* ── Right Arm (Waving hand) ── */}
+        {/* ── Right Arm (Polite Waving Hand) ── */}
         <group ref={rightArmRef} position={[0.62, 0.52, 0]}>
-          {/* Shoulder ball */}
+          {/* Shoulder ball joint */}
           <mesh>
             <sphereGeometry args={[0.18, 16, 16]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.suitBlack} roughness={0.2} />
           </mesh>
-          {/* Angled Upper Arm */}
+          {/* Upper Arm Capsule */}
           <mesh position={[0.15, 0.2, 0.06]} rotation={[-0.2, 0, -0.45]} castShadow>
-            <capsuleGeometry args={[0.13, 0.48, 12, 18]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.skinYellow} roughness={0.16} clearcoat={0.9} />
+            <capsuleGeometry args={[0.13, 0.46, 12, 18]} />
+            <meshPhysicalMaterial
+              color={BUTLER_COLORS.robotSilver}
+              metalness={0.35}
+              roughness={0.2}
+              clearcoat={0.9}
+            />
           </mesh>
-          {/* Waving C-Hand */}
+          {/* Waving Metallic C-Hand */}
           <LegoHand position={[0.3, 0.48, 0.08]} rotation={[0.4, 0.25, -0.65]} />
         </group>
       </group>
 
-      {/* ── 3. Hips & Legs ── */}
+      {/* ── 3. Tuxedo Hips & Robotic Butler Legs ── */}
       <group position={[0, -0.7, 0]}>
-        {/* Hip T-Bar */}
+        {/* Hip T-Bar in Tuxedo Black */}
         <mesh position={[0, 0.06, 0]} castShadow>
           <boxGeometry args={[1.22, 0.2, 0.78]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.pantsDark} roughness={0.25} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.suitBlack} roughness={0.2} />
         </mesh>
         <mesh position={[0, 0.06, 0]} rotation={[0, 0, Math.PI / 2]}>
           <cylinderGeometry args={[0.34, 0.34, 1.26, 24]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.pantsDark} roughness={0.25} />
+          <meshPhysicalMaterial color={BUTLER_COLORS.robotDarkGray} metalness={0.4} roughness={0.3} />
         </mesh>
 
         {/* Left Leg */}
         <group ref={leftLegRef} position={[-0.36, -0.5, 0]}>
+          {/* White / Silver Robotic Thigh */}
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.52, 0.98, 0.74]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.pantsBrown} roughness={0.18} clearcoat={0.85} />
+            <meshPhysicalMaterial
+              color={BUTLER_COLORS.shirtWhite}
+              roughness={0.16}
+              clearcoat={0.9}
+            />
           </mesh>
-          {/* Foot Step Cutout */}
+          {/* Cobalt Blue / Black Foot Step */}
           <mesh position={[0, -0.4, 0.2]}>
             <boxGeometry args={[0.52, 0.18, 0.36]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.pantsDark} roughness={0.25} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.bootBlue} roughness={0.2} />
           </mesh>
-          {/* Leg side hole circle for authentic Lego look */}
+          {/* Side Leg Hole for authentic Lego look */}
           <mesh position={[-0.27, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
             <circleGeometry args={[0.14, 18]} />
-            <meshBasicMaterial color={LEGO_COLORS.pantsDark} />
+            <meshBasicMaterial color={BUTLER_COLORS.robotDarkGray} />
           </mesh>
         </group>
 
         {/* Right Leg */}
         <group ref={rightLegRef} position={[0.36, -0.5, 0]}>
+          {/* White / Silver Robotic Thigh */}
           <mesh castShadow receiveShadow>
             <boxGeometry args={[0.52, 0.98, 0.74]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.pantsBrown} roughness={0.18} clearcoat={0.85} />
+            <meshPhysicalMaterial
+              color={BUTLER_COLORS.shirtWhite}
+              roughness={0.16}
+              clearcoat={0.9}
+            />
           </mesh>
-          {/* Foot Step Cutout */}
+          {/* Cobalt Blue / Black Foot Step */}
           <mesh position={[0, -0.4, 0.2]}>
             <boxGeometry args={[0.52, 0.18, 0.36]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.pantsDark} roughness={0.25} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.bootBlue} roughness={0.2} />
           </mesh>
-          {/* Leg side hole circle */}
+          {/* Side Leg Hole */}
           <mesh position={[0.27, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
             <circleGeometry args={[0.14, 18]} />
-            <meshBasicMaterial color={LEGO_COLORS.pantsDark} />
+            <meshBasicMaterial color={BUTLER_COLORS.robotDarkGray} />
           </mesh>
         </group>
       </group>
@@ -518,7 +660,7 @@ function LegoMinifigureBot({
   );
 }
 
-// ─── Main Exported Floating LEGO Mascot Component (Clean & Cute, No Text) ───
+// ─── Main Exported Floating LEGO AI Butler Mascot Component ──────────────────
 export interface WalkingBot3DProps {
   onOpenChat?: () => void;
   className?: string;
@@ -544,7 +686,7 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onClick={handleClick}
-        title="Nhấn để trò chuyện cùng trợ lý ảo WEMO 🧱✨"
+        title="Nhấn để trò chuyện cùng Quản Gia LEGO WEMO 🎩🤖✨"
       >
         <motion.div
           whileHover={{ scale: 1.08 }}
@@ -552,36 +694,36 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
           transition={{ type: "spring", stiffness: 350, damping: 22 }}
           className="relative"
           style={{
-            width: 125,
-            height: 165,
+            width: 140,
+            height: 185,
             background: "transparent",
           }}
         >
           <Canvas
             shadows
-            camera={{ position: [0, 0.18, 5.2], fov: 38 }}
+            camera={{ position: [0, 0.25, 5.6], fov: 38 }}
             gl={{ alpha: true, antialias: true }}
             style={{ width: "100%", height: "100%", pointerEvents: "none" }}
           >
-            <ambientLight intensity={0.92} />
+            <ambientLight intensity={0.95} />
             {/* Key Studio Light */}
-            <directionalLight position={[4, 7, 5]} intensity={2.0} castShadow />
-            {/* Soft Warm Fill Light */}
-            <directionalLight position={[-4, 3, 3]} intensity={1.1} color="#FFE6D5" />
-            {/* Rim Backlight for Plastic Edges */}
-            <directionalLight position={[0, 4, -5]} intensity={1.5} color="#FFDFBA" />
-            {/* Soft Pink Bounce from Heart Brick */}
-            <pointLight position={[-0.2, -0.3, 0.8]} intensity={1.3} color="#FF4D6D" distance={2.5} />
+            <directionalLight position={[4, 8, 5]} intensity={2.2} castShadow />
+            {/* Soft Warm Studio Fill Light */}
+            <directionalLight position={[-4, 3, 3]} intensity={1.1} color="#FFEEDD" />
+            {/* Rim Backlight highlighting the Top Hat & Shoulders */}
+            <directionalLight position={[0, 5, -5]} intensity={1.8} color="#E0F2FE" />
+            {/* Soft Cyan Visor Glow */}
+            <pointLight position={[0, 0.95, 1.1]} intensity={1.5} color={BUTLER_COLORS.neonCyan} distance={2.5} />
 
-            {/* Ambient Cute Sparkles */}
-            <Sparkles count={16} scale={3.2} size={2.0} speed={0.45} color="#FFB3C6" opacity={0.65} />
+            {/* Ambient High-Tech Sparkles */}
+            <Sparkles count={18} scale={3.4} size={2.2} speed={0.5} color="#38BDF8" opacity={0.65} />
 
             <Float speed={1.8} rotationIntensity={0.04} floatIntensity={0.08}>
-              <LegoMinifigureBot isHovered={isHovered} isClicked={isClicked} />
+              <LegoRobotButlerModel isHovered={isHovered} isClicked={isClicked} />
             </Float>
 
             {/* Ground Contact Shadow */}
-            <ContactShadows position={[0, -1.88, 0]} opacity={0.32} scale={2.6} blur={1.6} far={2.5} />
+            <ContactShadows position={[0, -1.9, 0]} opacity={0.34} scale={2.8} blur={1.6} far={2.5} />
           </Canvas>
 
           {/* Online green indicator dot */}
