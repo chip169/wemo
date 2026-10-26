@@ -5,42 +5,20 @@ import * as THREE from "three";
 import { motion, AnimatePresence } from "motion/react";
 import { Sparkles as SparklesIcon, X } from "lucide-react";
 
-// ─── Color Palette (Authentic ABS Glossy Plastic) ───────────────────────────
-const LEGO_COLORS = {
-  bearBrown: "#C27E3B",       // Warm Golden Caramel
-  bearDarkBrown: "#7E4316",   // Rich chocolate accents
-  creamBelly: "#FCECD2",      // Creamy chest & muzzle
-  pinkHeart: "#FF6584",       // Translucent candy heart
-  shirtWhite: "#FFFFFF",      // Clean white tee
-  eyeBlack: "#18100C",        // Glossy black pupil
-  eyeIris: "#5A3010",         // Warm amber iris
-  cheeks: "#FF8A7A",          // Soft rosy blush
-  studGold: "#E5A93C",        // Accent studs
+// ─── High-Tech Luxury Color Palette ─────────────────────────────────────────
+const BOT_COLORS = {
+  bodyWhite: "#FFFFFF",        // Pearl White Ceramic
+  visorBlack: "#0F172A",       // Glossy Obsidian Visor
+  ledCyan: "#38BDF8",          // Sky Blue LED
+  ledPink: "#F472B6",          // Soft Pink LED
+  roseGold: "#D4AF78",         // Metallic Rose Gold Trims
+  wemoCoral: "#E8B4A8",        // WEMO Signature Coral
+  heartGlow: "#FF4D6D",        // Heart Core Glow
+  metalDark: "#334155",        // Gunmetal joints
 };
 
-// ─── Smooth LEGO Stud ───────────────────────────────────────────────────────
-function LegoStud({ position, scale = [1, 1, 1], color = LEGO_COLORS.bearBrown }: {
-  position: [number, number, number];
-  scale?: [number, number, number];
-  color?: string;
-}) {
-  return (
-    <group position={position} scale={scale}>
-      <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[0.2, 0.2, 0.14, 24]} />
-        <meshPhysicalMaterial
-          color={color}
-          roughness={0.16}
-          clearcoat={0.9}
-          clearcoatRoughness={0.1}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-// ─── Translucent Glowing Candy Heart ────────────────────────────────────────
-function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, number, number] }) {
+// ─── Glowing NFC Memory Chip / Heart Core ───────────────────────────────────
+function GlowingNfcHeart({ position = [0, 0, 0] }: { position?: [number, number, number] }) {
   const heartShape = useMemo(() => {
     const s = new THREE.Shape();
     s.moveTo(0, 0.25);
@@ -55,12 +33,12 @@ function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, numbe
 
   const geom = useMemo(() => {
     return new THREE.ExtrudeGeometry(heartShape, {
-      depth: 0.26,
+      depth: 0.22,
       bevelEnabled: true,
       bevelSegments: 3,
       steps: 1,
-      bevelSize: 0.05,
-      bevelThickness: 0.05,
+      bevelSize: 0.04,
+      bevelThickness: 0.04,
     });
   }, [heartShape]);
 
@@ -68,23 +46,26 @@ function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, numbe
     <group position={position} scale={[0.42, 0.42, 0.42]}>
       <mesh geometry={geom} castShadow>
         <meshPhysicalMaterial
-          color={LEGO_COLORS.pinkHeart}
-          emissive={LEGO_COLORS.pinkHeart}
-          emissiveIntensity={0.65}
+          color={BOT_COLORS.heartGlow}
+          emissive={BOT_COLORS.heartGlow}
+          emissiveIntensity={0.85}
           roughness={0.08}
-          transmission={0.85}
+          transmission={0.88}
           thickness={0.8}
           clearcoat={1.0}
         />
       </mesh>
-      <LegoStud position={[-0.32, 0.58, 0.13]} color={LEGO_COLORS.pinkHeart} scale={[0.55, 0.55, 0.55]} />
-      <LegoStud position={[0.32, 0.58, 0.13]} color={LEGO_COLORS.pinkHeart} scale={[0.55, 0.55, 0.55]} />
+      {/* Golden NFC Ring Accent */}
+      <mesh position={[0, 0, 0.24]}>
+        <ringGeometry args={[0.18, 0.24, 24]} />
+        <meshBasicMaterial color={BOT_COLORS.roseGold} side={THREE.DoubleSide} />
+      </mesh>
     </group>
   );
 }
 
-// ─── Completely Seamless & Organic Chibi LEGO Mascot Figure ─────────────────
-function SeamlessLegoFigure({
+// ─── Sleek Futuristic Chibi Bot (WEMO Astro-Bot) ────────────────────────────
+function AstroBotFigure({
   isHovered,
   motionMode,
 }: {
@@ -103,62 +84,62 @@ function SeamlessLegoFigure({
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
 
-    // 1. Smooth Head Tracking (Eyes & head softly follow mouse)
+    // 1. Head and Visor Cursor Tracking
     if (headRef.current) {
-      const targetRotY = mouse.x * 0.42;
-      const targetRotX = -mouse.y * 0.25;
+      const targetRotY = mouse.x * 0.45;
+      const targetRotX = -mouse.y * 0.28;
       headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.08);
       headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.08);
     }
 
-    // 2. Continuous Organic Body Motion
+    // 2. Body Floating & Bobbing
     if (figureGroupRef.current) {
       if (motionMode === "dance") {
-        figureGroupRef.current.position.y = -0.45 + Math.sin(t * 8) * 0.07;
-        figureGroupRef.current.rotation.y = Math.sin(t * 4) * 0.2;
+        figureGroupRef.current.position.y = -0.45 + Math.sin(t * 8) * 0.08;
+        figureGroupRef.current.rotation.y = Math.sin(t * 4) * 0.22;
       } else if (motionMode === "walk") {
-        figureGroupRef.current.position.y = -0.45 + Math.abs(Math.sin(t * 5)) * 0.045;
-        figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.06;
+        figureGroupRef.current.position.y = -0.45 + Math.abs(Math.sin(t * 5)) * 0.05;
+        figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.08;
       } else {
-        // Natural gentle breathing float
-        figureGroupRef.current.position.y = -0.45 + Math.sin(t * 2) * 0.03;
+        // Futuristic gentle antigravity hover
+        figureGroupRef.current.position.y = -0.45 + Math.sin(t * 2.2) * 0.04;
         figureGroupRef.current.rotation.y = THREE.MathUtils.lerp(figureGroupRef.current.rotation.y, 0, 0.08);
       }
     }
 
-    // 3. Right Arm (Waving) — seamless ball-joint rotation
+    // 3. Right Arm (Waving)
     if (rightArmRef.current) {
       if (motionMode === "dance") {
-        rightArmRef.current.rotation.z = -0.5 + Math.sin(t * 8) * 0.38;
-        rightArmRef.current.rotation.x = 0.25 + Math.cos(t * 8) * 0.22;
+        rightArmRef.current.rotation.z = -0.5 + Math.sin(t * 8) * 0.42;
+        rightArmRef.current.rotation.x = 0.25 + Math.cos(t * 8) * 0.25;
       } else if (motionMode === "walk") {
         rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.2, 0.1);
-        rightArmRef.current.rotation.x = Math.sin(t * 5) * 0.38;
+        rightArmRef.current.rotation.x = Math.sin(t * 5) * 0.42;
       } else {
-        const waveSpeed = isHovered ? 6.5 : 3.2;
-        const waveAmp = isHovered ? 0.35 : 0.22;
+        const waveSpeed = isHovered ? 7.0 : 3.5;
+        const waveAmp = isHovered ? 0.38 : 0.24;
         const wave = Math.sin(t * waveSpeed) * waveAmp;
-        rightArmRef.current.rotation.z = -0.42 + wave;
-        rightArmRef.current.rotation.x = 0.15 + Math.cos(t * 2.5) * 0.06;
+        rightArmRef.current.rotation.z = -0.45 + wave;
+        rightArmRef.current.rotation.x = 0.15 + Math.cos(t * 2.5) * 0.08;
       }
     }
 
-    // 4. Left Arm (Holding heart)
+    // 4. Left Arm (Holding NFC Heart)
     if (leftArmRef.current) {
       if (motionMode === "dance") {
-        leftArmRef.current.rotation.x = 0.12 - Math.cos(t * 8) * 0.2;
+        leftArmRef.current.rotation.x = 0.15 - Math.cos(t * 8) * 0.25;
       } else if (motionMode === "walk") {
-        leftArmRef.current.rotation.x = 0.12 - Math.sin(t * 5) * 0.28;
+        leftArmRef.current.rotation.x = 0.15 - Math.sin(t * 5) * 0.32;
       } else {
-        leftArmRef.current.rotation.x = 0.1 + Math.sin(t * 1.5) * 0.035;
+        leftArmRef.current.rotation.x = 0.1 + Math.sin(t * 1.5) * 0.04;
       }
     }
 
-    // 5. Seamless Capsule Legs
+    // 5. Legs
     if (leftLegRef.current && rightLegRef.current) {
       if (motionMode === "walk" || motionMode === "dance") {
         const legSpeed = motionMode === "dance" ? 8 : 5;
-        const legAmp = motionMode === "dance" ? 0.32 : 0.38;
+        const legAmp = motionMode === "dance" ? 0.35 : 0.42;
         leftLegRef.current.rotation.x = Math.sin(t * legSpeed) * legAmp;
         rightLegRef.current.rotation.x = -Math.sin(t * legSpeed) * legAmp;
       } else {
@@ -170,239 +151,256 @@ function SeamlessLegoFigure({
 
   return (
     <group ref={figureGroupRef} position={[0, -0.45, 0]}>
-      {/* ── 1. Seamless Head (Continuous Rounded Chibi Sphere) ── */}
-      <group ref={headRef} position={[0, 0.88, 0]}>
-        {/* Main Head: Beautiful, solid rounded sphere with zero holes or gaps */}
-        <mesh castShadow receiveShadow scale={[1.08, 0.98, 1.02]}>
+      {/* ── 1. Futuristic Chibi Robot Head ── */}
+      <group ref={headRef} position={[0, 0.9, 0]}>
+        {/* Pearl White Ceramic Helmet */}
+        <mesh castShadow receiveShadow scale={[1.08, 1.0, 1.04]}>
           <sphereGeometry args={[0.82, 36, 32]} />
           <meshPhysicalMaterial
-            color={LEGO_COLORS.bearBrown}
-            roughness={0.16}
-            clearcoat={0.92}
-            clearcoatRoughness={0.08}
+            color={BOT_COLORS.bodyWhite}
+            roughness={0.12}
+            clearcoat={1.0}
+            clearcoatRoughness={0.05}
           />
         </mesh>
 
-        {/* Center LEGO Stud on crown */}
-        <LegoStud position={[0, 0.82, 0]} color={LEGO_COLORS.bearBrown} scale={[1.1, 0.85, 1.1]} />
-
-        {/* ── Left Ear (Seamlessly blended sphere) ── */}
-        <group position={[-0.72, 0.62, 0]} rotation={[0, 0, 0.35]}>
-          <mesh castShadow>
-            <sphereGeometry args={[0.32, 24, 24]} />
-            <meshPhysicalMaterial
-              color={LEGO_COLORS.bearBrown}
-              roughness={0.18}
-              clearcoat={0.9}
-            />
-          </mesh>
-          <mesh position={[0, 0, 0.08]}>
-            <circleGeometry args={[0.18, 20]} />
-            <meshBasicMaterial color={LEGO_COLORS.creamBelly} />
-          </mesh>
-          <LegoStud position={[0, 0.3, 0]} color={LEGO_COLORS.bearBrown} scale={[0.7, 0.7, 0.7]} />
-        </group>
-
-        {/* ── Right Ear (Seamlessly blended sphere) ── */}
-        <group position={[0.72, 0.62, 0]} rotation={[0, 0, -0.35]}>
-          <mesh castShadow>
-            <sphereGeometry args={[0.32, 24, 24]} />
-            <meshPhysicalMaterial
-              color={LEGO_COLORS.bearBrown}
-              roughness={0.18}
-              clearcoat={0.9}
-            />
-          </mesh>
-          <mesh position={[0, 0, 0.08]}>
-            <circleGeometry args={[0.18, 20]} />
-            <meshBasicMaterial color={LEGO_COLORS.creamBelly} />
-          </mesh>
-          <LegoStud position={[0, 0.3, 0]} color={LEGO_COLORS.bearBrown} scale={[0.7, 0.7, 0.7]} />
-        </group>
-
-        {/* ── Soft Flattened Cream Snout & Smile ── */}
-        <group position={[0, -0.1, 0.72]}>
-          <mesh castShadow scale={[1.12, 0.85, 0.55]}>
-            <sphereGeometry args={[0.38, 24, 24]} />
-            <meshPhysicalMaterial
-              color={LEGO_COLORS.creamBelly}
-              roughness={0.22}
-              clearcoat={0.75}
-            />
-          </mesh>
-          {/* Chocolate Button Nose */}
-          <mesh position={[0, 0.1, 0.24]} scale={[1.2, 0.85, 0.8]}>
-            <sphereGeometry args={[0.12, 18, 18]} />
-            <meshPhysicalMaterial
-              color={LEGO_COLORS.bearDarkBrown}
-              roughness={0.14}
-              clearcoat={1.0}
-            />
-          </mesh>
-          {/* Sweet Smiling Mouth */}
-          <mesh position={[0, -0.06, 0.24]} rotation={[0, 0, Math.PI]}>
-            <torusGeometry args={[0.11, 0.022, 12, 24, Math.PI * 0.85]} />
-            <meshBasicMaterial color={LEGO_COLORS.bearDarkBrown} />
-          </mesh>
-        </group>
-
-        {/* ── Big Anime Eyes with Double Specular Sparkles ── */}
-        {/* Left Eye */}
-        <group position={[-0.32, 0.12, 0.76]} rotation={[-0.05, -0.12, 0]}>
-          <mesh scale={[1, 1.25, 1]}><circleGeometry args={[0.17, 28]} /><meshBasicMaterial color={LEGO_COLORS.eyeBlack} /></mesh>
-          <mesh position={[0, -0.02, 0.002]} scale={[0.9, 1.1, 1]}><circleGeometry args={[0.13, 24]} /><meshBasicMaterial color={LEGO_COLORS.eyeIris} /></mesh>
-          <mesh position={[-0.05, 0.06, 0.005]}><circleGeometry args={[0.06, 16]} /><meshBasicMaterial color="#FFFFFF" /></mesh>
-          <mesh position={[0.04, -0.04, 0.005]}><circleGeometry args={[0.03, 14]} /><meshBasicMaterial color="#FFFFFF" /></mesh>
-        </group>
-
-        {/* Right Eye */}
-        <group position={[0.32, 0.12, 0.76]} rotation={[-0.05, 0.12, 0]}>
-          <mesh scale={[1, 1.25, 1]}><circleGeometry args={[0.17, 28]} /><meshBasicMaterial color={LEGO_COLORS.eyeBlack} /></mesh>
-          <mesh position={[0, -0.02, 0.002]} scale={[0.9, 1.1, 1]}><circleGeometry args={[0.13, 24]} /><meshBasicMaterial color={LEGO_COLORS.eyeIris} /></mesh>
-          <mesh position={[-0.05, 0.06, 0.005]}><circleGeometry args={[0.06, 16]} /><meshBasicMaterial color="#FFFFFF" /></mesh>
-          <mesh position={[0.04, -0.04, 0.005]}><circleGeometry args={[0.03, 14]} /><meshBasicMaterial color="#FFFFFF" /></mesh>
-        </group>
-
-        {/* Rosy Cheeks */}
-        <mesh position={[-0.48, -0.08, 0.66]} rotation={[-0.1, -0.35, 0]}>
-          <circleGeometry args={[0.15, 20]} />
-          <meshBasicMaterial color={LEGO_COLORS.cheeks} transparent opacity={0.65} />
+        {/* Glossy Obsidian Curved Visor Face */}
+        <mesh position={[0, 0.02, 0.45]} scale={[0.88, 0.65, 0.45]}>
+          <sphereGeometry args={[0.8, 32, 24]} />
+          <meshPhysicalMaterial
+            color={BOT_COLORS.visorBlack}
+            roughness={0.08}
+            metalness={0.8}
+            clearcoat={1.0}
+            clearcoatRoughness={0.05}
+          />
         </mesh>
-        <mesh position={[0.48, -0.08, 0.66]} rotation={[-0.1, 0.35, 0]}>
-          <circleGeometry args={[0.15, 20]} />
-          <meshBasicMaterial color={LEGO_COLORS.cheeks} transparent opacity={0.65} />
+
+        {/* Expressive Glowing Digital LED Eyes */}
+        {isHovered || motionMode === "dance" ? (
+          // Happy squinting arches (^ ^)
+          <>
+            <group position={[-0.26, 0.06, 0.81]} rotation={[0, 0, Math.PI]}>
+              <mesh>
+                <torusGeometry args={[0.09, 0.025, 12, 24, Math.PI]} />
+                <meshBasicMaterial color={BOT_COLORS.ledPink} />
+              </mesh>
+            </group>
+            <group position={[0.26, 0.06, 0.81]} rotation={[0, 0, Math.PI]}>
+              <mesh>
+                <torusGeometry args={[0.09, 0.025, 12, 24, Math.PI]} />
+                <meshBasicMaterial color={BOT_COLORS.ledPink} />
+              </mesh>
+            </group>
+          </>
+        ) : (
+          // Bright, cute digital oval eyes with cyan glow
+          <>
+            <group position={[-0.26, 0.04, 0.81]}>
+              <mesh scale={[1, 1.35, 1]}>
+                <circleGeometry args={[0.1, 24]} />
+                <meshBasicMaterial color={BOT_COLORS.ledCyan} />
+              </mesh>
+              {/* White pupil sparkle */}
+              <mesh position={[-0.03, 0.04, 0.005]}>
+                <circleGeometry args={[0.035, 16]} />
+                <meshBasicMaterial color="#FFFFFF" />
+              </mesh>
+            </group>
+            <group position={[0.26, 0.04, 0.81]}>
+              <mesh scale={[1, 1.35, 1]}>
+                <circleGeometry args={[0.1, 24]} />
+                <meshBasicMaterial color={BOT_COLORS.ledCyan} />
+              </mesh>
+              {/* White pupil sparkle */}
+              <mesh position={[-0.03, 0.04, 0.005]}>
+                <circleGeometry args={[0.035, 16]} />
+                <meshBasicMaterial color="#FFFFFF" />
+              </mesh>
+            </group>
+          </>
+        )}
+
+        {/* Soft Rose Cheek LED Blushes */}
+        <mesh position={[-0.42, -0.12, 0.72]}>
+          <circleGeometry args={[0.08, 16]} />
+          <meshBasicMaterial color={BOT_COLORS.ledPink} transparent opacity={0.65} />
         </mesh>
+        <mesh position={[0.42, -0.12, 0.72]}>
+          <circleGeometry args={[0.08, 16]} />
+          <meshBasicMaterial color={BOT_COLORS.ledPink} transparent opacity={0.65} />
+        </mesh>
+
+        {/* Side Ear Pucks / Audio Sensors with Rose Gold Ring */}
+        <group position={[-0.88, 0.02, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.24, 0.24, 0.12, 24]} />
+            <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
+          </mesh>
+          <mesh position={[0, -0.065, 0]}>
+            <ringGeometry args={[0.12, 0.2, 24]} />
+            <meshBasicMaterial color={BOT_COLORS.roseGold} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+        <group position={[0.88, 0.02, 0]} rotation={[0, 0, -Math.PI / 2]}>
+          <mesh castShadow>
+            <cylinderGeometry args={[0.24, 0.24, 0.12, 24]} />
+            <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
+          </mesh>
+          <mesh position={[0, -0.065, 0]}>
+            <ringGeometry args={[0.12, 0.2, 24]} />
+            <meshBasicMaterial color={BOT_COLORS.roseGold} side={THREE.DoubleSide} />
+          </mesh>
+        </group>
+
+        {/* Cute Top Halo Antenna */}
+        <group position={[0, 0.88, 0]}>
+          <mesh>
+            <cylinderGeometry args={[0.04, 0.04, 0.18, 12]} />
+            <meshPhysicalMaterial color={BOT_COLORS.roseGold} metalness={0.8} roughness={0.2} />
+          </mesh>
+          <mesh position={[0, 0.14, 0]}>
+            <sphereGeometry args={[0.1, 16, 16]} />
+            <meshPhysicalMaterial
+              color={BOT_COLORS.ledCyan}
+              emissive={BOT_COLORS.ledCyan}
+              emissiveIntensity={1.2}
+              roughness={0.1}
+            />
+          </mesh>
+        </group>
       </group>
 
-      {/* ── 2. Seamless Body (Smooth Capsule Torso & WEMO Tee) ── */}
+      {/* ── 2. Seamless Capsule Body ── */}
       <group position={[0, 0, 0]}>
-        {/* Main Body Capsule: Smoothly joins head at top, legs at bottom */}
         <mesh castShadow receiveShadow>
-          <capsuleGeometry args={[0.54, 0.58, 16, 32]} />
+          <capsuleGeometry args={[0.52, 0.58, 16, 32]} />
           <meshPhysicalMaterial
-            color={LEGO_COLORS.shirtWhite}
-            roughness={0.2}
-            clearcoat={0.85}
+            color={BOT_COLORS.bodyWhite}
+            roughness={0.14}
+            clearcoat={1.0}
+            clearcoatRoughness={0.06}
           />
         </mesh>
 
-        {/* Soft Cream Belly & WEMO Emblem */}
-        <mesh position={[0, -0.06, 0.48]}>
-          <circleGeometry args={[0.34, 28]} />
-          <meshBasicMaterial color={LEGO_COLORS.creamBelly} transparent opacity={0.85} />
+        {/* Rose Gold Collar Trim */}
+        <mesh position={[0, 0.35, 0]}>
+          <torusGeometry args={[0.48, 0.035, 12, 32]} />
+          <meshPhysicalMaterial color={BOT_COLORS.roseGold} metalness={0.85} roughness={0.2} />
         </mesh>
-        {/* WEMO Mini Badge */}
-        <mesh position={[0, 0.18, 0.49]}>
-          <planeGeometry args={[0.42, 0.14]} />
-          <meshBasicMaterial color="#5C352E" />
-        </mesh>
-        <mesh position={[0, 0.18, 0.495]}>
-          <planeGeometry args={[0.36, 0.09]} />
-          <meshBasicMaterial color="#FFFFFF" />
+
+        {/* Glowing Heart Core on Chest */}
+        <group position={[0, 0.05, 0.48]}>
+          {/* Subtle dark bezel ring */}
+          <mesh>
+            <circleGeometry args={[0.22, 28]} />
+            <meshBasicMaterial color={BOT_COLORS.metalDark} />
+          </mesh>
+          <mesh position={[0, 0, 0.01]}>
+            <circleGeometry args={[0.16, 24]} />
+            <meshPhysicalMaterial
+              color={BOT_COLORS.heartGlow}
+              emissive={BOT_COLORS.heartGlow}
+              emissiveIntensity={1.2}
+            />
+          </mesh>
+        </group>
+
+        {/* WEMO Mini Brand Tag */}
+        <mesh position={[0, -0.22, 0.5]}>
+          <planeGeometry args={[0.34, 0.1]} />
+          <meshBasicMaterial color={BOT_COLORS.roseGold} />
         </mesh>
       </group>
 
-      {/* ── 3. Seamless Left Arm (Holding glowing heart close to body) ── */}
+      {/* ── 3. Seamless Left Arm (Holding NFC Heart Crystal) ── */}
       <group ref={leftArmRef} position={[-0.56, 0.22, 0]}>
-        {/* Upper Arm Capsule: Smooth spherical ends blend seamlessly at shoulder & hand */}
+        <mesh position={[0, 0, 0]}>
+          <sphereGeometry args={[0.16, 16, 16]} />
+          <meshPhysicalMaterial color={BOT_COLORS.roseGold} metalness={0.7} roughness={0.25} />
+        </mesh>
         <mesh position={[0.1, -0.22, 0.12]} rotation={[-0.35, 0.2, -0.25]} castShadow>
-          <capsuleGeometry args={[0.13, 0.42, 12, 20]} />
-          <meshPhysicalMaterial
-            color={LEGO_COLORS.bearBrown}
-            roughness={0.18}
-            clearcoat={0.88}
-          />
+          <capsuleGeometry args={[0.12, 0.42, 12, 20]} />
+          <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
         </mesh>
-        {/* Shoulder sleeve cap */}
-        <mesh position={[0, 0, 0]}>
-          <sphereGeometry args={[0.16, 16, 16]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
-        </mesh>
-        {/* Cute rounded paw/C-hand holding heart */}
-        <mesh position={[0.16, -0.42, 0.22]} rotation={[0, 0, Math.PI / 4]}>
+        <mesh position={[0.16, -0.42, 0.22]}>
           <sphereGeometry args={[0.13, 16, 16]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.85} />
+          <meshPhysicalMaterial color={BOT_COLORS.roseGold} metalness={0.7} roughness={0.25} />
         </mesh>
-        {/* Glowing Heart Brick */}
-        <GlowingHeartBrick position={[0.16, -0.32, 0.35]} />
+        {/* Floating / Held NFC Heart */}
+        <GlowingNfcHeart position={[0.16, -0.32, 0.35]} />
       </group>
 
-      {/* ── 4. Seamless Right Arm (Waving cheerfully) ── */}
+      {/* ── 4. Seamless Right Arm (Waving Cheerful Hand) ── */}
       <group ref={rightArmRef} position={[0.56, 0.22, 0]}>
-        {/* Shoulder sleeve cap */}
         <mesh position={[0, 0, 0]}>
           <sphereGeometry args={[0.16, 16, 16]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
+          <meshPhysicalMaterial color={BOT_COLORS.roseGold} metalness={0.7} roughness={0.25} />
         </mesh>
-        {/* Arm Capsule: Smooth rounded ends with zero harsh seams */}
         <mesh position={[0.15, 0.18, 0.06]} rotation={[-0.2, 0, -0.45]} castShadow>
-          <capsuleGeometry args={[0.13, 0.48, 12, 20]} />
-          <meshPhysicalMaterial
-            color={LEGO_COLORS.bearBrown}
-            roughness={0.18}
-            clearcoat={0.88}
-          />
+          <capsuleGeometry args={[0.12, 0.46, 12, 20]} />
+          <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
         </mesh>
-        {/* Cheerful Waving Hand Paw */}
-        <mesh position={[0.28, 0.45, 0.08]}>
+        {/* Cute Rounded Waving Hand */}
+        <mesh position={[0.28, 0.44, 0.08]}>
           <sphereGeometry args={[0.14, 16, 16]} />
-          <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.9} />
+          <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
         </mesh>
       </group>
 
-      {/* ── 5. Seamless Legs (Continuous rounded capsules) ── */}
+      {/* ── 5. Seamless Robotic Biped Legs ── */}
       <group position={[0, -0.48, 0]}>
-        {/* Left Leg Capsule */}
+        {/* Left Leg */}
         <group ref={leftLegRef} position={[-0.26, -0.16, 0]}>
           <mesh castShadow receiveShadow>
-            <capsuleGeometry args={[0.18, 0.38, 12, 20]} />
-            <meshPhysicalMaterial
-              color={LEGO_COLORS.bearBrown}
-              roughness={0.18}
-              clearcoat={0.88}
-            />
+            <capsuleGeometry args={[0.16, 0.36, 12, 20]} />
+            <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
           </mesh>
-          {/* Subtle Chocolate Shoe Accent at Bottom */}
-          <mesh position={[0, -0.22, 0.04]} scale={[1.05, 0.6, 1.15]}>
-            <sphereGeometry args={[0.18, 16, 16]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} />
+          {/* Cyan Glowing Hover Foot Pad */}
+          <mesh position={[0, -0.22, 0.04]} scale={[1.05, 0.55, 1.15]}>
+            <sphereGeometry args={[0.16, 16, 16]} />
+            <meshPhysicalMaterial
+              color={BOT_COLORS.ledCyan}
+              emissive={BOT_COLORS.ledCyan}
+              emissiveIntensity={0.8}
+            />
           </mesh>
         </group>
 
-        {/* Right Leg Capsule */}
+        {/* Right Leg */}
         <group ref={rightLegRef} position={[0.26, -0.16, 0]}>
           <mesh castShadow receiveShadow>
-            <capsuleGeometry args={[0.18, 0.38, 12, 20]} />
-            <meshPhysicalMaterial
-              color={LEGO_COLORS.bearBrown}
-              roughness={0.18}
-              clearcoat={0.88}
-            />
+            <capsuleGeometry args={[0.16, 0.36, 12, 20]} />
+            <meshPhysicalMaterial color={BOT_COLORS.bodyWhite} roughness={0.15} clearcoat={1.0} />
           </mesh>
-          {/* Subtle Chocolate Shoe Accent at Bottom */}
-          <mesh position={[0, -0.22, 0.04]} scale={[1.05, 0.6, 1.15]}>
-            <sphereGeometry args={[0.18, 16, 16]} />
-            <meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} />
+          {/* Cyan Glowing Hover Foot Pad */}
+          <mesh position={[0, -0.22, 0.04]} scale={[1.05, 0.55, 1.15]}>
+            <sphereGeometry args={[0.16, 16, 16]} />
+            <meshPhysicalMaterial
+              color={BOT_COLORS.ledCyan}
+              emissive={BOT_COLORS.ledCyan}
+              emissiveIntensity={0.8}
+            />
           </mesh>
         </group>
       </group>
 
-      {/* ── 6. Soft Ground Display Pedestal ── */}
+      {/* ── 6. Floating Holographic Pedestal ── */}
       <group position={[0, -1.18, 0]}>
         <mesh receiveShadow>
-          <cylinderGeometry args={[1.35, 1.45, 0.16, 32]} />
-          <meshPhysicalMaterial color="#3E2723" roughness={0.35} clearcoat={0.6} />
+          <cylinderGeometry args={[1.2, 1.35, 0.14, 32]} />
+          <meshPhysicalMaterial
+            color="#0F172A"
+            roughness={0.2}
+            metalness={0.6}
+            clearcoat={0.8}
+          />
         </mesh>
-        {[-0.6, 0, 0.6].map((x, i) =>
-          [-0.45, 0.45].map((z, j) => (
-            <LegoStud
-              key={`${i}-${j}`}
-              position={[x, 0.1, z]}
-              color="#3E2723"
-              scale={[0.5, 0.45, 0.5]}
-            />
-          ))
-        )}
+        {/* Glowing holographic ring */}
+        <mesh position={[0, 0.08, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+          <ringGeometry args={[0.75, 0.95, 32]} />
+          <meshBasicMaterial color={BOT_COLORS.wemoCoral} side={THREE.DoubleSide} />
+        </mesh>
       </group>
     </group>
   );
@@ -418,11 +416,11 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
   const [motionMode, setMotionMode] = useState<"wave" | "walk" | "dance">("wave");
   const [isHovered, setIsHovered] = useState(false);
   const [showSpeech, setShowSpeech] = useState(true);
-  const [speechBubble, setSpeechBubble] = useState("Chào bạn! Tớ là gấu LEGO WEMO 🧱");
+  const [speechBubble, setSpeechBubble] = useState("Chào bạn! Tớ là trợ lý WEMO Bot 🤖✨");
 
   const handlePointerEnter = () => {
     setIsHovered(true);
-    setSpeechBubble("Chào bạn! Bạn cần WEMO hỗ trợ gì ạ? 👋");
+    setSpeechBubble("Chào bạn! Bạn cần WEMO hỗ trợ điều gì ạ? 👋");
     setShowSpeech(true);
   };
 
@@ -452,7 +450,7 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
           >
             <div className="flex items-center justify-between gap-1 mb-1">
               <span className="text-[9.5px] font-black uppercase text-[#D4AF78] flex items-center gap-1">
-                <SparklesIcon className="w-3 h-3 text-[#E8B4A8]" /> WEMO Bot 🧱
+                <SparklesIcon className="w-3 h-3 text-[#E8B4A8]" /> WEMO Bot 🤖
               </span>
               <button
                 onClick={(e) => {
@@ -493,21 +491,21 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
             gl={{ alpha: true, antialias: true }}
             style={{ width: "100%", height: "100%", pointerEvents: "none" }}
           >
-            <ambientLight intensity={0.95} />
+            <ambientLight intensity={0.9} />
             {/* Studio Key Light */}
-            <directionalLight position={[4, 7, 5]} intensity={1.9} castShadow />
+            <directionalLight position={[4, 7, 5]} intensity={2.0} castShadow />
             {/* Warm Fill Light */}
             <directionalLight position={[-4, 3, 3]} intensity={1.1} color="#FFE6D5" />
             {/* Rim Backlight */}
             <directionalLight position={[0, 4, -5]} intensity={1.5} color="#FFDFBA" />
-            {/* Soft pink bounce from heart brick */}
-            <pointLight position={[-0.2, -0.3, 0.8]} intensity={1.2} color="#FF6584" distance={2.5} />
+            {/* Pink LED bounce from heart core */}
+            <pointLight position={[-0.2, -0.3, 0.8]} intensity={1.3} color="#FF4D6D" distance={2.5} />
 
             {/* Ambient Sparkles */}
             <Sparkles count={20} scale={3.4} size={2.2} speed={0.5} color="#FFB3C6" opacity={0.7} />
 
             <Float speed={1.8} rotationIntensity={0.05} floatIntensity={0.1}>
-              <SeamlessLegoFigure isHovered={isHovered} motionMode={motionMode} />
+              <AstroBotFigure isHovered={isHovered} motionMode={motionMode} />
             </Float>
 
             {/* Ground Contact Shadow */}
