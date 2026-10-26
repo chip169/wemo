@@ -2,8 +2,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Phone, MessageSquare, X, User, Smartphone, Bot, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
-import legoAvatarHd from "../assets/lego-avatar-hd.jpg";
-import { LegoCharacter3D } from "./3d/LegoCharacter3D";
 import { WalkingBot3D } from "./3d/WalkingBot3D";
 
 
@@ -607,26 +605,15 @@ export function SupportChatWidget() {
     }, 900 + Math.random()*600);
   };
 
-  // ─── Chat popup position — always above the bot icon, centered on it ────────
+  // ─── Chat popup position ────────
   const getPopupStyle = (): React.CSSProperties => {
-    const PW = 340;
-    const px = botPos.x;
-    const py = botPos.y;
-
-    // Sit 10px above the top of the bot icon
-    const bottomOffset = window.innerHeight - py + 10;
-
-    // Center horizontally on the bot icon, clamp to screen bounds
-    let leftOffset = px + W / 2 - PW / 2;
-    if (leftOffset + PW > window.innerWidth - 8) leftOffset = window.innerWidth - PW - 8;
-    if (leftOffset < 8) leftOffset = 8;
-
     return {
       position: "fixed",
-      zIndex: 9998,
-      width: PW,
-      bottom: bottomOffset,
-      left: leftOffset,
+      zIndex: 9999,
+      width: 360,
+      maxWidth: "calc(100vw - 32px)",
+      bottom: 24,
+      right: 24,
     };
   };
 
@@ -725,8 +712,8 @@ export function SupportChatWidget() {
           >
             {/* Header */}
             <div style={{ background:"linear-gradient(135deg, #FFF0EC 0%, #FCE1DA 100%)", padding:"13px 16px", display:"flex", alignItems:"center", gap:10, flexShrink:0, borderBottom:"1.5px solid rgba(232,180,168,0.25)" }}>
-              <div style={{ width:40, height:40, borderRadius:"50%", background:"rgba(232,180,168,0.15)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, overflow:"hidden" }}>
-                <PangolinBot pose="stand" size={38} />
+              <div style={{ width:38, height:38, borderRadius:"50%", background:"linear-gradient(135deg, #E8B4A8, #D4AF78)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 2px 8px rgba(232,180,168,0.35)" }}>
+                <Bot style={{ width:19, height:19, color:"white" }} />
               </div>
               <div style={{ flex:1, minWidth:0 }}>
                 <div style={{ color:"#5C352E", fontWeight:800, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>WEMO Assistant 🧱</div>
@@ -747,13 +734,13 @@ export function SupportChatWidget() {
 
             {/* Content */}
             {!isRegistered ? (
-              <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"20px", gap:13, overflowY:"auto" }}>
+              <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"22px 20px", gap:14, overflowY:"auto" }}>
                 <div style={{ textAlign:"center" }}>
-                  <div style={{ width: 110, height: 110, margin:"0 auto 6px" }}>
-                    <LegoCharacter3D interactive={true} autoRotate={false} cameraZoom={1.1} sparkles={true} />
+                  <div style={{ width: 52, height: 52, margin:"0 auto 10px", borderRadius: 16, background: "linear-gradient(135deg, #FFF0EC, #FCE1DA)", border: "1.5px solid rgba(232,180,168,0.35)", display: "flex", alignItems:"center", justifyContent: "center", boxShadow: "0 6px 16px rgba(232,180,168,0.2)" }}>
+                    <Bot style={{ width: 26, height: 26, color: "#8C5D53" }} />
                   </div>
-                  <div style={{ fontWeight:800, fontSize:14, color:"#1A1818" }}>Xin chào! Tớ là WEMO 🧱</div>
-                  <div style={{ fontSize:11, color:"#a8a29e", marginTop:4, lineHeight:1.65 }}>Rê chuột hoặc xoay mô hình 3D để tương tác nhé!</div>
+                  <div style={{ fontWeight:800, fontSize:15, color:"#1A1818" }}>Trợ lý WEMO 🧱</div>
+                  <div style={{ fontSize:11.5, color:"#8C5D53", marginTop:4, lineHeight:1.55 }}>Vui lòng để lại tên và số điện thoại để bắt đầu trò chuyện trực tiếp!</div>
                 </div>
                 <form onSubmit={handleRegister} style={{ display:"flex", flexDirection:"column", gap:11 }}>
                   {[
@@ -828,184 +815,11 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* ── Mode 1: Walking 3D Bot with Skeletal Animations ── */}
-      {botMode === "walking" && !isOpen && (
+      {/* ── Realistic 3D Animated LEGO Character on Page ── */}
+      {!isOpen && (
         <WalkingBot3D
           onOpenChat={() => setIsOpen(true)}
-          onToggleMode={() => setBotMode("badge")}
         />
-      )}
-
-      {/* ── Mode 2: Compact Luxury Circular Avatar Badge ── */}
-      {botMode === "badge" && (
-        <>
-          {/* ── Bubble notification ── */}
-          <AnimatePresence>
-            {showBubble && !isOpen && bubble && (
-              <motion.div
-                key={bubble}
-                initial={{ opacity:0, scale:0.85, y:12 }}
-                animate={{ opacity:1, scale:1, y:0 }}
-                exit={{ opacity:0, scale:0.85, y:8 }}
-                transition={{ type:"spring", stiffness:300, damping:24 }}
-                onClick={() => { setIsOpen(true); setShowBubble(false); }}
-                style={{ ...getBubbleStyle(), background:"white", borderRadius:20, padding:"14px 16px", fontFamily:"'Inter',sans-serif", boxShadow:"0 12px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.04)", border:"1px solid #f0ece8", cursor:"pointer", display:"flex", gap:12, alignItems:"flex-start" }}
-              >
-                <div style={{ width:34, height:34, borderRadius:"50%", background:"rgba(232,180,168,0.12)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, overflow:"hidden", marginTop:2 }}>
-                  <PangolinBot pose="stand" size={30} />
-                </div>
-                <div style={{ flex:1, display:"flex", flexDirection:"column", gap:3, minWidth:0 }}>
-                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:6 }}>
-                    <span style={{ fontWeight:700, fontSize:13, color:"#1C1917" }}>WEMO Assistant 🧱</span>
-                    <button
-                      data-action="dismiss-bubble"
-                      onClick={(e) => { e.stopPropagation(); setShowBubble(false); }}
-                      style={{ background:"none", border:"none", color:"#a8a29e", cursor:"pointer", padding:2, display:"flex", alignItems:"center", justifyContent:"center", borderRadius:4 }}
-                      onMouseEnter={e=>(e.currentTarget.style.background="#f5f5f4")}
-                      onMouseLeave={e=>(e.currentTarget.style.background="none")}
-                    >
-                      <X style={{ width:11, height:11 }} />
-                    </button>
-                  </div>
-                  <div style={{ fontSize:12, color:"#44403c", lineHeight:1.5, wordBreak:"break-word" as const }}>{bubble}</div>
-                  <div style={{ fontSize:10, color:"#a8a29e", marginTop:4, display:"flex", alignItems:"center", gap:4 }}>
-                    <span>WEMO</span><span>•</span><span>Vừa xong</span>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* ── Floating Circular Avatar Pod ── */}
-          <motion.div
-            onPointerDown={onPointerDown}
-            onPointerMove={onPointerMove}
-            onPointerUp={onPointerUp}
-            animate={idleAnimate}
-            transition={isDragging ? { type: "spring", stiffness: 320, damping: 28 } : idleTransition}
-            style={{
-              position: "fixed",
-              left: botPos.x,
-              top: botPos.y,
-              zIndex: 9999,
-              width: W,
-              height: W,
-              cursor: isDragging ? "grabbing" : "pointer",
-              userSelect: "none",
-              touchAction: "none",
-              transition: isDragging ? "none" : pose === "rolling"
-                ? `left ${rollDuration}ms cubic-bezier(.3,.6,.3,1), top ${rollDuration}ms cubic-bezier(.3,.6,.3,1)`
-                : "left 0.35s cubic-bezier(.3,.8,.4,1), top 0.35s cubic-bezier(.3,.8,.4,1)",
-            }}
-            whileHover={{ scale: isDragging ? 1 : 1.1 }}
-            whileTap={{ scale: 0.92 }}
-          >
-            <div
-              className={
-                pose === "rolling"
-                  ? (rollDir === 'cw' ? "pg-roll-cw" : "pg-roll-ccw")
-                  : pose === "landed"
-                    ? "pg-land"
-                    : (isIdle && !isDragging ? "pg-float" : "")
-              }
-              style={{
-                width: "100%", height: "100%", position: "relative",
-                ...(pose === "rolling" ? { ['--roll-dur' as string]: `${rollDuration}ms` } : {}),
-              }}
-            >
-              <PangolinBot pose={pose} size={W} eyeOff={eyeOff} />
-
-              {/* Toggle to 3D Walking Bot mode button */}
-              {!isOpen && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setBotMode("walking");
-                  }}
-                  style={{
-                    position: "absolute",
-                    top: -6,
-                    left: -6,
-                    width: 22,
-                    height: 22,
-                    borderRadius: "50%",
-                    background: "white",
-                    border: "1.5px solid #E8B4A8",
-                    boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    fontSize: 10,
-                    zIndex: 10,
-                  }}
-                  title="Mở chế độ nhân vật 3D đi lại trên màn hình"
-                >
-                  🚶
-                </button>
-              )}
-
-              {/* Online status indicator */}
-              {!isOpen && (
-                <span
-                  style={{
-                    position: "absolute",
-                    bottom: 2,
-                    right: 2,
-                    width: 14,
-                    height: 14,
-                    background: "#22c55e",
-                    borderRadius: "50%",
-                    border: "2.5px solid white",
-                    boxShadow: "0 2px 6px rgba(34,197,94,0.45)",
-                    pointerEvents: "none",
-                  }}
-                />
-              )}
-
-              {/* Notification badge */}
-              {showBubble && !isOpen && (
-                <motion.span
-                  initial={{ scale:0 }}
-                  animate={{ scale:1 }}
-                  style={{
-                    position: "absolute",
-                    top: -2,
-                    right: -2,
-                    background: "#ef4444",
-                    color: "white",
-                    fontSize: 9,
-                    fontWeight: 800,
-                    width: 18,
-                    height: 18,
-                    borderRadius: "50%",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    border: "2px solid white",
-                    boxShadow: "0 2px 6px rgba(239,68,68,0.35)",
-                  }}
-                >
-                  1
-                </motion.span>
-              )}
-
-              {/* Drag hint */}
-              <AnimatePresence>
-                {isDragging && (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    style={{ position:"absolute", top:-28, left:"50%", transform:"translateX(-50%)", background:"rgba(0,0,0,0.68)", color:"white", fontSize:9, fontWeight:700, padding:"3px 9px", borderRadius:8, whiteSpace:"nowrap" as const, pointerEvents:"none" }}
-                  >
-                    Thả để gắn vào lề
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </motion.div>
-        </>
       )}
     </>
   );

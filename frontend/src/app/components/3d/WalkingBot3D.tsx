@@ -1,9 +1,9 @@
-import React, { useRef, useState, useMemo } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Float, Sparkles } from "@react-three/drei";
+import { ContactShadows, Sparkles } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, AnimatePresence } from "motion/react";
-import { Sparkles as SparklesIcon, X, Minimize2, Heart } from "lucide-react";
+import { Sparkles as SparklesIcon, X, Minimize2 } from "lucide-react";
 
 // ─── LEGO Color Palette (Authentic ABS Plastic) ─────────────────────────────
 const LEGO_COLORS = {
@@ -17,6 +17,116 @@ const LEGO_COLORS = {
   cheeks: "#FF8A7A",          // Rosy cheek blush
   studGold: "#E5A93C",        // Accent studs
 };
+
+export type LegoAnimationState = "Idle" | "Walk" | "Wave" | "Dance" | "ThumbsUp";
+
+// ─── Animation Track Generators for Bone Rigging ─────────────────────────────
+function createQuatTrack(
+  boneName: string,
+  times: number[],
+  anglesX: number[] = [],
+  anglesY: number[] = [],
+  anglesZ: number[] = []
+) {
+  const values: number[] = [];
+  const q = new THREE.Quaternion();
+  const e = new THREE.Euler();
+  for (let i = 0; i < times.length; i++) {
+    const rx = anglesX[i] || 0;
+    const ry = anglesY[i] || 0;
+    const rz = anglesZ[i] || 0;
+    e.set(rx, ry, rz);
+    q.setFromEuler(e);
+    values.push(q.x, q.y, q.z, q.w);
+  }
+  return new THREE.QuaternionKeyframeTrack(`${boneName}.quaternion`, times, values);
+}
+
+// ─── Generate Mixamo-style Skeletal Animation Clips ──────────────────────────
+function createLegoClips() {
+  // 1. WALK CLIP (Smooth mechanical bipedal walk cycle)
+  const walkTimes = [0, 0.2, 0.4, 0.6, 0.8];
+  const walkClip = new THREE.AnimationClip("Walk", 0.8, [
+    createQuatTrack("LeftUpLeg", walkTimes, [0, 0.6, 0, -0.6, 0]),
+    createQuatTrack("RightUpLeg", walkTimes, [0, -0.6, 0, 0.6, 0]),
+    createQuatTrack("LeftArm", walkTimes, [0, -0.45, 0, 0.45, 0]),
+    createQuatTrack("RightArm", walkTimes, [0, 0.45, 0, -0.45, 0]),
+    createQuatTrack("Spine", walkTimes, [], [0, 0.08, 0, -0.08, 0]),
+    new THREE.VectorKeyframeTrack("Hips.position", walkTimes, [
+      0, -0.45, 0,
+      0, -0.38, 0,
+      0, -0.45, 0,
+      0, -0.38, 0,
+      0, -0.45, 0,
+    ]),
+  ]);
+
+  // 2. IDLE CLIP (Gentle rhythmic breathing & subtle sway)
+  const idleTimes = [0, 1.2, 2.4];
+  const idleClip = new THREE.AnimationClip("Idle", 2.4, [
+    createQuatTrack("Spine", idleTimes, [0, 0.03, 0]),
+    createQuatTrack("LeftArm", idleTimes, [0.1, 0.15, 0.1]),
+    createQuatTrack("RightArm", idleTimes, [0.1, 0.15, 0.1]),
+    new THREE.VectorKeyframeTrack("Hips.position", idleTimes, [
+      0, -0.45, 0,
+      0, -0.43, 0,
+      0, -0.45, 0,
+    ]),
+  ]);
+
+  // 3. WAVE CLIP (Cheerfully waving right C-hand)
+  const waveTimes = [0, 0.25, 0.5, 0.75, 1.0];
+  const waveClip = new THREE.AnimationClip("Wave", 1.0, [
+    createQuatTrack("RightArm", waveTimes, [0.3, 0.4, 0.3, 0.4, 0.3], [], [-0.4, -0.85, -0.4, -0.85, -0.4]),
+    createQuatTrack("Head", waveTimes, [], [], [0, -0.08, 0, -0.08, 0]),
+    createQuatTrack("LeftArm", waveTimes, [0.15, 0.2, 0.15, 0.2, 0.15]),
+    new THREE.VectorKeyframeTrack("Hips.position", waveTimes, [
+      0, -0.45, 0,
+      0, -0.44, 0,
+      0, -0.45, 0,
+      0, -0.44, 0,
+      0, -0.45, 0,
+    ]),
+  ]);
+
+  // 4. DANCE CLIP (Lively celebratory dance)
+  const danceTimes = [0, 0.2, 0.4, 0.6, 0.8];
+  const danceClip = new THREE.AnimationClip("Dance", 0.8, [
+    createQuatTrack("Hips", danceTimes, [], [0, 0.25, 0, -0.25, 0]),
+    createQuatTrack("LeftArm", danceTimes, [-0.3, 0.4, -0.3, 0.4, -0.3], [], [0.2, -0.2, 0.2, -0.2, 0.2]),
+    createQuatTrack("RightArm", danceTimes, [0.4, -0.3, 0.4, -0.3, 0.4], [], [-0.2, 0.2, -0.2, 0.2, -0.2]),
+    createQuatTrack("LeftUpLeg", danceTimes, [0, 0.3, 0, -0.3, 0]),
+    createQuatTrack("RightUpLeg", danceTimes, [0, -0.3, 0, 0.3, 0]),
+    new THREE.VectorKeyframeTrack("Hips.position", danceTimes, [
+      0, -0.45, 0,
+      0, -0.36, 0,
+      0, -0.45, 0,
+      0, -0.36, 0,
+      0, -0.45, 0,
+    ]),
+  ]);
+
+  // 5. THUMBS UP CLIP
+  const thumbTimes = [0, 0.3, 0.8, 1.1];
+  const thumbClip = new THREE.AnimationClip("ThumbsUp", 1.1, [
+    createQuatTrack("RightArm", thumbTimes, [0.2, 0.85, 0.85, 0.2]),
+    createQuatTrack("Head", thumbTimes, [0, 0.15, 0.15, 0]),
+    new THREE.VectorKeyframeTrack("Hips.position", thumbTimes, [
+      0, -0.45, 0,
+      0, -0.43, 0,
+      0, -0.43, 0,
+      0, -0.45, 0,
+    ]),
+  ]);
+
+  return {
+    Idle: idleClip,
+    Walk: walkClip,
+    Wave: waveClip,
+    Dance: danceClip,
+    ThumbsUp: thumbClip,
+  };
+}
 
 // ─── Lego Stud Component ────────────────────────────────────────────────────
 function LegoStud({ position, color = LEGO_COLORS.bearBrown, scale = [1, 1, 1] }: {
@@ -109,16 +219,16 @@ function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, numbe
   return (
     <group position={position} scale={[0.48, 0.48, 0.48]}>
       <mesh geometry={geom} castShadow>
-        <meshPhysicalMaterial color={LEGO_COLORS.pinkHeart} emissive={LEGO_COLORS.pinkHeart} emissiveIntensity={0.55} roughness={0.08} clearcoat={1.0} />
+        <meshPhysicalMaterial color={LEGO_COLORS.pinkHeart} emissive={LEGO_COLORS.pinkHeart} emissiveIntensity={0.65} roughness={0.08} clearcoat={1.0} />
       </mesh>
     </group>
   );
 }
 
 // ─── Lego Head ──────────────────────────────────────────────────────────────
-function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
+function LegoHead() {
   return (
-    <group ref={headRef} position={[0, 1.45, 0]}>
+    <group position={[0, 0, 0]}>
       {/* Head Cylinder Base */}
       <mesh castShadow receiveShadow>
         <cylinderGeometry args={[0.82, 0.82, 1.15, 32]} />
@@ -182,142 +292,126 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
   );
 }
 
-// ─── Animated Lego Minifigure Figure with Mixamo-Style Actions ───────────────
-export type LegoActionType = "idle" | "walk" | "wave" | "dance";
-
-function AnimatedLegoFigure({ currentAction = "wave" }: { currentAction: LegoActionType }) {
-  const figureRef = useRef<THREE.Group>(null);
-  const headRef = useRef<THREE.Group>(null);
-  const leftLegRef = useRef<THREE.Group>(null);
-  const rightLegRef = useRef<THREE.Group>(null);
-  const leftArmRef = useRef<THREE.Group>(null);
-  const rightArmRef = useRef<THREE.Group>(null);
-
+// ─── Complete Skeletal Rigged LEGO Minifigure Character ──────────────────────
+function RiggedLegoFigure({ currentAnimation }: { currentAnimation: LegoAnimationState }) {
+  const rootRef = useRef<THREE.Group>(null);
+  const headBoneRef = useRef<THREE.Group>(null);
   const { mouse } = useThree();
 
-  useFrame((state, delta) => {
-    const t = state.clock.getElapsedTime();
+  // Create AnimationClips
+  const clips = useMemo(() => createLegoClips(), []);
 
-    // 1. Head tracking mouse smoothly
-    if (headRef.current) {
-      const targetRotY = mouse.x * 0.45;
-      const targetRotX = -mouse.y * 0.25;
-      headRef.current.rotation.y = THREE.MathUtils.lerp(headRef.current.rotation.y, targetRotY, 0.08);
-      headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.08);
-    }
+  // AnimationMixer instance bound to root
+  const mixer = useMemo(() => {
+    if (!rootRef.current) return null;
+    return new THREE.AnimationMixer(rootRef.current);
+  }, []);
 
-    // 2. Action States
-    if (currentAction === "walk") {
-      const walkFreq = 5.8;
-      const legAngle = Math.sin(t * walkFreq) * 0.55;
+  // Switch animation states with smooth crossfade
+  useEffect(() => {
+    if (!mixer) return;
+    const clip = clips[currentAnimation] || clips.Idle;
+    const action = mixer.clipAction(clip);
+    action.reset().fadeIn(0.28).play();
 
-      if (leftLegRef.current) leftLegRef.current.rotation.x = legAngle;
-      if (rightLegRef.current) rightLegRef.current.rotation.x = -legAngle;
+    return () => {
+      action.fadeOut(0.28);
+    };
+  }, [mixer, currentAnimation, clips]);
 
-      if (leftArmRef.current) leftArmRef.current.rotation.x = -legAngle * 0.65;
-      if (rightArmRef.current) {
-        rightArmRef.current.rotation.x = legAngle * 0.65;
-        rightArmRef.current.rotation.z = -0.2;
-      }
+  // Update mixer and mouse head tracking in frame loop
+  useFrame((_, delta) => {
+    if (mixer) mixer.update(delta);
 
-      // Vertical bounce per step
-      if (figureRef.current) {
-        figureRef.current.position.y = -0.45 + Math.abs(Math.sin(t * walkFreq)) * 0.08;
-        figureRef.current.rotation.y = THREE.MathUtils.lerp(figureRef.current.rotation.y, 0, delta * 5);
-      }
-    } else if (currentAction === "dance") {
-      const danceFreq = 7.5;
-      const bounce = Math.abs(Math.sin(t * danceFreq)) * 0.16;
-      if (figureRef.current) {
-        figureRef.current.position.y = -0.45 + bounce;
-        figureRef.current.rotation.y = Math.sin(t * danceFreq * 0.5) * 0.25;
-      }
-      if (rightArmRef.current) {
-        rightArmRef.current.rotation.z = -0.65 - Math.sin(t * danceFreq) * 0.35;
-        rightArmRef.current.rotation.x = 0.4;
-      }
-      if (leftArmRef.current) {
-        leftArmRef.current.rotation.z = 0.65 + Math.sin(t * danceFreq) * 0.35;
-        leftArmRef.current.rotation.x = 0.4;
-      }
-      if (leftLegRef.current) leftLegRef.current.rotation.x = Math.sin(t * danceFreq) * 0.35;
-      if (rightLegRef.current) rightLegRef.current.rotation.x = -Math.sin(t * danceFreq) * 0.35;
-    } else if (currentAction === "wave") {
-      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, delta * 6);
-      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, delta * 6);
-      if (figureRef.current) {
-        figureRef.current.position.y = -0.45 + Math.sin(t * 2) * 0.04;
-        figureRef.current.rotation.y = THREE.MathUtils.lerp(figureRef.current.rotation.y, 0, delta * 5);
-      }
-      if (leftArmRef.current) leftArmRef.current.rotation.x = 0.15 + Math.sin(t * 1.5) * 0.05;
-      if (rightArmRef.current) {
-        const wave = Math.sin(t * 5.5) * 0.32;
-        rightArmRef.current.rotation.z = -0.55 + wave;
-        rightArmRef.current.rotation.x = 0.35 + Math.cos(t * 3) * 0.1;
-      }
-    } else {
-      // Idle
-      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, delta * 6);
-      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, delta * 6);
-      if (figureRef.current) {
-        figureRef.current.position.y = -0.45 + Math.sin(t * 2) * 0.04;
-        figureRef.current.rotation.y = THREE.MathUtils.lerp(figureRef.current.rotation.y, 0, delta * 5);
-      }
-      if (leftArmRef.current) leftArmRef.current.rotation.x = 0.15 + Math.sin(t * 1.5) * 0.05;
-      if (rightArmRef.current) {
-        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.2, delta * 4);
-        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0.2, delta * 4);
-      }
+    // Additive head tracking towards mouse
+    if (headBoneRef.current) {
+      const targetRotY = mouse.x * 0.4;
+      const targetRotX = -mouse.y * 0.22;
+      headBoneRef.current.rotation.y = THREE.MathUtils.lerp(headBoneRef.current.rotation.y, targetRotY, 0.08);
+      headBoneRef.current.rotation.x = THREE.MathUtils.lerp(headBoneRef.current.rotation.x, targetRotX, 0.08);
     }
   });
 
   return (
-    <group ref={figureRef} position={[0, -0.45, 0]}>
-      {/* Head */}
-      <LegoHead headRef={headRef as any} />
+    <group ref={rootRef} position={[0, -0.1, 0]}>
+      {/* ── Root & Hips Bone ── */}
+      <group name="Hips" position={[0, -0.45, 0]}>
+        {/* Hip Connector T-Bar */}
+        <mesh position={[0, 0.08, 0]} castShadow>
+          <boxGeometry args={[1.3, 0.24, 0.88]} />
+          <meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} />
+        </mesh>
+        <mesh position={[0, 0.08, 0]} rotation={[0, 0, Math.PI / 2]}>
+          <cylinderGeometry args={[0.36, 0.36, 1.34, 24]} />
+          <meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} />
+        </mesh>
 
-      {/* Torso */}
-      <group position={[0, 0.18, 0]}>
-        <LegoTorso />
-
-        {/* Left Arm holding glowing heart */}
-        <group ref={leftArmRef} position={[-0.72, 0.55, 0]}>
-          <mesh><sphereGeometry args={[0.22, 16, 16]} /><meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} /></mesh>
-          <mesh position={[-0.15, -0.45, 0.22]} rotation={[0.45, 0, 0.2]}><cylinderGeometry args={[0.16, 0.18, 0.75, 18]} /><meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} /></mesh>
-          <LegoHand position={[-0.24, -0.85, 0.42]} rotation={[-0.3, 0.4, 0.5]} />
-          <GlowingHeartBrick position={[-0.24, -0.75, 0.65]} />
+        {/* ── Left Leg Bone ── */}
+        <group name="LeftUpLeg" position={[-0.38, 0, 0]}>
+          <mesh position={[0, -0.55, 0]} castShadow receiveShadow>
+            <boxGeometry args={[0.56, 1.1, 0.82]} />
+            <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.85} />
+          </mesh>
+          <mesh position={[0, -0.98, 0.22]} castShadow>
+            <boxGeometry args={[0.56, 0.22, 0.4]} />
+            <meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} />
+          </mesh>
         </group>
 
-        {/* Right Arm (Waving / Dancing / Swapping) */}
-        <group ref={rightArmRef} position={[0.72, 0.55, 0]}>
-          <mesh><sphereGeometry args={[0.22, 16, 16]} /><meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} /></mesh>
-          <mesh position={[0.22, 0.25, 0.1]} rotation={[-0.3, 0, -0.55]}><cylinderGeometry args={[0.16, 0.18, 0.75, 18]} /><meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} /></mesh>
-          <LegoHand position={[0.42, 0.62, 0.15]} rotation={[0.5, 0.4, -0.8]} />
-        </group>
-      </group>
-
-      {/* Hips & Legs */}
-      <group position={[0, -0.72, 0]}>
-        <mesh position={[0, 0.08, 0]} castShadow><boxGeometry args={[1.3, 0.24, 0.88]} /><meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} /></mesh>
-        <mesh position={[0, 0.08, 0]} rotation={[0, 0, Math.PI / 2]}><cylinderGeometry args={[0.36, 0.36, 1.34, 24]} /><meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} /></mesh>
-
-        {/* Left Leg */}
-        <group ref={leftLegRef} position={[-0.38, 0, 0]}>
-          <mesh position={[0, -0.55, 0]} castShadow receiveShadow><boxGeometry args={[0.56, 1.1, 0.82]} /><meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.85} /></mesh>
-          <mesh position={[0, -0.98, 0.22]} castShadow><boxGeometry args={[0.56, 0.22, 0.4]} /><meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} /></mesh>
+        {/* ── Right Leg Bone ── */}
+        <group name="RightUpLeg" position={[0.38, 0, 0]}>
+          <mesh position={[0, -0.55, 0]} castShadow receiveShadow>
+            <boxGeometry args={[0.56, 1.1, 0.82]} />
+            <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.85} />
+          </mesh>
+          <mesh position={[0, -0.98, 0.22]} castShadow>
+            <boxGeometry args={[0.56, 0.22, 0.4]} />
+            <meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} />
+          </mesh>
         </group>
 
-        {/* Right Leg */}
-        <group ref={rightLegRef} position={[0.38, 0, 0]}>
-          <mesh position={[0, -0.55, 0]} castShadow receiveShadow><boxGeometry args={[0.56, 1.1, 0.82]} /><meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.85} /></mesh>
-          <mesh position={[0, -0.98, 0.22]} castShadow><boxGeometry args={[0.56, 0.22, 0.4]} /><meshPhysicalMaterial color={LEGO_COLORS.bearDarkBrown} roughness={0.25} /></mesh>
+        {/* ── Spine & Torso Bone ── */}
+        <group name="Spine" position={[0, 0.6, 0]}>
+          <LegoTorso />
+
+          {/* ── Head Bone ── */}
+          <group ref={headBoneRef} name="Head" position={[0, 1.35, 0]}>
+            <LegoHead />
+          </group>
+
+          {/* ── Left Arm Bone (Holding Heart) ── */}
+          <group name="LeftArm" position={[-0.72, 0.55, 0]}>
+            <mesh>
+              <sphereGeometry args={[0.22, 16, 16]} />
+              <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
+            </mesh>
+            <mesh position={[-0.15, -0.45, 0.22]} rotation={[0.45, 0, 0.2]}>
+              <cylinderGeometry args={[0.16, 0.18, 0.75, 18]} />
+              <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} />
+            </mesh>
+            <LegoHand position={[-0.24, -0.85, 0.42]} rotation={[-0.3, 0.4, 0.5]} />
+            <GlowingHeartBrick position={[-0.24, -0.75, 0.65]} />
+          </group>
+
+          {/* ── Right Arm Bone (Waving/Gesturing) ── */}
+          <group name="RightArm" position={[0.72, 0.55, 0]}>
+            <mesh>
+              <sphereGeometry args={[0.22, 16, 16]} />
+              <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
+            </mesh>
+            <mesh position={[0.22, 0.25, 0.1]} rotation={[-0.3, 0, -0.55]}>
+              <cylinderGeometry args={[0.16, 0.18, 0.75, 18]} />
+              <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} />
+            </mesh>
+            <LegoHand position={[0.42, 0.62, 0.15]} rotation={[0.5, 0.4, -0.8]} />
+          </group>
         </group>
       </group>
     </group>
   );
 }
 
-// ─── Interactive Walking Lego Bot Overlay ───────────────────────────────────
+// ─── Main Interactive Walking & Gesturing Bot Overlay ────────────────────────
 export interface WalkingBot3DProps {
   onOpenChat?: () => void;
   onToggleMode?: () => void;
@@ -325,26 +419,27 @@ export interface WalkingBot3DProps {
 }
 
 export function WalkingBot3D({ onOpenChat, onToggleMode, className = "" }: WalkingBot3DProps) {
-  const [action, setAction] = useState<LegoActionType>("wave");
+  const [anim, setAnim] = useState<LegoAnimationState>("Walk");
   const [speechBubble, setSpeechBubble] = useState("Chào bạn! Tớ là gấu LEGO WEMO 🧱");
   const [showSpeech, setShowSpeech] = useState(true);
+  const [showMenu, setShowMenu] = useState(false);
 
   const handlePointerEnter = () => {
-    if (action === "idle") {
-      setAction("wave");
-      setSpeechBubble("Bạn cần WEMO hỗ trợ gì không ạ? 👋");
-      setShowSpeech(true);
-    }
+    setAnim("Wave");
+    setSpeechBubble("Chào bạn! Bạn cần WEMO hỗ trợ gì ạ? 👋");
+    setShowSpeech(true);
+  };
+
+  const handlePointerLeave = () => {
+    setAnim("Walk");
   };
 
   const handleClick = () => {
-    if (onOpenChat) onOpenChat();
-  };
-
-  const selectAction = (act: LegoActionType, speech: string) => {
-    setAction(act);
-    setSpeechBubble(speech);
-    setShowSpeech(true);
+    setAnim("Dance");
+    setSpeechBubble("Mở khung chat hỗ trợ ngay nhé! ✨");
+    setTimeout(() => {
+      if (onOpenChat) onOpenChat();
+    }, 600);
   };
 
   return (
@@ -363,7 +458,13 @@ export function WalkingBot3D({ onOpenChat, onToggleMode, className = "" }: Walki
               <span className="text-[10px] font-black uppercase text-[#D4AF78] flex items-center gap-1">
                 <SparklesIcon className="w-3 h-3 text-[#E8B4A8]" /> WEMO LEGO Bot
               </span>
-              <button onClick={(e) => { e.stopPropagation(); setShowSpeech(false); }} className="text-stone-400 hover:text-stone-600 p-0.5">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowSpeech(false);
+                }}
+                className="text-stone-400 hover:text-stone-600 p-0.5"
+              >
                 <X className="w-3 h-3" />
               </button>
             </div>
@@ -373,77 +474,97 @@ export function WalkingBot3D({ onOpenChat, onToggleMode, className = "" }: Walki
         )}
       </AnimatePresence>
 
-      {/* Action Chips Toolbar */}
-      <div className="mb-2 flex items-center gap-1 p-1 rounded-full bg-white/90 backdrop-blur-md border border-[#E8B4A8]/30 shadow-md">
-        {[
-          { id: "walk" as LegoActionType, label: "Đi bộ", icon: "🚶", speech: "Tớ đang bước đi dạo quanh đây nè! 🚶‍♂️" },
-          { id: "wave" as LegoActionType, label: "Chào", icon: "👋", speech: "Xin chào bạn! Tớ có thể hỗ trợ gì ạ? 👋" },
-          { id: "dance" as LegoActionType, label: "Nhảy", icon: "💃", speech: "Nhảy múa cùng WEMO nào! 💃✨" },
-          { id: "idle" as LegoActionType, label: "Đứng yên", icon: "⏸", speech: "Tớ đứng đây sẵn sàng hỗ trợ nhé! 😌" },
-        ].map((btn) => (
-          <button
-            key={btn.id}
-            onClick={() => selectAction(btn.id, btn.speech)}
-            className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition-all flex items-center gap-1 cursor-pointer ${
-              action === btn.id
-                ? "bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white shadow-xs"
-                : "text-stone-600 hover:bg-stone-100"
-            }`}
+      {/* Animation Action Menu */}
+      <AnimatePresence>
+        {showMenu && (
+          <motion.div
+            initial={{ opacity: 0, y: 8, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 8, scale: 0.95 }}
+            className="mb-2 p-1.5 rounded-full bg-white/95 backdrop-blur-md border border-stone-200/80 shadow-2xl flex items-center gap-1"
           >
-            <span>{btn.icon}</span>
-            <span className="text-[10px]">{btn.label}</span>
-          </button>
-        ))}
-      </div>
+            {[
+              { id: "Walk" as LegoAnimationState, label: "Đi bộ", icon: "🚶" },
+              { id: "Wave" as LegoAnimationState, label: "Chào", icon: "👋" },
+              { id: "Dance" as LegoAnimationState, label: "Nhảy", icon: "💃" },
+              { id: "ThumbsUp" as LegoAnimationState, label: "Like", icon: "👍" },
+              { id: "Idle" as LegoAnimationState, label: "Nghỉ", icon: "😌" },
+            ].map((btn) => (
+              <button
+                key={btn.id}
+                onClick={() => {
+                  setAnim(btn.id);
+                  if (btn.id === "Walk") setSpeechBubble("Tớ sải bước đi dạo đây! 🚶‍♂️");
+                  if (btn.id === "Dance") setSpeechBubble("Nhảy múa cùng WEMO nào! 💃");
+                  if (btn.id === "Wave") setSpeechBubble("Xin chào quý khách! 👋");
+                  if (btn.id === "ThumbsUp") setSpeechBubble("WEMO số 1 luôn nhé! 👍");
+                  if (btn.id === "Idle") setSpeechBubble("Tớ đứng nghỉ một tí nha! 😌");
+                  setShowSpeech(true);
+                }}
+                className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all flex items-center gap-1 cursor-pointer ${
+                  anim === btn.id
+                    ? "bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white shadow-xs"
+                    : "text-stone-600 hover:bg-stone-100"
+                }`}
+              >
+                <span>{btn.icon}</span>
+                <span className="text-[11px]">{btn.label}</span>
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-      {/* 3D Lego Figure Container */}
+      {/* 3D Character Canvas */}
       <div
         className="relative flex items-center justify-center cursor-pointer group"
         onMouseEnter={handlePointerEnter}
+        onMouseLeave={handlePointerLeave}
         onClick={handleClick}
       >
         <div
-          className="relative rounded-3xl overflow-hidden transition-transform duration-300 group-hover:scale-105"
+          className="relative transition-transform duration-300 group-hover:scale-105"
           style={{
-            width: 170,
-            height: 200,
-            background: "radial-gradient(circle at 50% 65%, rgba(232,180,168,0.25) 0%, transparent 72%)",
+            width: 195,
+            height: 230,
+            background: "transparent",
           }}
         >
           <Canvas
             shadows
-            camera={{ position: [0, 0.2, 5.2], fov: 36 }}
+            camera={{ position: [0, 0.1, 5.3], fov: 38 }}
             gl={{ alpha: true, antialias: true }}
             style={{ width: "100%", height: "100%", pointerEvents: "none" }}
           >
-            <ambientLight intensity={1.1} />
-            <directionalLight position={[3, 5, 4]} intensity={1.8} castShadow />
-            <directionalLight position={[-3, 3, 2]} intensity={0.9} color="#FFE6D5" />
+            <ambientLight intensity={1.25} />
+            <directionalLight position={[4, 6, 5]} intensity={2.2} castShadow />
+            <directionalLight position={[-4, 3, 3]} intensity={1.1} color="#FFE6D5" />
             <directionalLight position={[0, 4, -4]} intensity={1.3} color="#FFDFBA" />
+            <pointLight position={[-0.24, -0.6, 0.8]} intensity={1.4} color="#FF6584" distance={2.5} />
 
-            <Sparkles count={20} scale={3.5} size={2} speed={0.5} color="#FFB3C6" opacity={0.6} />
+            <Sparkles count={24} scale={3.6} size={2.4} speed={0.5} color="#FFB3C6" opacity={0.7} />
 
-            <AnimatedLegoFigure currentAction={action} />
+            <RiggedLegoFigure currentAnimation={anim} />
 
-            <ContactShadows position={[0, -1.8, 0]} opacity={0.55} scale={4} blur={1.5} far={3} />
+            <ContactShadows position={[0, -1.75, 0]} opacity={0.65} scale={4} blur={1.8} far={3} />
           </Canvas>
 
-          {/* Minimize Button */}
-          {onToggleMode && (
+          {/* Action Menu Pill Button */}
+          <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onToggleMode();
+                setShowMenu((prev) => !prev);
               }}
-              className="absolute top-2 right-2 p-1.5 rounded-full bg-white/85 hover:bg-white text-stone-600 shadow-sm border border-stone-200/60 transition-all text-[11px] font-bold cursor-pointer z-10"
-              title="Thu nhỏ thành nút tròn"
+              className="p-1.5 rounded-full bg-white/90 hover:bg-white text-stone-700 shadow-md border border-stone-200/80 transition-all text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+              title="Đổi động tác 3D (Đi bộ, Nhảy múa, Vẫy tay...)"
             >
-              <Minimize2 className="w-3.5 h-3.5 text-stone-500" />
+              <SparklesIcon className="w-3.5 h-3.5 text-[#D4AF78]" />
             </button>
-          )}
+          </div>
 
-          {/* Online green dot */}
-          <span className="absolute bottom-2 right-3 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-xs animate-pulse" />
+          {/* Online status indicator */}
+          <span className="absolute bottom-4 right-4 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-md animate-pulse" />
         </div>
       </div>
     </div>
