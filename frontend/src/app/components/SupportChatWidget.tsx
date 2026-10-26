@@ -3,6 +3,7 @@ import { Send, Phone, MessageSquare, X, User, Smartphone, Bot, Sparkles } from "
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
 import legoBotImg from "../assets/lego-bot.png";
+import { LegoCharacter3D } from "./3d/LegoCharacter3D";
 
 
 
@@ -704,9 +705,11 @@ export function SupportChatWidget() {
             {!isRegistered ? (
               <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"20px", gap:13, overflowY:"auto" }}>
                 <div style={{ textAlign:"center" }}>
-                  <div style={{ width:64, height:64, margin:"0 auto 10px" }}><PangolinBot pose="stand" size={64} /></div>
-                  <div style={{ fontWeight:800, fontSize:14, color:"#1A1818" }}>Xin chào! Tớ là Pango 🦔</div>
-                  <div style={{ fontSize:11, color:"#a8a29e", marginTop:4, lineHeight:1.65 }}>Nhập thông tin để tớ hỗ trợ tốt hơn nhé!</div>
+                  <div style={{ width: 110, height: 110, margin:"0 auto 6px" }}>
+                    <LegoCharacter3D interactive={true} autoRotate={false} cameraZoom={1.1} sparkles={true} />
+                  </div>
+                  <div style={{ fontWeight:800, fontSize:14, color:"#1A1818" }}>Xin chào! Tớ là WEMO 🧱</div>
+                  <div style={{ fontSize:11, color:"#a8a29e", marginTop:4, lineHeight:1.65 }}>Rê chuột hoặc xoay mô hình 3D để tương tác nhé!</div>
                 </div>
                 <form onSubmit={handleRegister} style={{ display:"flex", flexDirection:"column", gap:11 }}>
                   {[
