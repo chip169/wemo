@@ -57,7 +57,7 @@ export function PaymentPage() {
   });
   const [paid, setPaid] = useState(false);
   const [polling, setPolling] = useState(true);
-  const [copied, setCopied] = useState(false);
+  const [copiedField, setCopiedField] = useState<string | null>(null);
   const [orderData, setOrderData] = useState<any>(null);
   const [qrError, setQrError] = useState(false);
 
@@ -159,10 +159,10 @@ export function PaymentPage() {
     };
   }, [orderId]);
 
-  const handleCopyInfo = (text: string) => {
+  const handleCopyInfo = (field: string, text: string) => {
     navigator.clipboard.writeText(text).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      setCopiedField(field);
+      setTimeout(() => setCopiedField(null), 2000);
     });
   };
 
@@ -174,7 +174,7 @@ export function PaymentPage() {
       <div className="absolute -top-40 -left-40 w-96 h-96 bg-[#E8B4A8]/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 -right-40 w-[500px] h-[500px] bg-[#D4AF78]/10 rounded-full blur-[150px] pointer-events-none" />
 
-      <div className="max-w-2xl mx-auto px-4 sm:px-6 relative z-10">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 text-xs font-bold text-stone-400 uppercase tracking-widest mb-6">
@@ -281,20 +281,20 @@ export function PaymentPage() {
               <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78]" />
 
               <div className="p-6 sm:p-8">
-                <div className="flex flex-col lg:flex-row gap-8 items-center">
+                <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
 
                   {/* QR Code */}
-                  <div className="flex flex-col items-center gap-3 shrink-0">
+                  <div className="flex flex-col items-center gap-3 shrink-0 w-full md:w-auto">
                     <div className="relative">
                       {!qrError ? (
                         <img
                           src={buildVietQRUrl(orderId || "", paymentAmount)}
                           alt="VietQR Payment Code"
-                          className="w-56 h-56 rounded-2xl border-2 border-stone-200 object-contain bg-white p-2"
+                          className="w-56 h-56 rounded-2xl border-2 border-stone-200 object-contain bg-white p-2 shadow-xs"
                           onError={() => setQrError(true)}
                         />
                       ) : (
-                        <div className="w-56 h-56 rounded-2xl border-2 border-stone-200 bg-white flex flex-col items-center justify-center p-2">
+                        <div className="w-56 h-56 rounded-2xl border-2 border-stone-200 bg-white flex flex-col items-center justify-center p-2 shadow-xs">
                           <img
                             src="/assets/momo-qr.png"
                             alt="QR MoMo WEMO"
@@ -304,7 +304,7 @@ export function PaymentPage() {
                       )}
                       {/* Polling indicator */}
                       {polling && (
-                        <div className="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center" title="Đang kiểm tra thanh toán...">
+                        <div className="absolute -bottom-2 -right-2 w-7 h-7 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center shadow" title="Đang kiểm tra thanh toán...">
                           <motion.div
                             animate={{ rotate: 360 }}
                             transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
@@ -314,69 +314,134 @@ export function PaymentPage() {
                         </div>
                       )}
                     </div>
-                    <p className="text-[10px] text-stone-400 font-medium text-center">
-                      Quét bằng MoMo hoặc ứng dụng ngân hàng bất kỳ
+                    <p className="text-[11px] text-stone-400 font-medium text-center">
+                      Quét bằng MoMo hoặc app ngân hàng
                     </p>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-stone-100 border border-stone-200/80">
                       <img
                         src="https://api.vietqr.io/img/momo.png"
                         alt="MoMo"
-                        className="h-5 object-contain"
+                        className="h-4.5 object-contain"
                         onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                       />
-                      <span className="text-xs font-bold text-[#A50064]">MoMo</span>
+                      <span className="text-xs font-bold text-[#A50064]">Ví / Quỹ MoMo</span>
                     </div>
                   </div>
 
                   {/* Transfer Info */}
-                  <div className="flex-1 w-full space-y-4">
-                    <h3 className="text-sm font-black text-stone-800 uppercase tracking-widest">
-                      Thông Tin Chuyển Khoản
-                    </h3>
+                  <div className="flex-1 w-full space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-xs font-black text-stone-800 uppercase tracking-widest">
+                        Thông Tin Chuyển Khoản
+                      </h3>
+                      <span className="text-[10px] text-stone-400 font-medium">Chạm nút để sao chép</span>
+                    </div>
 
-                    {[
-                      { label: "Ngân hàng", value: "MoMo", copiable: false },
-                      { label: "Số tài khoản", value: ACCOUNT_NO, copiable: true },
-                      { label: "Tên tài khoản", value: ACCOUNT_NAME, copiable: false },
-                      {
-                        label: "Số tiền (100%)",
-                        value: paymentAmount > 0 ? formatPrice(paymentAmount) : "Đang tải...",
-                        copiable: false,
-                        highlight: true,
-                      },
-                      {
-                        label: "Nội dung CK",
-                        value: `Thanh toan WEMO ${orderId}`,
-                        copiable: true,
-                        highlight: true,
-                      },
-                    ].map(({ label, value, copiable, highlight }) => (
-                      <div key={label} className="flex items-center justify-between gap-3">
-                        <span className="text-xs text-stone-400 font-medium shrink-0 w-28">{label}</span>
-                        <div className={`flex-1 flex items-center justify-between gap-2 px-3 py-2.5 rounded-xl ${highlight ? "bg-[#E8B4A8]/10 border border-[#E8B4A8]/20" : "bg-stone-50 border border-stone-100"}`}>
-                          <span className={`text-sm font-black ${highlight ? "text-stone-900" : "text-stone-700"} break-all`}>{value}</span>
-                          {copiable && (
-                            <button
-                              onClick={() => handleCopyInfo(value)}
-                              className="shrink-0 p-1 rounded-lg hover:bg-stone-200 transition-colors cursor-pointer"
-                              title="Sao chép"
-                            >
-                              {copied ? (
-                                <Check className="w-3.5 h-3.5 text-emerald-500" />
-                              ) : (
-                                <Copy className="w-3.5 h-3.5 text-stone-400" />
-                              )}
-                            </button>
-                          )}
+                    {/* Ngân hàng & Tên chủ tài khoản */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70">
+                        <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">
+                          Ngân hàng
+                        </div>
+                        <div className="text-sm font-black text-stone-800 flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#A50064] shrink-0" />
+                          MoMo
                         </div>
                       </div>
-                    ))}
+
+                      <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/70">
+                        <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-1">
+                          Tên tài khoản
+                        </div>
+                        <div className="text-sm font-black text-stone-800 tracking-tight whitespace-nowrap overflow-hidden text-ellipsis">
+                          {ACCOUNT_NAME}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Số tài khoản */}
+                    <div className="p-3 sm:p-3.5 rounded-xl bg-stone-50 border border-stone-200/70 flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[10px] font-bold text-stone-400 uppercase tracking-wider mb-0.5">
+                          Số tài khoản
+                        </div>
+                        <div className="text-sm sm:text-base font-black text-stone-900 font-mono tracking-wide select-all whitespace-nowrap overflow-x-auto">
+                          {ACCOUNT_NO}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleCopyInfo("account", ACCOUNT_NO)}
+                        className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95 ${
+                          copiedField === "account"
+                            ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+                            : "bg-white border-stone-200 hover:border-stone-300 text-stone-700 hover:bg-stone-100"
+                        }`}
+                        title="Sao chép số tài khoản"
+                      >
+                        {copiedField === "account" ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-500" />
+                            <span>Đã chép</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-stone-400" />
+                            <span>Sao chép</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Số tiền thanh toán */}
+                    <div className="p-3 sm:p-3.5 rounded-xl bg-[#E8B4A8]/10 border border-[#E8B4A8]/30 flex items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] font-bold text-[#a65345] uppercase tracking-wider mb-0.5">
+                          Số tiền thanh toán (100%)
+                        </div>
+                        <div className="text-lg sm:text-xl font-black text-[#5C352E]">
+                          {paymentAmount > 0 ? formatPrice(paymentAmount) : "Đang tải..."}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Nội dung chuyển khoản */}
+                    <div className="p-3 sm:p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/80 flex items-center justify-between gap-3">
+                      <div className="min-w-0 flex-1">
+                        <div className="text-[10px] font-bold text-amber-800/80 uppercase tracking-wider mb-0.5">
+                          Nội dung chuyển khoản
+                        </div>
+                        <div className="text-xs sm:text-sm font-black text-amber-950 font-mono tracking-tight select-all whitespace-nowrap overflow-x-auto">
+                          {`Thanh toan WEMO ${orderId}`}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => handleCopyInfo("content", `Thanh toan WEMO ${orderId}`)}
+                        className={`shrink-0 flex items-center gap-1 px-3 py-1.5 rounded-lg border text-xs font-bold transition-all shadow-xs cursor-pointer active:scale-95 ${
+                          copiedField === "content"
+                            ? "bg-emerald-50 border-emerald-300 text-emerald-700"
+                            : "bg-white border-amber-200 hover:border-amber-300 text-amber-900 hover:bg-amber-100/50"
+                        }`}
+                        title="Sao chép nội dung chuyển khoản"
+                      >
+                        {copiedField === "content" ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 text-emerald-500" />
+                            <span>Đã chép</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Sao chép</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
 
                     {/* Auto-detection notice */}
-                    <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-blue-50 border border-blue-100">
-                      <Smartphone className="w-4 h-4 text-blue-400 shrink-0 mt-0.5" />
+                    <div className="flex items-start gap-2.5 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                      <Smartphone className="w-4 h-4 text-blue-500 shrink-0 mt-0.5" />
                       <p className="text-xs text-blue-700 leading-relaxed font-medium">
-                        Hệ thống tự động nhận diện thanh toán. Sau khi chuyển khoản thành công, trang sẽ <strong>tự động cập nhật</strong> mà không cần thao tác thêm.
+                        Hệ thống tự động nhận diện thanh toán. Sau khi chuyển khoản, trang sẽ <strong>tự động chuyển hướng</strong> sang màn hình hoàn tất đơn hàng.
                       </p>
                     </div>
 
@@ -386,7 +451,16 @@ export function PaymentPage() {
 
               {/* Polling status bar */}
               <div className="px-6 sm:px-8 pb-5">
-
+                <div className="flex items-center gap-2 justify-center">
+                  <motion.div
+                    animate={{ scale: [1, 1.3, 1] }}
+                    transition={{ repeat: Infinity, duration: 1.5 }}
+                    className="w-2 h-2 rounded-full bg-emerald-400"
+                  />
+                  <span className="text-[11px] text-stone-400 font-medium">
+                    Đang kiểm tra trạng thái thanh toán... (tự động làm mới mỗi 5 giây)
+                  </span>
+                </div>
               </div>
             </div>
 
