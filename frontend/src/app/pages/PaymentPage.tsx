@@ -11,14 +11,13 @@ import {
   ShieldCheck,
   AlertCircle,
   Loader2,
-  MessageCircle,
 } from "lucide-react";
 import { Link, useParams, useNavigate } from "react-router";
 import confetti from "canvas-confetti";
 
-const BANK_ID = "TPB";
-const ACCOUNT_NO = "25569158888";
-const ACCOUNT_NAME = "WEMO STUDIO";
+const BANK_ID = "momo";
+const ACCOUNT_NO = "PSG2628319600000026";
+const ACCOUNT_NAME = "NGUYEN THI YEN NHI";
 const POLL_INTERVAL_MS = 5000;
 const COUNTDOWN_SECONDS = 15 * 60; // 15 minutes
 
@@ -218,7 +217,7 @@ export function PaymentPage() {
             THANH TOÁN AN TOÀN
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-stone-900 tracking-tight mb-2">
-            Quét Mã VietQR Để Thanh Toán (100%)
+            Quét Mã VietQR Để Thanh Toán
           </h1>
           <p className="text-sm text-stone-500">
             Mã đơn hàng: <span className="font-black text-stone-800 font-mono">{orderId}</span>
@@ -259,13 +258,12 @@ export function PaymentPage() {
           <div className="space-y-5">
             {/* Countdown Banner */}
             <motion.div
-              className={`flex items-center justify-between p-4 rounded-2xl border ${
-                countdown < 120
-                  ? "bg-rose-50 border-rose-200"
-                  : countdown < 300
+              className={`flex items-center justify-between p-4 rounded-2xl border ${countdown < 120
+                ? "bg-rose-50 border-rose-200"
+                : countdown < 300
                   ? "bg-amber-50 border-amber-200"
                   : "bg-emerald-50 border-emerald-200"
-              }`}
+                }`}
             >
               <div className="flex items-center gap-2">
                 <Clock className={`w-4 h-4 ${countdown < 120 ? "text-rose-500" : countdown < 300 ? "text-amber-500" : "text-emerald-500"}`} />
@@ -296,11 +294,12 @@ export function PaymentPage() {
                           onError={() => setQrError(true)}
                         />
                       ) : (
-                        <div className="w-56 h-56 rounded-2xl border-2 border-stone-200 bg-stone-50 flex items-center justify-center text-center p-4">
-                          <div>
-                            <AlertCircle className="w-8 h-8 text-amber-400 mx-auto mb-2" />
-                            <p className="text-xs text-stone-500">Không tải được QR.<br />Vui lòng dùng thông tin bên cạnh.</p>
-                          </div>
+                        <div className="w-56 h-56 rounded-2xl border-2 border-stone-200 bg-white flex flex-col items-center justify-center p-2">
+                          <img
+                            src="/assets/momo-qr.png"
+                            alt="QR MoMo WEMO"
+                            className="w-full h-full object-contain"
+                          />
                         </div>
                       )}
                       {/* Polling indicator */}
@@ -316,16 +315,16 @@ export function PaymentPage() {
                       )}
                     </div>
                     <p className="text-[10px] text-stone-400 font-medium text-center">
-                      Quét bằng ứng dụng ngân hàng bất kỳ
+                      Quét bằng MoMo hoặc ứng dụng ngân hàng bất kỳ
                     </p>
                     <div className="flex items-center gap-2">
                       <img
-                        src="https://api.vietqr.io/img/TPB.png"
-                        alt="TPBank"
+                        src="https://api.vietqr.io/img/momo.png"
+                        alt="MoMo"
                         className="h-5 object-contain"
                         onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                       />
-                      <span className="text-xs font-bold text-[#E84A4A]">TPBank</span>
+                      <span className="text-xs font-bold text-[#A50064]">MoMo</span>
                     </div>
                   </div>
 
@@ -336,7 +335,7 @@ export function PaymentPage() {
                     </h3>
 
                     {[
-                      { label: "Ngân hàng", value: "TPBank (Tiên Phong Bank)", copiable: false },
+                      { label: "Ngân hàng", value: "MoMo", copiable: false },
                       { label: "Số tài khoản", value: ACCOUNT_NO, copiable: true },
                       { label: "Tên tài khoản", value: ACCOUNT_NAME, copiable: false },
                       {
@@ -381,34 +380,13 @@ export function PaymentPage() {
                       </p>
                     </div>
 
-                    {/* Zalo Confirmation Button (Phương án 1) */}
-                    {orderData?.adminPhone && (
-                      <a
-                        href={`https://zalo.me/${orderData.adminPhone.replace(/[^0-9]/g, "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-full py-3 px-4 rounded-xl bg-[#0068FF] hover:bg-[#005AE0] text-white text-xs font-black flex items-center justify-center gap-2 shadow transition-all hover:scale-[1.01]"
-                      >
-                        <MessageCircle className="w-4.5 h-4.5 fill-white/20" />
-                        Xác Nhận Qua Zalo Nhanh
-                      </a>
-                    )}
                   </div>
                 </div>
               </div>
 
               {/* Polling status bar */}
               <div className="px-6 sm:px-8 pb-5">
-                <div className="flex items-center gap-2 justify-center">
-                  <motion.div
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ repeat: Infinity, duration: 1.5 }}
-                    className="w-2 h-2 rounded-full bg-emerald-400"
-                  />
-                  <span className="text-[10px] text-stone-400 font-medium">
-                    Đang kiểm tra trạng thái thanh toán... (tự động làm mới mỗi 5 giây)
-                  </span>
-                </div>
+
               </div>
             </div>
 

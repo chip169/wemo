@@ -1336,6 +1336,44 @@ app.post("/api/nfc", authMiddleware, async (req, res) => {
   }
 });
 
+app.put("/api/nfc/:id", authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const tagData = req.body;
+
+  try {
+    let updatedTag;
+    if (getDbMode() === "mongodb") {
+      const updateFields = {};
+      if (tagData.uid !== undefined) updateFields.uid = tagData.uid;
+      if (tagData.status !== undefined) updateFields.status = tagData.status;
+      if (tagData.giftId !== undefined) updateFields.giftId = tagData.giftId;
+      if (tagData.lastTapped !== undefined) updateFields.lastTapped = tagData.lastTapped;
+
+      updatedTag = await NFC.findOneAndUpdate({ id }, updateFields, { new: true });
+      if (!updatedTag) {
+        return res.status(404).json({ error: "Không tìm thấy thẻ NFC." });
+      }
+    } else {
+      const nfc = await readJsonFile("nfc.json");
+      const idx = nfc.findIndex((t) => t.id === id);
+      if (idx === -1) {
+        return res.status(404).json({ error: "Không tìm thấy thẻ NFC." });
+      }
+      if (tagData.uid !== undefined) nfc[idx].uid = tagData.uid;
+      if (tagData.status !== undefined) nfc[idx].status = tagData.status;
+      if (tagData.giftId !== undefined) nfc[idx].giftId = tagData.giftId;
+      if (tagData.lastTapped !== undefined) nfc[idx].lastTapped = tagData.lastTapped;
+
+      await writeJsonFile("nfc.json", nfc);
+      updatedTag = nfc[idx];
+    }
+
+    res.json({ success: true, tag: updatedTag });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 app.delete("/api/nfc/:id", authMiddleware, async (req, res) => {
   const { id } = req.params;
   try {

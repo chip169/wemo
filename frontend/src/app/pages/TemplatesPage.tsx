@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Eye, Sparkles, Heart, Search, Check, Layers, Play, Mail } from "lucide-react";
 import { Link } from "react-router";
+import { TemplatePreviewModal, PreviewTemplateItem } from "../components/TemplatePreviewModal";
 
 const STATIC_TEMPLATES = [
   {
@@ -156,6 +157,7 @@ export function TemplatesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+  const [previewTemplate, setPreviewTemplate] = useState<PreviewTemplateItem | null>(null);
 
   useEffect(() => {
     fetch("/api/templates")
@@ -164,12 +166,15 @@ export function TemplatesPage() {
         const merged = STATIC_TEMPLATES.map((staticTpl) => {
           const dbId = SLUG_TO_ID_MAP[staticTpl.slug] || staticTpl.slug;
           const dbTpl = data.find((t) => t.id === dbId);
-          if (!dbTpl) return staticTpl;
+          if (!dbTpl) return { ...staticTpl, id: dbId, videoUrl: "", photos: [] };
           return {
             ...staticTpl,
+            id: dbId,
             title: dbTpl.name || staticTpl.title,
             description: dbTpl.sampleMessage || staticTpl.description,
             image: dbTpl.preview || staticTpl.image,
+            videoUrl: dbTpl.videoUrl || "",
+            photos: dbTpl.photos || [],
             features: (dbTpl.features && dbTpl.features.length > 0) ? dbTpl.features : staticTpl.features,
           };
         });
@@ -385,10 +390,23 @@ export function TemplatesPage() {
                     {/* Action Buttons: Video & Contact */}
                     <div className="grid grid-cols-2 gap-3 mt-5 pt-1">
                       <a
-                        href={`/adminWemo/preview/${previewId}`}
+                        href={`/preview/${previewId}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setPreviewTemplate({
+                            id: previewId,
+                            slug: template.slug,
+                            title: template.title,
+                            description: template.description,
+                            image: template.image,
+                            videoUrl: (template as any).videoUrl || "",
+                            photos: (template as any).photos || [],
+                            emoji: template.emoji,
+                          });
+                        }}
+                        className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs cursor-pointer"
                       >
                         <Play className="w-3.5 h-3.5 stroke-[#E63956] fill-transparent" />
                         <span>Video</span>
@@ -436,6 +454,13 @@ export function TemplatesPage() {
           </Link>
         </motion.div>
       </section>
+
+      {/* In-page Video & 3D Interactive Preview Modal */}
+      <TemplatePreviewModal
+        isOpen={Boolean(previewTemplate)}
+        template={previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+      />
     </div>
   );
 }

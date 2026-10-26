@@ -64,6 +64,10 @@ export const router = createBrowserRouter([
     Component: AdminTemplatePreviewPage,
   },
   {
+    path: "preview/:templateId",
+    Component: AdminTemplatePreviewPage,
+  },
+  {
     path: "/",
     Component: Root,
     children: [

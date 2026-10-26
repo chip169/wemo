@@ -97,9 +97,19 @@ const INITIAL_TEMPLATES = [
   }
 ];
 
+import { TemplatePreviewModal, PreviewTemplateItem } from "./TemplatePreviewModal";
+
 const LOCAL_STORAGE_KEY = "wemo_templates_cache_v6";
 
-function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEMPLATES[0]; isLoading: boolean }) {
+function InteractiveCard({
+  template,
+  isLoading,
+  onOpenPreview,
+}: {
+  template: any;
+  isLoading: boolean;
+  onOpenPreview: (tpl: any) => void;
+}) {
   const cardRef = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
@@ -210,10 +220,14 @@ function InteractiveCard({ template, isLoading }: { template: typeof INITIAL_TEM
           {/* Action Buttons: Video & Contact */}
           <div className="grid grid-cols-2 gap-3 mt-5 pt-1">
             <a
-              href={`/adminWemo/preview/${template.id}`}
+              href={`/preview/${template.id}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs"
+              onClick={(e) => {
+                e.preventDefault();
+                onOpenPreview(template);
+              }}
+              className="inline-flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl bg-[#FFF0F4] border border-[#FFCCD5] text-[#E63956] hover:bg-[#FFE5EC] font-bold text-xs sm:text-sm transition-all no-underline shadow-2xs cursor-pointer"
             >
               <Play className="w-3.5 h-3.5 stroke-[#E63956] fill-transparent" />
               <span>Video</span>
@@ -247,6 +261,7 @@ export function TemplateShowcase() {
     return INITIAL_TEMPLATES;
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [previewTemplate, setPreviewTemplate] = useState<PreviewTemplateItem | null>(null);
 
   useEffect(() => {
     fetch("/api/templates")
@@ -260,6 +275,8 @@ export function TemplateShowcase() {
             title: dbTpl.name || tpl.title,
             description: dbTpl.sampleMessage || tpl.description,
             image: dbTpl.preview || tpl.image,
+            videoUrl: dbTpl.videoUrl || "",
+            photos: dbTpl.photos || [],
           };
         });
         setTemplateList(merged);
@@ -351,12 +368,23 @@ export function TemplateShowcase() {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="h-full"
             >
-              <InteractiveCard template={template} isLoading={isLoading} />
+              <InteractiveCard
+                template={template}
+                isLoading={isLoading}
+                onOpenPreview={(tpl) => setPreviewTemplate(tpl)}
+              />
             </motion.div>
           ))}
         </div>
 
       </div>
+
+      {/* In-page Video & 3D Interactive Preview Modal */}
+      <TemplatePreviewModal
+        isOpen={Boolean(previewTemplate)}
+        template={previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+      />
     </section>
   );
 }
