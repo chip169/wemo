@@ -245,14 +245,14 @@ function LegoMinifigureBot({
     // ── 4. Natural Body Breathing & Bounce ──────────────────────────────────
     if (figureGroupRef.current) {
       if (mode === "dance") {
-        figureGroupRef.current.position.y = -0.48 + Math.sin(t * 8) * 0.08;
+        figureGroupRef.current.position.y = -0.18 + Math.sin(t * 8) * 0.08;
         figureGroupRef.current.rotation.y = Math.sin(t * 4) * 0.22;
       } else if (mode === "walk") {
-        figureGroupRef.current.position.y = -0.48 + Math.abs(Math.sin(t * 5)) * 0.04;
+        figureGroupRef.current.position.y = -0.18 + Math.abs(Math.sin(t * 5)) * 0.04;
         figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.06;
       } else {
         // Natural gentle idle breathing float
-        figureGroupRef.current.position.y = -0.48 + Math.sin(t * 2.2) * 0.03;
+        figureGroupRef.current.position.y = -0.18 + Math.sin(t * 2.2) * 0.03;
         figureGroupRef.current.rotation.y = THREE.MathUtils.lerp(figureGroupRef.current.rotation.y, 0, 0.08);
       }
     }
@@ -304,7 +304,7 @@ function LegoMinifigureBot({
   });
 
   return (
-    <group ref={figureGroupRef} position={[0, -0.48, 0]}>
+    <group ref={figureGroupRef} position={[0, -0.18, 0]}>
       {/* ── 1. Authentic LEGO Minifigure Head ── */}
       <group ref={headRef} position={[0, 0.94, 0]}>
         {/* Main Head Cylinder */}
@@ -514,24 +514,6 @@ function LegoMinifigureBot({
           </mesh>
         </group>
       </group>
-
-      {/* ── 4. Circular LEGO Baseplate Pedestal ── */}
-      <group position={[0, -1.35, 0]}>
-        <mesh receiveShadow>
-          <cylinderGeometry args={[1.35, 1.45, 0.16, 32]} />
-          <meshPhysicalMaterial color="#3E2723" roughness={0.35} clearcoat={0.6} />
-        </mesh>
-        {[-0.6, 0, 0.6].map((x, i) =>
-          [-0.45, 0.45].map((z, j) => (
-            <LegoStud
-              key={`${i}-${j}`}
-              position={[x, 0.1, z]}
-              color="#3E2723"
-              scale={[0.52, 0.45, 0.52]}
-            />
-          ))
-        )}
-      </group>
     </group>
   );
 }
@@ -599,7 +581,7 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
             </Float>
 
             {/* Ground Contact Shadow */}
-            <ContactShadows position={[0, -1.8, 0]} opacity={0.42} scale={4.0} blur={1.8} far={3} />
+            <ContactShadows position={[0, -1.88, 0]} opacity={0.32} scale={2.6} blur={1.6} far={2.5} />
           </Canvas>
 
           {/* Online green indicator dot */}
