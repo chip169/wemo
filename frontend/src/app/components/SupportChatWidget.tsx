@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Phone, MessageSquare, X, User, Smartphone, Bot, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
-import { WalkingBot3D } from "./3d/WalkingBot3D";
+import { SplineBot3D } from "./3d/SplineBot3D";
 
 
 
@@ -585,9 +585,17 @@ export function SupportChatWidget() {
       setIsTyping(true);
       setTimeout(() => {
         setIsTyping(false);
-        fetch("/api/support/messages", { method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({ sessionId:sid, sender:"admin", text:`Xin chào ${name.trim()}! 🦔 Tớ là Pango. Tớ có thể giúp về thiệp NFC, mô hình LEGO cá nhân hóa, giá cả và đặt hàng. Bạn cần gì?` }) }).catch(console.error);
-      }, 1800);
-    }, 500);
+        fetch("/api/support/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            sessionId: sid,
+            sender: "admin",
+            text: `Kính chào ${name.trim()}! 🎩✨ Tôi là Quản gia WEMO LEGO. Tôi có thể hỗ trợ bạn về mô hình LEGO cá nhân hóa theo ảnh thật, chip ký ức NFC, bảng giá và đặt hàng độc bản. Bạn đang quan tâm gói quà nào ạ?`,
+          }),
+        }).catch(console.error);
+      }, 1400);
+    }, 400);
   };
 
   // ─── Send ──────────────────────────────────────────────────────────────────
@@ -711,63 +719,68 @@ export function SupportChatWidget() {
             style={{ ...getPopupStyle(), height:500, borderRadius:24, background:"rgba(255,255,255,0.98)", backdropFilter:"blur(24px)", border:"1.5px solid rgba(232,180,168,0.35)", boxShadow:"0 28px 64px rgba(0,0,0,0.18), 0 8px 24px rgba(232,180,168,0.25)", display:"flex", flexDirection:"column", overflow:"hidden", fontFamily:"'Inter',sans-serif" } as any}
           >
             {/* Header */}
-            <div style={{ background:"linear-gradient(135deg, #FFF0EC 0%, #FCE1DA 100%)", padding:"13px 16px", display:"flex", alignItems:"center", gap:10, flexShrink:0, borderBottom:"1.5px solid rgba(232,180,168,0.25)" }}>
-              <div style={{ width:38, height:38, borderRadius:"50%", background:"linear-gradient(135deg, #E8B4A8, #D4AF78)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 2px 8px rgba(232,180,168,0.35)" }}>
-                <Bot style={{ width:19, height:19, color:"white" }} />
+            <div style={{ background:"linear-gradient(135deg, #FFF0EC 0%, #FCE7F3 100%)", padding:"13px 16px", display:"flex", alignItems:"center", gap:11, flexShrink:0, borderBottom:"1.5px solid rgba(244,114,182,0.25)" }}>
+              <div style={{ width:40, height:40, borderRadius:"50%", background:"linear-gradient(135deg, #F472B6, #FB7185)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 3px 10px rgba(244,114,182,0.35)", position:"relative" }}>
+                <span style={{ fontSize: 20 }}>🎩</span>
+                <span style={{ position:"absolute", bottom:0, right:0, width:10, height:10, background:"#22c55e", borderRadius:"50%", border:"2px solid white" }} />
               </div>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ color:"#5C352E", fontWeight:800, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>WEMO Assistant 🧱</div>
-                <div style={{ color:"#8C5D53", fontSize:9.5, display:"flex", flexDirection:"column", gap:2, marginTop:2 }}>
-                  <div style={{ display:"flex", alignItems:"center", gap:4 }}>
-                    <span style={{ width:6, height:6, background:"#4ade80", borderRadius:"50%", display:"inline-block", flexShrink:0 }} />
-                    <span style={{ fontWeight:500 }}>Trực tuyến</span>
-                  </div>
-                  <div style={{ opacity:0.8 }}>Phản hồi tức thì</div>
+                <div style={{ color:"#4A1D24", fontWeight:800, fontSize:13.5, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>Quản Gia WEMO 🧱✨</div>
+                <div style={{ color:"#9D174D", fontSize:10, display:"flex", alignItems:"center", gap:5, marginTop:2 }}>
+                  <span style={{ width:6, height:6, background:"#22c55e", borderRadius:"50%", display:"inline-block", flexShrink:0 }} />
+                  <span style={{ fontWeight:600 }}>Trực tuyến • Tư vấn 1-1 tức thì</span>
                 </div>
               </div>
               <div style={{ display:"flex", gap:5 }}>
-                <a href="tel:0398768699" data-action="c" style={{ width:32, height:32, borderRadius:10, background:"rgba(92,53,46,0.06)", display:"flex", alignItems:"center", justifyContent:"center", color:"#5C352E", textDecoration:"none" }}><Phone style={{ width:14, height:14 }} /></a>
-                <a href="https://zalo.me/0398768699" target="_blank" rel="noopener noreferrer" data-action="z" style={{ width:32, height:32, borderRadius:10, background:"rgba(92,53,46,0.06)", display:"flex", alignItems:"center", justifyContent:"center", color:"#5C352E", textDecoration:"none" }}><MessageSquare style={{ width:14, height:14 }} /></a>
-                <button data-action="x" onClick={() => setIsOpen(false)} style={{ width:32, height:32, borderRadius:10, background:"rgba(92,53,46,0.06)", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", color:"#5C352E" }}><X style={{ width:15, height:15 }} /></button>
+                <a href="tel:0398768699" data-action="c" style={{ width:32, height:32, borderRadius:10, background:"rgba(244,114,182,0.12)", display:"flex", alignItems:"center", justifyContent:"center", color:"#9D174D", textDecoration:"none" }}><Phone style={{ width:14, height:14 }} /></a>
+                <a href="https://zalo.me/0398768699" target="_blank" rel="noopener noreferrer" data-action="z" style={{ width:32, height:32, borderRadius:10, background:"rgba(244,114,182,0.12)", display:"flex", alignItems:"center", justifyContent:"center", color:"#9D174D", textDecoration:"none" }}><MessageSquare style={{ width:14, height:14 }} /></a>
+                <button data-action="x" onClick={() => setIsOpen(false)} style={{ width:32, height:32, borderRadius:10, background:"rgba(244,114,182,0.12)", border:"none", cursor:"pointer", display:"flex", alignItems:"center", justifyContent:"center", color:"#9D174D" }}><X style={{ width:15, height:15 }} /></button>
               </div>
             </div>
 
             {/* Content */}
             {!isRegistered ? (
-              <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"22px 20px", gap:14, overflowY:"auto" }}>
+              <div style={{ flex:1, display:"flex", flexDirection:"column", justifyContent:"center", padding:"22px 20px", gap:14, overflowY:"auto", background:"linear-gradient(180deg, #FFFFFF 0%, #FFF5F7 100%)" }}>
                 <div style={{ textAlign:"center" }}>
-                  <div style={{ width: 52, height: 52, margin:"0 auto 10px", borderRadius: 16, background: "linear-gradient(135deg, #FFF0EC, #FCE1DA)", border: "1.5px solid rgba(232,180,168,0.35)", display: "flex", alignItems:"center", justifyContent: "center", boxShadow: "0 6px 16px rgba(232,180,168,0.2)" }}>
-                    <Bot style={{ width: 26, height: 26, color: "#8C5D53" }} />
+                  <div style={{ width: 56, height: 56, margin:"0 auto 10px", borderRadius: 20, background: "linear-gradient(135deg, #FFF1F2, #FCE7F3)", border: "2px solid rgba(244,114,182,0.35)", display: "flex", alignItems:"center", justifyContent: "center", boxShadow: "0 8px 20px rgba(244,114,182,0.22)" }}>
+                    <span style={{ fontSize: 28 }}>🎩</span>
                   </div>
-                  <div style={{ fontWeight:800, fontSize:15, color:"#1A1818" }}>Trợ lý WEMO 🧱</div>
-                  <div style={{ fontSize:11.5, color:"#8C5D53", marginTop:4, lineHeight:1.55 }}>Vui lòng để lại tên và số điện thoại để bắt đầu trò chuyện trực tiếp!</div>
+                  <div style={{ fontWeight:800, fontSize:15.5, color:"#2E1015" }}>Quản Gia WEMO LEGO 🧱</div>
+                  <div style={{ fontSize:11.5, color:"#9D174D", marginTop:4, lineHeight:1.55 }}>
+                    Vui lòng để lại tên và số điện thoại để Quản Gia tư vấn mô hình LEGO cá nhân hóa & chip ký ức riêng cho bạn!
+                  </div>
                 </div>
                 <form onSubmit={handleRegister} style={{ display:"flex", flexDirection:"column", gap:11 }}>
                   {[
-                    { icon:<User style={{width:11,height:11}}/>, label:"Họ và tên *", type:"text", val:name, set:setName, ph:"Nhập họ và tên..." },
-                    { icon:<Smartphone style={{width:11,height:11}}/>, label:"Số điện thoại *", type:"tel", val:phone, set:setPhone, ph:"Số điện thoại..." },
+                    { icon:<User style={{width:11,height:11}}/>, label:"Họ và tên *", type:"text", val:name, set:setName, ph:"Ví dụ: Nguyễn Minh Anh..." },
+                    { icon:<Smartphone style={{width:11,height:11}}/>, label:"Số điện thoại *", type:"tel", val:phone, set:setPhone, ph:"Ví dụ: 0912 345 678..." },
                   ].map(f => (
                     <div key={f.label}>
-                      <label style={{ display:"flex", alignItems:"center", gap:5, fontSize:10, fontWeight:700, color:"#8C5D53", textTransform:"uppercase" as const, letterSpacing:"0.07em", marginBottom:5 }}>{f.icon} {f.label}</label>
+                      <label style={{ display:"flex", alignItems:"center", gap:5, fontSize:10.5, fontWeight:700, color:"#9D174D", textTransform:"uppercase" as const, letterSpacing:"0.06em", marginBottom:5 }}>{f.icon} {f.label}</label>
                       <input type={f.type} value={f.val} onChange={e=>f.set(e.target.value)} placeholder={f.ph} required
-                        style={{ width:"100%", padding:"10px 13px", borderRadius:13, border:"1.5px solid #F3D9D2", outline:"none", fontSize:12, color:"#5C352E", boxSizing:"border-box" as const }}
-                        onFocus={e=>(e.target.style.borderColor="#E8B4A8")} onBlur={e=>(e.target.style.borderColor="#F3D9D2")} />
+                        style={{ width:"100%", padding:"11px 14px", borderRadius:14, border:"1.5px solid #FBCFE8", outline:"none", fontSize:12.5, color:"#4A1D24", boxSizing:"border-box" as const, transition:"border-color 0.2s" }}
+                        onFocus={e=>(e.target.style.borderColor="#F472B6")} onBlur={e=>(e.target.style.borderColor="#FBCFE8")} />
                     </div>
                   ))}
-                  <button type="submit" style={{ padding:"12px", background:"linear-gradient(135deg, #E8B4A8, #D49D90)", color:"white", border:"none", borderRadius:14, fontWeight:800, fontSize:13, cursor:"pointer", boxShadow:"0 4px 14px rgba(232,180,168,0.35)" }}>Bắt đầu trò chuyện 🦔</button>
+                  <button type="submit" style={{ padding:"12px", background:"linear-gradient(135deg, #F472B6 0%, #FB7185 50%, #E11D48 100%)", color:"white", border:"none", borderRadius:14, fontWeight:800, fontSize:13, cursor:"pointer", boxShadow:"0 6px 18px rgba(244,114,182,0.4)", display:"flex", alignItems:"center", justifyContent:"center", gap:6 }}>
+                    Bắt đầu trò chuyện cùng Quản Gia 🎩✨
+                  </button>
+                  <div style={{ textAlign:"center", fontSize:10, color:"#9E777F", marginTop:2 }}>
+                    🔒 Thông tin được bảo mật 100% để tư vấn đơn hàng
+                  </div>
                 </form>
               </div>
             ) : (
               <>
                 <div
                   ref={messagesContainerRef}
-                  style={{ flex:1, overflowY:"auto", padding:"14px 14px", display:"flex", flexDirection:"column", gap:10, background:"#FFF6F4", scrollBehavior:"smooth" }}
+                  style={{ flex:1, overflowY:"auto", padding:"14px 14px", display:"flex", flexDirection:"column", gap:10, background:"#FFF8FA", scrollBehavior:"smooth" }}
                 >
                   {messages.filter(m=>!m.text.startsWith("[Hệ thống]")).length===0 ? (
                     <div style={{ textAlign:"center", padding:"28px 12px" }}>
-                      <Sparkles style={{ width:28, height:28, color:"#E8B4A8", margin:"0 auto 10px", display:"block" }} />
-                      <div style={{ fontSize:13, fontWeight:800, color:"#8C5D53" }}>Xin chào {name}! 💕</div>
-                      <div style={{ fontSize:11.5, marginTop:5, lineHeight:1.75, color:"#A47870" }}>Hỏi tớ về thiệp NFC, mô hình LEGO cá nhân hóa,<br/>giá cả hay đặt hàng nhé!</div>
+                      <Sparkles style={{ width:28, height:28, color:"#F472B6", margin:"0 auto 10px", display:"block" }} />
+                      <div style={{ fontSize:13.5, fontWeight:800, color:"#831843" }}>Xin chào {name}! 💖</div>
+                      <div style={{ fontSize:11.5, marginTop:5, lineHeight:1.75, color:"#9D174D" }}>Hỏi tôi về các gói LEGO cá nhân hóa, chip NFC,<br/>bảng giá hay đặt hàng nhé!</div>
                     </div>
                   ) : (
                     messages.map((msg, i) => {
@@ -776,11 +789,11 @@ export function SupportChatWidget() {
                       return (
                         <div key={i} className="pg-msg" style={{ display:"flex", justifyContent:me?"flex-end":"flex-start", gap:7, alignItems:"flex-end" }}>
                           {!me && (
-                            <div style={{ width:26, height:26, borderRadius:"50%", background:"linear-gradient(135deg, #E8B4A8, #D49D90)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 2px 6px rgba(232,180,168,0.4)" }}>
-                              <Bot style={{width:13,height:13,color:"white"}}/>
+                            <div style={{ width:28, height:28, borderRadius:"50%", background:"linear-gradient(135deg, #F472B6, #FB7185)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, boxShadow:"0 2px 6px rgba(244,114,182,0.4)" }}>
+                              <span style={{ fontSize: 14 }}>🎩</span>
                             </div>
                           )}
-                          <div style={{ maxWidth:"74%", padding:"10px 14px", borderRadius:18, fontSize:12.5, lineHeight:1.68, whiteSpace:"pre-wrap" as const, wordBreak:"break-word" as const, ...(me?{background:"linear-gradient(135deg, #E8B4A8, #D49D90)",color:"white",borderBottomRightRadius:4,boxShadow:"0 3px 12px rgba(232,180,168,0.35)"}:{background:"white",color:"#5C352E",borderBottomLeftRadius:4,border:"1px solid #F3D9D2",boxShadow:"0 1px 4px rgba(0,0,0,0.05)"}) }}>
+                          <div style={{ maxWidth:"74%", padding:"10px 14px", borderRadius:18, fontSize:12.5, lineHeight:1.68, whiteSpace:"pre-wrap" as const, wordBreak:"break-word" as const, ...(me?{background:"linear-gradient(135deg, #F472B6, #E11D48)",color:"white",borderBottomRightRadius:4,boxShadow:"0 3px 12px rgba(244,114,182,0.35)"}:{background:"white",color:"#4A1D24",borderBottomLeftRadius:4,border:"1px solid #FCE7F3",boxShadow:"0 1px 4px rgba(0,0,0,0.05)"}) }}>
                             {msg.text}
                           </div>
                         </div>
@@ -793,19 +806,19 @@ export function SupportChatWidget() {
 
                 {messages.filter(m=>!m.text.startsWith("[Hệ thống]")).length===0 && (
                   <div style={{ padding:"0 14px 10px", display:"flex", gap:6, flexWrap:"wrap" as const }}>
-                    {["💰 Giá cả","📦 Đặt hàng","📱 NFC là gì?","🧱 LEGO cá nhân hóa"].map(q=>(
+                    {["💰 Bảng giá LEGO","📦 Cách đặt hàng","📱 Chip NFC là gì?","💑 Gói Couple Set"].map(q=>(
                       <button key={q} data-action="q" onClick={()=>setInputText(q.split(" ").slice(1).join(" "))}
-                        style={{ padding:"5px 11px", borderRadius:20, border:"1.5px solid #E8B4A8", background:"white", color:"#C58B7E", fontSize:10, fontWeight:700, cursor:"pointer" }}>{q}</button>
+                        style={{ padding:"5px 11px", borderRadius:20, border:"1.5px solid #F472B6", background:"white", color:"#BE185D", fontSize:10.5, fontWeight:700, cursor:"pointer" }}>{q}</button>
                     ))}
                   </div>
                 )}
 
-                <form onSubmit={handleSend} style={{ padding:"10px 12px", borderTop:"1.5px solid #F3D9D2", display:"flex", gap:8, alignItems:"center", background:"white", flexShrink:0 }}>
+                <form onSubmit={handleSend} style={{ padding:"10px 12px", borderTop:"1.5px solid #FCE7F3", display:"flex", gap:8, alignItems:"center", background:"white", flexShrink:0 }}>
                   <input type="text" value={inputText} onChange={e=>setInputText(e.target.value)} placeholder="Nhập tin nhắn..."
-                    style={{ flex:1, padding:"10px 15px", borderRadius:22, border:"1.5px solid #F3D9D2", outline:"none", fontSize:12, background:"#FFFDFD", color:"#5C352E" }}
-                    onFocus={e=>(e.target.style.borderColor="#E8B4A8")} onBlur={e=>(e.target.style.borderColor="#F3D9D2")} />
+                    style={{ flex:1, padding:"10px 15px", borderRadius:22, border:"1.5px solid #FBCFE8", outline:"none", fontSize:12, background:"#FFFDFD", color:"#4A1D24" }}
+                    onFocus={e=>(e.target.style.borderColor="#F472B6")} onBlur={e=>(e.target.style.borderColor="#FBCFE8")} />
                   <button type="submit" disabled={!inputText.trim()}
-                    style={{ width:38, height:38, borderRadius:13, background:inputText.trim()?"linear-gradient(135deg, #E8B4A8, #D49D90)":"#e7e5e4", border:"none", cursor:inputText.trim()?"pointer":"default", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, transition:"background 0.2s" }}>
+                    style={{ width:38, height:38, borderRadius:13, background:inputText.trim()?"linear-gradient(135deg, #F472B6, #E11D48)":"#e7e5e4", border:"none", cursor:inputText.trim()?"pointer":"default", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, transition:"background 0.2s" }}>
                     <Send style={{width:15,height:15,color:inputText.trim()?"white":"#a8a29e"}} />
                   </button>
                 </form>
@@ -815,9 +828,9 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* ── Realistic 3D Animated LEGO Character on Page ── */}
+      {/* ── Realistic 3D Animated LEGO Character on Page (Spline 3D Ready) ── */}
       {!isOpen && (
-        <WalkingBot3D
+        <SplineBot3D
           onOpenChat={() => setIsOpen(true)}
         />
       )}
