@@ -6,19 +6,19 @@ const plans = [
   {
     code: "MB-LG-STD",
     name: "WEMO LEGO – Standard",
+    badge: "Tiết Kiệm",
     icon: Sparkles,
     price: "339.000đ",
-    period: "/sản phẩm",
-    description: "Mô hình LEGO-compatible cá nhân hóa theo ảnh thật, tối ưu chi phí.",
+    period: "/ 1 nhân vật",
+    description: "Mô hình LEGO cá nhân hóa theo ảnh thật, thiết kế khuôn mặt & tóc riêng.",
     color: "#E8B4A8",
     features: [
-      "Mã SP: MB-LG-STD",
-      "Lắp ráp theo ảnh thật của người nhận",
-      "Trang phục mặc định, tóc & mặt theo ảnh",
-      "Đi kèm chip NFC mở trang ký ức số",
-      "Trang web độc bản: Ảnh, video, lời nhắn",
-      "Hộp quà & thiệp chúc thiết kế độc bản",
-      "Bảo hành & hỗ trợ chu đáo",
+      "Lắp ráp thủ công theo ảnh thật người nhận",
+      "Khuôn mặt & kiểu tóc cá nhân hóa tỉ mỉ",
+      "Đế gỗ tích hợp chip NFC chạm mở trang web",
+      "Tặng 1 trang web kỷ niệm độc bản (ảnh, video)",
+      "Kèm hộp quà nơ & thiệp chúc thiết kế riêng",
+      "Bảo hành 12 tháng & hỗ trợ kỹ thuật trọn đời",
     ],
     cta: "Đặt Hàng Ngay",
     popular: false,
@@ -26,61 +26,63 @@ const plans = [
   {
     code: "MB-LG-PRM",
     name: "WEMO LEGO – Premium",
+    badge: "Khuyên Dùng",
     icon: Crown,
     price: "469.000đ",
-    period: "/sản phẩm",
-    description: "Cá nhân hóa chi tiết cao theo ảnh thật (tóc, trang phục & phụ kiện đặc trưng).",
+    period: "/ 1 nhân vật",
+    description: "Cá nhân hóa chi tiết cao: tóc, biểu cảm, trang phục & phụ kiện đặc trưng.",
     color: "#D4AF78",
     features: [
-      "Mã SP: MB-LG-PRM",
-      "Lắp ráp theo ảnh thật của người nhận",
-      "Tóc, trang phục, phụ kiện chi tiết theo ảnh",
-      "Đi kèm chip NFC mở trang ký ức số",
-      "Trang web độc bản: Ảnh, video, lời nhắn",
-      "Tặng kèm đế trưng bày & hộp quà cao cấp",
-      "Hỗ trợ ưu tiên & duyệt mẫu thiết kế",
+      "Cá nhân hóa toàn diện: Tóc, trang phục & phụ kiện",
+      "Tỉ mỉ từng chi tiết đặc trưng theo ảnh gửi",
+      "Đế gỗ tích hợp chip NFC chạm mở trang web",
+      "Landing page độc bản: Nhạc nền, ảnh & video",
+      "Tặng đế trưng bày cao cấp & hộp quà sang trọng",
+      "Duyệt ảnh mẫu thiết kế trước khi gia công",
+      "Ưu tiên hoàn thiện hỏa tốc theo yêu cầu",
     ],
-    cta: "Đặt Hàng Ngay",
+    cta: "Đặt Gói Này Ngay",
     popular: true,
   },
   {
     code: "MB-LG-CPS",
-    name: "WEMO LEGO – Couple Set (Standard)",
+    name: "WEMO LEGO – Couple Standard",
+    badge: "Cặp Đôi",
     icon: Users,
     price: "600.000đ",
-    period: "/bộ 2 nhân vật",
-    description: "Bộ đôi nhân vật LEGO theo ảnh cặp đôi kèm 1 landing page chung và hộp đôi.",
+    period: "/ bộ 2 nhân vật",
+    description: "Bộ đôi 2 nhân vật LEGO theo ảnh cặp đôi kèm 1 landing page chung và hộp đôi.",
     color: "#E88D7B",
     features: [
-      "Mã SP: MB-LG-CPS",
-      "Bộ đôi 2 nhân vật LEGO cá nhân hóa",
-      "Trang phục mặc định, tóc & mặt cá nhân hóa",
-      "Tích hợp 1 landing page chung cho cả 2 người",
-      "Hộp đôi thiết kế riêng sang trọng, tinh tế",
-      "Tích hợp chip NFC trên đế cho cả hai",
-      "Quà tặng kỷ niệm tình yêu ý nghĩa",
+      "Bộ đôi 2 nhân vật LEGO theo ảnh cặp đôi",
+      "Cá nhân hóa khuôn mặt & kiểu tóc cả hai bạn",
+      "1 landing page chung câu chuyện tình yêu",
+      "Tích hợp chip NFC chạm mở web kỷ niệm",
+      "Hộp quà đôi thiết kế lãng mạn & tinh tế",
+      "Kỷ vật tình yêu độc bản, bền đẹp theo năm tháng",
     ],
-    cta: "Đặt Hàng Ngay",
+    cta: "Đặt Gói Cặp Đôi",
     popular: false,
   },
   {
     code: "MB-LG-CPP",
-    name: "WEMO LEGO – Couple Set (Premium)",
+    name: "WEMO LEGO – Couple Premium",
+    badge: "Bộ Đôi Cao Cấp",
     icon: Heart,
     price: "850.000đ",
-    period: "/bộ 2 nhân vật",
-    description: "Bộ đôi nhân vật LEGO cao cấp, trang phục và phụ kiện tỉ mỉ cho cả hai bạn.",
+    period: "/ bộ 2 nhân vật",
+    description: "Bộ đôi LEGO cao cấp nhất, trang phục và phụ kiện tỉ mỉ cho cả hai bạn.",
     color: "#5C352E",
     features: [
-      "Mã SP: MB-LG-CPP",
-      "Bộ đôi 2 nhân vật LEGO cao cấp",
-      "Tóc, trang phục, phụ kiện chi tiết cho cả hai",
-      "1 landing page chung câu chuyện tình yêu",
-      "Hộp đôi cao cấp thiết kế riêng đặc biệt",
-      "Tặng kèm đế đôi cao cấp & thiệp chúc độc bản",
-      "Duyệt mẫu thiết kế 3D trước khi gia công",
+      "Bộ đôi 2 nhân vật LEGO chi tiết cao cấp nhất",
+      "Cá nhân hóa toàn diện trang phục & phụ kiện cặp đôi",
+      "1 landing page Premium: Câu chuyện tình yêu, album riêng",
+      "Đế đôi khắc tên & ngày kỷ niệm theo yêu cầu",
+      "Hộp quà đôi giới hạn sang trọng kèm thiệp hoa khô",
+      "Duyệt ảnh thiết kế 3D trước khi xuất xưởng",
+      "Bảo hành trọn đời & hỗ trợ kỹ thuật vĩnh viễn",
     ],
-    cta: "Đặt Hàng Ngay",
+    cta: "Đặt Gói Cao Cấp",
     popular: false,
   },
 ];
@@ -88,82 +90,113 @@ const plans = [
 function PricingCard({ plan }: { plan: typeof plans[0] }) {
   return (
     <div
-      className={`rounded-3xl p-8 h-full flex flex-col justify-between border transition-all duration-300 hover:shadow-lg relative ${
-        plan.popular 
-          ? 'bg-[#0A0A0A] text-white border-[#D4AF78] shadow-[0_25px_60px_-15px_rgba(232,180,168,0.2)] md:-translate-y-4' 
-          : 'bg-white text-stone-850 border-stone-100 shadow-sm hover:-translate-y-1'
+      className={`rounded-3xl p-7 sm:p-8 h-full flex flex-col justify-between border transition-all duration-300 relative ${
+        plan.popular
+          ? 'bg-gradient-to-b from-[#2B1B18] via-[#221513] to-[#1A0E0C] text-white border-2 border-[#D4AF78] shadow-[0_22px_55px_-10px_rgba(212,175,120,0.38)] md:-translate-y-4 md:scale-[1.02] z-10'
+          : 'bg-white/95 backdrop-blur-md text-[#2D1612] border border-[#E8B4A8]/30 shadow-[0_12px_36px_rgba(92,53,46,0.06)] hover:shadow-[0_20px_45px_rgba(232,180,168,0.2)] hover:border-[#D4AF78]/60 hover:-translate-y-1.5'
       }`}
     >
-      {plan.popular && (
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-          <span 
-            className="text-[9px] font-black px-4 py-1.5 rounded-full text-white uppercase tracking-widest shadow-md whitespace-nowrap block"
+      {/* Top Floating Badge */}
+      {plan.popular ? (
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+          <span
+            className="text-[10px] font-black px-4 py-1.5 rounded-full uppercase tracking-wider shadow-lg flex items-center gap-1.5 whitespace-nowrap"
             style={{
-              background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)",
+              background: "linear-gradient(135deg, #FDE68A 0%, #D4AF78 50%, #C08A3E 100%)",
+              color: "#241310",
             }}
           >
-            Được khuyên dùng
+            <Crown className="w-3.5 h-3.5 fill-[#241310]" /> Được Khuyên Dùng
+          </span>
+        </div>
+      ) : (
+        <div className="absolute top-4 right-5">
+          <span
+            className="text-[9.5px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"
+            style={{
+              background: "rgba(232, 180, 168, 0.15)",
+              color: "#8C5D53",
+            }}
+          >
+            {plan.badge}
           </span>
         </div>
       )}
+
       <div>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        {/* Header Icon */}
+        <div className="mb-5">
           <div
-            className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-inner"
-            style={{ 
-              background: plan.popular ? 'linear-gradient(135deg, #E8B4A8 0%, #D4AF78 100%)' : '#FAFAFA',
-              border: plan.popular ? 'none' : '1px solid #ECECF0'
+            className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-sm"
+            style={{
+              background: plan.popular
+                ? 'linear-gradient(135deg, #FDE68A 0%, #D4AF78 100%)'
+                : 'linear-gradient(135deg, #FFF0EC 0%, #FCE1DA 100%)',
+              border: plan.popular ? 'none' : '1px solid rgba(232, 180, 168, 0.4)',
             }}
           >
-            <plan.icon className={`w-5.5 h-5.5 ${plan.popular ? 'text-white' : 'text-stone-700'}`} />
+            <plan.icon className={`w-5.5 h-5.5 ${plan.popular ? 'text-[#241310]' : 'text-[#8C5D53]'}`} />
           </div>
         </div>
 
         {/* Name */}
-        <h3 className="mb-2 text-xl font-bold font-sans">
+        <h3 className="mb-2 text-xl font-bold font-sans tracking-tight">
           {plan.name}
         </h3>
 
         {/* Description */}
         <p
-          className="mb-6 text-xs sm:text-sm leading-relaxed min-h-[40px]"
-          style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}
+          className="mb-6 text-xs sm:text-[13px] leading-relaxed min-h-[42px]"
+          style={{ color: plan.popular ? '#C4B5B0' : '#785A52' }}
         >
           {plan.description}
         </p>
 
-        {/* Price */}
-        <div 
-          className="mb-8 py-4 px-5 rounded-2xl flex items-baseline gap-1"
-          style={{ background: plan.popular ? 'rgba(255,255,255,0.03)' : '#FAFAFA' }}
-        >
-          <span
-            className="font-extrabold tracking-tight"
-            style={{
-              fontFamily: "var(--font-display)",
-              fontSize: "2.25rem",
-              color: plan.popular ? '#FFFFFF' : '#0A0A0A',
-            }}
-          >
-            {plan.price}
-          </span>
-          {plan.period && (
-            <span className="text-xs ml-1 opacity-60" style={{ color: plan.popular ? '#8E8E93' : '#6B6B6B' }}>
+        {/* Price Section */}
+        <div className={`mb-6 pb-6 border-b ${plan.popular ? 'border-white/10' : 'border-[#E8B4A8]/20'}`}>
+          <div className="flex items-baseline gap-1.5 flex-wrap">
+            <span
+              className="font-extrabold tracking-tight leading-none"
+              style={{
+                fontSize: "2.15rem",
+                color: plan.popular ? '#FFFFFF' : '#2D1612',
+              }}
+            >
+              {plan.price}
+            </span>
+            <span
+              className="text-xs font-semibold px-2 py-0.5 rounded-full"
+              style={{
+                background: plan.popular ? 'rgba(212, 175, 120, 0.2)' : 'rgba(232, 180, 168, 0.15)',
+                color: plan.popular ? '#FDE68A' : '#8C5D53',
+              }}
+            >
               {plan.period}
             </span>
-          )}
+          </div>
+          <div className={`mt-2 text-[11px] font-medium flex items-center gap-1.5 ${plan.popular ? 'text-[#D4AF78]' : 'text-[#8C5D53]'}`}>
+            <Check className="w-3.5 h-3.5 flex-shrink-0 text-[#D4AF78]" />
+            <span>Tặng kèm web NFC + Hộp quà & thiệp</span>
+          </div>
         </div>
 
-        {/* Features */}
-        <ul className="space-y-3.5 mb-8">
+        {/* Features List */}
+        <ul className="space-y-3 mb-8">
           {plan.features.map((feature, i) => (
-            <li key={i} className="flex items-start gap-3">
-              <Check
-                className="w-4 h-4 mt-0.5 flex-shrink-0"
-                style={{ color: '#D4AF78' }}
-              />
-              <span className="text-xs sm:text-sm leading-tight opacity-90 font-medium">
+            <li key={i} className="flex items-start gap-2.5">
+              <div
+                className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+                style={{
+                  background: plan.popular ? 'rgba(212, 175, 120, 0.25)' : 'rgba(232, 180, 168, 0.25)',
+                  color: plan.popular ? '#FDE68A' : '#8C5D53',
+                }}
+              >
+                <Check className="w-2.5 h-2.5 stroke-[3]" />
+              </div>
+              <span
+                className="text-xs sm:text-[13px] leading-snug font-medium"
+                style={{ color: plan.popular ? '#E8DDD9' : '#4A2E28' }}
+              >
                 {feature}
               </span>
             </li>
@@ -171,15 +204,16 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
         </ul>
       </div>
 
+      {/* CTA Button */}
       {plan.name.includes("Sự Kiện") ? (
         <a
           href="https://zalo.me/0398768699"
           target="_blank"
           rel="noopener noreferrer"
-          className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+          className={`w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-sm ${
             plan.popular
-              ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
-              : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
+              ? 'bg-gradient-to-r from-[#FDE68A] via-[#D4AF78] to-[#C08A3E] text-[#241310] hover:shadow-lg hover:scale-[1.01]'
+              : 'bg-[#FFF5F2] text-[#5C352E] border border-[#E8B4A8]/60 hover:bg-gradient-to-r hover:from-[#E8B4A8] hover:to-[#D4AF78] hover:text-white hover:border-transparent hover:shadow-md'
           }`}
         >
           {plan.cta}
@@ -187,10 +221,10 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
       ) : (
         <Link
           to={`/order?package=${plan.code}`}
-          className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
+          className={`w-full py-3.5 rounded-xl font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer shadow-sm ${
             plan.popular
-              ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
-              : 'bg-white text-stone-900 border border-stone-200 hover:bg-stone-50'
+              ? 'bg-gradient-to-r from-[#FDE68A] via-[#D4AF78] to-[#C08A3E] text-[#241310] hover:shadow-lg hover:scale-[1.01]'
+              : 'bg-[#FFF5F2] text-[#5C352E] border border-[#E8B4A8]/60 hover:bg-gradient-to-r hover:from-[#E8B4A8] hover:to-[#D4AF78] hover:text-white hover:border-transparent hover:shadow-md'
           }`}
         >
           {plan.cta}
