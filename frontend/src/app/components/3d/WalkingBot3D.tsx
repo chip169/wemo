@@ -55,18 +55,18 @@ function LegoHand({ position, rotation = [0, 0, 0], color = BUTLER_COLORS.robotS
 }) {
   return (
     <group position={position} rotation={rotation}>
-      {/* Wrist cylinder peg */}
+      {/* Wrist cylinder collar */}
       <mesh position={[0, 0.12, 0]}>
-        <cylinderGeometry args={[0.12, 0.14, 0.22, 18]} />
-        <meshPhysicalMaterial color={color} roughness={0.2} metalness={0.25} clearcoat={0.9} />
+        <cylinderGeometry args={[0.13, 0.14, 0.2, 20]} />
+        <meshPhysicalMaterial color={color} roughness={0.18} metalness={0.2} clearcoat={0.9} />
       </mesh>
-      {/* Curved C-Claw */}
+      {/* Thick Authentic LEGO C-Claw */}
       <mesh position={[0, -0.06, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.22, 0.075, 16, 28, Math.PI * 1.42]} />
+        <torusGeometry args={[0.22, 0.08, 16, 28, Math.PI * 1.48]} />
         <meshPhysicalMaterial
           color={color}
-          roughness={0.18}
-          metalness={0.25}
+          roughness={0.16}
+          metalness={0.2}
           clearcoat={0.95}
         />
       </mesh>
@@ -566,86 +566,130 @@ function LegoRobotButlerModel({ isHovered, isClicked }: { isHovered: boolean; is
       <group>
         <LegoButlerTorso />
 
-        {/* ── Left Arm (Outstretched Welcoming Butler Gesture) ── */}
-        <group ref={leftArmRef} position={[-0.62, 0.52, 0]}>
-          {/* Shoulder ball joint in pink suit sleeve */}
+        {/* ── Left Arm (Authentic Outstretched LEGO Robot Butler Arm) ── */}
+        <group ref={leftArmRef} position={[-0.64, 0.52, 0]}>
+          {/* 1. Pink Suit Shoulder Sleeve (Square bevel profile) */}
           <mesh castShadow>
-            <sphereGeometry args={[0.18, 16, 16]} />
+            <boxGeometry args={[0.28, 0.28, 0.26]} />
             <meshPhysicalMaterial color={BUTLER_COLORS.suitPink} roughness={0.16} clearcoat={1.0} />
           </mesh>
-
-          {/* Upper Arm Segment (Extending outward to the left) */}
-          <mesh position={[-0.15, -0.16, 0.12]} rotation={[-0.35, -0.3, 0.38]} castShadow>
-            <capsuleGeometry args={[0.12, 0.38, 12, 18]} />
-            <meshPhysicalMaterial
-              color={BUTLER_COLORS.robotSilver}
-              metalness={0.25}
-              roughness={0.2}
-              clearcoat={0.9}
-            />
-          </mesh>
-
-          {/* Elbow Robotic Joint */}
-          <mesh position={[-0.28, -0.28, 0.24]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.12, 0.12, 0.14, 18]} />
+          {/* Shoulder Hinge Pin */}
+          <mesh position={[0, -0.16, 0]}>
+            <cylinderGeometry args={[0.11, 0.11, 0.1, 18]} />
             <meshPhysicalMaterial color={BUTLER_COLORS.robotDarkGray} roughness={0.3} />
           </mesh>
 
-          {/* Forearm Segment (Reaching forward & outward) */}
-          <mesh position={[-0.42, -0.26, 0.44]} rotation={[-0.15, 0.45, -0.2]} castShadow>
-            <capsuleGeometry args={[0.11, 0.38, 12, 18]} />
-            <meshPhysicalMaterial
-              color={BUTLER_COLORS.robotSilver}
-              metalness={0.25}
-              roughness={0.2}
-              clearcoat={0.9}
-            />
-          </mesh>
-
-          {/* Outstretched Welcoming C-Hand (Palm facing up & forward) */}
-          <LegoHand position={[-0.58, -0.24, 0.62]} rotation={[0.4, 0.5, -0.5]} />
-
-          {/* Mini glowing pink gift brick held on hand */}
-          <group position={[-0.58, -0.14, 0.64]} scale={[0.55, 0.55, 0.55]}>
+          {/* 2. Upper Arm Block (Reaching down & outward) */}
+          <group position={[-0.16, -0.2, 0.12]} rotation={[-0.32, -0.2, 0.4]}>
             <mesh castShadow>
-              <boxGeometry args={[0.26, 0.22, 0.26]} />
-              <meshStandardMaterial
-                color={BUTLER_COLORS.neonPink}
-                emissive={BUTLER_COLORS.neonPink}
-                emissiveIntensity={2.8}
-                roughness={0.15}
-              />
+              <boxGeometry args={[0.22, 0.38, 0.24]} />
+              <meshPhysicalMaterial color={BUTLER_COLORS.shirtWhite} roughness={0.16} clearcoat={0.9} />
             </mesh>
-            <mesh position={[0, 0.13, 0]}>
-              <cylinderGeometry args={[0.07, 0.07, 0.06, 16]} />
-              <meshStandardMaterial
-                color={BUTLER_COLORS.neonPink}
-                emissive={BUTLER_COLORS.neonPink}
-                emissiveIntensity={2.8}
-              />
+            {/* Authentic LEGO pin hole on outer arm side */}
+            <mesh position={[-0.115, 0, 0]} rotation={[0, -Math.PI / 2, 0]}>
+              <circleGeometry args={[0.065, 16]} />
+              <meshBasicMaterial color={BUTLER_COLORS.robotDarkGray} />
             </mesh>
+          </group>
+
+          {/* 3. Elbow Hinge Joint */}
+          <group position={[-0.32, -0.36, 0.26]} rotation={[0, 0, Math.PI / 2]}>
+            <mesh castShadow>
+              <cylinderGeometry args={[0.14, 0.14, 0.22, 24]} />
+              <meshPhysicalMaterial color={BUTLER_COLORS.robotDarkGray} roughness={0.25} />
+            </mesh>
+            {/* Center pin hole on elbow */}
+            <mesh position={[0, 0.115, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+              <circleGeometry args={[0.065, 16]} />
+              <meshBasicMaterial color="#111111" />
+            </mesh>
+          </group>
+
+          {/* 4. Chunky LEGO Forearm Segment with 2 LEGO Studs */}
+          <group position={[-0.48, -0.34, 0.5]} rotation={[-0.12, 0.52, -0.18]}>
+            {/* Forearm rectangular brick */}
+            <mesh castShadow>
+              <boxGeometry args={[0.24, 0.22, 0.46]} />
+              <meshPhysicalMaterial color={BUTLER_COLORS.shirtWhite} roughness={0.16} clearcoat={0.9} />
+            </mesh>
+            {/* Two unmistakable LEGO Studs on top of forearm */}
+            <LegoStud position={[0, 0.15, -0.11]} scale={[0.42, 0.38, 0.42]} color={BUTLER_COLORS.suitPink} />
+            <LegoStud position={[0, 0.15, 0.11]} scale={[0.42, 0.38, 0.42]} color={BUTLER_COLORS.suitPink} />
+
+            {/* Wrist Ring Collar */}
+            <mesh position={[0, 0, 0.26]} rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[0.13, 0.13, 0.08, 20]} />
+              <meshPhysicalMaterial color={BUTLER_COLORS.suitPinkDark} roughness={0.2} />
+            </mesh>
+
+            {/* Iconic LEGO C-Claw Hand (Clearly visible, palm facing up) */}
+            <LegoHand position={[0, 0, 0.36]} rotation={[0.4, 0, Math.PI / 2]} color={BUTLER_COLORS.robotSilver} />
+
+            {/* Authentic LEGO 2x2 Plate Tray with 4 Studs */}
+            <group position={[0, 0.15, 0.44]}>
+              {/* Baseplate Tray */}
+              <mesh castShadow receiveShadow>
+                <boxGeometry args={[0.48, 0.08, 0.42]} />
+                <meshPhysicalMaterial color={BUTLER_COLORS.robotSilver} metalness={0.25} roughness={0.2} clearcoat={0.8} />
+              </mesh>
+              {/* 4 Classic LEGO Studs on the Tray */}
+              {[-0.12, 0.12].map((x, i) =>
+                [-0.09, 0.09].map((z, j) => (
+                  <LegoStud
+                    key={`tray-${i}-${j}`}
+                    position={[x, 0.06, z]}
+                    scale={[0.36, 0.32, 0.36]}
+                    color={BUTLER_COLORS.suitPink}
+                  />
+                ))
+              )}
+              {/* Mini glowing pink gift brick resting on the tray */}
+              <group position={[0, 0.14, 0]} scale={[0.62, 0.62, 0.62]}>
+                <mesh castShadow>
+                  <boxGeometry args={[0.26, 0.22, 0.26]} />
+                  <meshStandardMaterial
+                    color={BUTLER_COLORS.neonPink}
+                    emissive={BUTLER_COLORS.neonPink}
+                    emissiveIntensity={2.8}
+                    roughness={0.15}
+                  />
+                </mesh>
+                <mesh position={[0, 0.13, 0]}>
+                  <cylinderGeometry args={[0.07, 0.07, 0.06, 16]} />
+                  <meshStandardMaterial
+                    color={BUTLER_COLORS.neonPink}
+                    emissive={BUTLER_COLORS.neonPink}
+                    emissiveIntensity={2.8}
+                  />
+                </mesh>
+              </group>
+            </group>
           </group>
         </group>
 
-        {/* ── Right Arm (Polite Waving Hand) ── */}
-        <group ref={rightArmRef} position={[0.62, 0.52, 0]}>
-          {/* Shoulder ball joint */}
-          <mesh>
-            <sphereGeometry args={[0.18, 16, 16]} />
-            <meshPhysicalMaterial color={BUTLER_COLORS.suitPink} roughness={0.2} />
+        {/* ── Right Arm (Authentic Waving LEGO Arm) ── */}
+        <group ref={rightArmRef} position={[0.64, 0.52, 0]}>
+          {/* Shoulder sleeve cuff */}
+          <mesh castShadow>
+            <boxGeometry args={[0.28, 0.28, 0.26]} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.suitPink} roughness={0.16} clearcoat={1.0} />
           </mesh>
-          {/* Upper Arm Capsule */}
-          <mesh position={[0.15, 0.2, 0.06]} rotation={[-0.2, 0, -0.45]} castShadow>
-            <capsuleGeometry args={[0.13, 0.46, 12, 18]} />
-            <meshPhysicalMaterial
-              color={BUTLER_COLORS.robotSilver}
-              metalness={0.25}
-              roughness={0.2}
-              clearcoat={0.9}
-            />
-          </mesh>
-          {/* Waving Pearlescent C-Hand */}
-          <LegoHand position={[0.3, 0.48, 0.08]} rotation={[0.4, 0.25, -0.65]} />
+          {/* Upper Arm Block */}
+          <group position={[0.16, 0.18, 0.06]} rotation={[-0.2, 0, -0.45]}>
+            <mesh castShadow>
+              <boxGeometry args={[0.22, 0.42, 0.24]} />
+              <meshPhysicalMaterial color={BUTLER_COLORS.shirtWhite} roughness={0.16} clearcoat={0.9} />
+            </mesh>
+            {/* Side pin hole */}
+            <mesh position={[0.115, 0, 0]} rotation={[0, Math.PI / 2, 0]}>
+              <circleGeometry args={[0.065, 16]} />
+              <meshBasicMaterial color={BUTLER_COLORS.robotDarkGray} />
+            </mesh>
+            {/* Forearm Stud */}
+            <LegoStud position={[0, 0.24, 0]} scale={[0.38, 0.35, 0.38]} color={BUTLER_COLORS.suitPink} />
+            {/* Waving LEGO C-Claw Hand */}
+            <LegoHand position={[0, 0.32, 0]} rotation={[0.4, 0.25, -0.65]} color={BUTLER_COLORS.robotSilver} />
+          </group>
         </group>
       </group>
 
@@ -745,14 +789,14 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
           transition={{ type: "spring", stiffness: 350, damping: 22 }}
           className="relative"
           style={{
-            width: 125,
-            height: 152,
+            width: 132,
+            height: 154,
             background: "transparent",
           }}
         >
           <Canvas
             shadows
-            camera={{ position: [-0.08, 0.38, 6.4], fov: 38 }}
+            camera={{ position: [-0.12, 0.38, 6.4], fov: 38 }}
             gl={{ alpha: true, antialias: true }}
             style={{ width: "100%", height: "100%", pointerEvents: "none" }}
           >
