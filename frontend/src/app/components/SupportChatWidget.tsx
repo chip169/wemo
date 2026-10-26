@@ -232,7 +232,7 @@ export function SupportChatWidget() {
   const [eyeOff, setEyeOff]            = useState({ x: 0, y: 0 }); // eye tracking offset
   const [side, setSide]             = useState<"left"|"right">("right");
   const [isDragging, setIsDragging] = useState(false);
-  const [botMode, setBotMode]       = useState<"walking" | "badge">("walking");
+  const [botMode, setBotMode]       = useState<"walking" | "badge">("badge");
 
   // Bot free-floating position
   const [botPos, setBotPos]   = useState({ x: snapX("right"), y: snapY() });
