@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Phone, MessageSquare, X, User, Smartphone, Bot, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
-import legoBotImg from "../assets/lego-bot.png";
+import legoAvatarHd from "../assets/lego-avatar-hd.jpg";
 import { LegoCharacter3D } from "./3d/LegoCharacter3D";
 
 
@@ -17,7 +17,7 @@ interface Message {
 type BotPose = "stand" | "curled" | "rolling" | "landed" | "wave" | "bow" | "think" | "excited";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
-const W = 72;
+const W = 66;
 const EDGE = 20;
 const POS_KEY = "wemo_pangolin_pos_v1";
 const CHAT_KEYS = { name: "wemo_chat_name", phone: "wemo_chat_phone", session: "wemo_chat_session" };
@@ -48,7 +48,7 @@ function getCtx(p: string) {
 
 // ─── AI replies — Butler personality ─────────────────────────────────────────────────────
 const KB = [
-  { kw: ["xin chào","hello","hi","chào"], r: "Chào mừng quý khách! 🎊 Tôi là Pango, quản gia của WEMO. Tôi có thể phục vụ quý khách điều gì ạ?" },
+  { kw: ["xin chào","hello","hi","chào"], r: "Chào mừng quý khách! 🎊 Tôi là trợ lý ảo WEMO 🧱. Tôi có thể hỗ trợ quý khách điều gì ạ?" },
   { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO có 4 gói LEGO cá nhân hóa chính hãng: 🎊\n• WEMO LEGO Standard: 339k (tóc & mặt theo ảnh)\n• WEMO LEGO Premium: 469k (Khuyên dùng - chi tiết cao tóc, trang phục, phụ kiện)\n• Couple Set Standard: 600k (2 nhân vật + 1 landing page)\n• Couple Set Premium: 850k (2 nhân vật chi tiết cao + hộp đôi)\n• Doanh nghiệp / Sự kiện: Chiết khấu lên đến 30%!\nQuý khách muốn chọn gói nào ạ? 💌" },
   { kw: ["nfc","chip","hoạt động","công nghệ"], r: "Công nghệ NFC thông minh của WEMO rất đơn giản thưa quý khách! 📱 Chỉ cần chạm nhẹ điện thoại vào đế mô hình LEGO, trang web kỷ niệm lập tức hiện ra — không cần cài ứng dụng!" },
   { kw: ["chibi","3d","ảnh","vẽ","avatar","lego"], r: "Dịch vụ LEGO cá nhân hóa độc đáo của WEMO 🧱 Chỉ cần 1-2 ảnh chân dung rõ nét, nghệ nhân sẽ thiết kế nhân vật LEGO độc bản dành riêng cho bạn trong 24-48 giờ!" },
@@ -69,8 +69,8 @@ function aiReply(t: string) {
   return FALL[Math.floor(Math.random() * FALL.length)];
 }
 
-// ─── 3D LEGO MASCOT BOT — Ultra-sharp 3D Lego figure with animations ───
-function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
+// ─── 3D LEGO MASCOT BOT — Luxury Circular 3D Avatar Pod ───────────────────
+function PangolinBot({ pose, size = 66 }: {
   pose: BotPose;
   size?: number;
   eyeOff?: { x: number; y: number };
@@ -78,7 +78,6 @@ function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
   const isRolling = pose === "rolling" || pose === "curled";
   const isThink   = pose === "think";
   const isExcited = pose === "excited";
-  const isBow     = pose === "bow" || pose === "landed";
   const isWave    = pose === "wave";
 
   return (
@@ -87,14 +86,12 @@ function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
         isRolling
           ? { rotate: 360 }
           : isWave
-          ? { rotate: [-5, 8, -5, 8, 0], y: [0, -4, 0] }
+          ? { rotate: [-4, 6, -4, 6, 0], y: [0, -3, 0] }
           : isThink
-          ? { rotate: -10, y: -4, scale: 1.02 }
+          ? { rotate: -6, y: -2, scale: 1.02 }
           : isExcited
-          ? { y: [0, -10, 0, -6, 0], scale: [1, 1.08, 1, 1.04, 1] }
-          : isBow
-          ? { scaleY: [1, 0.9, 1], y: [0, 5, 0] }
-          : { y: [0, -3, 0], rotate: [0, 1, -1, 0] }
+          ? { y: [0, -6, 0, -3, 0], scale: [1, 1.05, 1] }
+          : { y: [0, -2, 0] }
       }
       transition={
         isRolling
@@ -105,9 +102,7 @@ function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
           ? { duration: 0.4 }
           : isExcited
           ? { duration: 0.8, repeat: Infinity, ease: "easeInOut" }
-          : isBow
-          ? { duration: 0.6 }
-          : { duration: 3.5, repeat: Infinity, ease: "easeInOut" }
+          : { duration: 3, repeat: Infinity, ease: "easeInOut" }
       }
       style={{
         width: size,
@@ -118,19 +113,66 @@ function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
         justifyContent: "center",
       }}
     >
-      <img
-        src={legoBotImg}
-        alt="WEMO 3D Lego Mascot"
+      {/* Luxury Gradient Ring Container */}
+      <div
         style={{
           width: "100%",
           height: "100%",
-          objectFit: "contain",
-          filter: "drop-shadow(0 8px 16px rgba(74,50,30,0.22)) drop-shadow(0 2px 4px rgba(0,0,0,0.12))",
-          userSelect: "none",
-          pointerEvents: "none",
+          borderRadius: "50%",
+          padding: size > 45 ? 2.5 : 1.5,
+          background: "linear-gradient(135deg, #E8B4A8 0%, #D4AF78 50%, #E8B4A8 100%)",
+          boxShadow: size > 45
+            ? "0 10px 24px -2px rgba(232, 180, 168, 0.45), 0 4px 10px rgba(92, 53, 46, 0.12)"
+            : "0 2px 8px rgba(0,0,0,0.08)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          position: "relative",
         }}
-        draggable={false}
-      />
+      >
+        {/* Inner Clean White Pod with HD Avatar */}
+        <div
+          style={{
+            width: "100%",
+            height: "100%",
+            borderRadius: "50%",
+            overflow: "hidden",
+            background: "radial-gradient(circle at 50% 30%, #FFFFFF 0%, #FFF7F4 100%)",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <img
+            src={legoAvatarHd}
+            alt="WEMO 3D LEGO Mascot"
+            style={{
+              width: "118%",
+              height: "118%",
+              objectFit: "cover",
+              objectPosition: "center 10%",
+              userSelect: "none",
+              pointerEvents: "none",
+            }}
+            draggable={false}
+          />
+
+          {/* Glossy Glass Specular Arc */}
+          <div
+            style={{
+              position: "absolute",
+              top: 1,
+              left: "15%",
+              width: "70%",
+              height: "40%",
+              borderRadius: "50%",
+              background: "linear-gradient(180deg, rgba(255,255,255,0.65) 0%, rgba(255,255,255,0) 100%)",
+              pointerEvents: "none",
+            }}
+          />
+        </div>
+      </div>
 
       {/* Sparkles when excited */}
       {isExcited && (
@@ -149,7 +191,7 @@ function PangolinBot({ pose, size = 72, eyeOff = { x: 0, y: 0 } }: {
           initial={{ opacity: 0, scale: 0.5, y: 0 }}
           animate={{ opacity: 1, scale: 1, y: -8 }}
           transition={{ duration: 0.3 }}
-          style={{ position: "absolute", top: -8, right: 2, fontSize: 14, pointerEvents: "none" }}
+          style={{ position: "absolute", top: -8, right: 0, fontSize: 14, pointerEvents: "none" }}
         >
           💭
         </motion.div>
@@ -685,7 +727,7 @@ export function SupportChatWidget() {
                 <PangolinBot pose="stand" size={38} />
               </div>
               <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ color:"#5C352E", fontWeight:800, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>Pango 🦔</div>
+                <div style={{ color:"#5C352E", fontWeight:800, fontSize:13, whiteSpace:"nowrap", overflow:"hidden", textOverflow:"ellipsis" }}>WEMO Assistant 🧱</div>
                 <div style={{ color:"#8C5D53", fontSize:9.5, display:"flex", flexDirection:"column", gap:2, marginTop:2 }}>
                   <div style={{ display:"flex", alignItems:"center", gap:4 }}>
                     <span style={{ width:6, height:6, background:"#4ade80", borderRadius:"50%", display:"inline-block", flexShrink:0 }} />
@@ -801,7 +843,7 @@ export function SupportChatWidget() {
             </div>
             <div style={{ flex:1, display:"flex", flexDirection:"column", gap:3, minWidth:0 }}>
               <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:6 }}>
-                <span style={{ fontWeight:700, fontSize:13, color:"#1C1917" }}>Pango 🦔</span>
+                <span style={{ fontWeight:700, fontSize:13, color:"#1C1917" }}>WEMO Assistant 🧱</span>
                 <button
                   data-action="dismiss-bubble"
                   onClick={(e) => { e.stopPropagation(); setShowBubble(false); }}
@@ -814,7 +856,7 @@ export function SupportChatWidget() {
               </div>
               <div style={{ fontSize:12, color:"#44403c", lineHeight:1.5, wordBreak:"break-word" as const }}>{bubble}</div>
               <div style={{ fontSize:10, color:"#a8a29e", marginTop:4, display:"flex", alignItems:"center", gap:4 }}>
-                <span>Pango</span><span>•</span><span>Vừa xong</span>
+                <span>WEMO</span><span>•</span><span>Vừa xong</span>
               </div>
             </div>
           </motion.div>
@@ -878,9 +920,22 @@ export function SupportChatWidget() {
 
           <PangolinBot pose={pose} size={W} eyeOff={eyeOff} />
 
-          {/* Online dot */}
+          {/* Online status indicator — cleanly positioned at bottom-right of circle */}
           {!isOpen && (
-            <span style={{ position:"absolute", top:6, right:4, width:11, height:11, background:"#4ade80", borderRadius:"50%", border:"2.5px solid white", boxShadow:"0 0 0 2px rgba(74,222,128,0.35)" }} />
+            <span
+              style={{
+                position: "absolute",
+                bottom: 2,
+                right: 2,
+                width: 14,
+                height: 14,
+                background: "#22c55e",
+                borderRadius: "50%",
+                border: "2.5px solid white",
+                boxShadow: "0 2px 6px rgba(34,197,94,0.45)",
+                pointerEvents: "none",
+              }}
+            />
           )}
 
           {/* Notification badge */}
@@ -888,8 +943,26 @@ export function SupportChatWidget() {
             <motion.span
               initial={{ scale:0 }}
               animate={{ scale:1 }}
-              style={{ position:"absolute", top:2, right:-2, background:"#ef4444", color:"white", fontSize:9, fontWeight:800, width:17, height:17, borderRadius:"50%", display:"flex", alignItems:"center", justifyContent:"center", border:"2px solid white", boxShadow:"0 2px 6px rgba(239,68,68,0.3)" }}
-            >1</motion.span>
+              style={{
+                position: "absolute",
+                top: -2,
+                right: -2,
+                background: "#ef4444",
+                color: "white",
+                fontSize: 9,
+                fontWeight: 800,
+                width: 18,
+                height: 18,
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                border: "2px solid white",
+                boxShadow: "0 2px 6px rgba(239,68,68,0.35)",
+              }}
+            >
+              1
+            </motion.span>
           )}
 
           {/* Drag hint */}
