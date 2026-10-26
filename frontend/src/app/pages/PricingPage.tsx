@@ -1,79 +1,109 @@
 import { motion } from "motion/react";
-import { Check, Sparkles, Crown, Building2, ArrowRight } from "lucide-react";
+import { Check, Sparkles, Crown, Building2, Users, Heart } from "lucide-react";
 import { Link } from "react-router";
-import { useState, useRef } from "react";
 
 const faqs = [
   {
-    q: "Kích thước 9cm và 12cm khác nhau như thế nào?",
-    a: "Phiên bản 9cm nhỏ gọn, tinh tế và rất thích hợp để trang trí bàn học/làm việc. Phiên bản 12cm có kích thước lớn hơn, được chế tác và ghép các chi tiết LEGO tỉ mỉ hơn, giúp các đường nét nhân vật và trang phục hiển thị nổi bật, sống động hơn.",
+    q: "Gói Standard và Premium khác nhau như thế nào?",
+    a: "Gói Standard (339.000đ) sử dụng trang phục mặc định và cá nhân hóa khuôn mặt, kiểu tóc theo ảnh thật của bạn. Gói Premium (469.000đ) được chế tác chi tiết toàn diện: cá nhân hóa từ kiểu tóc, trang phục cụ thể đến các phụ kiện đặc trưng (kính, mũ, túi xách, máy ảnh...) đúng theo ảnh chụp.",
   },
   {
-    q: "Tôi có được giảm giá khi đặt số lượng lớn cho sự kiện/đám cưới không?",
-    a: "Có! Chúng tôi có chính sách chiết khấu vô cùng hấp dẫn (lên đến 30%) cho các đơn hàng từ 5 sản phẩm trở lên. Ngoài ra WEMO hỗ trợ tùy biến riêng bao bì, thiệp chúc và khắc tên/logo lên phần đế gỗ cho các đơn sự kiện.",
+    q: "Gói Couple Set bao gồm những gì?",
+    a: "Gói Couple Set bao gồm bộ đôi 2 nhân vật LEGO cá nhân hóa theo hình ảnh cặp đôi, đi kèm 1 landing page chung lưu giữ câu chuyện tình yêu của hai bạn và hộp đôi thiết kế riêng sang trọng. Phiên bản Couple Premium (850.000đ) sẽ có thêm trang phục và phụ kiện chi tiết cho cả 2 nhân vật.",
   },
   {
     q: "Chip NFC ẩn trên mô hình LEGO hoạt động như thế nào?",
-    a: "Mỗi mô hình LEGO của WEMO đều được tích hợp một chip NFC ẩn thông minh bên dưới đế. Khi người nhận dùng điện thoại chạm nhẹ vào đế LEGO, màn hình điện thoại sẽ tự động mở ra trang thiệp 3D độc bản chứa lời chúc, âm nhạc và những hình ảnh kỷ niệm của hai bạn.",
+    a: "Mỗi mô hình LEGO của WEMO đều được tích hợp chip NFC ẩn thông minh bên dưới đế. Người nhận chỉ cần chạm nhẹ điện thoại vào đế LEGO để mở ra trang web ký ức số độc bản chứa ảnh, video và lời chúc, không cần tải ứng dụng.",
+  },
+  {
+    q: "Tôi có được chiết khấu khi đặt số lượng lớn cho sự kiện/đám cưới không?",
+    a: "Có! WEMO có chính sách chiết khấu lên đến 30% cho các đơn hàng từ 5 bộ trở lên, kèm dịch vụ khắc logo doanh nghiệp lên đế và tùy biến trang web sự kiện riêng.",
   },
 ];
 
 const plans = [
   {
-    name: "Mô hình LEGO 9cm",
+    code: "MB-LG-STD",
+    name: "WEMO LEGO – Standard",
+    badge: "Tiết kiệm",
     icon: Sparkles,
-    price: "650.000đ",
+    price: "339.000đ",
     period: "/sản phẩm",
-    description: "Kích thước tiêu chuẩn tinh tế, phù hợp để bàn làm việc.",
+    description: "Mô hình LEGO-compatible cá nhân hóa theo ảnh thật, tối ưu chi phí.",
     color: "#E8B4A8",
     features: [
-      "Kích thước chiều cao: 9cm",
-      "Thiết kế nhân vật LEGO độc bản",
-      "Chế tác từ chi tiết LEGO cao cấp",
-      "Tùy chọn đế mica / đế gỗ khắc tên",
-      "Tích hợp chip NFC ẩn thông minh",
-      "Hộp quà & thiệp chúc thiết kế riêng",
+      "Mã sản phẩm: MB-LG-STD",
+      "Lắp ráp theo ảnh thật của người nhận",
+      "Trang phục mặc định, tóc & mặt cá nhân hóa",
+      "Đi kèm chip NFC chạm mở trang ký ức số",
+      "Trang web độc bản: Ảnh, video, lời nhắn",
+      "Hộp quà & thiệp chúc thiết kế độc bản",
       "Bảo hành & hỗ trợ chu đáo",
     ],
-    cta: "Mua Ngay",
+    cta: "Đặt Hàng Ngay",
     popular: false,
   },
   {
-    name: "Mô hình LEGO 12cm",
+    code: "MB-LG-PRM",
+    name: "WEMO LEGO – Premium",
+    badge: "Được khuyên dùng",
     icon: Crown,
-    price: "800.000đ",
+    price: "469.000đ",
     period: "/sản phẩm",
-    description: "Bản cao cấp sắc nét, cân đối và được ưa chuộng nhất.",
+    description: "Cá nhân hóa chi tiết cao theo ảnh thật (tóc, trang phục & phụ kiện chi tiết).",
     color: "#D4AF78",
     features: [
-      "Kích thước chiều cao: 12cm",
-      "Thiết kế nhân vật LEGO chi tiết cao",
-      "Lắp ráp & chế tác thủ công tỉ mỉ",
-      "Chi tiết mô hình sắc nét vượt trội",
-      "Tặng kèm đế mica hoặc đế gỗ",
-      "Tích hợp chip NFC ẩn thông minh",
-      "Hỗ trợ ưu tiên & Giao hàng nhanh",
+      "Mã sản phẩm: MB-LG-PRM",
+      "Lắp ráp theo ảnh thật của người nhận",
+      "Tóc, trang phục, phụ kiện chi tiết theo ảnh",
+      "Đi kèm chip NFC chạm mở trang ký ức số",
+      "Trang web độc bản: Ảnh, video, lời nhắn",
+      "Tặng kèm đế trưng bày & hộp quà cao cấp",
+      "Hỗ trợ ưu tiên & duyệt mẫu thiết kế",
     ],
-    cta: "Mua Ngay",
+    cta: "Đặt Hàng Ngay",
     popular: true,
   },
   {
-    name: "Sự Kiện / Doanh Nghiệp",
-    icon: Building2,
-    price: "Liên Hệ",
-    period: "",
-    description: "Đặt số lượng lớn cho sự kiện, tiệc cưới, quà tặng doanh nghiệp.",
-    color: "#0A0A0A",
+    code: "MB-LG-CPS",
+    name: "WEMO LEGO – Couple Set (Standard)",
+    badge: "Cặp đôi",
+    icon: Users,
+    price: "600.000đ",
+    period: "/bộ 2 nhân vật",
+    description: "Bộ đôi nhân vật LEGO theo ảnh cặp đôi kèm 1 landing page chung và hộp đôi.",
+    color: "#E88D7B",
     features: [
-      "Áp dụng đơn hàng từ 5 sản phẩm",
-      "Chiết khấu đặc biệt lên đến 30%",
-      "Thiết kế mô hình LEGO đồng loạt theo chủ đề",
-      "Tùy biến bao bì & thiệp chúc thương hiệu",
-      "Khắc tên/Logo thương hiệu lên đế gỗ",
-      "Hỗ trợ giao nhận đa địa chỉ",
-      "Thiết kế mẫu duyệt trước miễn phí",
+      "Mã sản phẩm: MB-LG-CPS",
+      "Bộ đôi 2 nhân vật LEGO theo ảnh cặp đôi",
+      "Trang phục mặc định, tóc & mặt cá nhân hóa",
+      "1 landing page chung cho cả 2 người",
+      "Hộp đôi thiết kế riêng sang trọng, tinh tế",
+      "Tích hợp chip NFC trên đế cho cả hai",
+      "Quà tặng kỷ niệm tình yêu ý nghĩa",
     ],
-    cta: "Nhận Báo Giá",
+    cta: "Đặt Hàng Ngay",
+    popular: false,
+  },
+  {
+    code: "MB-LG-CPP",
+    name: "WEMO LEGO – Couple Set (Premium)",
+    badge: "Bộ đôi cao cấp",
+    icon: Heart,
+    price: "850.000đ",
+    period: "/bộ 2 nhân vật",
+    description: "Bộ đôi nhân vật LEGO cao cấp, trang phục và phụ kiện tỉ mỉ cho cả hai bạn.",
+    color: "#5C352E",
+    features: [
+      "Mã sản phẩm: MB-LG-CPP",
+      "Bộ đôi 2 nhân vật LEGO cao cấp",
+      "Tóc, trang phục, phụ kiện chi tiết cho cả hai",
+      "1 landing page chung câu chuyện tình yêu",
+      "Hộp đôi cao cấp thiết kế riêng đặc biệt",
+      "Tặng kèm đế đôi cao cấp & thiệp chúc độc bản",
+      "Duyệt mẫu thiết kế 3D trước khi gia công",
+    ],
+    cta: "Đặt Hàng Ngay",
     popular: false,
   },
 ];
@@ -179,7 +209,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
         </a>
       ) : (
         <Link
-          to="/order"
+          to={`/order?package=${plan.code}`}
           className={`w-full py-4 rounded-xl font-bold text-xs uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer ${
             plan.popular
               ? 'bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:shadow-lg'
@@ -232,14 +262,14 @@ export function PricingPage() {
             className="max-w-2xl mx-auto"
             style={{ fontSize: "1.25rem", color: "#5A5A5A", lineHeight: 1.6 }}
           >
-            Chọn kích thước phù hợp với sở thích của bạn. Mỗi mô hình LEGO cá nhân hóa là một tác phẩm nghệ thuật độc bản được lưu giữ mãi mãi.
+            Chọn gói sản phẩm phù hợp với nhu cầu của bạn. Mỗi mô hình LEGO cá nhân hóa WEMO là một tác phẩm nghệ thuật độc bản đi kèm chip NFC thông minh lưu giữ ký ức số mãi mãi.
           </p>
         </motion.div>
       </section>
 
       {/* Plans */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 relative z-10">
-        <div className="grid md:grid-cols-3 gap-8 items-stretch">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
           {plans.map((plan, index) => (
             <motion.div
               key={index}
@@ -252,6 +282,29 @@ export function PricingPage() {
               <PricingCard plan={plan} />
             </motion.div>
           ))}
+        </div>
+
+        {/* Enterprise & Event Custom Orders Banner */}
+        <div className="mt-12 rounded-3xl p-8 sm:p-10 bg-stone-900 text-white border border-stone-800 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div className="space-y-2 text-center md:text-left">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#D4AF78]/20 text-[#D4AF78] text-[11px] font-black uppercase tracking-wider">
+              <Building2 className="w-3.5 h-3.5" /> Dành cho Sự Kiện & Doanh Nghiệp (B2B)
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-white">
+              Đặt Số Lượng Lớn Cho Sự Kiện, Tiệc Cưới, Quà Doanh Nghiệp
+            </h3>
+            <p className="text-xs sm:text-sm text-stone-400 max-w-2xl leading-relaxed">
+              Chiết khấu đặc biệt lên đến 30% cho đơn hàng từ 5 bộ trở lên. Tùy biến logo doanh nghiệp lên đế mô hình, thiết kế bao bì & trang ký ức thương hiệu riêng biệt.
+            </p>
+          </div>
+          <a
+            href="https://zalo.me/0398768699"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white hover:opacity-95 transition-all shadow-md active:scale-95 text-center"
+          >
+            Nhận Báo Giá Doanh Nghiệp
+          </a>
         </div>
       </section>
 

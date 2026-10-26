@@ -12,9 +12,9 @@ export function SettingsPage() {
   const [websiteUrl, setWebsiteUrl] = useState("https://wemo.vn");
   const [metaDescription, setMetaDescription] = useState("Tạo quà tặng kỹ thuật số cảm xúc với công nghệ chip NFC. Biến những kỷ niệm tuyệt đẹp thành trải nghiệm tương tác trực quan.");
   
-  const [priceBasic, setPriceBasic] = useState("99.000đ");
-  const [pricePremium, setPricePremium] = useState("199.000đ");
-  const [priceBusiness, setPriceBusiness] = useState("Liên hệ");
+  const [priceBasic, setPriceBasic] = useState("339.000đ");
+  const [pricePremium, setPricePremium] = useState("469.000đ");
+  const [priceBusiness, setPriceBusiness] = useState("Chiết khấu đến 30%");
 
   const [maxFileSize, setMaxFileSize] = useState(50);
   const [storageLimit, setStorageLimit] = useState(5);
@@ -240,7 +240,7 @@ export function SettingsPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 rounded-lg" style={{ border: "1px solid #E5E7EB" }}>
             <div style={{ fontSize: "0.875rem", color: "#6B7280", marginBottom: "4px" }}>
-              Cơ bản
+              Standard (MB-LG-STD)
             </div>
             <input
               type="text"
@@ -258,7 +258,7 @@ export function SettingsPage() {
 
           <div className="p-4 rounded-lg" style={{ border: "1px solid #E5E7EB" }}>
             <div style={{ fontSize: "0.875rem", color: "#6B7280", marginBottom: "4px" }}>
-              Cao cấp
+              Premium (MB-LG-PRM)
             </div>
             <input
               type="text"
@@ -276,7 +276,7 @@ export function SettingsPage() {
 
           <div className="p-4 rounded-lg" style={{ border: "1px solid #E5E7EB" }}>
             <div style={{ fontSize: "0.875rem", color: "#6B7280", marginBottom: "4px" }}>
-              Doanh nghiệp
+              Doanh nghiệp / Sự kiện
             </div>
             <input
               type="text"

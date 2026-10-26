@@ -20,32 +20,68 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 
-// ─── Pricing Table ─────────────────────────────────────────────────────────────
+// ─── Official Product Catalog & Pricing Table ─────────────────────────────
+export const PRODUCT_OPTIONS = [
+  {
+    id: "MB-LG-STD",
+    code: "MB-LG-STD",
+    name: "WEMO LEGO – Standard",
+    shortName: "Standard",
+    badge: "Tiết kiệm",
+    emoji: "👤",
+    desc: "Trang phục mặc định, tóc & mặt cá nhân hóa theo ảnh",
+    price: 339000,
+    recommended: false,
+  },
+  {
+    id: "MB-LG-PRM",
+    code: "MB-LG-PRM",
+    name: "WEMO LEGO – Premium",
+    shortName: "Premium",
+    badge: "Bán chạy nhất",
+    emoji: "✨",
+    desc: "Cá nhân hóa chi tiết cao (tóc, trang phục, phụ kiện theo ảnh)",
+    price: 469000,
+    recommended: true,
+  },
+  {
+    id: "MB-LG-CPS",
+    code: "MB-LG-CPS",
+    name: "WEMO LEGO – Couple Set (Standard)",
+    shortName: "Couple Standard",
+    badge: "Cặp đôi",
+    emoji: "👩‍❤️‍👨",
+    desc: "Bộ đôi 2 nhân vật (trang phục mặc định) + 1 landing page + Hộp đôi riêng",
+    price: 600000,
+    recommended: false,
+  },
+  {
+    id: "MB-LG-CPP",
+    code: "MB-LG-CPP",
+    name: "WEMO LEGO – Couple Set (Premium)",
+    shortName: "Couple Premium",
+    badge: "Bộ đôi cao cấp",
+    emoji: "👑",
+    desc: "Bộ đôi 2 nhân vật chi tiết (tóc, trang phục, phụ kiện) + 1 landing page + Hộp đôi cao cấp",
+    price: 850000,
+    recommended: false,
+  },
+];
+
 const PRICES = {
-  size: { "9cm": 650000, "12cm": 800000 },
+  products: {
+    "MB-LG-STD": 339000,
+    "MB-LG-PRM": 469000,
+    "MB-LG-CPS": 600000,
+    "MB-LG-CPP": 850000,
+    "9cm": 339000,
+    "12cm": 469000,
+  } as Record<string, number>,
   base: { none: 0, mica: 30000, wood: 50000 },
   led: 80000,
 };
-
-const SIZE_OPTIONS = [
-  {
-    id: "9cm",
-    label: "9 cm",
-    emoji: "🤏",
-    desc: "Nhỏ gọn, để bàn làm việc tinh tế",
-    price: PRICES.size["9cm"],
-  },
-  {
-    id: "12cm",
-    label: "12 cm",
-    emoji: "👌",
-    desc: "Được ưa chuộng nhất, sắc nét và nổi bật",
-    price: PRICES.size["12cm"],
-    recommended: true,
-  },
-];
 
 const BASE_OPTIONS = [
   { id: "none", label: "Không đế", emoji: "🚫", price: 0 },
@@ -57,14 +93,16 @@ const formatPrice = (p: number) =>
   p.toLocaleString("vi-VN") + "đ";
 
 const calcTotal = (config: OrderConfig): number => {
-  const base = PRICES.size[config.size as keyof typeof PRICES.size] || 0;
+  const base = PRICES.products[config.size] || PRICES.products[config.packageCode] || 469000;
   const baseExtra = PRICES.base[config.base as keyof typeof PRICES.base] || 0;
   const ledExtra = config.led ? PRICES.led : 0;
   return (base + baseExtra + ledExtra) * config.quantity;
 };
 
 interface OrderConfig {
-  size: "9cm" | "12cm";
+  size: string;
+  packageCode: string;
+  productName: string;
   quantity: number;
   base: "none" | "mica" | "wood";
   led: boolean;
@@ -109,6 +147,10 @@ const convertToBase64 = (file: File): Promise<string> => {
 
 export function OrderFormPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const pkgParam = searchParams.get("package") || searchParams.get("size");
+  const initialPkg = PRODUCT_OPTIONS.find((p) => p.id === pkgParam || p.code === pkgParam) || PRODUCT_OPTIONS[1];
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [step, setStep] = useState(0);
@@ -118,7 +160,9 @@ export function OrderFormPage() {
   const [submitError, setSubmitError] = useState<string | null>(null);
 
   const [config, setConfig] = useState<OrderConfig>({
-    size: "12cm",
+    size: initialPkg.id,
+    packageCode: initialPkg.code,
+    productName: initialPkg.name,
     quantity: 1,
     base: "none",
     led: false,
@@ -400,40 +444,76 @@ export function OrderFormPage() {
                   <p className="text-sm text-stone-500">Chọn thông số phù hợp — giá tự động cập nhật.</p>
                 </div>
 
-                {/* Size */}
+                {/* Product Package */}
                 <div className="space-y-3">
-                  <label className="flex items-center gap-2 text-xs font-black text-stone-700 uppercase tracking-widest">
-                    <Ruler className="w-3.5 h-3.5 text-[#E8B4A8]" /> Kích thước nhân vật
-                  </label>
-                  <div className="grid grid-cols-3 gap-3">
-                    {SIZE_OPTIONS.map((s) => (
-                      <button
-                        key={s.id}
-                        type="button"
-                        onClick={() => setConfig({ ...config, size: s.id as OrderConfig["size"] })}
-                        className={`relative p-3.5 rounded-2xl border-2 text-center transition-all cursor-pointer ${config.size === s.id
-                          ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-md"
-                          : "border-stone-150 bg-white hover:border-stone-300"
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center gap-2 text-xs font-black text-stone-700 uppercase tracking-widest">
+                      <Sparkles className="w-3.5 h-3.5 text-[#E8B4A8]" /> Gói sản phẩm WEMO LEGO
+                    </label>
+                    <span className="text-[11px] text-stone-400">Chọn 1 trong 4 gói</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {PRODUCT_OPTIONS.map((p) => {
+                      const isSelected = config.size === p.id || config.packageCode === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          onClick={() =>
+                            setConfig({
+                              ...config,
+                              size: p.id,
+                              packageCode: p.code,
+                              productName: p.name,
+                            })
+                          }
+                          className={`relative p-4 rounded-2xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between ${
+                            isSelected
+                              ? "border-[#E8B4A8] bg-[#E8B4A8]/5 shadow-md ring-1 ring-[#E8B4A8]/20"
+                              : "border-stone-150 bg-white hover:border-stone-300"
                           }`}
-                      >
-                        {s.recommended && (
-                          <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-[#D4AF78] text-white text-[9px] font-black whitespace-nowrap">
-                            Phổ biến
+                        >
+                          {p.badge && (
+                            <div
+                              className={`absolute -top-2.5 right-3 px-2.5 py-0.5 rounded-full text-white text-[9px] font-black ${
+                                p.recommended ? "bg-[#E8B4A8]" : "bg-stone-700"
+                              }`}
+                            >
+                              {p.badge}
+                            </div>
+                          )}
+                          <div>
+                            <div className="flex items-center gap-2 mb-1">
+                              <span className="text-xl">{p.emoji}</span>
+                              <div className="font-black text-sm text-stone-900 leading-snug">
+                                {p.name}
+                              </div>
+                            </div>
+                            <span className="inline-block text-[10px] font-mono font-bold text-stone-400 mb-1">
+                              Mã SP: {p.code}
+                            </span>
+                            <div className="text-[11px] text-stone-500 leading-relaxed">
+                              {p.desc}
+                            </div>
                           </div>
-                        )}
-                        <div className="text-2xl mb-1">{s.emoji}</div>
-                        <div className="font-black text-sm text-stone-900">{s.label}</div>
-                        <div className="text-[10px] text-stone-400 mt-0.5 leading-tight">{s.desc}</div>
-                        <div className={`text-xs font-black mt-2 ${config.size === s.id ? "text-[#E8B4A8]" : "text-stone-500"}`}>
-                          {formatPrice(s.price)}
-                        </div>
-                        {config.size === s.id && (
-                          <div className="absolute top-2 right-2 w-4 h-4 rounded-full bg-[#E8B4A8] flex items-center justify-center">
-                            <Check className="w-2.5 h-2.5 text-white" />
+                          <div className="mt-3 pt-2.5 border-t border-stone-100 flex items-center justify-between">
+                            <span className="text-[11px] text-stone-400">Giá niêm yết</span>
+                            <span
+                              className={`text-sm font-black ${
+                                isSelected ? "text-[#E8B4A8]" : "text-stone-900"
+                              }`}
+                            >
+                              {formatPrice(p.price)}
+                            </span>
                           </div>
-                        )}
-                      </button>
-                    ))}
+                          {isSelected && (
+                            <div className="absolute top-3 right-3 w-4 h-4 rounded-full bg-[#E8B4A8] flex items-center justify-center">
+                              <Check className="w-2.5 h-2.5 text-white" />
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
 
@@ -657,8 +737,9 @@ export function OrderFormPage() {
                     <h3 className="text-xs font-black text-stone-600 uppercase tracking-widest">Sản phẩm</h3>
                     <div className="space-y-2 text-sm">
                       {[
-                        { label: "Kích thước", value: config.size },
-                        { label: "Số lượng", value: `${config.quantity} nhân vật` },
+                        { label: "Gói sản phẩm", value: config.productName || config.size },
+                        { label: "Mã sản phẩm", value: config.packageCode || config.size },
+                        { label: "Số lượng", value: `${config.quantity} bộ` },
                         { label: "Loại đế", value: config.base === "none" ? "Không đế" : config.base === "mica" ? "Đế Mica" : "Đế Gỗ" },
                         { label: "Đèn LED", value: config.led ? "Có (+80,000đ)" : "Không" },
                       ].map(({ label, value }) => (

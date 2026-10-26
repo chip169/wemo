@@ -49,7 +49,7 @@ function getCtx(p: string) {
 // ─── AI replies — Butler personality ─────────────────────────────────────────────────────
 const KB = [
   { kw: ["xin chào","hello","hi","chào"], r: "Chào mừng quý khách! 🎊 Tôi là Pango, quản gia của WEMO. Tôi có thể phục vụ quý khách điều gì ạ?" },
-  { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO đang có 3 gói ưu đãi: 🎊\n• Mô hình LEGO 9cm: 650k\n• Mô hình LEGO 12cm: 800k\n• Gói Doanh nghiệp: Liên hệ để nhận báo giá\nGói nào phù hợp với nhu cầu của quý khách ạ? 💌" },
+  { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO có 4 gói LEGO cá nhân hóa chính hãng: 🎊\n• WEMO LEGO Standard: 339k (tóc & mặt theo ảnh)\n• WEMO LEGO Premium: 469k (Khuyên dùng - chi tiết cao tóc, trang phục, phụ kiện)\n• Couple Set Standard: 600k (2 nhân vật + 1 landing page)\n• Couple Set Premium: 850k (2 nhân vật chi tiết cao + hộp đôi)\n• Doanh nghiệp / Sự kiện: Chiết khấu lên đến 30%!\nQuý khách muốn chọn gói nào ạ? 💌" },
   { kw: ["nfc","chip","hoạt động","công nghệ"], r: "Công nghệ NFC thông minh của WEMO rất đơn giản thưa quý khách! 📱 Chỉ cần chạm nhẹ điện thoại vào đế mô hình LEGO, trang web kỷ niệm lập tức hiện ra — không cần cài ứng dụng!" },
   { kw: ["chibi","3d","ảnh","vẽ","avatar","lego"], r: "Dịch vụ LEGO cá nhân hóa độc đáo của WEMO 🧱 Chỉ cần 1-2 ảnh chân dung rõ nét, nghệ nhân sẽ thiết kế nhân vật LEGO độc bản dành riêng cho bạn trong 24-48 giờ!" },
   { kw: ["giao hàng","ship","bao lâu","nhận"], r: "Chúng tôi đảm bảo giao hàng nhanh chóng thưa quý khách 📦 Nội thành: 2-3 ngày • Tỉnh thành: 3-5 ngày • Có dịch vụ giao hỏa tốc!" },
