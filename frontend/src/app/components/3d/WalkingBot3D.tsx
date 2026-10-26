@@ -111,7 +111,7 @@ function LegoTorso({ color = LEGO_COLORS.shirtWhite }: { color?: string }) {
         />
       </mesh>
 
-      {/* Cream Belly Patch / WEMO tee accent */}
+      {/* Cream Belly Patch */}
       <mesh position={[0, -0.05, 0.46]}>
         <planeGeometry args={[0.8, 1.1]} />
         <meshBasicMaterial color={LEGO_COLORS.creamBelly} transparent opacity={0.9} />
@@ -130,7 +130,7 @@ function LegoTorso({ color = LEGO_COLORS.shirtWhite }: { color?: string }) {
   );
 }
 
-// ─── Lego Head with Sculpted Bear Ears & Adorable Face ───────────────────────
+// ─── Lego Head with Solid Dome & Adorable Bear Features ──────────────────────
 function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
   return (
     <group ref={headRef} position={[0, 1.35, 0]}>
@@ -146,7 +146,7 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
 
       {/* Main Minifigure Cylindrical Head */}
       <mesh castShadow receiveShadow>
-        <cylinderGeometry args={[0.82, 0.84, 1.1, 32]} />
+        <cylinderGeometry args={[0.82, 0.82, 1.12, 32]} />
         <meshPhysicalMaterial
           color={LEGO_COLORS.bearBrown}
           roughness={0.18}
@@ -155,9 +155,9 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
         />
       </mesh>
 
-      {/* Head Top Cap (Dome-like curve) */}
-      <mesh position={[0, 0.55, 0]} castShadow>
-        <sphereGeometry args={[0.82, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2.6]} />
+      {/* Head Top Smooth Curve — Solid sphere half inside cylinder, no hollow gap */}
+      <mesh position={[0, 0.46, 0]} castShadow>
+        <sphereGeometry args={[0.81, 32, 18]} />
         <meshPhysicalMaterial
           color={LEGO_COLORS.bearBrown}
           roughness={0.18}
@@ -165,47 +165,47 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
         />
       </mesh>
 
-      {/* Classic Center Top Stud */}
-      <LegoStud position={[0, 0.85, 0]} color={LEGO_COLORS.bearBrown} scale={[1.2, 1.1, 1.2]} />
+      {/* Classic Center Top Stud — solidly positioned on dome */}
+      <LegoStud position={[0, 0.88, 0]} color={LEGO_COLORS.bearBrown} scale={[1.1, 0.85, 1.1]} />
 
       {/* ── Left Bear Ear with Lego Stud ── */}
-      <group position={[-0.75, 0.65, 0]} rotation={[0, 0, 0.35]}>
+      <group position={[-0.72, 0.62, 0]} rotation={[0, 0, 0.35]}>
         <mesh castShadow>
-          <sphereGeometry args={[0.34, 24, 24]} />
+          <sphereGeometry args={[0.32, 24, 24]} />
           <meshPhysicalMaterial
             color={LEGO_COLORS.bearBrown}
             roughness={0.2}
             clearcoat={0.9}
           />
         </mesh>
-        <mesh position={[0, 0, 0.1]}>
-          <circleGeometry args={[0.2, 20]} />
+        <mesh position={[0, 0, 0.08]}>
+          <circleGeometry args={[0.18, 20]} />
           <meshBasicMaterial color={LEGO_COLORS.creamBelly} />
         </mesh>
-        <LegoStud position={[0, 0.35, 0]} color={LEGO_COLORS.bearBrown} scale={[0.85, 0.85, 0.85]} />
+        <LegoStud position={[0, 0.32, 0]} color={LEGO_COLORS.bearBrown} scale={[0.75, 0.75, 0.75]} />
       </group>
 
       {/* ── Right Bear Ear with Lego Stud ── */}
-      <group position={[0.75, 0.65, 0]} rotation={[0, 0, -0.35]}>
+      <group position={[0.72, 0.62, 0]} rotation={[0, 0, -0.35]}>
         <mesh castShadow>
-          <sphereGeometry args={[0.34, 24, 24]} />
+          <sphereGeometry args={[0.32, 24, 24]} />
           <meshPhysicalMaterial
             color={LEGO_COLORS.bearBrown}
             roughness={0.2}
             clearcoat={0.9}
           />
         </mesh>
-        <mesh position={[0, 0, 0.1]}>
-          <circleGeometry args={[0.2, 20]} />
+        <mesh position={[0, 0, 0.08]}>
+          <circleGeometry args={[0.18, 20]} />
           <meshBasicMaterial color={LEGO_COLORS.creamBelly} />
         </mesh>
-        <LegoStud position={[0, 0.35, 0]} color={LEGO_COLORS.bearBrown} scale={[0.85, 0.85, 0.85]} />
+        <LegoStud position={[0, 0.32, 0]} color={LEGO_COLORS.bearBrown} scale={[0.75, 0.75, 0.75]} />
       </group>
 
-      {/* ── Perfectly Proportioned Snout & Mouth ── */}
+      {/* ── Cute Flattened Snout & Smile ── */}
       <group position={[0, -0.06, 0.72]}>
-        {/* Flattened Cream Muzzle Ellipsoid */}
-        <mesh castShadow scale={[1.15, 0.9, 0.65]}>
+        {/* Flattened Cream Muzzle */}
+        <mesh castShadow scale={[1.15, 0.88, 0.6]}>
           <sphereGeometry args={[0.42, 24, 24]} />
           <meshPhysicalMaterial
             color={LEGO_COLORS.creamBelly}
@@ -215,7 +215,7 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
         </mesh>
 
         {/* Chocolate Button Nose */}
-        <mesh position={[0, 0.12, 0.28]} scale={[1.2, 0.85, 0.8]}>
+        <mesh position={[0, 0.12, 0.26]} scale={[1.2, 0.85, 0.8]}>
           <sphereGeometry args={[0.13, 18, 18]} />
           <meshPhysicalMaterial
             color={LEGO_COLORS.bearDarkBrown}
@@ -225,7 +225,7 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
         </mesh>
 
         {/* Happy Smile Arc */}
-        <mesh position={[0, -0.08, 0.28]} rotation={[0, 0, Math.PI]}>
+        <mesh position={[0, -0.08, 0.26]} rotation={[0, 0, Math.PI]}>
           <torusGeometry args={[0.13, 0.024, 12, 24, Math.PI * 0.85]} />
           <meshBasicMaterial color={LEGO_COLORS.bearDarkBrown} />
         </mesh>
@@ -311,7 +311,7 @@ function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, numbe
   }, [heartShape]);
 
   return (
-    <group position={position} scale={[0.5, 0.5, 0.5]}>
+    <group position={position} scale={[0.48, 0.48, 0.48]}>
       <mesh geometry={geom} castShadow>
         <meshPhysicalMaterial
           color={LEGO_COLORS.pinkHeart}
@@ -329,7 +329,7 @@ function GlowingHeartBrick({ position = [0, 0, 0] }: { position?: [number, numbe
   );
 }
 
-// ─── Complete Lego Minifigure Figure with Realtime Animations ───────────────
+// ─── Real-time Animated Figure ──────────────────────────────────────────────
 function RealtimeLegoFigure({
   isHovered,
   motionMode,
@@ -360,14 +360,14 @@ function RealtimeLegoFigure({
     // 2. Body Motions
     if (figureGroupRef.current) {
       if (motionMode === "dance") {
-        figureGroupRef.current.position.y = -0.55 + Math.sin(t * 8) * 0.1;
-        figureGroupRef.current.rotation.y = Math.sin(t * 4) * 0.25;
+        figureGroupRef.current.position.y = -0.55 + Math.sin(t * 8) * 0.08;
+        figureGroupRef.current.rotation.y = Math.sin(t * 4) * 0.22;
       } else if (motionMode === "walk") {
-        figureGroupRef.current.position.y = -0.55 + Math.abs(Math.sin(t * 5)) * 0.06;
-        figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.08;
+        figureGroupRef.current.position.y = -0.55 + Math.abs(Math.sin(t * 5)) * 0.05;
+        figureGroupRef.current.rotation.y = Math.sin(t * 2.5) * 0.07;
       } else {
-        // Idle breathing bob
-        figureGroupRef.current.position.y = -0.55 + Math.sin(t * 2) * 0.04;
+        // Breathing bob
+        figureGroupRef.current.position.y = -0.55 + Math.sin(t * 2) * 0.035;
         figureGroupRef.current.rotation.y = THREE.MathUtils.lerp(figureGroupRef.current.rotation.y, 0, 0.08);
       }
     }
@@ -375,37 +375,36 @@ function RealtimeLegoFigure({
     // 3. Right Arm (Waving)
     if (rightArmRef.current) {
       if (motionMode === "dance") {
-        rightArmRef.current.rotation.z = -0.5 + Math.sin(t * 8) * 0.45;
-        rightArmRef.current.rotation.x = 0.3 + Math.cos(t * 8) * 0.3;
+        rightArmRef.current.rotation.z = -0.45 + Math.sin(t * 8) * 0.4;
+        rightArmRef.current.rotation.x = 0.25 + Math.cos(t * 8) * 0.25;
       } else if (motionMode === "walk") {
         rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.15, 0.1);
-        rightArmRef.current.rotation.x = Math.sin(t * 5) * 0.45;
+        rightArmRef.current.rotation.x = Math.sin(t * 5) * 0.4;
       } else {
-        // Cheerful wave (faster when hovered)
         const waveSpeed = isHovered ? 6.5 : 3.2;
-        const waveAmp = isHovered ? 0.38 : 0.24;
+        const waveAmp = isHovered ? 0.36 : 0.22;
         const wave = Math.sin(t * waveSpeed) * waveAmp;
         rightArmRef.current.rotation.z = -0.45 + wave;
-        rightArmRef.current.rotation.x = 0.2 + Math.cos(t * 2.5) * 0.08;
+        rightArmRef.current.rotation.x = 0.18 + Math.cos(t * 2.5) * 0.08;
       }
     }
 
-    // 4. Left Arm (Holding glowing heart)
+    // 4. Left Arm (Holding heart)
     if (leftArmRef.current) {
       if (motionMode === "dance") {
-        leftArmRef.current.rotation.x = 0.2 - Math.cos(t * 8) * 0.3;
+        leftArmRef.current.rotation.x = 0.15 - Math.cos(t * 8) * 0.25;
       } else if (motionMode === "walk") {
-        leftArmRef.current.rotation.x = 0.2 - Math.sin(t * 5) * 0.35;
+        leftArmRef.current.rotation.x = 0.15 - Math.sin(t * 5) * 0.3;
       } else {
-        leftArmRef.current.rotation.x = 0.15 + Math.sin(t * 1.5) * 0.05;
+        leftArmRef.current.rotation.x = 0.12 + Math.sin(t * 1.5) * 0.04;
       }
     }
 
-    // 5. Legs (Walking / Stepping)
+    // 5. Legs
     if (leftLegRef.current && rightLegRef.current) {
       if (motionMode === "walk" || motionMode === "dance") {
         const legSpeed = motionMode === "dance" ? 8 : 5;
-        const legAmp = motionMode === "dance" ? 0.4 : 0.45;
+        const legAmp = motionMode === "dance" ? 0.35 : 0.42;
         leftLegRef.current.rotation.x = Math.sin(t * legSpeed) * legAmp;
         rightLegRef.current.rotation.x = -Math.sin(t * legSpeed) * legAmp;
       } else {
@@ -424,31 +423,31 @@ function RealtimeLegoFigure({
       <group position={[0, 0.18, 0]}>
         <LegoTorso />
 
-        {/* ── Left Arm (Holding glowing heart brick) ── */}
-        <group ref={leftArmRef} position={[-0.72, 0.55, 0]}>
+        {/* ── Left Arm (Holding glowing heart brick gracefully) ── */}
+        <group ref={leftArmRef} position={[-0.68, 0.52, 0]}>
           <mesh>
-            <sphereGeometry args={[0.22, 16, 16]} />
+            <sphereGeometry args={[0.2, 16, 16]} />
             <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
           </mesh>
-          <mesh position={[-0.15, -0.45, 0.22]} rotation={[0.45, 0, 0.2]}>
-            <cylinderGeometry args={[0.16, 0.18, 0.75, 18]} />
+          <mesh position={[0.08, -0.28, 0.15]} rotation={[-0.4, 0.2, -0.3]}>
+            <cylinderGeometry args={[0.14, 0.16, 0.55, 16]} />
             <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} />
           </mesh>
-          <LegoHand position={[-0.24, -0.85, 0.42]} rotation={[-0.3, 0.4, 0.5]} />
-          <GlowingHeartBrick position={[-0.24, -0.75, 0.65]} />
+          <LegoHand position={[0.15, -0.52, 0.28]} rotation={[-0.5, 0.6, 0.3]} />
+          <GlowingHeartBrick position={[0.18, -0.42, 0.42]} />
         </group>
 
         {/* ── Right Arm (Waving cheerfully) ── */}
-        <group ref={rightArmRef} position={[0.72, 0.55, 0]}>
+        <group ref={rightArmRef} position={[0.68, 0.52, 0]}>
           <mesh>
-            <sphereGeometry args={[0.22, 16, 16]} />
+            <sphereGeometry args={[0.2, 16, 16]} />
             <meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} />
           </mesh>
-          <mesh position={[0.22, 0.25, 0.1]} rotation={[-0.3, 0, -0.55]}>
-            <cylinderGeometry args={[0.16, 0.18, 0.75, 18]} />
+          <mesh position={[0.18, 0.22, 0.08]} rotation={[-0.2, 0, -0.5]}>
+            <cylinderGeometry args={[0.14, 0.16, 0.62, 16]} />
             <meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} />
           </mesh>
-          <LegoHand position={[0.42, 0.62, 0.15]} rotation={[0.5, 0.4, -0.8]} />
+          <LegoHand position={[0.34, 0.54, 0.12]} rotation={[0.4, 0.3, -0.7]} />
         </group>
       </group>
 
@@ -488,7 +487,7 @@ function RealtimeLegoFigure({
         </group>
       </group>
 
-      {/* ── Circular Lego Baseplate (Display Pedestal) ── */}
+      {/* ── Circular Lego Baseplate ── */}
       <group position={[0, -1.9, 0]}>
         <mesh receiveShadow>
           <cylinderGeometry args={[1.75, 1.85, 0.22, 36]} />
@@ -540,20 +539,20 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
   };
 
   return (
-    <div className={`fixed bottom-4 right-4 z-50 select-none ${className}`}>
-      {/* ── Speech Bubble positioned gracefully to the LEFT of character (never overlapping head!) ── */}
+    <div className={`fixed bottom-3 right-3 z-50 select-none ${className}`}>
+      {/* ── Speech Bubble positioned neatly to the LEFT of character ── */}
       <AnimatePresence>
         {showSpeech && (
           <motion.div
-            initial={{ opacity: 0, x: 18, scale: 0.92 }}
+            initial={{ opacity: 0, x: 16, scale: 0.92 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: 14, scale: 0.92 }}
-            className="absolute right-[195px] bottom-[85px] w-[215px] p-3.5 rounded-2xl bg-white/95 backdrop-blur-md border border-[#E8B4A8]/45 shadow-2xl text-stone-800 text-xs font-semibold cursor-pointer z-50"
+            exit={{ opacity: 0, x: 12, scale: 0.92 }}
+            className="absolute right-[142px] bottom-[48px] w-[185px] p-3 rounded-2xl bg-white/95 backdrop-blur-md border border-[#E8B4A8]/45 shadow-xl text-stone-800 text-[11px] font-semibold cursor-pointer z-50"
             onClick={handleClick}
           >
-            <div className="flex items-center justify-between gap-1 mb-1.5">
-              <span className="text-[10px] font-black uppercase text-[#D4AF78] flex items-center gap-1">
-                <SparklesIcon className="w-3.5 h-3.5 text-[#E8B4A8]" /> WEMO Assistant 🧱
+            <div className="flex items-center justify-between gap-1 mb-1">
+              <span className="text-[9.5px] font-black uppercase text-[#D4AF78] flex items-center gap-1">
+                <SparklesIcon className="w-3 h-3 text-[#E8B4A8]" /> WEMO Bot 🧱
               </span>
               <button
                 onClick={(e) => {
@@ -562,18 +561,18 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
                 }}
                 className="text-stone-400 hover:text-stone-600 p-0.5 rounded"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-3 h-3" />
               </button>
             </div>
-            <p className="leading-snug text-stone-700 text-[12px]">{speechBubble}</p>
+            <p className="leading-snug text-stone-700 text-[11.5px]">{speechBubble}</p>
 
             {/* Triangle pointer pointing RIGHT towards the character */}
-            <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-3 h-3 bg-white rotate-45 border-t border-r border-[#E8B4A8]/45" />
+            <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-2.5 h-2.5 bg-white rotate-45 border-t border-r border-[#E8B4A8]/45" />
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* ── 3D Mascot Interactive Canvas ── */}
+      {/* ── 3D Mascot Interactive Canvas (Compact Size: 135x175px) ── */}
       <div
         className="relative flex items-center justify-center cursor-pointer group"
         onMouseEnter={handlePointerEnter}
@@ -583,39 +582,33 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
         <div
           className="relative transition-transform duration-300 group-hover:scale-105"
           style={{
-            width: 190,
-            height: 250,
+            width: 135,
+            height: 175,
             background: "transparent",
           }}
         >
           <Canvas
             shadows
-            camera={{ position: [0, 0.35, 5.8], fov: 40 }}
+            camera={{ position: [0, 0.25, 5.8], fov: 38 }}
             gl={{ alpha: true, antialias: true }}
             style={{ width: "100%", height: "100%", pointerEvents: "none" }}
           >
-            <ambientLight intensity={0.9} />
-            {/* Studio Key Light */}
+            <ambientLight intensity={0.95} />
             <directionalLight position={[4, 7, 5]} intensity={1.9} castShadow />
-            {/* Warm Fill Light */}
             <directionalLight position={[-4, 3, 3]} intensity={1.1} color="#FFE6D5" />
-            {/* Rim Backlight */}
             <directionalLight position={[0, 4, -5]} intensity={1.5} color="#FFDFBA" />
-            {/* Soft pink bounce from heart brick */}
             <pointLight position={[-0.3, -0.6, 0.8]} intensity={1.2} color="#FF6584" distance={2.5} />
 
-            {/* Ambient Sparkles */}
-            <Sparkles count={24} scale={3.8} size={2.4} speed={0.5} color="#FFB3C6" opacity={0.7} />
+            <Sparkles count={20} scale={3.6} size={2.2} speed={0.5} color="#FFB3C6" opacity={0.7} />
 
-            <Float speed={1.8} rotationIntensity={0.08} floatIntensity={0.12}>
+            <Float speed={1.8} rotationIntensity={0.06} floatIntensity={0.1}>
               <RealtimeLegoFigure isHovered={isHovered} motionMode={motionMode} />
             </Float>
 
-            {/* Ground Contact Shadow */}
-            <ContactShadows position={[0, -2.45, 0]} opacity={0.5} scale={4.8} blur={2.0} far={3.5} />
+            <ContactShadows position={[0, -2.45, 0]} opacity={0.45} scale={4.5} blur={2.0} far={3.5} />
           </Canvas>
 
-          {/* Quick Motion Switcher Chips */}
+          {/* Quick Motion Switcher Chip */}
           <div className="absolute top-1 right-1 flex items-center gap-1 z-10">
             <button
               onClick={(e) => {
@@ -630,18 +623,18 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
                 );
                 setShowSpeech(true);
               }}
-              className="p-1.5 rounded-full bg-white/90 hover:bg-white text-stone-700 shadow-md border border-stone-200/80 transition-all text-[11px] font-bold flex items-center gap-1 cursor-pointer"
+              className="p-1 px-1.5 rounded-full bg-white/90 hover:bg-white text-stone-700 shadow-sm border border-stone-200/80 transition-all text-[10px] font-bold flex items-center gap-1 cursor-pointer"
               title="Đổi động tác (Vẫy tay / Đi dạo / Nhảy múa)"
             >
-              <SparklesIcon className="w-3.5 h-3.5 text-[#D4AF78]" />
-              <span className="text-[10px] font-bold text-stone-600 pr-1">
+              <SparklesIcon className="w-3 h-3 text-[#D4AF78]" />
+              <span className="text-[9.5px] font-bold text-stone-600">
                 {motionMode === "wave" ? "Vẫy tay" : motionMode === "walk" ? "Đi dạo" : "Nhảy"}
               </span>
             </button>
           </div>
 
           {/* Online status indicator */}
-          <span className="absolute bottom-3 right-4 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-md animate-pulse" />
+          <span className="absolute bottom-2.5 right-3 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white shadow-xs animate-pulse" />
         </div>
       </div>
     </div>
