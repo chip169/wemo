@@ -4,92 +4,7 @@ import { Float, Sparkles, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
 import { motion } from "motion/react";
 
-// ─── Lightweight Web Audio Synthesizer (Instantaneous Lego & Chime SFX) ──────
-class LegoSoundEffects {
-  private ctx: AudioContext | null = null;
 
-  private initCtx() {
-    if (!this.ctx && typeof window !== "undefined") {
-      const AudioCtx =
-        window.AudioContext ||
-        (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
-      if (AudioCtx) this.ctx = new AudioCtx();
-    }
-    if (this.ctx && this.ctx.state === "suspended") {
-      this.ctx.resume();
-    }
-  }
-
-  // Crisp plastic LEGO snap / click
-  playClick() {
-    try {
-      this.initCtx();
-      if (!this.ctx) return;
-      const t = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(1400, t);
-      osc.frequency.exponentialRampToValueAtTime(320, t + 0.04);
-
-      gain.gain.setValueAtTime(0.2, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.045);
-    } catch {}
-  }
-
-  // Gentlemanly Tip-Hat Royal Chime
-  playTipHat() {
-    try {
-      this.initCtx();
-      if (!this.ctx) return;
-      const t = this.ctx.currentTime;
-      [880, 1318.5, 1760].forEach((freq, i) => {
-        const osc = this.ctx!.createOscillator();
-        const gain = this.ctx!.createGain();
-        osc.type = "sine";
-        osc.frequency.setValueAtTime(freq, t + i * 0.06);
-
-        gain.gain.setValueAtTime(0.14, t + i * 0.06);
-        gain.gain.exponentialRampToValueAtTime(0.001, t + i * 0.06 + 0.38);
-
-        osc.connect(gain);
-        gain.connect(this.ctx!.destination);
-        osc.start(t + i * 0.06);
-        osc.stop(t + i * 0.06 + 0.42);
-      });
-    } catch {}
-  }
-
-  // Theme & Prop change tone
-  playSwap() {
-    try {
-      this.initCtx();
-      if (!this.ctx) return;
-      const t = this.ctx.currentTime;
-      const osc = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      osc.type = "triangle";
-      osc.frequency.setValueAtTime(520, t);
-      osc.frequency.exponentialRampToValueAtTime(980, t + 0.07);
-
-      gain.gain.setValueAtTime(0.16, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.07);
-
-      osc.connect(gain);
-      gain.connect(this.ctx.destination);
-      osc.start(t);
-      osc.stop(t + 0.08);
-    } catch {}
-  }
-}
-
-const sfx = new LegoSoundEffects();
 
 // ─── Multi-Theme Color Palettes ──────────────────────────────────────────────
 export type SuitTheme = "pink" | "black" | "blue";
@@ -1054,7 +969,6 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
     // Only trigger if not actively dragging
     if (Math.abs(dragRotationY - startRotYRef.current) > 0.1) return;
 
-    sfx.playTipHat();
     setIsTippingHat(true);
     setTimeout(() => {
       setIsTippingHat(false);
@@ -1067,7 +981,6 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
       className={`fixed bottom-3 right-3 z-50 select-none flex flex-col items-end ${className}`}
       onMouseEnter={() => {
         setIsHovered(true);
-        sfx.playClick();
       }}
       onMouseLeave={() => {
         setIsHovered(false);
