@@ -182,8 +182,10 @@ function LegoHead({ headRef }: { headRef: React.RefObject<THREE.Group> }) {
   );
 }
 
-// ─── Animated Lego Minifigure Figure with Procedural Walking ────────────────
-function AnimatedLegoFigure({ isWalking, isWaving }: { isWalking: boolean; isWaving: boolean }) {
+// ─── Animated Lego Minifigure Figure with Mixamo-Style Actions ───────────────
+export type LegoActionType = "idle" | "walk" | "wave" | "dance";
+
+function AnimatedLegoFigure({ currentAction = "wave" }: { currentAction: LegoActionType }) {
   const figureRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
   const leftLegRef = useRef<THREE.Group>(null);
@@ -204,16 +206,16 @@ function AnimatedLegoFigure({ isWalking, isWaving }: { isWalking: boolean; isWav
       headRef.current.rotation.x = THREE.MathUtils.lerp(headRef.current.rotation.x, targetRotX, 0.08);
     }
 
-    // 2. Walking mechanics
-    if (isWalking) {
-      const walkFreq = 5.5;
+    // 2. Action States
+    if (currentAction === "walk") {
+      const walkFreq = 5.8;
       const legAngle = Math.sin(t * walkFreq) * 0.55;
 
       if (leftLegRef.current) leftLegRef.current.rotation.x = legAngle;
       if (rightLegRef.current) rightLegRef.current.rotation.x = -legAngle;
 
       if (leftArmRef.current) leftArmRef.current.rotation.x = -legAngle * 0.65;
-      if (rightArmRef.current && !isWaving) {
+      if (rightArmRef.current) {
         rightArmRef.current.rotation.x = legAngle * 0.65;
         rightArmRef.current.rotation.z = -0.2;
       }
@@ -221,23 +223,51 @@ function AnimatedLegoFigure({ isWalking, isWaving }: { isWalking: boolean; isWav
       // Vertical bounce per step
       if (figureRef.current) {
         figureRef.current.position.y = -0.45 + Math.abs(Math.sin(t * walkFreq)) * 0.08;
+        figureRef.current.rotation.y = THREE.MathUtils.lerp(figureRef.current.rotation.y, 0, delta * 5);
       }
-    } else {
-      // Idle return
+    } else if (currentAction === "dance") {
+      const danceFreq = 7.5;
+      const bounce = Math.abs(Math.sin(t * danceFreq)) * 0.16;
+      if (figureRef.current) {
+        figureRef.current.position.y = -0.45 + bounce;
+        figureRef.current.rotation.y = Math.sin(t * danceFreq * 0.5) * 0.25;
+      }
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.z = -0.65 - Math.sin(t * danceFreq) * 0.35;
+        rightArmRef.current.rotation.x = 0.4;
+      }
+      if (leftArmRef.current) {
+        leftArmRef.current.rotation.z = 0.65 + Math.sin(t * danceFreq) * 0.35;
+        leftArmRef.current.rotation.x = 0.4;
+      }
+      if (leftLegRef.current) leftLegRef.current.rotation.x = Math.sin(t * danceFreq) * 0.35;
+      if (rightLegRef.current) rightLegRef.current.rotation.x = -Math.sin(t * danceFreq) * 0.35;
+    } else if (currentAction === "wave") {
       if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, delta * 6);
       if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, delta * 6);
-      if (figureRef.current) figureRef.current.position.y = -0.45 + Math.sin(t * 2) * 0.04;
+      if (figureRef.current) {
+        figureRef.current.position.y = -0.45 + Math.sin(t * 2) * 0.04;
+        figureRef.current.rotation.y = THREE.MathUtils.lerp(figureRef.current.rotation.y, 0, delta * 5);
+      }
       if (leftArmRef.current) leftArmRef.current.rotation.x = 0.15 + Math.sin(t * 1.5) * 0.05;
-    }
-
-    // 3. Cheerful waving arm
-    if (isWaving && rightArmRef.current) {
-      const wave = Math.sin(t * 5.5) * 0.32;
-      rightArmRef.current.rotation.z = -0.55 + wave;
-      rightArmRef.current.rotation.x = 0.35 + Math.cos(t * 3) * 0.1;
-    } else if (!isWalking && rightArmRef.current) {
-      rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.2, delta * 4);
-      rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0.2, delta * 4);
+      if (rightArmRef.current) {
+        const wave = Math.sin(t * 5.5) * 0.32;
+        rightArmRef.current.rotation.z = -0.55 + wave;
+        rightArmRef.current.rotation.x = 0.35 + Math.cos(t * 3) * 0.1;
+      }
+    } else {
+      // Idle
+      if (leftLegRef.current) leftLegRef.current.rotation.x = THREE.MathUtils.lerp(leftLegRef.current.rotation.x, 0, delta * 6);
+      if (rightLegRef.current) rightLegRef.current.rotation.x = THREE.MathUtils.lerp(rightLegRef.current.rotation.x, 0, delta * 6);
+      if (figureRef.current) {
+        figureRef.current.position.y = -0.45 + Math.sin(t * 2) * 0.04;
+        figureRef.current.rotation.y = THREE.MathUtils.lerp(figureRef.current.rotation.y, 0, delta * 5);
+      }
+      if (leftArmRef.current) leftArmRef.current.rotation.x = 0.15 + Math.sin(t * 1.5) * 0.05;
+      if (rightArmRef.current) {
+        rightArmRef.current.rotation.z = THREE.MathUtils.lerp(rightArmRef.current.rotation.z, -0.2, delta * 4);
+        rightArmRef.current.rotation.x = THREE.MathUtils.lerp(rightArmRef.current.rotation.x, 0.2, delta * 4);
+      }
     }
   });
 
@@ -258,7 +288,7 @@ function AnimatedLegoFigure({ isWalking, isWaving }: { isWalking: boolean; isWav
           <GlowingHeartBrick position={[-0.24, -0.75, 0.65]} />
         </group>
 
-        {/* Right Arm (Waving) */}
+        {/* Right Arm (Waving / Dancing / Swapping) */}
         <group ref={rightArmRef} position={[0.72, 0.55, 0]}>
           <mesh><sphereGeometry args={[0.22, 16, 16]} /><meshPhysicalMaterial color={LEGO_COLORS.shirtWhite} roughness={0.2} /></mesh>
           <mesh position={[0.22, 0.25, 0.1]} rotation={[-0.3, 0, -0.55]}><cylinderGeometry args={[0.16, 0.18, 0.75, 18]} /><meshPhysicalMaterial color={LEGO_COLORS.bearBrown} roughness={0.2} clearcoat={0.8} /></mesh>
@@ -295,23 +325,26 @@ export interface WalkingBot3DProps {
 }
 
 export function WalkingBot3D({ onOpenChat, onToggleMode, className = "" }: WalkingBot3DProps) {
-  const [isWalking, setIsWalking] = useState(false);
-  const [isWaving, setIsWaving] = useState(true);
+  const [action, setAction] = useState<LegoActionType>("wave");
   const [speechBubble, setSpeechBubble] = useState("Chào bạn! Tớ là gấu LEGO WEMO 🧱");
   const [showSpeech, setShowSpeech] = useState(true);
 
   const handlePointerEnter = () => {
-    setIsWaving(true);
-    setSpeechBubble("Bạn cần WEMO hỗ trợ gì không ạ? 👋");
-    setShowSpeech(true);
-  };
-
-  const handlePointerLeave = () => {
-    if (!isWalking) setIsWaving(false);
+    if (action === "idle") {
+      setAction("wave");
+      setSpeechBubble("Bạn cần WEMO hỗ trợ gì không ạ? 👋");
+      setShowSpeech(true);
+    }
   };
 
   const handleClick = () => {
     if (onOpenChat) onOpenChat();
+  };
+
+  const selectAction = (act: LegoActionType, speech: string) => {
+    setAction(act);
+    setSpeechBubble(speech);
+    setShowSpeech(true);
   };
 
   return (
@@ -340,11 +373,33 @@ export function WalkingBot3D({ onOpenChat, onToggleMode, className = "" }: Walki
         )}
       </AnimatePresence>
 
+      {/* Action Chips Toolbar */}
+      <div className="mb-2 flex items-center gap-1 p-1 rounded-full bg-white/90 backdrop-blur-md border border-[#E8B4A8]/30 shadow-md">
+        {[
+          { id: "walk" as LegoActionType, label: "Đi bộ", icon: "🚶", speech: "Tớ đang bước đi dạo quanh đây nè! 🚶‍♂️" },
+          { id: "wave" as LegoActionType, label: "Chào", icon: "👋", speech: "Xin chào bạn! Tớ có thể hỗ trợ gì ạ? 👋" },
+          { id: "dance" as LegoActionType, label: "Nhảy", icon: "💃", speech: "Nhảy múa cùng WEMO nào! 💃✨" },
+          { id: "idle" as LegoActionType, label: "Đứng yên", icon: "⏸", speech: "Tớ đứng đây sẵn sàng hỗ trợ nhé! 😌" },
+        ].map((btn) => (
+          <button
+            key={btn.id}
+            onClick={() => selectAction(btn.id, btn.speech)}
+            className={`px-2 py-0.5 rounded-full text-[11px] font-bold transition-all flex items-center gap-1 cursor-pointer ${
+              action === btn.id
+                ? "bg-gradient-to-r from-[#E8B4A8] to-[#D4AF78] text-white shadow-xs"
+                : "text-stone-600 hover:bg-stone-100"
+            }`}
+          >
+            <span>{btn.icon}</span>
+            <span className="text-[10px]">{btn.label}</span>
+          </button>
+        ))}
+      </div>
+
       {/* 3D Lego Figure Container */}
       <div
         className="relative flex items-center justify-center cursor-pointer group"
         onMouseEnter={handlePointerEnter}
-        onMouseLeave={handlePointerLeave}
         onClick={handleClick}
       >
         <div
@@ -368,38 +423,24 @@ export function WalkingBot3D({ onOpenChat, onToggleMode, className = "" }: Walki
 
             <Sparkles count={20} scale={3.5} size={2} speed={0.5} color="#FFB3C6" opacity={0.6} />
 
-            <AnimatedLegoFigure isWalking={isWalking} isWaving={isWaving} />
+            <AnimatedLegoFigure currentAction={action} />
 
             <ContactShadows position={[0, -1.8, 0]} opacity={0.55} scale={4} blur={1.5} far={3} />
           </Canvas>
 
-          {/* Quick Controls: Toggle Walk / Minimize */}
-          <div className="absolute top-2 right-2 flex items-center gap-1 z-10">
+          {/* Minimize Button */}
+          {onToggleMode && (
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setIsWalking((prev) => !prev);
-                setSpeechBubble(!isWalking ? "Tớ đang bước đi nè! 🚶‍♂️" : "Tớ đứng lại trò chuyện nhé! 😊");
-                setShowSpeech(true);
+                onToggleMode();
               }}
-              className="p-1.5 rounded-full bg-white/85 hover:bg-white text-stone-600 shadow-sm border border-stone-200/60 transition-all text-[11px] font-bold cursor-pointer"
-              title={isWalking ? "Dừng lại" : "Bước đi"}
+              className="absolute top-2 right-2 p-1.5 rounded-full bg-white/85 hover:bg-white text-stone-600 shadow-sm border border-stone-200/60 transition-all text-[11px] font-bold cursor-pointer z-10"
+              title="Thu nhỏ thành nút tròn"
             >
-              {isWalking ? "⏸" : "🚶"}
+              <Minimize2 className="w-3.5 h-3.5 text-stone-500" />
             </button>
-            {onToggleMode && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onToggleMode();
-                }}
-                className="p-1.5 rounded-full bg-white/85 hover:bg-white text-stone-600 shadow-sm border border-stone-200/60 transition-all text-[11px] font-bold cursor-pointer"
-                title="Thu nhỏ thành nút tròn"
-              >
-                <Minimize2 className="w-3.5 h-3.5 text-stone-500" />
-              </button>
-            )}
-          </div>
+          )}
 
           {/* Online green dot */}
           <span className="absolute bottom-2 right-3 w-3.5 h-3.5 bg-emerald-500 rounded-full border-2 border-white shadow-xs animate-pulse" />
