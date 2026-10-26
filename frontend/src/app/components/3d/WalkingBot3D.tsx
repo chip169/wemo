@@ -2,7 +2,7 @@ import React, { useRef, useState, useMemo, useEffect } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Float, Sparkles, ContactShadows } from "@react-three/drei";
 import * as THREE from "three";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 
 // ─── Lightweight Web Audio Synthesizer (Instantaneous Lego & Chime SFX) ──────
 class LegoSoundEffects {
@@ -1012,8 +1012,8 @@ export interface WalkingBot3DProps {
 export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isTippingHat, setIsTippingHat] = useState(false);
-  const [suitTheme, setSuitTheme] = useState<SuitTheme>("pink");
-  const [propType, setPropType] = useState<PropType>("gift");
+  const suitTheme: SuitTheme = "pink";
+  const propType: PropType = "gift";
 
   // Interactive 360-degree rotation drag
   const [dragRotationY, setDragRotationY] = useState(0);
@@ -1074,102 +1074,7 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
         isDraggingRef.current = false;
       }}
     >
-      {/* ── Mini Customizer Toolbar (Pops up gently on hover) ── */}
-      <AnimatePresence>
-        {isHovered && (
-          <motion.div
-            initial={{ opacity: 0, y: 10, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.9 }}
-            transition={{ duration: 0.2 }}
-            className="mb-1.5 p-1.5 rounded-2xl bg-white/95 backdrop-blur-md border border-pink-200/60 shadow-lg flex items-center gap-1.5 text-[11px]"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Color Themes */}
-            <div className="flex items-center gap-1 pr-1.5 border-r border-gray-200">
-              <button
-                type="button"
-                onClick={() => {
-                  setSuitTheme("pink");
-                  sfx.playSwap();
-                }}
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  suitTheme === "pink" ? "scale-110 ring-2 ring-pink-500 shadow-sm" : "opacity-80 hover:opacity-100"
-                }`}
-                style={{ background: "#F472B6" }}
-                title="Vest Hồng Sweetheart"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setSuitTheme("black");
-                  sfx.playSwap();
-                }}
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  suitTheme === "black" ? "scale-110 ring-2 ring-stone-800 shadow-sm" : "opacity-80 hover:opacity-100"
-                }`}
-                style={{ background: "#18181B" }}
-                title="Tuxedo Đen Quý Phái"
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  setSuitTheme("blue");
-                  sfx.playSwap();
-                }}
-                className={`w-5 h-5 rounded-full transition-transform ${
-                  suitTheme === "blue" ? "scale-110 ring-2 ring-blue-600 shadow-sm" : "opacity-80 hover:opacity-100"
-                }`}
-                style={{ background: "#2563EB" }}
-                title="Vest Xanh Hoàng Gia"
-              />
-            </div>
 
-            {/* Prop Selector */}
-            <div className="flex items-center gap-1">
-              <button
-                type="button"
-                onClick={() => {
-                  setPropType("gift");
-                  sfx.playSwap();
-                }}
-                className={`px-1.5 py-0.5 rounded-lg text-xs transition-colors ${
-                  propType === "gift" ? "bg-pink-100 text-pink-700 font-bold" : "text-gray-600 hover:bg-gray-100"
-                }`}
-                title="Gạch quà tặng LEGO"
-              >
-                🎁
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setPropType("rose");
-                  sfx.playSwap();
-                }}
-                className={`px-1.5 py-0.5 rounded-lg text-xs transition-colors ${
-                  propType === "rose" ? "bg-pink-100 text-pink-700 font-bold" : "text-gray-600 hover:bg-gray-100"
-                }`}
-                title="Bó hoa hồng LEGO"
-              >
-                🌹
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setPropType("ring");
-                  sfx.playSwap();
-                }}
-                className={`px-1.5 py-0.5 rounded-lg text-xs transition-colors ${
-                  propType === "ring" ? "bg-pink-100 text-pink-700 font-bold" : "text-gray-600 hover:bg-gray-100"
-                }`}
-                title="Hộp nhẫn tình yêu phát sáng"
-              >
-                💍
-              </button>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ── 3D LEGO Mascot Canvas (Drag to rotate 360°, Click to Tip Hat & Open Chat) ── */}
       <div
