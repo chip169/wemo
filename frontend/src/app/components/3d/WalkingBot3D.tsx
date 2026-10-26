@@ -529,17 +529,17 @@ function LegoRobotButlerModel({ isHovered, isClicked }: { isHovered: boolean; is
       }
     }
 
-    // ── 6. Left Arm (Hospitable Butler Welcome Pose) ─────────────────────────
+    // ── 6. Left Arm (Hospitable Butler Welcome Pose - Outreached) ───────────
     if (leftArmRef.current) {
       if (mode === "bow") {
-        leftArmRef.current.rotation.x = 0.4;
-        leftArmRef.current.rotation.z = 0.25;
+        leftArmRef.current.rotation.x = 0.35;
+        leftArmRef.current.rotation.z = -0.15;
       } else if (mode === "walk") {
-        leftArmRef.current.rotation.x = 0.12 - Math.sin(t * 5) * 0.3;
+        leftArmRef.current.rotation.x = 0.12 - Math.sin(t * 5) * 0.25;
       } else {
-        // Welcoming outstretched butler gesture
-        leftArmRef.current.rotation.x = 0.18 + Math.sin(t * 1.5) * 0.04;
-        leftArmRef.current.rotation.z = 0.18;
+        // Welcoming outstretched butler gesture (gentle breathing float)
+        leftArmRef.current.rotation.x = 0.08 + Math.sin(t * 1.5) * 0.04;
+        leftArmRef.current.rotation.z = -0.12 + Math.cos(t * 1.5) * 0.03;
       }
     }
 
@@ -566,16 +566,17 @@ function LegoRobotButlerModel({ isHovered, isClicked }: { isHovered: boolean; is
       <group>
         <LegoButlerTorso />
 
-        {/* ── Left Arm (Welcoming Butler Gesture) ── */}
+        {/* ── Left Arm (Outstretched Welcoming Butler Gesture) ── */}
         <group ref={leftArmRef} position={[-0.62, 0.52, 0]}>
-          {/* Shoulder ball joint */}
-          <mesh>
+          {/* Shoulder ball joint in pink suit sleeve */}
+          <mesh castShadow>
             <sphereGeometry args={[0.18, 16, 16]} />
-            <meshPhysicalMaterial color={BUTLER_COLORS.suitPink} roughness={0.2} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.suitPink} roughness={0.16} clearcoat={1.0} />
           </mesh>
-          {/* Upper Arm Capsule */}
-          <mesh position={[0.08, -0.22, 0.12]} rotation={[-0.32, 0.14, -0.22]} castShadow>
-            <capsuleGeometry args={[0.13, 0.42, 12, 18]} />
+
+          {/* Upper Arm Segment (Extending outward to the left) */}
+          <mesh position={[-0.15, -0.16, 0.12]} rotation={[-0.35, -0.3, 0.38]} castShadow>
+            <capsuleGeometry args={[0.12, 0.38, 12, 18]} />
             <meshPhysicalMaterial
               color={BUTLER_COLORS.robotSilver}
               metalness={0.25}
@@ -583,8 +584,47 @@ function LegoRobotButlerModel({ isHovered, isClicked }: { isHovered: boolean; is
               clearcoat={0.9}
             />
           </mesh>
-          {/* Pearlescent C-Hand in hospitable welcoming pose */}
-          <LegoHand position={[0.16, -0.46, 0.24]} rotation={[-0.3, 0.4, 0.2]} />
+
+          {/* Elbow Robotic Joint */}
+          <mesh position={[-0.28, -0.28, 0.24]} rotation={[0, 0, Math.PI / 2]}>
+            <cylinderGeometry args={[0.12, 0.12, 0.14, 18]} />
+            <meshPhysicalMaterial color={BUTLER_COLORS.robotDarkGray} roughness={0.3} />
+          </mesh>
+
+          {/* Forearm Segment (Reaching forward & outward) */}
+          <mesh position={[-0.42, -0.26, 0.44]} rotation={[-0.15, 0.45, -0.2]} castShadow>
+            <capsuleGeometry args={[0.11, 0.38, 12, 18]} />
+            <meshPhysicalMaterial
+              color={BUTLER_COLORS.robotSilver}
+              metalness={0.25}
+              roughness={0.2}
+              clearcoat={0.9}
+            />
+          </mesh>
+
+          {/* Outstretched Welcoming C-Hand (Palm facing up & forward) */}
+          <LegoHand position={[-0.58, -0.24, 0.62]} rotation={[0.4, 0.5, -0.5]} />
+
+          {/* Mini glowing pink gift brick held on hand */}
+          <group position={[-0.58, -0.14, 0.64]} scale={[0.55, 0.55, 0.55]}>
+            <mesh castShadow>
+              <boxGeometry args={[0.26, 0.22, 0.26]} />
+              <meshStandardMaterial
+                color={BUTLER_COLORS.neonPink}
+                emissive={BUTLER_COLORS.neonPink}
+                emissiveIntensity={2.8}
+                roughness={0.15}
+              />
+            </mesh>
+            <mesh position={[0, 0.13, 0]}>
+              <cylinderGeometry args={[0.07, 0.07, 0.06, 16]} />
+              <meshStandardMaterial
+                color={BUTLER_COLORS.neonPink}
+                emissive={BUTLER_COLORS.neonPink}
+                emissiveIntensity={2.8}
+              />
+            </mesh>
+          </group>
         </group>
 
         {/* ── Right Arm (Polite Waving Hand) ── */}
@@ -705,14 +745,14 @@ export function WalkingBot3D({ onOpenChat, className = "" }: WalkingBot3DProps) 
           transition={{ type: "spring", stiffness: 350, damping: 22 }}
           className="relative"
           style={{
-            width: 110,
-            height: 145,
+            width: 125,
+            height: 152,
             background: "transparent",
           }}
         >
           <Canvas
             shadows
-            camera={{ position: [0, 0.38, 6.4], fov: 38 }}
+            camera={{ position: [-0.08, 0.38, 6.4], fov: 38 }}
             gl={{ alpha: true, antialias: true }}
             style={{ width: "100%", height: "100%", pointerEvents: "none" }}
           >
