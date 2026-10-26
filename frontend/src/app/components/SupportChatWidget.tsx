@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
 import legoAvatarHd from "../assets/lego-avatar-hd.jpg";
 import { LegoCharacter3D } from "./3d/LegoCharacter3D";
+import { WalkingBot3D } from "./3d/WalkingBot3D";
 
 
 
@@ -231,6 +232,7 @@ export function SupportChatWidget() {
   const [eyeOff, setEyeOff]            = useState({ x: 0, y: 0 }); // eye tracking offset
   const [side, setSide]             = useState<"left"|"right">("right");
   const [isDragging, setIsDragging] = useState(false);
+  const [botMode, setBotMode]       = useState<"walking" | "badge">("walking");
 
   // Bot free-floating position
   const [botPos, setBotPos]   = useState({ x: snapX("right"), y: snapY() });
@@ -826,160 +828,185 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* ── Bubble notification ── */}
-      <AnimatePresence>
-        {showBubble && !isOpen && bubble && (
-          <motion.div
-            key={bubble}
-            initial={{ opacity:0, scale:0.85, y:12 }}
-            animate={{ opacity:1, scale:1, y:0 }}
-            exit={{ opacity:0, scale:0.85, y:8 }}
-            transition={{ type:"spring", stiffness:300, damping:24 }}
-            onClick={() => { setIsOpen(true); setShowBubble(false); }}
-            style={{ ...getBubbleStyle(), background:"white", borderRadius:20, padding:"14px 16px", fontFamily:"'Inter',sans-serif", boxShadow:"0 12px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.04)", border:"1px solid #f0ece8", cursor:"pointer", display:"flex", gap:12, alignItems:"flex-start" }}
-          >
-            <div style={{ width:34, height:34, borderRadius:"50%", background:"rgba(232,180,168,0.12)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, overflow:"hidden", marginTop:2 }}>
-              <PangolinBot pose="stand" size={30} />
-            </div>
-            <div style={{ flex:1, display:"flex", flexDirection:"column", gap:3, minWidth:0 }}>
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:6 }}>
-                <span style={{ fontWeight:700, fontSize:13, color:"#1C1917" }}>WEMO Assistant 🧱</span>
-                <button
-                  data-action="dismiss-bubble"
-                  onClick={(e) => { e.stopPropagation(); setShowBubble(false); }}
-                  style={{ background:"none", border:"none", color:"#a8a29e", cursor:"pointer", padding:2, display:"flex", alignItems:"center", justifyContent:"center", borderRadius:4 }}
-                  onMouseEnter={e=>(e.currentTarget.style.background="#f5f5f4")}
-                  onMouseLeave={e=>(e.currentTarget.style.background="none")}
-                >
-                  <X style={{ width:11, height:11 }} />
-                </button>
-              </div>
-              <div style={{ fontSize:12, color:"#44403c", lineHeight:1.5, wordBreak:"break-word" as const }}>{bubble}</div>
-              <div style={{ fontSize:10, color:"#a8a29e", marginTop:4, display:"flex", alignItems:"center", gap:4 }}>
-                <span>WEMO</span><span>•</span><span>Vừa xong</span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* ── Mode 1: Walking 3D Bot with Skeletal Animations ── */}
+      {botMode === "walking" && !isOpen && (
+        <WalkingBot3D
+          onOpenChat={() => setIsOpen(true)}
+          onToggleMode={() => setBotMode("badge")}
+        />
+      )}
 
-      {/* ── Floating Pangolin Bot ── */}
-      <motion.div
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        animate={idleAnimate}
-        transition={isDragging ? { type: "spring", stiffness: 320, damping: 28 } : idleTransition}
-        style={{
-          position: "fixed",
-          left: botPos.x,
-          top: botPos.y,
-          zIndex: 9999,
-          width: W,
-          height: W,
-          cursor: isDragging ? "grabbing" : "pointer",
-          userSelect: "none",
-          touchAction: "none",
-          transition: isDragging ? "none" : pose === "rolling"
-            ? `left ${rollDuration}ms cubic-bezier(.3,.6,.3,1), top ${rollDuration}ms cubic-bezier(.3,.6,.3,1)`
-            : "left 0.35s cubic-bezier(.3,.8,.4,1), top 0.35s cubic-bezier(.3,.8,.4,1)",
-        }}
-        whileHover={{ scale: isDragging ? 1 : 1.1 }}
-        whileTap={{ scale: 0.92 }}
-      >
-        {/* Animation wrapper — rolling / landed / idle float */}
-        <div
-          className={
-            pose === "rolling"
-              ? (rollDir === 'cw' ? "pg-roll-cw" : "pg-roll-ccw")
-              : pose === "landed"
-                ? "pg-land"
-                : (isIdle && !isDragging ? "pg-float" : "")
-          }
-          style={{
-            width: "100%", height: "100%", position: "relative",
-            // CSS variable drives roll duration
-            ...(pose === "rolling" ? { ['--roll-dur' as string]: `${rollDuration}ms` } : {}),
-          }}
-        >
-
-          {/* Rolling trail glow */}
-          {pose === "rolling" && (
-            <motion.div
-              style={{
-                position: "absolute",
-                inset: -6,
-                borderRadius: "50%",
-                background: "radial-gradient(circle, rgba(232,180,168,0.35) 0%, transparent 70%)",
-                pointerEvents: "none",
-              }}
-              animate={{ scale: [1, 1.4, 1], opacity: [0.7, 0.3, 0.7] }}
-              transition={{ duration: 0.4, repeat: Infinity }}
-            />
-          )}
-
-          <PangolinBot pose={pose} size={W} eyeOff={eyeOff} />
-
-          {/* Online status indicator — cleanly positioned at bottom-right of circle */}
-          {!isOpen && (
-            <span
-              style={{
-                position: "absolute",
-                bottom: 2,
-                right: 2,
-                width: 14,
-                height: 14,
-                background: "#22c55e",
-                borderRadius: "50%",
-                border: "2.5px solid white",
-                boxShadow: "0 2px 6px rgba(34,197,94,0.45)",
-                pointerEvents: "none",
-              }}
-            />
-          )}
-
-          {/* Notification badge */}
-          {showBubble && !isOpen && (
-            <motion.span
-              initial={{ scale:0 }}
-              animate={{ scale:1 }}
-              style={{
-                position: "absolute",
-                top: -2,
-                right: -2,
-                background: "#ef4444",
-                color: "white",
-                fontSize: 9,
-                fontWeight: 800,
-                width: 18,
-                height: 18,
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                border: "2px solid white",
-                boxShadow: "0 2px 6px rgba(239,68,68,0.35)",
-              }}
-            >
-              1
-            </motion.span>
-          )}
-
-          {/* Drag hint */}
+      {/* ── Mode 2: Compact Luxury Circular Avatar Badge ── */}
+      {botMode === "badge" && (
+        <>
+          {/* ── Bubble notification ── */}
           <AnimatePresence>
-            {isDragging && (
+            {showBubble && !isOpen && bubble && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                style={{ position:"absolute", top:-28, left:"50%", transform:"translateX(-50%)", background:"rgba(0,0,0,0.68)", color:"white", fontSize:9, fontWeight:700, padding:"3px 9px", borderRadius:8, whiteSpace:"nowrap" as const, pointerEvents:"none" }}
+                key={bubble}
+                initial={{ opacity:0, scale:0.85, y:12 }}
+                animate={{ opacity:1, scale:1, y:0 }}
+                exit={{ opacity:0, scale:0.85, y:8 }}
+                transition={{ type:"spring", stiffness:300, damping:24 }}
+                onClick={() => { setIsOpen(true); setShowBubble(false); }}
+                style={{ ...getBubbleStyle(), background:"white", borderRadius:20, padding:"14px 16px", fontFamily:"'Inter',sans-serif", boxShadow:"0 12px 32px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.04)", border:"1px solid #f0ece8", cursor:"pointer", display:"flex", gap:12, alignItems:"flex-start" }}
               >
-                Thả để gắn vào lề
+                <div style={{ width:34, height:34, borderRadius:"50%", background:"rgba(232,180,168,0.12)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0, overflow:"hidden", marginTop:2 }}>
+                  <PangolinBot pose="stand" size={30} />
+                </div>
+                <div style={{ flex:1, display:"flex", flexDirection:"column", gap:3, minWidth:0 }}>
+                  <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:6 }}>
+                    <span style={{ fontWeight:700, fontSize:13, color:"#1C1917" }}>WEMO Assistant 🧱</span>
+                    <button
+                      data-action="dismiss-bubble"
+                      onClick={(e) => { e.stopPropagation(); setShowBubble(false); }}
+                      style={{ background:"none", border:"none", color:"#a8a29e", cursor:"pointer", padding:2, display:"flex", alignItems:"center", justifyContent:"center", borderRadius:4 }}
+                      onMouseEnter={e=>(e.currentTarget.style.background="#f5f5f4")}
+                      onMouseLeave={e=>(e.currentTarget.style.background="none")}
+                    >
+                      <X style={{ width:11, height:11 }} />
+                    </button>
+                  </div>
+                  <div style={{ fontSize:12, color:"#44403c", lineHeight:1.5, wordBreak:"break-word" as const }}>{bubble}</div>
+                  <div style={{ fontSize:10, color:"#a8a29e", marginTop:4, display:"flex", alignItems:"center", gap:4 }}>
+                    <span>WEMO</span><span>•</span><span>Vừa xong</span>
+                  </div>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>
-        </div>
-      </motion.div>
+
+          {/* ── Floating Circular Avatar Pod ── */}
+          <motion.div
+            onPointerDown={onPointerDown}
+            onPointerMove={onPointerMove}
+            onPointerUp={onPointerUp}
+            animate={idleAnimate}
+            transition={isDragging ? { type: "spring", stiffness: 320, damping: 28 } : idleTransition}
+            style={{
+              position: "fixed",
+              left: botPos.x,
+              top: botPos.y,
+              zIndex: 9999,
+              width: W,
+              height: W,
+              cursor: isDragging ? "grabbing" : "pointer",
+              userSelect: "none",
+              touchAction: "none",
+              transition: isDragging ? "none" : pose === "rolling"
+                ? `left ${rollDuration}ms cubic-bezier(.3,.6,.3,1), top ${rollDuration}ms cubic-bezier(.3,.6,.3,1)`
+                : "left 0.35s cubic-bezier(.3,.8,.4,1), top 0.35s cubic-bezier(.3,.8,.4,1)",
+            }}
+            whileHover={{ scale: isDragging ? 1 : 1.1 }}
+            whileTap={{ scale: 0.92 }}
+          >
+            <div
+              className={
+                pose === "rolling"
+                  ? (rollDir === 'cw' ? "pg-roll-cw" : "pg-roll-ccw")
+                  : pose === "landed"
+                    ? "pg-land"
+                    : (isIdle && !isDragging ? "pg-float" : "")
+              }
+              style={{
+                width: "100%", height: "100%", position: "relative",
+                ...(pose === "rolling" ? { ['--roll-dur' as string]: `${rollDuration}ms` } : {}),
+              }}
+            >
+              <PangolinBot pose={pose} size={W} eyeOff={eyeOff} />
+
+              {/* Toggle to 3D Walking Bot mode button */}
+              {!isOpen && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setBotMode("walking");
+                  }}
+                  style={{
+                    position: "absolute",
+                    top: -6,
+                    left: -6,
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    background: "white",
+                    border: "1.5px solid #E8B4A8",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    fontSize: 10,
+                    zIndex: 10,
+                  }}
+                  title="Mở chế độ nhân vật 3D đi lại trên màn hình"
+                >
+                  🚶
+                </button>
+              )}
+
+              {/* Online status indicator */}
+              {!isOpen && (
+                <span
+                  style={{
+                    position: "absolute",
+                    bottom: 2,
+                    right: 2,
+                    width: 14,
+                    height: 14,
+                    background: "#22c55e",
+                    borderRadius: "50%",
+                    border: "2.5px solid white",
+                    boxShadow: "0 2px 6px rgba(34,197,94,0.45)",
+                    pointerEvents: "none",
+                  }}
+                />
+              )}
+
+              {/* Notification badge */}
+              {showBubble && !isOpen && (
+                <motion.span
+                  initial={{ scale:0 }}
+                  animate={{ scale:1 }}
+                  style={{
+                    position: "absolute",
+                    top: -2,
+                    right: -2,
+                    background: "#ef4444",
+                    color: "white",
+                    fontSize: 9,
+                    fontWeight: 800,
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    border: "2px solid white",
+                    boxShadow: "0 2px 6px rgba(239,68,68,0.35)",
+                  }}
+                >
+                  1
+                </motion.span>
+              )}
+
+              {/* Drag hint */}
+              <AnimatePresence>
+                {isDragging && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    style={{ position:"absolute", top:-28, left:"50%", transform:"translateX(-50%)", background:"rgba(0,0,0,0.68)", color:"white", fontSize:9, fontWeight:700, padding:"3px 9px", borderRadius:8, whiteSpace:"nowrap" as const, pointerEvents:"none" }}
+                  >
+                    Thả để gắn vào lề
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </motion.div>
+        </>
+      )}
     </>
   );
 }
