@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Send, Phone, MessageSquare, X, User, Smartphone, Bot, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useLocation } from "react-router";
-import { SplineBot3D } from "./3d/SplineBot3D";
+import { WalkingBot3D } from "./3d/WalkingBot3D";
 
 
 
@@ -45,23 +45,48 @@ function getCtx(p: string) {
   return "homepage";
 }
 
-// ─── AI replies — Butler personality ─────────────────────────────────────────────────────
+// ─── AI replies — Quản Gia LEGO WEMO personality ────────────────────────────
 const KB = [
-  { kw: ["xin chào","hello","hi","chào"], r: "Chào mừng quý khách! 🎊 Tôi là trợ lý ảo WEMO 🧱. Tôi có thể hỗ trợ quý khách điều gì ạ?" },
-  { kw: ["giá","bao nhiêu","tiền","phí"], r: "Thưa quý khách, WEMO có 4 gói LEGO cá nhân hóa chính hãng: 🎊\n• WEMO LEGO Standard: 339k (tóc & mặt theo ảnh)\n• WEMO LEGO Premium: 469k (Khuyên dùng - chi tiết cao tóc, trang phục, phụ kiện)\n• Couple Set Standard: 600k (2 nhân vật + 1 landing page)\n• Couple Set Premium: 850k (2 nhân vật chi tiết cao + hộp đôi)\n• Doanh nghiệp / Sự kiện: Chiết khấu lên đến 30%!\nQuý khách muốn chọn gói nào ạ? 💌" },
-  { kw: ["nfc","chip","hoạt động","công nghệ"], r: "Công nghệ NFC thông minh của WEMO rất đơn giản thưa quý khách! 📱 Chỉ cần chạm nhẹ điện thoại vào đế mô hình LEGO, trang web kỷ niệm lập tức hiện ra — không cần cài ứng dụng!" },
-  { kw: ["chibi","3d","ảnh","vẽ","avatar","lego"], r: "Dịch vụ LEGO cá nhân hóa độc đáo của WEMO 🧱 Chỉ cần 1-2 ảnh chân dung rõ nét, nghệ nhân sẽ thiết kế nhân vật LEGO độc bản dành riêng cho bạn trong 24-48 giờ!" },
-  { kw: ["giao hàng","ship","bao lâu","nhận"], r: "Chúng tôi đảm bảo giao hàng nhanh chóng thưa quý khách 📦 Nội thành: 2-3 ngày • Tỉnh thành: 3-5 ngày • Có dịch vụ giao hỏa tốc!" },
-  { kw: ["đặt","order","mua","đặt hàng"], r: "Tôi sấn lòng hỗ trợ quý khách đặt hàng! 🎊 Quý khách có thể gọi 0398 768 699 hoặc nhấn Zalo bên trên. Thiệp dành cho dịp gì ạ?" },
-  { kw: ["cảm ơn","thanks","tuyệt","ok","được"], r: "Thưa quý khách, đó là vinh dự của tôi! 🎊 Hế tôi làm gì khác được cho quý khách không?" },
-  { kw: ["mẫu","template","thiết kế","kiểu"], r: "WEMO có rất nhiều mẫu thiệp tinh tế ✨ Sinh nhật, lãng mạn, tốt nghiệp, cưới... Phong cách nào quý khách yêu thích ạ?" },
-  { kw: ["liên hệ","hotline","số điện thoại","zalo"], r: "Thưa quý khách, quý khách có thể liên hệ WEMO qua: 📞 0398 768 699 hoặc 💬 Zalo cùng số đó. Tôi sẽ chuyển tiếp ngay!" },
+  {
+    kw: ["xin chào", "hello", "hi", "chào", "chào bạn", "alo", "hey"],
+    r: "Kính chào quý khách! 🎩✨ Tôi là Quản gia WEMO LEGO. Tôi rất hân hạnh được hỗ trợ quý khách về mô hình LEGO cá nhân hóa độc bản và chip ký ức số NFC. Quý khách cần tôi tư vấn phần nào ạ?",
+  },
+  {
+    kw: ["giá", "bao nhiêu", "tiền", "phí", "bảng giá", "chi phí", "bao nhieu"],
+    r: "Thưa quý khách, WEMO có 4 gói mô hình LEGO cá nhân hóa thủ công theo ảnh thật: 🧱✨\n\n• Gói Standard (339.000đ): Cá nhân hóa tóc & khuôn mặt theo ảnh thật.\n• Gói Premium (469.000đ - Khuyên dùng): Cá nhân hóa toàn diện từ tóc, biểu cảm, trang phục đến phụ kiện đặc trưng theo ảnh.\n• Gói Couple Standard (600.000đ): Bộ đôi 2 nhân vật + 1 trang web tình yêu chung.\n• Gói Couple Premium (850.000đ): Bộ đôi 2 nhân vật chi tiết cao cấp nhất + hộp đôi quà tặng sang trọng.\n\n🎁 Tất cả các gói đều được TẶNG KÈM chip NFC chạm mở trang web ký ức độc quyền + Hộp quà & thiệp chúc nơ tinh tế!",
+  },
+  {
+    kw: ["nfc", "chip", "hoạt động", "công nghệ", "chạm", "quet"],
+    r: "Dạ, công nghệ chip NFC thông minh của WEMO hoạt động cực kỳ tiện lợi ạ! 📱✨\n\nChip NFC được tích hợp ẩn tinh tế dưới đế mô hình LEGO. Người nhận chỉ cần chạm nhẹ điện thoại (iPhone hoặc Android) vào đế là trang web ký ức độc bản (chứa ảnh kỷ niệm, video, nhạc nền & lời chúc riêng) sẽ tự động mở ra ngay lập tức — hoàn toàn không cần cài ứng dụng!",
+  },
+  {
+    kw: ["ảnh", "hình", "chụp", "gửi ảnh", "chân dung", "mẫu", "chibi", "3d", "lego"],
+    r: "Thưa quý khách, để chế tác LEGO độc bản, bạn chỉ cần gửi 1-2 bức ảnh chân dung rõ mặt và trang phục bạn muốn làm. 📸 Các nghệ nhân thiết kế WEMO sẽ phác thảo và gửi bạn duyệt ảnh mẫu trước khi tiến hành gia công lắp ráp hoàn thiện nhé ạ!",
+  },
+  {
+    kw: ["giao hàng", "ship", "bao lâu", "nhận", "thời gian", "khi nào", "mất bao lâu"],
+    r: "Dạ, thời gian hoàn thiện và giao hàng của WEMO rất nhanh chóng ạ: 📦\n\n• Thời gian thiết kế & gia công tỉ mỉ: 24 - 48 giờ.\n• Giao hàng nội thành: 1 - 2 ngày làm việc.\n• Giao hàng các tỉnh thành: 2 - 4 ngày.\n• WEMO có hỗ trợ giao hỏa tốc nếu quý khách cần làm quà tặng gấp cho dịp kỷ niệm/sinh nhật nhé!",
+  },
+  {
+    kw: ["đặt", "order", "mua", "đặt hàng", "mua hàng", "dat hang"],
+    r: "Tôi rất sẵn lòng hỗ trợ quý khách đặt hàng ngay ạ! 🎁 Quý khách có thể nhấn nút 'Đặt Hàng' trên thanh menu hoặc để lại yêu cầu cụ thể ngay tại đây. Nếu cần hỗ trợ hỏa tốc, chuyên viên WEMO luôn túc trực qua hotline/Zalo 0398 768 699!",
+  },
+  {
+    kw: ["cảm ơn", "thanks", "tuyệt", "ok", "được", "cam on", "hay quá"],
+    r: "Dạ, được phục vụ quý khách là niềm vinh hạnh của Quản gia WEMO! 🎩✨ Chúc quý khách một ngày thật nhiều niềm vui và chọn được món quà ý nghĩa nhất. Quý khách cần hỏi thêm thông tin gì cứ nhắn tôi nhé ạ!",
+  },
+  {
+    kw: ["liên hệ", "hotline", "số điện thoại", "zalo", "sđt", "phone", "tu van"],
+    r: "Dạ thưa quý khách, để kết nối trực tiếp cùng đội ngũ tư vấn viên WEMO:\n\n📞 Hotline / Zalo: 0398 768 699\n💬 Hoặc gửi lời nhắn ngay tại khung chat này, chuyên viên WEMO sẽ phản hồi hỗ trợ bạn ngay lập tức ạ!",
+  },
 ];
+
 const FALL = [
-  "Thưa quý khách, để tôi chuyển quý khách đến chuyên viên tư vấn ngay nhé! 🎊",
-  "Tôi đã ghi nhận yêu cầu! Trung bình chờ dưới 2 phút ⏰",
-  "Thưa quý khách, quý khách có thể mô tả thêm không ạ? Hoặc gọi ngay 0398 768 699! 😊",
+  "Quản gia WEMO đã ghi nhận câu hỏi của bạn! 🎩 Chuyên viên tư vấn WEMO sẽ phản hồi chi tiết ngay tại đây hoặc liên hệ bạn sớm nhất có thể nhé ạ. Nếu cần tư vấn gấp, bạn có thể gọi hotline/Zalo 0398 768 699! ✨",
+  "Dạ, yêu cầu của bạn đã được chuyển đến chuyên viên thiết kế WEMO! 💌 Bạn đang quan tâm đến mẫu LEGO cá nhân hóa đơn hay gói cặp đôi để tôi gửi thêm ảnh mẫu thực tế cho bạn tham khảo nhé?",
+  "Cảm ơn bạn đã nhắn tin cho WEMO! 🧱 Đội ngũ hỗ trợ đã nhận thông tin và sẽ phản hồi bạn ngay. Bạn có thể tham khảo nhanh bảng giá hoặc gửi ảnh bạn muốn làm LEGO ngay tại đây nhé ạ! 😊",
 ];
+
 function aiReply(t: string) {
   const l = t.toLowerCase();
   for (const { kw, r } of KB) if (kw.some(k => l.includes(k))) return r;
@@ -828,9 +853,9 @@ export function SupportChatWidget() {
         )}
       </AnimatePresence>
 
-      {/* ── Realistic 3D Animated LEGO Character on Page (Spline 3D Ready) ── */}
+      {/* ── Realistic 3D Animated LEGO Character on Page ── */}
       {!isOpen && (
-        <SplineBot3D
+        <WalkingBot3D
           onOpenChat={() => setIsOpen(true)}
         />
       )}
