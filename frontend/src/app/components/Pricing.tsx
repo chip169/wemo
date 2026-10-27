@@ -176,7 +176,7 @@ function PricingCard({ plan }: { plan: typeof plans[0] }) {
           </div>
           <div className={`mt-2 text-[11px] font-medium flex items-center gap-1.5 ${plan.popular ? 'text-[#D4AF78]' : 'text-[#8C5D53]'}`}>
             <Check className="w-3.5 h-3.5 flex-shrink-0 text-[#D4AF78]" />
-            <span>Tặng kèm web NFC + Hộp quà & thiệp</span>
+            <span>Chip NFC • Tặng kèm web NFC</span>
           </div>
         </div>
 
