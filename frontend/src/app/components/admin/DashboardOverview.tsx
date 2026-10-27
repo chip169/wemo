@@ -41,7 +41,13 @@ export function DashboardOverview() {
         ]);
 
         const validOrders = Array.isArray(ordersRes)
-          ? ordersRes.filter((o: any) => o.status !== "cancelled" && o.paymentStatus !== "refunded")
+          ? ordersRes.filter(
+              (o: any) =>
+                o.status !== "cancelled" &&
+                o.status !== "pending" &&
+                o.status !== "pending_payment" &&
+                o.paymentStatus === "paid"
+            )
           : [];
         const totalRevenue = validOrders.reduce((sum: number, o: any) => sum + (Number(o.amount) || 0), 0);
         const totalViews = giftsRes.reduce((sum: number, g: any) => sum + (g.views || 0), 0);

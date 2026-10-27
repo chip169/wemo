@@ -30,7 +30,7 @@ interface Order {
 const statusColors = {
   pending_payment: { bg: "#FFEDD5", text: "#EA580C", label: "Chờ thanh toán" },
   deposited: { bg: "#E0F2FE", text: "#0369A1", label: "Đã thanh toán 100%" },
-  pending: { bg: "#FEF3C7", text: "#D97706", label: "Chờ xử lý" },
+  pending: { bg: "#FEF3C7", text: "#D97706", label: "Chờ xác nhận" },
   processing: { bg: "#DBEAFE", text: "#2563EB", label: "Đang sản xuất" },
   shipping: { bg: "#F3E8FF", text: "#7C3AED", label: "Đang giao hàng" },
   completed: { bg: "#DCFCE7", text: "#16A34A", label: "Đã hoàn thành" },
@@ -228,10 +228,18 @@ export function OrdersPage() {
     return matchesSearch && matchesPayment;
   });
 
+  // Đơn hợp lệ tính vào doanh thu thực nhận: Đã thanh toán & không ở trạng thái chờ xác nhận/hủy/hoàn tiền
   const validOrders = orders.filter(
-    (o) => o.status !== "cancelled" && o.paymentStatus !== "refunded"
+    (o) =>
+      o.status !== "cancelled" &&
+      o.status !== "pending" &&
+      o.status !== "pending_payment" &&
+      o.paymentStatus === "paid"
   );
   const totalRevenue = validOrders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
+  const pendingOrdersCount = orders.filter(
+    (o) => o.status === "pending" || o.status === "pending_payment" || o.paymentStatus === "unpaid"
+  ).length;
   const cancelledOrdersCount = orders.filter(
     (o) => o.status === "cancelled" || o.paymentStatus === "refunded"
   ).length;
@@ -284,7 +292,7 @@ export function OrdersPage() {
               {totalRevenue.toLocaleString()}đ
             </span>
             <span className="text-[10px] text-emerald-600 font-semibold block">
-              (Loại trừ đơn hủy/hoàn)
+              (Chưa tính đơn chờ xác nhận)
             </span>
           </div>
         </div>
@@ -314,13 +322,13 @@ export function OrdersPage() {
           </div>
           <div>
             <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
-              Đơn hàng hợp lệ
+              Đơn đã ghi nhận DT
             </span>
             <span className="text-base sm:text-lg font-black text-stone-900 tracking-tight block">
               {validOrders.length}
             </span>
             <span className="text-[10px] text-teal-600 font-medium block">
-              Đang & đã hoàn thành
+              Đã thu ({pendingOrdersCount} đơn đang chờ)
             </span>
           </div>
         </div>
@@ -702,6 +710,7 @@ export function OrdersPage() {
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
                       <option value="pending_payment">Chờ thanh toán</option>
+                      <option value="pending">Chờ xác nhận</option>
                       <option value="deposited">Đã thanh toán (100%)</option>
                       <option value="processing">Đang sản xuất</option>
                       <option value="shipping">Đang giao hàng</option>
@@ -836,6 +845,7 @@ export function OrdersPage() {
                       className="w-full px-4 py-2.5 rounded-xl border border-stone-200 outline-none focus:border-[#E8B4A8] text-xs bg-stone-50 text-stone-700 font-medium"
                     >
                       <option value="pending_payment">Chờ thanh toán</option>
+                      <option value="pending">Chờ xác nhận</option>
                       <option value="deposited">Đã thanh toán (100%)</option>
                       <option value="processing">Đang sản xuất</option>
                       <option value="shipping">Đang giao hàng</option>

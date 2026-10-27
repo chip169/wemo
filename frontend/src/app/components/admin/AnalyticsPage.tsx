@@ -58,8 +58,14 @@ export function AnalyticsPage() {
         const giftsList = Array.isArray(giftsData) ? giftsData : [];
         const nfcList = Array.isArray(nfcData) ? nfcData : [];
 
-        // 1. Total revenue (không tính đơn hủy hoặc đã hoàn tiền)
-        const validOrders = ordersList.filter((o) => o.status !== "cancelled" && o.paymentStatus !== "refunded");
+        // 1. Total revenue (không tính đơn chờ xác nhận/thanh toán, đơn hủy hoặc đã hoàn tiền)
+        const validOrders = ordersList.filter(
+          (o) =>
+            o.status !== "cancelled" &&
+            o.status !== "pending" &&
+            o.status !== "pending_payment" &&
+            o.paymentStatus === "paid"
+        );
         const totalRev = validOrders.reduce((sum, o) => sum + (Number(o.amount) || 0), 0);
 
         // 2. Average views
@@ -96,10 +102,15 @@ export function AnalyticsPage() {
           });
         }
 
-        // Aggregate actual orders (loại bỏ đơn hủy hoặc hoàn tiền)
+        // Aggregate actual orders (chỉ tính đơn đã xác nhận & đã thanh toán, loại bỏ đơn chờ xác nhận, đơn hủy hoặc hoàn tiền)
         ordersList.forEach((o) => {
           if (!o.createdDate) return;
-          if (o.status === "cancelled" || o.paymentStatus === "refunded") return;
+          if (
+            o.status === "cancelled" ||
+            o.status === "pending" ||
+            o.status === "pending_payment" ||
+            o.paymentStatus !== "paid"
+          ) return;
           const date = new Date(o.createdDate);
           const mIdx = date.getMonth();
           const target = past6Months.find((m) => m.monthIndex === mIdx);
