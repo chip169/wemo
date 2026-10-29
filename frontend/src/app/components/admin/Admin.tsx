@@ -27,7 +27,7 @@ import { CustomersPage } from "./CustomersPage";
 import { AnalyticsPage } from "./AnalyticsPage";
 import { SettingsPage } from "./SettingsPage";
 import { SupportChatPage } from "./SupportChatPage";
-import { MockConversationsPage } from "./MockConversationsPage";
+
 import { AdminLogin } from "./AdminLogin";
 
 export function Admin() {
@@ -76,8 +76,7 @@ export function Admin() {
         return <TemplatesPage />;
       case "customers":
         return <CustomersPage />;
-      case "mock-conversations":
-        return <MockConversationsPage />;
+
       case "support":
         return <SupportChatPage />;
       case "analytics":

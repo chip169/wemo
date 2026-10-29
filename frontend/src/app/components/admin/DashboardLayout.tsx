@@ -19,7 +19,7 @@ import {
   LogOut,
   User,
   MessageSquare,
-  MessageSquareQuote,
+
 } from "lucide-react";
 
 interface DashboardLayoutProps {
@@ -36,7 +36,7 @@ const navigation = [
   { name: "Mẫu thiết kế", icon: Layers, id: "templates" },
   { name: "Khách hàng", icon: Users, id: "customers" },
   { name: "Hỗ trợ trực tuyến", icon: MessageSquare, id: "support" },
-  { name: "Nhật ký tư vấn", icon: MessageSquareQuote, id: "mock-conversations" },
+
   { name: "Thống kê", icon: BarChart3, id: "analytics" },
   { name: "Cài đặt", icon: Settings, id: "settings" },
 ];
