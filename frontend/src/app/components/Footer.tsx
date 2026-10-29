@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Heart, Instagram, Twitter, Facebook, Youtube } from "lucide-react";
 
-import bearImg from "../assets/gau.png";
 
 export function Footer() {
   const footerLinks = {
@@ -44,13 +43,6 @@ export function Footer() {
 
   return (
     <footer className="relative w-full pt-24 pb-12 bg-gradient-to-b from-transparent via-[#D2B495]/40 to-[#C4A482] border-t border-[#B59471]/40">
-      <div className="absolute -top-[110px] right-[12%] z-20 w-48 md:w-56 select-none pointer-events-none transition-all duration-300">
-        <img
-          src={bearImg}
-          alt="Cute Teddy Bear 3D"
-          className="w-full h-auto object-contain transform translate-y-[19px] drop-shadow-[0_15px_15px_rgba(74,59,43,0.35)] hover:scale-105 hover:translate-y-[8px] transition-all duration-500 ease-out"
-        />
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main content grid */}
